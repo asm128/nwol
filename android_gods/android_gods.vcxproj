@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="NsightTegraProject">
+    <NsightTegraProjectRevisionNumber>11</NsightTegraProjectRevisionNumber>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Tegra-Android">
+      <Configuration>Debug</Configuration>
+      <Platform>Tegra-Android</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Tegra-Android">
+      <Configuration>Release</Configuration>
+      <Platform>Tegra-Android</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shipping|Tegra-Android">
+      <Configuration>Shipping</Configuration>
+      <Platform>Tegra-Android</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C8507827-FA01-4C33-8372-9913A3256635}</ProjectGuid>
+    <RootNamespace>android_gods</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <AndroidTargetAPI>android-15</AndroidTargetAPI>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <AndroidTargetAPI>android-15</AndroidTargetAPI>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <AndroidTargetAPI>android-15</AndroidTargetAPI>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros">
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">
+    <ClCompile>
+      <CppLanguageStandard>gnu++11</CppLanguageStandard>
+      <AdditionalIncludeDirectories>..\nwol; </AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>ANDROID</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">
+    <ClCompile>
+      <CppLanguageStandard>gnu++11</CppLanguageStandard>
+      <AdditionalIncludeDirectories>..\nwol; </AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>ANDROID</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">
+    <ClCompile>
+      <CppLanguageStandard>gnu++11</CppLanguageStandard>
+      <AdditionalIncludeDirectories>..\nwol; </AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>ANDROID</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\gods\buffer.cpp" />
+    <ClCompile Include="..\gods\buffer_create.cpp" />
+    <ClCompile Include="..\gods\gnode.cpp" />
+    <ClCompile Include="..\gods\graph.cpp" />
+    <ClCompile Include="..\gods\netlib.cpp" />
+    <ClCompile Include="..\gods\netlib_client.cpp" />
+    <ClCompile Include="..\gods\netlib_server.cpp" />
+    <ClCompile Include="..\gods\reference_registry.cpp" />
+    <ClCompile Include="android_gods.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\gods\application.h" />
+    <ClInclude Include="..\gods\buffer.h" />
+    <ClInclude Include="..\gods\gbuffer.h" />
+    <ClInclude Include="..\gods\glist.h" />
+    <ClInclude Include="..\gods\glist_base.h" />
+    <ClInclude Include="..\gods\gnode.h" />
+    <ClInclude Include="..\gods\gnode_constants.h" />
+    <ClInclude Include="..\gods\graph.h" />
+    <ClInclude Include="..\gods\gref.h" />
+    <ClInclude Include="..\gods\gref_definition.h" />
+    <ClInclude Include="..\gods\gref_definition_common.h" />
+    <ClInclude Include="..\gods\gref_definition_pure.h" />
+    <ClInclude Include="..\gods\gref_manager_nco.h" />
+    <ClInclude Include="..\gods\gref_manager_obj.h" />
+    <ClInclude Include="..\gods\gref_manager_pod.h" />
+    <ClInclude Include="..\gods\gref_ptr.h" />
+    <ClInclude Include="..\gods\gref_serializer_pod.h" />
+    <ClInclude Include="..\gods\gstring.h" />
+    <ClInclude Include="..\gods\netlib.h" />
+    <ClInclude Include="..\gods\netlib_client.h" />
+    <ClInclude Include="..\gods\netlib_private.h" />
+    <ClInclude Include="..\gods\netlib_server.h" />
+    <ClInclude Include="..\gods\parse_int.h" />
+    <ClInclude Include="..\gods\reference_registry.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

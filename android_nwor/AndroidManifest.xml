@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- BEGIN_INCLUDE(manifest) -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="nwo.gods.runtime" android:versionCode="1" android:versionName="1.0">
+    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="15" />                                                                          <!-- This is the platform API where NativeActivity was introduced. -->
+    <uses-permission android:name="android.permission.INTERNET" />                                                                                <!-- This is required for debugging. -->
+    <application android:label="@string/app_name" android:hasCode="False">                                                                        <!-- This .apk has no Java code itself, so set hasCode to false. -->
+        <activity android:name="android.app.NativeActivity" android:label="@string/app_name" android:configChanges="orientation|keyboardHidden">  <!-- Our activity is the built-in NativeActivity framework class. This will take care of integrating with our NDK code. -->
+            <meta-data android:name="android.app.lib_name" android:value="android_nwor" />                                                        <!-- Tell NativeActivity the name of our .so -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest> 
+<!-- END_INCLUDE(manifest) -->

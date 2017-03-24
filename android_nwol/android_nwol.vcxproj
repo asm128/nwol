@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="NsightTegraProject">
+    <NsightTegraProjectRevisionNumber>11</NsightTegraProjectRevisionNumber>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Tegra-Android">
+      <Configuration>Debug</Configuration>
+      <Platform>Tegra-Android</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Tegra-Android">
+      <Configuration>Release</Configuration>
+      <Platform>Tegra-Android</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shipping|Tegra-Android">
+      <Configuration>Shipping</Configuration>
+      <Platform>Tegra-Android</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{9E0801C8-D392-4D64-84D8-4D8C9A143B80}</ProjectGuid>
+    <RootNamespace>android_nwol</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <AndroidTargetAPI>android-15</AndroidTargetAPI>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <AndroidTargetAPI>android-15</AndroidTargetAPI>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <AndroidTargetAPI>android-15</AndroidTargetAPI>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros">
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">
+    <ClCompile>
+      <CppLanguageStandard>gnu++1y</CppLanguageStandard>
+      <PreprocessorDefinitions>ANDROID</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">
+    <ClCompile>
+      <CppLanguageStandard>gnu++1y</CppLanguageStandard>
+      <PreprocessorDefinitions>ANDROID</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">
+    <ClCompile>
+      <CppLanguageStandard>gnu++1y</CppLanguageStandard>
+      <PreprocessorDefinitions>ANDROID</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\nwol\ascii_screen.cpp" />
+    <ClCompile Include="..\nwol\datatype.cpp" />
+    <ClCompile Include="..\nwol\descriptor.cpp" />
+    <ClCompile Include="..\nwol\descriptor_manager.cpp" />
+    <ClCompile Include="..\nwol\gui.cpp" />
+    <ClCompile Include="..\nwol\input.cpp" />
+    <ClCompile Include="..\nwol\label.cpp" />
+    <ClCompile Include="..\nwol\label_manager.cpp" />
+    <ClCompile Include="..\nwol\log.cpp" />
+    <ClCompile Include="..\nwol\runtime_module.cpp" />
+    <ClCompile Include="..\nwol\storage.cpp" />
+    <ClCompile Include="..\nwol\timer.cpp" />
+    <ClCompile Include="android_nwol.cpp" />
+    <ClCompile Include="vulkanandroid.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\nwol\array_view.h" />
+    <ClInclude Include="..\nwol\array_view_bit.h" />
+    <ClInclude Include="..\nwol\ascii_color.h" />
+    <ClInclude Include="..\nwol\ascii_reference.h" />
+    <ClInclude Include="..\nwol\ascii_screen.h" />
+    <ClInclude Include="..\nwol\ascii_target.h" />
+    <ClInclude Include="..\nwol\build_global.h" />
+    <ClInclude Include="..\nwol\choice.h" />
+    <ClInclude Include="..\nwol\coord.h" />
+    <ClInclude Include="..\nwol\datatype.h" />
+    <ClInclude Include="..\nwol\datausage.h" />
+    <ClInclude Include="..\nwol\descriptor.h" />
+    <ClInclude Include="..\nwol\descriptor_manager.h" />
+    <ClInclude Include="..\nwol\enum.h" />
+    <ClInclude Include="..\nwol\evaluation.h" />
+    <ClInclude Include="..\nwol\fill.h" />
+    <ClInclude Include="..\nwol\gcore_ref.h" />
+    <ClInclude Include="..\nwol\grid.h" />
+    <ClInclude Include="..\nwol\grid_view.h" />
+    <ClInclude Include="..\nwol\gui.h" />
+    <ClInclude Include="..\nwol\input.h" />
+    <ClInclude Include="..\nwol\label.h" />
+    <ClInclude Include="..\nwol\label_manager.h" />
+    <ClInclude Include="..\nwol\log.h" />
+    <ClInclude Include="..\nwol\matrix.h" />
+    <ClInclude Include="..\nwol\member_registry.h" />
+    <ClInclude Include="..\nwol\misc.h" />
+    <ClInclude Include="..\nwol\multithread.h" />
+    <ClInclude Include="..\nwol\noise.h" />
+    <ClInclude Include="..\nwol\nwol_array.h" />
+    <ClInclude Include="..\nwol\nwol_bit.h" />
+    <ClInclude Include="..\nwol\nwol_color.h" />
+    <ClInclude Include="..\nwol\nwol_debug.h" />
+    <ClInclude Include="..\nwol\nwol_error.h" />
+    <ClInclude Include="..\nwol\nwol_io.h" />
+    <ClInclude Include="..\nwol\nwol_math.h" />
+    <ClInclude Include="..\nwol\nwol_memory.h" />
+    <ClInclude Include="..\nwol\nwol_mutex.h" />
+    <ClInclude Include="..\nwol\nwol_string.h" />
+    <ClInclude Include="..\nwol\platform_globals.h" />
+    <ClInclude Include="..\nwol\runtime.h" />
+    <ClInclude Include="..\nwol\runtime_impl.h" />
+    <ClInclude Include="..\nwol\size.h" />
+    <ClInclude Include="..\nwol\storage.h" />
+    <ClInclude Include="..\nwol\struct_generator_pod.h" />
+    <ClInclude Include="..\nwol\stype.h" />
+    <ClInclude Include="..\nwol\text.h" />
+    <ClInclude Include="..\nwol\timer.h" />
+    <ClInclude Include="..\nwol\typeint.h" />
+    <ClInclude Include="..\nwol\type_identifier.h" />
+    <ClInclude Include="..\nwol\type_registry.h" />
+    <ClInclude Include="..\nwol\unshrinkable_block_container.h" />
+    <ClInclude Include="..\nwol\value.h" />
+    <ClInclude Include="vulkanandroid.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
