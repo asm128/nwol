@@ -1,0 +1,242 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="glabel">
+      <UniqueIdentifier>{5162af89-8731-4d78-b07c-5104798e3509}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gdescriptor">
+      <UniqueIdentifier>{78afd68a-645b-4990-9fa9-b3d04450cb9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="array">
+      <UniqueIdentifier>{fba8f62f-7de6-419f-96ce-54edf0c791fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui">
+      <UniqueIdentifier>{1739c303-de2e-40b0-9c15-70d52b89c5e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="datatype">
+      <UniqueIdentifier>{d381085f-7e5e-48ba-b750-51ae858359e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{f259e5b9-4ab6-492d-9cb2-409d3995561b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="misc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="evaluation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_string.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="typeint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_io.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="build_global.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="unshrinkable_block_container.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="label.h">
+      <Filter>glabel</Filter>
+    </ClInclude>
+    <ClInclude Include="descriptor.h">
+      <Filter>gdescriptor</Filter>
+    </ClInclude>
+    <ClInclude Include="fill.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="size.h">
+      <Filter>array</Filter>
+    </ClInclude>
+    <ClInclude Include="array_view.h">
+      <Filter>array</Filter>
+    </ClInclude>
+    <ClInclude Include="gui.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="datausage.h">
+      <Filter>datatype</Filter>
+    </ClInclude>
+    <ClInclude Include="datatype.h">
+      <Filter>datatype</Filter>
+    </ClInclude>
+    <ClInclude Include="grid_view.h">
+      <Filter>array</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_math.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="coord.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="noise.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="text.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="multithread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_mutex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="enum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ascii_reference.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ascii_screen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="storage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="label_manager.h">
+      <Filter>glabel</Filter>
+    </ClInclude>
+    <ClInclude Include="descriptor_manager.h">
+      <Filter>gdescriptor</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_error.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="platform_globals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_bit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="choice.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="grid.h">
+      <Filter>array</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_memory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_array.h">
+      <Filter>array</Filter>
+    </ClInclude>
+    <ClInclude Include="ascii_color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="array_view_bit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="type_registry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="type_identifier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime_impl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gcore_ref.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="struct_generator_pod.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="member_registry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ascii_target.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_bool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_value.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="label.cpp">
+      <Filter>glabel</Filter>
+    </ClCompile>
+    <ClCompile Include="descriptor.cpp">
+      <Filter>gdescriptor</Filter>
+    </ClCompile>
+    <ClCompile Include="gui.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="datatype.cpp">
+      <Filter>datatype</Filter>
+    </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="log.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ascii_screen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="storage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="label_manager.cpp">
+      <Filter>glabel</Filter>
+    </ClCompile>
+    <ClCompile Include="descriptor_manager.cpp">
+      <Filter>gdescriptor</Filter>
+    </ClCompile>
+    <ClCompile Include="runtime_module.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="nwor.def">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>
