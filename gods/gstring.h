@@ -11,7 +11,7 @@ namespace nwol
 	public:
 		using			gbuffer<_tBase, _F, ::nwol::GUSAGE_TEXT>::		m_ArrayBuffer;
 
-		inline															gestring			(void)								= default;
+		inline															gestring			()									= default;
 		inline															gestring			(const gestring& other)				: gbuffer<_tBase, _F, ::nwol::GUSAGE_TEXT>(other)				{}
 		inline															gestring			(uint32_t size)						: gbuffer<_tBase, _F, ::nwol::GUSAGE_TEXT>(size)				{}
 		template <size_t _S>											gestring			(const _tBase (&data)[_S])			: gestring(_S, data)											{}

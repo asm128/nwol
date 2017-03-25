@@ -14,11 +14,11 @@
 
 #ifdef __GNUC__
 #define UNUSED __attribute__((__unused__))
-#elif defined(__WIN32__)
+#elif defined(__WINDOWS__)
 #	ifdef _DEBUG
-#		define UNUSED(x)
+#		define UNUSED 
 #	else
-#		define UNUSED(x) UNREFERENCED_PARAMETER(x)
+#		define UNUSED 
 #	endif
 #else
 #define UNUSED

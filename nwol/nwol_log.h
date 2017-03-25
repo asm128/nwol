@@ -69,6 +69,13 @@ namespace nwol
 	
 #define nwol_wprintf nwol_printf
 
+#if defined( ANDROID )
+#	define always_printf( ... )					__android_log_print( ANDROID_LOG_DEBUG, __FILE__ ":", __VA_ARGS__ )
+#else
+#	define always_printf( format, ... )			nwol_printf(NWOL_ERROR_SEVERITY_DEBUG, "info", format, __VA_ARGS__)
+#endif
+
+
 #ifdef DEBUG_PRINTF_ENABLED
 #	if defined( ANDROID )
 #		define debug_printf( ... )					__android_log_print( ANDROID_LOG_DEBUG, __FILE__ ":", __VA_ARGS__ )

@@ -97,7 +97,7 @@ namespace nwol
 			return 0;
 		}
 
-								void									clear				(void)																					{
+								void									clear				()																						{
 			this->Count														= 0;
 			this->Data														= 0;
 			if(m_ArrayBuffer.writable())

@@ -1,4 +1,5 @@
 #include "netlib_private.h"
+#include "platform_globals.h"
 
 #include "gbuffer.h"
 #include "nwol_misc.h"
@@ -90,10 +91,12 @@ int32_t									nwol::createConnectionByHostName	( char_t* host_name, uint16_t p
 	reterr_error_if_errored(errMy, "gettaddrinfo failed! Return value: %i", sockErr);
 
 	// Retrieve each address and print out the hex bytes
-	int												iAddress						= 1;
-//    sockaddr_in6 *sockaddr_ipv6;
+#if defined(NWOL_DEBUG_ENABLED)
+	int									iAddress						= 1;
+#endif
 
-	for(const addrinfo* ptr = createdAddrInfo; ptr != NULL ;ptr=ptr->ai_next)  {
+	//sockaddr_in6 *sockaddr_ipv6;
+	for(const addrinfo* ptr = createdAddrInfo; ptr != NULL; ptr = ptr->ai_next)  {
 		debug_printf("getaddrinfo response %d", iAddress++);
 		debug_printf("Flags: 0x%x", ptr->ai_flags);
 		debug_print("Family: ");
@@ -130,12 +133,10 @@ int32_t									nwol::createConnectionByHostName	( char_t* host_name, uint16_t p
 			sockaddr_ipv6								= (struct ::sockaddr_in6 *) ptr->ai_addr;
 			//debug_printf("IPv6 address %s", InetNtop(AF_INET6, &sockaddr_ipv6->sin6_addr, ipwstringbuffer, 46) );
 
-			// We use WSAAddressToString since it is supported on Windows XP and later
+			
 			sockaddr_ip									= (LPSOCKADDR)ptr->ai_addr;
-			// The buffer length is changed by each call to WSAAddresstoString
-			// So we need to set it for each iteration through the loop for safety
-			ipbufferlength								= 46;
-			iRetval										= WSAAddressToStringW(sockaddr_ip, (DWORD) ptr->ai_addrlen, NULL, ipwstringbuffer, &ipbufferlength );
+			ipbufferlength								= 46;	// The buffer length is changed by each call to WSAAddresstoString, so we need to set it for each iteration through the loop for safety
+			iRetval										= WSAAddressToStringW(sockaddr_ip, (DWORD) ptr->ai_addrlen, NULL, ipwstringbuffer, &ipbufferlength );	// We use WSAAddressToString since it is supported on Windows XP and later
 			if (iRetval) {
 				debug_printf("WSAAddressToString failed with %u", WSAGetLastError() );
 			}
@@ -145,8 +146,7 @@ int32_t									nwol::createConnectionByHostName	( char_t* host_name, uint16_t p
 		}
 
 		debug_print("Socket type: ");
-		switch (ptr->ai_socktype) 
-		{
+		switch (ptr->ai_socktype) {
 		case 0				:	debug_print("Unspecified"							);	break;
 		case SOCK_STREAM	:	debug_print("SOCK_STREAM (stream)"					);	break;
 		case SOCK_DGRAM		:	debug_print("SOCK_DGRAM (datagram)"					);	break;
@@ -159,8 +159,7 @@ int32_t									nwol::createConnectionByHostName	( char_t* host_name, uint16_t p
 		}
 
 		debug_print("Protocol: ");
-		switch (ptr->ai_protocol) 
-		{
+		switch (ptr->ai_protocol) {
 		case 0				:	debug_print("Unspecified"							);	break;
 		case IPPROTO_TCP	:	debug_print("IPPROTO_TCP (TCP)"						);	break;
 		case IPPROTO_UDP	:	debug_print("IPPROTO_UDP (UDP)"						);	break;
@@ -260,7 +259,7 @@ int32_t									nwol::sendToConnection				( ::nwol::SConnectionEndpoint* connect
 	int32_t											bytesSent						= ::sendto(connection->sd, (const char_t*)buffer, bytesToSend, 0, (::sockaddr *)&targetConnection->sockaddr, (int)sizeof(::sockaddr_in));
 	reterr_error_if(bytesSent == -1, "Error transmitting data.");
 
-	*_bytesSent = bytesSent;
+	*_bytesSent									= bytesSent;
 	return 0;
 }
 
@@ -314,7 +313,8 @@ int32_t									nwol::getAddress					( ::nwol::SConnectionEndpoint* connection, 
 	if( a3 ) *a3								= (connection->sockaddr.sin_addr.s_addr & 0x00FF0000) >> 0x10;
 	if( a4 ) *a4								= (connection->sockaddr.sin_addr.s_addr & 0xFF000000) >> 0x18;
 #endif
-	if( port_number ) *port_number = connection->sockaddr.sin_port;
+	if( port_number ) 
+		*port_number								= connection->sockaddr.sin_port;
 	return 0;
 }
 

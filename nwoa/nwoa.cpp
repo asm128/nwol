@@ -23,7 +23,7 @@ void										printTypeDebug							()														{
 	static const ::SApplication::TRegistry			memberRegistry							= ::SApplication::get_member_registry();
 	for(uint32_t iMember=0; iMember < memberRegistry.get_member_count(); ++iMember) {
 		const ::nwol::STypeIdentifier					& identifier						= memberRegistry.get_types()[iMember];
-		debug_printf
+		always_printf
 			(	"0x%X: %s::%s %s (%s): %s."
 			,	memberRegistry.get_data_type_ids	()[iMember]
 			,	identifier.NameSpace	.c_str()
@@ -37,7 +37,7 @@ void										printTypeDebug							()														{
 	::nwol::SApplicationNetworkClient::TRegistry			memberRegistryNet					= ::nwol::SApplicationNetworkClient::get_member_registry();
 	for(uint32_t iMember=0; iMember < memberRegistry.get_member_count(); ++iMember) {
 		const ::nwol::STypeIdentifier					& identifier						= memberRegistryNet.get_types()[iMember];
-		debug_printf
+		always_printf
 			(	"0x%X: %s::%s %s (%s): %s."
 			,	memberRegistryNet.get_data_type_ids	()[iMember]
 			,	identifier.NameSpace	.c_str()

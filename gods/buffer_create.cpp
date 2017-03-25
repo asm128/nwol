@@ -335,21 +335,19 @@ void nwol::freeSBufferBlock(SBuffer* pBuffer)
 
 void nwol::checkBlockBoundaries(SBuffer* pBuffer)
 {
-#if defined(DEBUG) || defined(_DEBUG)
+//#if defined(DEBUG) || defined(_DEBUG)
 	char* pBlock = pBuffer->__pBlock;
 	NWOL_DEBUG_CHECK_TYPE checkPre	= *(NWOL_DEBUG_CHECK_TYPE*)	(pBlock-sizeof(NWOL_DEBUG_CHECK_TYPE));
 	NWOL_DEBUG_CHECK_TYPE checkPost	= *(NWOL_DEBUG_CHECK_TYPE*)	&pBlock[pBuffer->nSizeInBytes+calc_align_address(BASETYPE_ALIGN, pBlock)];
-	if( checkPre != BINFIBO )
-	{
+	if( checkPre != BINFIBO ) {
 		error_printf("Memory written before buffer writable block:<SBuffer*>=0x%p. Block address:0x%p. Check value: 0x%X. Current value: 0x%X.", pBuffer, pBlock, BINFIBO, checkPre);
 		_CrtDbgBreak();
 	}
-	if( checkPost != BINFIBO )
-	{
+	if( checkPost != BINFIBO ) {
 		error_printf("Memory written after buffer writable block:<SBuffer*>=0x%p. Block address:0x%p. Check value: 0x%X. Current value: 0x%X.", pBuffer, pBlock, BINFIBO , checkPost);
 		_CrtDbgBreak();
 	}
-#endif
+//#endif
 }
 
 nwol::error_t nwol::createBuffer(GDATA_TYPE DataFormat, GDATA_USAGE Usage, uint32_t nElementCount, nwol::GODS(SBuffer)* out_pBuffer)

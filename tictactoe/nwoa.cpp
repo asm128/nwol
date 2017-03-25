@@ -102,7 +102,7 @@ int32_t										update							(::SApplication& instanceApp, bool exitRequested)	
 						guiSystem.Controls.TextColorsASCII		[controlIndex].ColorPressed			= {COLOR_DARKGREY, COLOR_YELLOW};
 					}
 				}
-				debug_print("Game restarted.");
+				debug_printf("%s", "Game restarted.");
 				break;
 
 			default: 
@@ -115,7 +115,7 @@ int32_t										update							(::SApplication& instanceApp, bool exitRequested)	
 					}
 					int32_t											playerNumber			= cellPicked.IndexPlayer+1;
 					const char										* textAction			= cellPicked.Value ? "Player %u played {%u, %u}" : "Player %u cannot move to {%u, %u}";
-					debug_printf(textAction, playerNumber, cellPicked.Row, cellPicked.Column);
+					always_printf(textAction, playerNumber, cellPicked.Row, cellPicked.Column);
 				}
 				break;
 			}

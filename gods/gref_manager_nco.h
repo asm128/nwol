@@ -111,10 +111,10 @@ namespace nwol
 
 																SReferencePage							(const ::nwol::SReferenceGlobals& globals )				: Globals(globals)
 		{
+#if defined(NWOL_DEBUG_ENABLED)
 			const ::nwol::glabel										& typeName								= _tRef::get_type_name();
 				
 			debug_printf("Loading %s table.", typeName.begin());
-#if defined(DEBUG) || defined(_DEBUG)
 				 if( Globals.DataAlign == 32 )				{ debug_printf("Detected align to 32 bytes: %llu."		, (uint64_t)Globals.DataAlign);	}	
 			else if( Globals.DataAlign == 16 )				{ debug_printf("Detected align to 16 bytes: %llu."		, (uint64_t)Globals.DataAlign);	}	
 			else if( !(Globals.DataAlign % sizeof(void*)) ) { debug_printf("Detected align to native size: %llu."	, (uint64_t)sizeof(void*));		}	
@@ -488,12 +488,14 @@ namespace nwol
 #endif
 		}
 
+#if defined(NWOL_DEBUG_ENABLED)
 		// Output an error message in case of detecting an invalid reference count.
 		static				void											_printRefCountZero						(const _tRef* p)									{
 			errmsg_refcountnull();
 			ERROR_PRINTF_ALLOCID(p);
 			//printInfoString(p);
 		}
+#endif
 
 	public:
 		static inline		gref_manager_nco<_tRef, _ManagerType>&			get										()													{
@@ -516,14 +518,15 @@ namespace nwol
 			)
 		{}
 																			~gref_manager_nco						()													{
-			if (Counters.CreatedRefs)																																		
-			{																																								
-				const ::nwol::glabel			& typeName			= _tRef::get_type_name();																									
+			if (Counters.CreatedRefs) {	
+#if defined(NWOL_DEBUG_ENABLED)
+				static const ::nwol::glabel												& typeName								= _tRef::get_type_name();																									
 				debug_printf("Instance manager(GREF(%s)) shutting down", typeName.begin());																					
 																																											
 				debug_printf("GREF(%s) instances created:	%llu (%llu bytes).", typeName.begin(), (uint64_t)Counters.CreatedRefs,	(uint64_t)(sizeof(_tRef)+sizeof(_TPage::SInstanceEntry))*Counters.CreatedRefs	);
 				debug_printf("GREF(%s) instances acquired:	%llu (%llu bytes).", typeName.begin(), (uint64_t)Counters.AcquiredRefs,	(uint64_t)(sizeof(_tRef)+sizeof(_TPage::SInstanceEntry))*Counters.AcquiredRefs	);
 				debug_printf("GREF(%s) instances freed:		%llu (%llu bytes).", typeName.begin(), (uint64_t)Counters.FreedRefs,	(uint64_t)(sizeof(_tRef)+sizeof(_TPage::SInstanceEntry))*Counters.FreedRefs		);
+#endif
 				if (Counters.CreatedRefs > Counters.FreedRefs) { 																								
 					error_printf("Number of instances not released properly: %llu.", (uint64_t)Counters.CreatedRefs - Counters.FreedRefs);						
 				}																																				
@@ -532,7 +535,7 @@ namespace nwol
 				}																																				
 				else {																																			
 					debug_printf("No count mismatch detected.");																								
-				}																																				
+				}
 			}																																					
 			else if (0 != Counters.FreedRefs) {																													
 				error_printf("Number of instances deleted but not created by this manager: %llu.", (uint64_t)Counters.FreedRefs - Counters.CreatedRefs);		
@@ -541,7 +544,7 @@ namespace nwol
 			// Delete all pages on shutdown.
 			uint32_t																pageCount								= (uint32_t)lstReferencePages.size();
 			if (pageCount) {
-				const ::nwol::glabel&												typeName								= _tRef::get_type_name();
+				static const ::nwol::glabel												& typeName								= _tRef::get_type_name();
 				debug_printf("Preparing to deallocate %llu gcore_ref<%s> pages. (%llu bytes)", (uint64_t)pageCount, typeName.begin(), ((uint64_t)sizeof(_TPage))*pageCount );
 				for (uint32_t i = 0; i < pageCount; i++) {
 					if (lstReferencePages[i])
@@ -575,8 +578,10 @@ namespace nwol
 		// Acquire a reference.
 							_tRef*											acquireRef								(_tRef* p)											{
 			if (p) {
+#if defined(NWOL_DEBUG_ENABLED)
 				if (0 == p->ReferenceCount)
 					_printRefCountZero(p);
+#endif
 
 				NWOL_INTERLOCKED_INCREMENT(p->ReferenceCount);
 				CHECKBUFFEROVERRUNREF(p);
@@ -596,7 +601,9 @@ namespace nwol
 			default:
 				break;
 			case ((REFCOUNT_T)0) - 1:
+#if defined(NWOL_DEBUG_ENABLED)
 				_printRefCountZero(p0);
+#endif
 				p0->ReferenceCount													= 0;
 			case 0:
 				switch(_ManagerType) {

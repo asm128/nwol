@@ -350,8 +350,7 @@ namespace nwol
 		constexpr			_tMat4				operator -					(const _tMat4& other)															const	noexcept	{												return {_11 - other._11	, _12 - other._12	, _13 - other._13	, _14 - other._14	, _21 - other._21	, _22 - other._22	, _23 - other._23	, _24 - other._24	, _31 - other._31	, _32 - other._32	, _33 - other._33	, _34 - other._34	, _41 - other._41	, _42 - other._42	, _43 - other._43	, _44 - other._44	}; }
 		constexpr			_tMat4				operator *					(double scalar)																	const	noexcept	{												return {(_tBase)(_11 * scalar), (_tBase)(_12 * scalar), (_tBase)(_13 * scalar), (_tBase)(_14 * scalar), (_tBase)(_21 * scalar), (_tBase)(_22 * scalar), (_tBase)(_23 * scalar), (_tBase)(_24 * scalar), (_tBase)(_31 * scalar), (_tBase)(_32 * scalar), (_tBase)(_33 * scalar), (_tBase)(_34 * scalar), (_tBase)(_41 * scalar), (_tBase)(_42 * scalar), (_tBase)(_43 * scalar), (_tBase)(_44 * scalar) }; }
 							_tMat4				operator /					(double scalar)																	const				{ error_if(0 == scalar, "Division by zero.");	return {(_tBase)(_11 / scalar), (_tBase)(_12 / scalar), (_tBase)(_13 / scalar), (_tBase)(_14 / scalar), (_tBase)(_21 / scalar), (_tBase)(_22 / scalar), (_tBase)(_23 / scalar), (_tBase)(_24 / scalar), (_tBase)(_31 / scalar), (_tBase)(_32 / scalar), (_tBase)(_33 / scalar), (_tBase)(_34 / scalar), (_tBase)(_41 / scalar), (_tBase)(_42 / scalar), (_tBase)(_43 / scalar), (_tBase)(_44 / scalar) }; }
-		constexpr			_tMat4				operator *					(const _tMat4& right)															const	noexcept
-		{ 
+		constexpr			_tMat4				operator *					(const _tMat4& right)															const	noexcept	{ 
 			return	
 				{ _11*right._11 + _12*right._21 + _13*right._31 + _14*right._41, _11*right._12 + _12*right._22 + _13*right._32 + _14*right._42, _11*right._13 + _12*right._23 + _13*right._33 + _14*right._43, _11*right._14 + _12*right._24 + _13*right._34 + _14*right._44
 				, _21*right._11 + _22*right._21 + _23*right._31 + _24*right._41, _21*right._12 + _22*right._22 + _23*right._32 + _24*right._42, _21*right._13 + _22*right._23 + _23*right._33 + _24*right._43, _21*right._14 + _22*right._24 + _23*right._34 + _24*right._44
@@ -374,7 +373,6 @@ namespace nwol
 		inline				_tMat4&				LinearInterpolate			(const _tMat4&p, const _tMat4&q, double fTime)											noexcept	{ return *this = ((q-p)*fTime)+p; }
 		constexpr			_TCoord3			InverseTranslate			(const _TCoord3& vec)															const	noexcept	{ return { vec.x - _41, vec.y - _42, vec.z - _43 }; }
 							void				InverseTranslateInPlace		(_TCoord3& fpVec)																const	noexcept	{ vec.x -= _41; vec.y -= _42; vec.z -= _43; }
-
 		constexpr			_TCoord3			Transform					(const _TCoord3& v)																const				{
 			return 
 			_TCoord3
@@ -385,7 +383,6 @@ namespace nwol
 				/	(v.x*_14 + v.y*_24 + v.z*_34 + _44)	// w
 			;
 		}
-
 		constexpr			_TCoord3			TransformDirection			(const _TCoord3& vector)														const	noexcept	{
 			return 
 				{	vector.x * _11 + vector.y * _21 + vector.z * _31
@@ -393,7 +390,6 @@ namespace nwol
 				,	vector.x * _13 + vector.y * _23 + vector.z * _33
 				};
 		}
-
 		constexpr			_TCoord3			TransformInverseDirection	(const _TCoord3& _v)															const	noexcept	{
 			return	
 				{	_v.x * _11 + _v.y * _12 + _v.z * _13 
@@ -411,7 +407,7 @@ namespace nwol
 		//	,	fpVec.x * _13 + fpVec.y * _23 + fpVec.z * _33
 		//	};
 		//}
-							void				Identity					(void)																					noexcept	{
+							void				Identity					()																						noexcept	{
 			*this = 
 				{ (_tBase)1,  (_tBase)0,  (_tBase)0,  (_tBase)0
 				, (_tBase)0,  (_tBase)1,  (_tBase)0,  (_tBase)0
@@ -617,8 +613,7 @@ namespace nwol
 
 		constexpr			_tMat4				GetTranspose				()																				const	noexcept	{ return {_11, _21, _31, _41,  _12, _22, _32, _42,  _13, _23, _33, _43,  _14, _24, _34, _44};	}
 		inline constexpr	_TCoord3			GetTranslation				()																				const	noexcept	{ return { _41, _42, _43 }; }
-							_tMat4				GetInverse					()																				const
-		{
+							_tMat4				GetInverse					()																				const				{
 			_tMat4										mTranspose					= GetTranspose()
 				,										mResult						= *this
 				;

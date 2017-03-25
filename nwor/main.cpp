@@ -190,8 +190,7 @@ int											rtMain							(::nwol::SRuntimeValues& runtimeValues)
 			printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
 			runtimeState.Quit							= true; 
 		}
-		else 
-		{
+		else {
 			int32_t											errSetup					= containerForCallbacks.Setup(); 
 			if(0 > errSetup) { 
 				runtimeState.Quit							= true; 
@@ -207,7 +206,7 @@ int											rtMain							(::nwol::SRuntimeValues& runtimeValues)
 					INTERLOCKED_INCREMENT(runtimeState.RenderThreadUsers);
 
 					::nwol::error_t									errLoop						= mainLoop(runtimeState, containerForCallbacks);
-					debug_printf("Main loop exited with code %u.", (uint32_t)errLoop); 
+					always_printf("Main loop exited with code %u.", (uint32_t)errLoop); 
 
 					while(INTERLOCKED_COMPARE_EXCHANGE(runtimeState.RenderThreadUsers, 0, 1))
 						::std::this_thread::sleep_for(::std::chrono::milliseconds(1));;
