@@ -1,4 +1,4 @@
-#include "coord.h"
+#include "nwol_coord.h"
 #include "nwol_log.h"
 
 #ifndef __MATRIX_H__283409263409234649837__
@@ -33,13 +33,12 @@ namespace nwol
 					};
 		}
 		//
-		//
 		inline				TMat2&				operator +=					(const TMat2& other)																	noexcept	{ return *this = operator+(other	); }
 		inline				TMat2&				operator -=					(const TMat2& other)																	noexcept	{ return *this = operator-(other	); }
 		inline				TMat2&				operator *=					(double scalar)																			noexcept	{ return *this = operator*(scalar	); }
 		inline				TMat2&				operator /=					(double scalar)																						{ return *this = operator/(scalar	); }
 		inline				TMat2&				operator *=					(const TMat2& right)																	noexcept	{ return *this = operator*(right	); }
-
+		//
 		template <typename _T>
 		constexpr inline	SMatrix2<_T>		Cast						()																				const	noexcept	{ return { (_T)_11, (_T)_12, (_T)_21, (_T)_22 }; }
 		constexpr			_tBase				GetDeterminant				()																				const	noexcept	{ return _11* _22 - _12* _21;	}
@@ -49,20 +48,17 @@ namespace nwol
 		inline				void				Transpose					(const TMat2& m)																					{ *this = GetTranspose();	}	
 		inline				void				Invert						()																									{ *this = GetInverse();		}
 		inline				TMat2&				LinearInterpolate			(const TMat2& p, const TMat2& q, double fTime)											noexcept	{ return *this = ((q-p)*fTime)+p; }
-							void				RotationZ					(double angle)
-		{	
+							void				RotationZ					(double angle)																			noexcept	{	
 			::nwol::SPairSinCos							angleSinCos					= ::nwol::getSinCos(angle);
 			_11		= (_tBase) angleSinCos.Cos; _12	= (_tBase)angleSinCos.Sin;
 			_21		= (_tBase)-angleSinCos.Sin; _22	= (_tBase)angleSinCos.Cos; 
 		}
-
-		constexpr			TCoord2D			TransformInverse			(const TCoord2D& _v)															const				{
+		constexpr			TCoord2D			TransformInverse			(const TCoord2D& _v)															const	noexcept	{
 			return
 				{ _v.x * _11 + _v.y * _12
 				, _v.x * _21 + _v.y * _22
 				};
 		} // ApplyInverseRota
-
 							void				Identity					()																									{
 			*this =
 				{ (_tBase)1,  (_tBase)0
@@ -113,16 +109,15 @@ namespace nwol
 		inline				_tMat3&				operator /=					(double scalar)																						{ return *this = operator/(scalar	);	}
 		inline				_tMat3&				operator *=					(const _tMat3& right)																	noexcept	{ return *this = operator*(right	);	}
 
-							void				SetTranspose				(const _tMat3& m)																					{ *this = m.GetTranspose();				}
+							void				SetTranspose				(const _tMat3& m)																		noexcept	{ *this = m.GetTranspose();				}
 							void				SetInverse					(const _tMat3& m)																					{ *this = m.GetInverse();				}
-							void				Transpose					(const _tMat3& m)																					{ *this = GetTranspose();				}
+							void				Transpose					(const _tMat3& m)																		noexcept	{ *this = GetTranspose();				}
 							void				Invert						()																									{ *this = GetInverse();					}
 
 		inline				_tMat3&				LinearInterpolate			(const _tMat3&p, const _tMat3&q, double fTime)											noexcept	{ return *this = ((q-p)*fTime)+p; }
 		constexpr			double				GetDeterminant				()																				const	noexcept	{ return _11*(_22*_33-_23*_32) + _12*(_23*_31-_33*_21) + _13*(_21*_32-_22*_31); }
 		constexpr			_tMat3				GetTranspose				()																				const	noexcept	{ return {_11, _21, _31, _12, _22, _32, _13, _23, _33};	}
 							_tMat3				GetInverse					()																				const				{
-			_tMat3										result;
 			_tBase										A, B, C, D, E, F, G, H, I;
 
 			A										= (_22*_33 - _23*_32);/**/ B = (_23*_31 - _21*_33);/**/ C = (_21*_32 - _22*_31);
@@ -134,9 +129,22 @@ namespace nwol
 				+																		_13*(_21*_32-_22*_31)
 				;
 
-			result._11								= (_tBase)(A/det); result._12 = (_tBase)(D/det); result._13 = (_tBase)(G/det);
-			result._21								= (_tBase)(B/det); result._22 = (_tBase)(E/det); result._23 = (_tBase)(H/det);
-			result._31								= (_tBase)(C/det); result._32 = (_tBase)(F/det); result._33 = (_tBase)(I/det);
+			_tMat3										result;
+			if(0 == det) {
+				error_printf("%s", "Matrix determinant is zero.");
+				result									= 
+					{	1, 0, 0
+					,	0, 1, 0
+					,	0, 0, 1
+					};
+			}
+			else {
+				result									= 
+					{	(_tBase)(A/det), (_tBase)(D/det), (_tBase)(G/det)
+					,	(_tBase)(B/det), (_tBase)(E/det), (_tBase)(H/det)
+					,	(_tBase)(C/det), (_tBase)(F/det), (_tBase)(I/det)
+					}
+			}
 
 			return result;
 		}

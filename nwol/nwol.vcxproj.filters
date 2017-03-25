@@ -81,12 +81,6 @@
     <ClInclude Include="nwol_math.h">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="coord.h">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="noise.h">
-      <Filter>math</Filter>
-    </ClInclude>
     <ClInclude Include="text.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -117,17 +111,11 @@
     <ClInclude Include="nwol_error.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="matrix.h">
-      <Filter>math</Filter>
-    </ClInclude>
     <ClInclude Include="platform_globals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="nwol_bit.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="choice.h">
-      <Filter>math</Filter>
     </ClInclude>
     <ClInclude Include="grid.h">
       <Filter>array</Filter>
@@ -197,6 +185,18 @@
     </ClInclude>
     <ClInclude Include="nwol_size.h">
       <Filter>array</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_coord.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_matrix.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_noise.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_choice.h">
+      <Filter>math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

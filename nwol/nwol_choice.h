@@ -1,4 +1,4 @@
-#include "noise.h"
+#include "nwol_noise.h"
 #include "nwol_array.h"
 
 #ifndef __CHOICE_H_9823423__

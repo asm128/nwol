@@ -1,4 +1,4 @@
-#include "coord.h"
+#include "nwol_coord.h"
 
 #ifndef __MISC_H__982143092634987160987328097642398__
 #define __MISC_H__982143092634987160987328097642398__

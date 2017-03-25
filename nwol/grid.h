@@ -1,7 +1,7 @@
 #include "grid_view.h"
 
 #include "text.h"
-#include "noise.h"
+#include "nwol_noise.h"
 
 #ifndef __TILE_H__973098721983761298736129873691872361__
 #define __TILE_H__973098721983761298736129873691872361__

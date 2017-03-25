@@ -182,9 +182,9 @@
     <ClInclude Include="ascii_screen.h" />
     <ClInclude Include="ascii_reference.h" />
     <ClInclude Include="build_global.h" />
-    <ClInclude Include="choice.h" />
+    <ClInclude Include="nwol_choice.h" />
     <ClInclude Include="ascii_color.h" />
-    <ClInclude Include="coord.h" />
+    <ClInclude Include="nwol_coord.h" />
     <ClInclude Include="datatype.h" />
     <ClInclude Include="datausage.h" />
     <ClInclude Include="descriptor.h" />
@@ -199,11 +199,11 @@
     <ClInclude Include="label.h" />
     <ClInclude Include="label_manager.h" />
     <ClInclude Include="nwol_log.h" />
-    <ClInclude Include="matrix.h" />
+    <ClInclude Include="nwol_matrix.h" />
     <ClInclude Include="nwol_memory.h" />
     <ClInclude Include="nwol_misc.h" />
     <ClInclude Include="multithread.h" />
-    <ClInclude Include="noise.h" />
+    <ClInclude Include="nwol_noise.h" />
     <ClInclude Include="nwol_bit.h" />
     <ClInclude Include="nwol_debug.h" />
     <ClInclude Include="nwol_error.h" />

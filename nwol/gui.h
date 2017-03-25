@@ -1,6 +1,6 @@
 #include "nwol_enum.h"
 #include "nwol_input.h"
-#include "coord.h"
+#include "nwol_coord.h"
 #include "ascii_color.h"
 #include "ascii_target.h"
 
