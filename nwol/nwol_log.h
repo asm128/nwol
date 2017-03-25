@@ -1,6 +1,6 @@
 #include "build_global.h"
 #include "nwol_io.h"
-#include "size.h"
+#include "nwol_size.h"
 #include "nwol_string.h"
 
 

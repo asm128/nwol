@@ -1,5 +1,4 @@
-#include "enum.h"
-
+#include "nwol_enum.h"
 
 #ifndef __DATAUSAGE_H__928364092634829374234__
 #define __DATAUSAGE_H__928364092634829374234__

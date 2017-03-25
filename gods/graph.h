@@ -67,8 +67,8 @@ namespace nwol
 					::nwol::error_t						GetAttributeLabel			(::nwol::id_t attributeId	, ::nwol::glabel& output)											{ SAttributeId attrId = attributeId; return Attributes[attrId.dir].GetDescription	(attrId.pos, output);	}
 					::nwol::error_t						GetAttributeType			(::nwol::id_t attributeId	, ::nwol::glabel& output)											{ SAttributeId attrId = attributeId; return Attributes[attrId.dir].GetTypeName		(attrId.pos, output);	}
 		
-		template<typename _TRef>
-					::nwol::error_t						GetAttribute				(::nwol::id_t nodeIndex, ::nwol::id_t attributeIndex, ::nwol::DATA_DIRECTION direction, ::nwol::gptr_nco<_TRef>& attributeStruct)	{
+		template<typename _tRef>
+					::nwol::error_t						GetAttribute				(::nwol::id_t nodeIndex, ::nwol::id_t attributeIndex, ::nwol::DATA_DIRECTION direction, ::nwol::gptr_nco<_tRef>& attributeStruct)	{
 			reterr_error_if(validateNodeIndex(nodeIndex), "invalid node index: '%u'", (uint32_t)nodeIndex);
 
 			CGraphNode											* pNode						= NodeInstances[nodeIndex];
@@ -77,8 +77,8 @@ namespace nwol
 			return 0;		
 		}
 
-		template<typename _TRef>
-					::nwol::error_t						PushAttribute				(::nwol::id_t nodeIndex, ::nwol::DATA_DIRECTION direction, ::nwol::gptr_nco<_TRef>& attributeStruct, ::nwol::id_t* _attributeIndex, const ::nwol::glabel& description)	{
+		template<typename _tRef>
+					::nwol::error_t						PushAttribute				(::nwol::id_t nodeIndex, ::nwol::DATA_DIRECTION direction, ::nwol::gptr_nco<_tRef>& attributeStruct, ::nwol::id_t* _attributeIndex, const ::nwol::glabel& description)	{
 			reterr_error_if(validateNodeIndex(nodeIndex), "invalid node index: '%u'", (uint32_t)nodeIndex);
 
 			::nwol::id_t										attributePos				= -1;
@@ -87,7 +87,7 @@ namespace nwol
 				(	errMy
 				,	"Failed to push attribute reference into attribute registry. Node index: '%u'. Attribute type: '%s'. Attribute description: '%s'."
 				,	(uint32_t)	nodeIndex
-				,	_TRef::get_type_name().begin()
+				,	_tRef::get_type_name().begin()
 				,	description.begin()
 			);
 
@@ -100,7 +100,7 @@ namespace nwol
 				,	"Failed to push attribute index into node. Node index: '%u'. AttributeId: '0x%X'. Attribute type: '%s'. Attribute description: '%s'."
 				,	(uint32_t)		nodeIndex
 				,	(::nwol::id_t)	newId
-				,	_TRef::get_type_name().begin()
+				,	_tRef::get_type_name().begin()
 				,	description.begin()
 				);
 

@@ -1,7 +1,7 @@
 #include "netlib_private.h"
 
 #include "gbuffer.h"
-#include "misc.h"
+#include "nwol_misc.h"
 
 #include <stdio.h>
 

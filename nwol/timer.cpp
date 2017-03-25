@@ -1,4 +1,4 @@
-#include "timer.h"
+#include "nwol_timer.h"
 #include <chrono>
 
 #if defined(__WINDOWS__)

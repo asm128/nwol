@@ -8,22 +8,22 @@ namespace nwol
 {
 #define GListNCO(baseType)				::nwol::glist_nco			<GREF(baseType)>
 #define GLstNCO(NameSpace, baseType)	::nwol::glist_nco			<NameSpace::GREF(baseType)>
-	template<typename _TRef, ::nwol::GDATA_TYPE m_DataType = GTYPEID_POINTER_MAKE(_TRef), int32_t m_DataBytes = GTYPEID_TOTALBYTES(GTYPEID_POINTER_MAKE(_TRef))> class glist_nco : public glist_base<_TRef, m_DataType, m_DataBytes>
+	template<typename _tRef, ::nwol::GDATA_TYPE m_DataType = GTYPEID_POINTER_MAKE(_tRef), int32_t m_DataBytes = GTYPEID_TOTALBYTES(GTYPEID_POINTER_MAKE(_tRef))> class glist_nco : public glist_base<_tRef, m_DataType, m_DataBytes>
 	{
-		typedef glist_base<_TRef, m_DataType, m_DataBytes>	base_list_type;
+		typedef glist_base<_tRef, m_DataType, m_DataBytes>	base_list_type;
 		using			base_list_type::					glist_base;
 	public:
 															glist_nco				()																															= default;
 															glist_nco				(uint32_t nInitialSize)																										{	resize(nInitialSize);	}
 		//
-		virtual			::nwol::error_t						create					(_TRef** in_lstCoreInstances, uint32_t nInstanceCount)																		{
+		virtual			::nwol::error_t						create					(_tRef** in_lstCoreInstances, uint32_t nInstanceCount)																		{
 			reterr_error_if(nInstanceCount && 0 == in_lstCoreInstances, "%s", "Cannot create list from a null address!");
 
 			if( this->m_BufferData.writable()
 				&& (this->Count >= nInstanceCount || this->m_BufferData->nSizeInBytes >= (nInstanceCount*m_DataBytes) ) )
 			{
 				uint32_t												iCoreInstance;	
-				_TRef**													pRefArray				= (_TRef**)this->m_BufferData->pByteArray;
+				_tRef**													pRefArray				= (_tRef**)this->m_BufferData->pByteArray;
 				::nwol::release(pRefArray, &this->Count);
 
 				for(iCoreInstance = 0; iCoreInstance < nInstanceCount; iCoreInstance++)
@@ -36,7 +36,7 @@ namespace nwol
 				reterr_error_if(0 > ::nwol::createBuffer(m_DataType, GUSAGE_POINTER, nInstanceCount, &newListBuffer), "Cannot create buffer for pointer list of size %u! Out of memory?", nInstanceCount);
 
 				for (uint32_t iCoreInstance = 0; iCoreInstance < nInstanceCount; iCoreInstance++)
-					((_TRef**)newListBuffer->pByteArray)[iCoreInstance]	= ::nwol::acquire(in_lstCoreInstances[iCoreInstance]);
+					((_tRef**)newListBuffer->pByteArray)[iCoreInstance]	= ::nwol::acquire(in_lstCoreInstances[iCoreInstance]);
 
 				this->SetBufferData(newListBuffer);
 			}
@@ -44,7 +44,7 @@ namespace nwol
 		}
 
 		//
-		virtual			::nwol::error_t						create					(::nwol::gptr_nco<_TRef>* in_lstCoreInstances, uint32_t nInstanceCount)														{
+		virtual			::nwol::error_t						create					(::nwol::gptr_nco<_tRef>* in_lstCoreInstances, uint32_t nInstanceCount)														{
 			if (nInstanceCount && 0 == in_lstCoreInstances) {
 				error_printf("%s", "Cannot create list from a null address!");
 				return -1;
@@ -52,7 +52,7 @@ namespace nwol
 			GPNCO(::nwol, SBuffer)										newListBuffer;
 			reterr_error_if(0 > ::nwol::createBuffer(m_DataType, GUSAGE_POINTER, nInstanceCount, &newListBuffer), "Cannot create buffer for pointer list of size %u! Out of memory?", nInstanceCount);
 			for (uint32_t iCoreInstance = 0; iCoreInstance < nInstanceCount; iCoreInstance++)
-				((_TRef**)newListBuffer->pByteArray)[iCoreInstance]		= in_lstCoreInstances[iCoreInstance].acquire();
+				((_tRef**)newListBuffer->pByteArray)[iCoreInstance]		= in_lstCoreInstances[iCoreInstance].acquire();
 		
 			this->SetBufferData(newListBuffer);
 
@@ -69,10 +69,10 @@ namespace nwol
 			}
 			else if (this->m_BufferData && this->m_BufferData.am_I_owning() && newSize <= (this->m_BufferData->nSizeInBytes / m_DataBytes)) {
 				if (newSize > this->Count)
-					memset(&((_TRef**)this->m_BufferData->pByteArray)[this->Count], 0, sizeof(_TRef*)*(newSize - this->Count));
+					memset(&((_tRef**)this->m_BufferData->pByteArray)[this->Count], 0, sizeof(_tRef*)*(newSize - this->Count));
 				else
 					for (uint32_t iRef = (uint32_t)newSize; iRef < this->Count; iRef++)
-						::nwol::release(&((_TRef**)this->m_BufferData->pByteArray)[iRef]);
+						::nwol::release(&((_tRef**)this->m_BufferData->pByteArray)[iRef]);
 
 				this->m_BufferData->nElementCount = this->Count			= (uint32_t)newSize;
 			}
@@ -83,9 +83,9 @@ namespace nwol
 					GPNCO(::nwol, SBuffer)								oldListBuffer			= this->m_BufferData; //GetBufferData();
 					uint32_t iCoreInstance = 0, nMaxCount = (uint32_t)nwol::min(this->Count, (uint32_t)newSize);
 					for (; iCoreInstance < nMaxCount; iCoreInstance++)
-						((_TRef**)newListBuffer->pByteArray)[iCoreInstance]	= ::nwol::acquire(((_TRef**)oldListBuffer->pByteArray)[iCoreInstance]);
+						((_tRef**)newListBuffer->pByteArray)[iCoreInstance]	= ::nwol::acquire(((_tRef**)oldListBuffer->pByteArray)[iCoreInstance]);
 					if (iCoreInstance < newSize)
-						memset(&((_TRef**)newListBuffer->pByteArray)[iCoreInstance], 0, sizeof(_TRef*)*(newSize - nMaxCount));
+						memset(&((_tRef**)newListBuffer->pByteArray)[iCoreInstance], 0, sizeof(_tRef*)*(newSize - nMaxCount));
 				}
 				else
 					memset(newListBuffer->pByteArray, 0, m_DataBytes*newSize);
@@ -96,7 +96,7 @@ namespace nwol
 		}
 
 		virtual			::nwol::error_t						pack					()																															{
-			glist_nco<_TRef, m_DataType, m_DataBytes>				lstPacked				(this->get_valid_element_count());
+			glist_nco<_tRef, m_DataType, m_DataBytes>				lstPacked				(this->get_valid_element_count());
 			uint32_t												iPacked					= 0;
 			for (uint32_t iLocal = 0; iLocal < this->Count; iLocal++) {
 				if (this->begin()[iLocal]) {
@@ -109,7 +109,7 @@ namespace nwol
 			return 0;
 		}
 		
-						::nwol::error_t						push					(_TRef* CoreInstance)																										{
+						::nwol::error_t						push					(_tRef* CoreInstance)																										{
 			uint32_t												nOldSize				= this->Count;
 			::nwol::error_t											errMy					= this->resize(nOldSize + 1);
 			if (0 > errMy) {
@@ -121,23 +121,23 @@ namespace nwol
 			return 0;
 		}
 		
-						::nwol::error_t						pop						(_TRef** out_pElement = 0)																									{
+						::nwol::error_t						pop						(_tRef** out_pElement = 0)																									{
 			reterr_error_if(0 == this->Count	, "%s", "Cannot pop elements from an empty list.");
 			reterr_error_if(!this->m_BufferData	, "%s", "Invalid buffer data.");
 
-			_TRef													* oldElement			= 0;
+			_tRef													* oldElement			= 0;
 			if (this->m_BufferData.am_I_owning()) {
 				if (out_pElement) {
 					oldElement										= *out_pElement;
-					*out_pElement									= ((_TRef**)this->m_BufferData->pByteArray)[this->m_BufferData->nElementCount = --this->Count];
+					*out_pElement									= ((_tRef**)this->m_BufferData->pByteArray)[this->m_BufferData->nElementCount = --this->Count];
 				}
 				else 
-					oldElement										= ((_TRef**)this->m_BufferData->pByteArray)[this->m_BufferData->nElementCount = --this->Count];
+					oldElement										= ((_tRef**)this->m_BufferData->pByteArray)[this->m_BufferData->nElementCount = --this->Count];
 			}
 			else {
-				_TRef													* newElement			= 0;
+				_tRef													* newElement			= 0;
 				if (out_pElement)
-					newElement = ::nwol::acquire(((_TRef**)this->m_BufferData->pByteArray)[this->Count - 1]);
+					newElement = ::nwol::acquire(((_tRef**)this->m_BufferData->pByteArray)[this->Count - 1]);
 
 				::nwol::error_t											errMy					= this->resize(this->Count - 1);
 				if (-1 == errMy) {
@@ -156,7 +156,7 @@ namespace nwol
 			return 0;
 		}
 		
-						::nwol::error_t						insert					(_TRef* CoreInstance, uint32_t nIndex)																						{
+						::nwol::error_t						insert					(_tRef* CoreInstance, uint32_t nIndex)																						{
 			reterr_error_if(nIndex >= this->Count, "Invalid index! Index=%u. Max index=%u", nIndex, this->Count - 1);
 
 			uint32_t												oldSize					= this->Count;
@@ -170,11 +170,11 @@ namespace nwol
 
 				uint32_t												iElement;
 				for (iElement = 0; iElement < nIndex; iElement++)
-					((_TRef**)newListBuffer->pByteArray)[iElement]		= ::nwol::acquire(((_TRef**)this->m_BufferData->pByteArray)[iElement]);
-				((_TRef**)newListBuffer->pByteArray)[iElement]		= ::nwol::acquire(CoreInstance);
+					((_tRef**)newListBuffer->pByteArray)[iElement]		= ::nwol::acquire(((_tRef**)this->m_BufferData->pByteArray)[iElement]);
+				((_tRef**)newListBuffer->pByteArray)[iElement]		= ::nwol::acquire(CoreInstance);
 				iElement++;
 				for (; iElement < newSize; iElement++)
-					((_TRef**)newListBuffer->pByteArray)[iElement]		= ::nwol::acquire(((_TRef**)this->m_BufferData->pByteArray)[iElement - 1]);
+					((_tRef**)newListBuffer->pByteArray)[iElement]		= ::nwol::acquire(((_tRef**)this->m_BufferData->pByteArray)[iElement - 1]);
 				this->SetBufferData(newListBuffer);
 			}
 			else {
@@ -189,14 +189,14 @@ namespace nwol
 
 #define GListObj(baseType)				::nwol::glist_obj		<GREF(baseType)>
 #define GLstObj(NameSpace, baseType)	::nwol::glist_obj		<NameSpace::GREF(baseType)>
-	template<typename _TRef, GDATA_TYPE m_DataType = GTYPEID_POINTER_MAKE(_TRef), int32_t m_DataBytes = GTYPEID_TOTALBYTES(GTYPEID_POINTER_MAKE(_TRef))> class glist_obj : public glist_nco<_TRef, m_DataType, m_DataBytes>
+	template<typename _tRef, GDATA_TYPE m_DataType = GTYPEID_POINTER_MAKE(_tRef), int32_t m_DataBytes = GTYPEID_TOTALBYTES(GTYPEID_POINTER_MAKE(_tRef))> class glist_obj : public glist_nco<_tRef, m_DataType, m_DataBytes>
 	{
-		typedef	glist_nco<_TRef, m_DataType, m_DataBytes>	base_list_type;
-		typedef				typename _TRef::TBase			_tBase;
+		typedef	glist_nco<_tRef, m_DataType, m_DataBytes>	base_list_type;
+		typedef				typename _tRef::TBase			_tBase;
 	public:
 		inline												glist_obj				()																															{}
 		inline												glist_obj				(uint32_t nInitialSize)												: base_list_type::glist_nco(nInitialSize)				{}
-															glist_obj				(const ::nwol::gptr_nco<_TRef>* sourceList, uint32_t nElementCount)	: base_list_type::glist_nco(nElementCount)				{
+															glist_obj				(const ::nwol::gptr_nco<_tRef>* sourceList, uint32_t nElementCount)	: base_list_type::glist_nco(nElementCount)				{
 			if (sourceList) {
 				for (uint32_t i = 0; i < this->Count; ++i)
 					this->Data[i]										= sourceList[i].acquire();
@@ -214,7 +214,7 @@ namespace nwol
 			if (this->m_BufferData.writable()
 				&& (this->Count >= nInstanceCount || this->m_BufferData->nSizeInBytes >= (nInstanceCount*m_DataBytes)))
 			{
-				gcreateAll((_TRef**)this->m_BufferData->pByteArray, in_lstCoreInstances, nInstanceCount);
+				gcreateAll((_tRef**)this->m_BufferData->pByteArray, in_lstCoreInstances, nInstanceCount);
 				this->m_BufferData->nElementCount = this->Count		= nInstanceCount;
 			}
 			else {
@@ -222,7 +222,7 @@ namespace nwol
 				reterr_error_if(0 > ::nwol::createBuffer(m_DataType, GUSAGE_POINTER, nInstanceCount, &newListBuffer), "Cannot create buffer for pointer list of size %u! Out of memory?", nInstanceCount);
 				memset(newListBuffer->pByteArray, 0, nInstanceCount*m_DataBytes);
 
-				gcreateAll((_TRef**)newListBuffer->pByteArray, in_lstCoreInstances, nInstanceCount);
+				gcreateAll((_tRef**)newListBuffer->pByteArray, in_lstCoreInstances, nInstanceCount);
 				this->SetBufferData(newListBuffer);
 			}
 			return 0;
@@ -231,12 +231,12 @@ namespace nwol
 		virtual				::nwol::error_t					create_all				()																															{
 			GPNCO(::nwol, SBuffer)									newListBuffer;
 			if(this->m_BufferData.writable()) 
-				gcreateAll((_TRef**)this->m_BufferData->pByteArray, this->Count);
+				gcreateAll((_tRef**)this->m_BufferData->pByteArray, this->Count);
 			else {
 				if(this->Count) {
 					reterr_error_if(0 > ::nwol::createBuffer(m_DataType, GUSAGE_POINTER, this->Count, this->m_BufferData->nColumnCount, this->m_BufferData->nSliceCount, &newListBuffer), "Cannot create buffer for pointer list of size %u! Out of memory?", this->Count);
 					memset(newListBuffer->pByteArray, 0, m_DataBytes*this->Count);
-					gcreateAll((_TRef**)newListBuffer->pByteArray, this->Count);
+					gcreateAll((_tRef**)newListBuffer->pByteArray, this->Count);
 				}
 				this->SetBufferData(newListBuffer);
 			}
@@ -247,11 +247,11 @@ namespace nwol
 	//-------------------------------------------------------------- glist_pod -----------------------------------------------------------------------
 #define GListPOD(baseType)				::nwol::glist_pod		<GREF(baseType)>
 #define GLstPOD(NameSpace, baseType)	::nwol::glist_pod		<NameSpace::GREF(baseType)>
-	template<typename _TRef, GDATA_TYPE m_DataType = GTYPEID_POINTER_MAKE(_TRef), int32_t m_DataBytes = GTYPEID_TOTALBYTES(GTYPEID_POINTER_MAKE(_TRef))> class glist_pod : public glist_obj<_TRef, m_DataType, m_DataBytes>
+	template<typename _tRef, GDATA_TYPE m_DataType = GTYPEID_POINTER_MAKE(_tRef), int32_t m_DataBytes = GTYPEID_TOTALBYTES(GTYPEID_POINTER_MAKE(_tRef))> class glist_pod : public glist_obj<_tRef, m_DataType, m_DataBytes>
 	{
 	public:
-		using				glist_obj<_TRef>::				glist_obj;
-		typedef				typename _TRef::TBase			_tBase;
+		using				glist_obj<_tRef>::				glist_obj;
+		typedef				typename _tRef::TBase			_tBase;
 		//----------------------------------				-------------
 		virtual				::nwol::error_t					serialize				(FILE* fp)																			const									{
 			reterr_error_if(0 == fp, "%s", "A null pointer is not a valid file handler!");
@@ -279,7 +279,7 @@ namespace nwol
 			reterr_error_if(0 > ::nwol::createBuffer(m_DataType, GUSAGE_POINTER, nSize, &newListBuffer), "Cannot create buffer for pointer list of size %u! Out of memory?", nSize);
 			memset(newListBuffer->pByteArray, 0, m_DataBytes*nSize);
 
-			uint32_t												instancesRead			= fileDeserializeData((_TRef**)newListBuffer->pByteArray, nSize, fp);
+			uint32_t												instancesRead			= fileDeserializeData((_tRef**)newListBuffer->pByteArray, nSize, fp);
 			reterr_error_if(nSize != instancesRead, "Failed to read the requested instances! %u requested to be read, %u actually read.", nSize, instancesRead);
 
 			this->SetBufferData(newListBuffer);
@@ -318,7 +318,7 @@ namespace nwol
 			}
 
 			memset(newListBuffer->pByteArray, 0, m_DataBytes*nSize);
-			bytesRead											+= memDeserializeData((_TRef**)newListBuffer->pByteArray, nSize, ((char*)in_pByteArray) + bytesRead);
+			bytesRead											+= memDeserializeData((_tRef**)newListBuffer->pByteArray, nSize, ((char*)in_pByteArray) + bytesRead);
 			this->SetBufferData(newListBuffer);
 
 			return bytesRead;
@@ -348,7 +348,7 @@ namespace nwol
 			reterr_error_if(0 > ::nwol::createBuffer(m_DataType, GUSAGE_POINTER, nSize, &newListBuffer), "Cannot create buffer for pointer list of size %u! Out of memory?", nSize);
 
 			memset(newListBuffer->pByteArray, 0, m_DataBytes*nSize);
-			uint32_t												instancesRead			= fileReadData((_TRef**)newListBuffer->pByteArray, nSize, fp);
+			uint32_t												instancesRead			= fileReadData((_tRef**)newListBuffer->pByteArray, nSize, fp);
 			reterr_error_if(nSize != instancesRead, "Failed to read the requested instances! %u requested to be read, %u actually read.", nSize, instancesRead);
 			this->SetBufferData(newListBuffer);
 			return 0;
@@ -386,7 +386,7 @@ namespace nwol
 			}
 
 			memset(newListBuffer->pByteArray, 0, m_DataBytes*nSize);
-			bytesRead											+= memReadData((_TRef**)newListBuffer->pByteArray, nSize, ((char*)in_pByteArray) + bytesRead);
+			bytesRead											+= memReadData((_tRef**)newListBuffer->pByteArray, nSize, ((char*)in_pByteArray) + bytesRead);
 			this->SetBufferData(newListBuffer);
 
 			return bytesRead;

@@ -10,7 +10,6 @@ namespace nwol
 		virtual	void										OnKeyUp									(uint8_t key)											= 0;
 		virtual	void										OnKeyDown								(uint8_t key)											= 0;
 	};
-
 	struct IHandlerMouse		{
 		virtual	void										OnMouseButtonUp							(uint8_t buttonIndex)									= 0;
 		virtual	void										OnMouseButtonDown						(uint8_t buttonIndex)									= 0;

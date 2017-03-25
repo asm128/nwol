@@ -11,8 +11,7 @@ namespace nwol
 #pragma pack( push, 1 )
 	// This type was intended to wrap native types and other basic PODs but now it's also used for most type of objects.
 	template <typename _tBase,::nwol:: GDATA_TYPE _F, ::nwol::GDATA_USAGE _USAGE = ::nwol::GUSAGE_NUMERIC> 
-	struct supertype
-	{
+	struct supertype {
 		// Typedef so we don't have to write it all the time.
 		typedef						supertype<_tBase, _F, _USAGE>	stype;
 		typedef						_tBase							TBase;

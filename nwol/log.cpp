@@ -1,6 +1,6 @@
-#include "log.h"
+#include "nwol_log.h"
 
-#include <string.h>
+#include "nwol_string.h"
 #include <time.h>
 
 #if defined(ANDROID) || defined(__linux__)

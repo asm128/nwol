@@ -1,7 +1,4 @@
 #include "runtime.h"
-#include "platform_globals.h"
-#include "log.h"
-#include "nwol_error.h"
 #include "multithread.h"
 
 #if defined(__ANDROID__)
@@ -9,8 +6,6 @@
 #elif defined(__LINUX__)
 #error "Not implemented."
 #elif defined(__WINDOWS__)
-#include <Windows.h>
-#include <crtdbg.h>
 #include <process.h>
 #else 
 #error "Platform not supported."

@@ -1,10 +1,10 @@
 #include "netlib_server.h"
 #include "netlib_private.h"
 
-#include "misc.h"
+#include "nwol_misc.h"
 
 #include "gref_definition.h"
-#include "size.h"
+#include "nwol_size.h"
 
 #include <thread>
 #if defined(__WINDOWS__)

@@ -2,7 +2,7 @@
 
 #include "runtime.h"
 
-#include "input.h"
+#include "nwol_input.h"
 #include "text.h"
 #include "ascii_screen.h"
 #include "ascii_color.h"

@@ -12,19 +12,19 @@ namespace nwol
 	// This is the shared_ptr-like object for non-copiable non-constructable objects.
 #define GPtrNCO(baseType)			::nwol::gptr_nco<GREF(baseType)>				
 #define GPNCO(NameSpace, baseType)	::nwol::gptr_nco<NameSpace::GREF(baseType)>	
-	template <typename _TRef> class gptr_nco {
+	template <typename _tRef> class gptr_nco {
 	protected:
-		typedef					void							(*TFunctionRelease)		(_TRef**)																						;
-		typedef					typename						_TRef::TBase			_tBase																							;
-								_TRef													* InstanceRef																					= 0;
+		typedef					void							(*TFunctionRelease)		(_tRef**)																						;
+		typedef					typename						_tRef::TBase			_tBase																							;
+								_tRef													* InstanceRef																					= 0;
 
 	public:
 		virtual													~gptr_nco				()																								{ ::nwol::release(&InstanceRef);									}	// 
 		inline constexpr										gptr_nco				()																								= default;
-		inline constexpr										gptr_nco				(_TRef* instanceRef)																			: InstanceRef(instanceRef)											{}
-		inline													gptr_nco				(const gptr_nco<_TRef>& other)																	: InstanceRef(::nwol::acquire(other.InstanceRef))					{}
+		inline constexpr										gptr_nco				(_tRef* instanceRef)																			: InstanceRef(instanceRef)											{}
+		inline													gptr_nco				(const gptr_nco<_tRef>& other)																	: InstanceRef(::nwol::acquire(other.InstanceRef))					{}
 		// virtual operators ---------------				----------------------------------------------------------------
-		virtual					gptr_nco&						operator =				(_TRef* instanceRef)																			{
+		virtual					gptr_nco&						operator =				(_tRef* instanceRef)																			{
 			if (instanceRef == InstanceRef) {
 				::nwol::release(&instanceRef);
 				return *this;
@@ -33,7 +33,7 @@ namespace nwol
 			return *this;
 		}
 
-		virtual					gptr_nco&						operator =				(const gptr_nco<_TRef>& other)																	{
+		virtual					gptr_nco&						operator =				(const gptr_nco<_tRef>& other)																	{
 			if(other.InstanceRef != InstanceRef)
 				_set(other.acquire());
 			return *this;
@@ -41,20 +41,20 @@ namespace nwol
 
 		virtual					_tBase*							operator->				()																								{ return InstanceRef->get();									}
 		inline constexpr		const _tBase*					operator->				()																			const				{ return InstanceRef->get();									}
-								_TRef**							operator &				()																					noexcept	{ return &InstanceRef;											}
-		inline constexpr		_TRef* const*					operator &				()																			const	noexcept	{ return &InstanceRef;											}
-																operator _TRef*&		()																								{ return InstanceRef;											}
+								_tRef**							operator &				()																					noexcept	{ return &InstanceRef;											}
+		inline constexpr		_tRef* const*					operator &				()																			const	noexcept	{ return &InstanceRef;											}
+																operator _tRef*&		()																								{ return InstanceRef;											}
 		// inline constexpr		operators
-		inline constexpr										operator _TRef* const &	()																			const	noexcept	{ return InstanceRef;											}
+		inline constexpr										operator _tRef* const &	()																			const	noexcept	{ return InstanceRef;											}
 		inline constexpr		 bool							operator!				()																			const	noexcept	{ return 0 == InstanceRef;										}
-		inline constexpr		 bool							operator==				(const gptr_nco<_TRef>& other)												const	noexcept	{ return InstanceRef == other.InstanceRef;						}
-		inline constexpr		 bool							operator!=				(const gptr_nco<_TRef>& other)												const	noexcept	{ return InstanceRef != other.InstanceRef;						}
-		inline constexpr		 bool							operator==				(_TRef* const & other)														const	noexcept	{ return InstanceRef == other;									}
-		inline constexpr		 bool							operator!=				(_TRef* const & other)														const	noexcept	{ return InstanceRef != other;									}
+		inline constexpr		 bool							operator==				(const gptr_nco<_tRef>& other)												const	noexcept	{ return InstanceRef == other.InstanceRef;						}
+		inline constexpr		 bool							operator!=				(const gptr_nco<_tRef>& other)												const	noexcept	{ return InstanceRef != other.InstanceRef;						}
+		inline constexpr		 bool							operator==				(_tRef* const & other)														const	noexcept	{ return InstanceRef == other;									}
+		inline constexpr		 bool							operator!=				(_tRef* const & other)														const	noexcept	{ return InstanceRef != other;									}
 
 		// virtual methods -	--------------------			--------------------------------------------------------											--
 		virtual					 void							free					()																								{ _set(0);														}
-		virtual					 void							acquire					(_TRef* const & instanceRef)																	{ 
+		virtual					 void							acquire					(_tRef* const & instanceRef)																	{ 
 			if(instanceRef != InstanceRef)
 				_set(instanceRef ? instanceRef->acquire() : nullptr);	
 		}
@@ -65,19 +65,19 @@ namespace nwol
 
 		// inline constexpr		methods
 		inline constexpr		bool							valid					()																			const	noexcept	{ return 0 != InstanceRef;											}
-		inline constexpr		_TRef*							get_pointer				()																			const	noexcept	{ return InstanceRef;												}
+		inline constexpr		_tRef*							get_pointer				()																			const	noexcept	{ return InstanceRef;												}
 		inline constexpr		bool							am_I_owning				()																			const	noexcept	{ return InstanceRef == 0	|| InstanceRef->ReferenceCount == 1;	}
 		inline constexpr		bool							writable				()																			const	noexcept	{ return InstanceRef		&& InstanceRef->ReferenceCount == 1;	}
-		inline constexpr		_TRef*							acquire					()																			const	noexcept	{ return InstanceRef		 ? InstanceRef->acquire() : nullptr;	}
+		inline constexpr		_tRef*							acquire					()																			const	noexcept	{ return InstanceRef		 ? InstanceRef->acquire() : nullptr;	}
 
 		// static methods
-		static inline 			const ::nwol::gsyslabel&		get_type_name			()																								{ return _TRef::get_type_name();									}
+		static inline 			const ::nwol::gsyslabel&		get_type_name			()																								{ return _tRef::get_type_name();									}
 		static inline constexpr	uint32_t						get_type_size			()																					noexcept	{ return sizeof(_tBase);											}
 
 	protected:
 		// virtual protected
-		virtual					void							_set					(_TRef* const & instanceRef)																	{
-			_TRef														* old					= InstanceRef;
+		virtual					void							_set					(_tRef* const & instanceRef)																	{
+			_tRef														* old					= InstanceRef;
 			InstanceRef												= instanceRef;
 			::nwol::release(&old);
 		}
@@ -87,26 +87,26 @@ namespace nwol
 	// This is the shared_ptr-like object for proper C++ objects that can be copied or initialized by the generic manager.
 #define GPtrObj(baseType)			::nwol::gptr_obj<GREF(baseType)>				
 #define GPObj(NameSpace, baseType)	::nwol::gptr_obj<NameSpace::GREF(baseType)>	
-	template <typename _TRef> 
-	class gptr_obj : public gptr_nco<_TRef>
+	template <typename _tRef> 
+	class gptr_obj : public gptr_nco<_tRef>
 	{
-		using					gptr_nco<_TRef>::				InstanceRef;
+		using					gptr_nco<_tRef>::				InstanceRef;
 	protected:
-		typedef					typename						_TRef::TBase			_tBase																							;
+		typedef					typename						_tRef::TBase			_tBase																							;
 		virtual					void							_create					()																								{ gcreate(&InstanceRef);								}
 		virtual					void							_create					(const _tBase& other)																			{ gcreate(&InstanceRef, other);							}
 	public:
 		inline													gptr_obj				(const _tBase* initData)																		{ if (initData) gcreate(&InstanceRef, *initData);		}
-		inline													gptr_obj				(const gptr_nco<_TRef>& other)																	: gptr_nco<_TRef>::gptr_nco(other)						{}
+		inline													gptr_obj				(const gptr_nco<_tRef>& other)																	: gptr_nco<_tRef>::gptr_nco(other)						{}
 		inline													gptr_obj				(const _tBase& initData)																		{ gcreate(&InstanceRef, initData);						}
 		inline constexpr										gptr_obj				()																								= default;
 		inline constexpr										gptr_obj				(const int initData)																			{}
-		inline constexpr										gptr_obj				(_TRef* instanceRef)																			: gptr_nco<_TRef>::gptr_nco(instanceRef)				{}
+		inline constexpr										gptr_obj				(_tRef* instanceRef)																			: gptr_nco<_tRef>::gptr_nco(instanceRef)				{}
 		// virtual methods
 		virtual					void							create					()																								{ _create();											}
 		virtual					void							create					(const _tBase& other)																			{ _create(other);										}
 		// operators
-		using					gptr_nco<_TRef>::				operator->;
+		using					gptr_nco<_tRef>::				operator->;
 		virtual					_tBase*							operator->				()																								{
 			if(0 == InstanceRef)
 				_create();
@@ -116,12 +116,12 @@ namespace nwol
 		// Clone in-place
 		virtual					void							unbind					()																								{ gclone(&InstanceRef, InstanceRef);					}
 		// For cloning in-place, use unbind()
-		virtual					void							clone					(gptr_obj<_TRef>& target)													const				{ 
+		virtual					void							clone					(gptr_obj<_tRef>& target)													const				{ 
 			if (0 == InstanceRef) {															
 				target.free();									
 				return;													
 			}				
-			gptr_obj<_TRef>												_target;
+			gptr_obj<_tRef>												_target;
 			_target.create();
 			gcopy(_target, InstanceRef);											
 			target													= _target;
@@ -133,17 +133,17 @@ namespace nwol
 	// It also defines methods for storing and loading the data into a file or a memory address.
 #define GPtrPOD(baseType)			::nwol::gptr_pod<GREF(baseType)>				
 #define GPPOD(NameSpace, baseType)	::nwol::gptr_pod<NameSpace::GREF(baseType)>	
-	template <typename _TRef> 
-	class gptr_pod : public gptr_obj<_TRef>
+	template <typename _tRef> 
+	class gptr_pod : public gptr_obj<_tRef>
 	{
-		using					gptr_nco<_TRef>::				InstanceRef;
+		using					gptr_nco<_tRef>::				InstanceRef;
 	public:
-		typedef					typename						_TRef::TBase			_tBase																							;
+		typedef					typename						_tRef::TBase			_tBase																							;
 
-		using					gptr_obj<_TRef>::				gptr_obj;
+		using					gptr_obj<_tRef>::				gptr_obj;
 
-		virtual					const ::nwol::gdescriptor		get_descriptor			()																			const				{ return _TRef::get_type_descriptor();									}
-		virtual					int32_t							compare_data			(_TRef* other)																const				{ 
+		virtual					const ::nwol::gdescriptor		get_descriptor			()																			const				{ return _tRef::get_type_descriptor();									}
+		virtual					int32_t							compare_data			(_tRef* other)																const				{ 
 			if (0 == InstanceRef && 0 == other)																					
 				return 0;																								
 			else if (0 == InstanceRef || 0 == other)																			
@@ -190,7 +190,7 @@ namespace nwol
 			if (0 == in_fp)
 				return -1;
 
-			::nwol::gptr_pod<_TRef>										newInstance;
+			::nwol::gptr_pod<_tRef>										newInstance;
 			static constexpr	const uint32_t							nReadBytes				= ::nwol::get_type_size<_tBase>();
 			newInstance.create();
 			memcpy(newInstance.get_address(), in_fp, nReadBytes);
@@ -212,30 +212,30 @@ namespace nwol
 #define GPtrPODX(baseType)			::nwol::gptr_podx<GREF(baseType)>				
 #define GPPODX(NameSpace, baseType)	::nwol::gptr_podx<NameSpace::GREF(baseType)>	
 
-	template<typename _TRef> class gptr_podx : public gptr_pod<_TRef>
+	template<typename _tRef> class gptr_podx : public gptr_pod<_tRef>
 	{
-		using					gptr_nco<_TRef>::				InstanceRef																												;
-		using					gptr_nco<_TRef>::				valid																													;
+		using					gptr_nco<_tRef>::				InstanceRef																												;
+		using					gptr_nco<_tRef>::				valid																													;
 	protected:
-		typedef					typename						_TRef::TBase			_tBase																							;
+		typedef					typename						_tRef::TBase			_tBase																							;
 
-																gptr_podx				(void (*_onCreate)(_tBase *), void(*_onUpdate)(_tBase *), void(*_onFree)(_tBase *), const gptr_nco<_TRef>& other) : onCreate(_onCreate), onUpdate(_onUpdate), onFree(_onFree) { InstanceRef = other.acquire(); }
+																gptr_podx				(void (*_onCreate)(_tBase *), void(*_onUpdate)(_tBase *), void(*_onFree)(_tBase *), const gptr_nco<_tRef>& other) : onCreate(_onCreate), onUpdate(_onUpdate), onFree(_onFree) { InstanceRef = other.acquire(); }
 		virtual					void							_create					()																								{
-			_TRef														* newInstance			= 0;
+			_tRef														* newInstance			= 0;
 			gcreate(&newInstance);
 			_set(newInstance);
 			if (valid() && onCreate)
 				(*onCreate)(InstanceRef->get());
 		}
 
-		virtual					void							_set					(_TRef* const & CoreInstance)																	{
-			gptr_podx<_TRef>											old						(0, 0, onFree, m_History);	// call destroy handlers for history contents and release the instance.
+		virtual					void							_set					(_tRef* const & CoreInstance)																	{
+			gptr_podx<_tRef>											old						(0, 0, onFree, m_History);	// call destroy handlers for history contents and release the instance.
 			m_History												= InstanceRef;
 			InstanceRef												= CoreInstance;
 		}
 
 	public:
-								gptr_pod<_TRef>					m_History																												= {};	// history doesn't call update handlers.
+								gptr_pod<_tRef>					m_History																												= {};	// history doesn't call update handlers.
 								void							(*onCreate)				(_tBase* instance)																				= 0;
 								void							(*onUpdate)				(_tBase* instance)																				= 0;
 								void							(*onFree)				(_tBase* instance)																				= 0;
@@ -248,15 +248,15 @@ namespace nwol
 		}
 
 		inline constexpr 										gptr_podx				()																												= default;
-		inline													gptr_podx				(const gptr_nco<_TRef>& other)																					: gptr_podx()																{ InstanceRef = ::nwol::acquire(other.InstanceRef);	}
-		inline													gptr_podx				(const gptr_podx<_TRef>& other)																					: onCreate(other.onCreate), onUpdate(other.onUpdate), onFree(other.onFree)	{ InstanceRef = ::nwol::acquire(other.InstanceRef);	}
-		inline													gptr_podx				(_TRef* CoreInstance)																							: gptr_podx()																{ InstanceRef = CoreInstance;							}
+		inline													gptr_podx				(const gptr_nco<_tRef>& other)																					: gptr_podx()																{ InstanceRef = ::nwol::acquire(other.InstanceRef);	}
+		inline													gptr_podx				(const gptr_podx<_tRef>& other)																					: onCreate(other.onCreate), onUpdate(other.onUpdate), onFree(other.onFree)	{ InstanceRef = ::nwol::acquire(other.InstanceRef);	}
+		inline													gptr_podx				(_tRef* CoreInstance)																							: gptr_podx()																{ InstanceRef = CoreInstance;							}
 		inline													gptr_podx				(const _tBase* initData)																						: onCreate(0), onUpdate(0), onFree(0)										{ if (initData)	gcreate(&InstanceRef, *initData);		}
 		inline													gptr_podx				(const _tBase& initData)																						: onCreate(0), onUpdate(0), onFree(0)										{ gcreate(&InstanceRef, initData);						}
-		inline													gptr_podx				(void(*_onCreate)(_tBase*), void(*_onUpdate)(_tBase*), void(*_onFree)(_tBase*), _TRef* other = 0)				: onCreate(_onCreate), onUpdate(_onUpdate), onFree(_onFree)					{ InstanceRef = other;									}
-		inline													gptr_podx				(void(*_onCreate)(_tBase*), void(*_onUpdate)(_tBase*), void(*_onFree)(_tBase*), const gptr_pod<_TRef>& other)	: onCreate(_onCreate), onUpdate(_onUpdate), onFree(_onFree)					{ InstanceRef = other.acquire();						}
+		inline													gptr_podx				(void(*_onCreate)(_tBase*), void(*_onUpdate)(_tBase*), void(*_onFree)(_tBase*), _tRef* other = 0)				: onCreate(_onCreate), onUpdate(_onUpdate), onFree(_onFree)					{ InstanceRef = other;									}
+		inline													gptr_podx				(void(*_onCreate)(_tBase*), void(*_onUpdate)(_tBase*), void(*_onFree)(_tBase*), const gptr_pod<_tRef>& other)	: onCreate(_onCreate), onUpdate(_onUpdate), onFree(_onFree)					{ InstanceRef = other.acquire();						}
 		// operators -----------------------------------	----------------	---------------------------------
-		virtual					gptr_podx<_TRef>&				operator =				(const gptr_nco<_TRef>& other)																	{
+		virtual					gptr_podx<_tRef>&				operator =				(const gptr_nco<_tRef>& other)																	{
 			if( (0 == compare_data(other)) && 0 == m_History.compare_data(other) )
 				return *this;
 
@@ -267,10 +267,10 @@ namespace nwol
 			return *this;
 		}
 
-		virtual					gptr_podx<_TRef>&				operator =				(const gptr_podx<_TRef>& other)																	{ return operator=((const gptr_pod<_TRef>&) other); }
-		virtual					gptr_podx<_TRef>&				operator =				(_TRef* instanceRef)																			{
+		virtual					gptr_podx<_tRef>&				operator =				(const gptr_podx<_tRef>& other)																	{ return operator=((const gptr_pod<_tRef>&) other); }
+		virtual					gptr_podx<_tRef>&				operator =				(_tRef* instanceRef)																			{
 			if( (0 == compare_data(instanceRef)) && 0 == m_History.compare_data(instanceRef) ) {
-				gptr_podx<_TRef>(0, 0, onFree, instanceRef);	// Catch the reference.
+				gptr_podx<_tRef>(0, 0, onFree, instanceRef);	// Catch the reference.
 				return *this;
 			}
 			_set(instanceRef);
@@ -289,10 +289,10 @@ namespace nwol
 		inline					void							onCreateHandler			(void(*handler)(_tBase*))															noexcept	{ onCreate	= handler;	}
 		inline					void							onUpdateHandler			(void(*handler)(_tBase*))															noexcept	{ onUpdate	= handler;	}
 		inline					void							onFreeHandler			(void(*handler)(_tBase*))															noexcept	{ onFree	= handler;	}
-		inline constexpr		const gptr_nco<_TRef>&			get_history				()																			const	noexcept	{ return m_History;		}
+		inline constexpr		const gptr_nco<_tRef>&			get_history				()																			const	noexcept	{ return m_History;		}
 								void							roll_back				()																								{	
 			// Swap the pointers.
-			_TRef														* oldInstance			= InstanceRef;
+			_tRef														* oldInstance			= InstanceRef;
 			InstanceRef												= m_History.acquire();
 			m_History												= oldInstance; // catch the reference
 			if (valid() && onUpdate)
@@ -300,7 +300,7 @@ namespace nwol
 		}
 
 								void							free_history			()																								{
-			gptr_podx<_TRef>											old						(0, 0, onFree, m_History);	// call destroy handlers for history contents and release the instance.
+			gptr_podx<_tRef>											old						(0, 0, onFree, m_History);	// call destroy handlers for history contents and release the instance.
 			m_History.free();
 		}
 	};

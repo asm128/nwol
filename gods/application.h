@@ -3,7 +3,7 @@
 #include "runtime.h"
 
 #include "gui.h"
-#include "input.h"
+#include "nwol_input.h"
 #include "netlib_client.h"
 //#include "netlib_server.h"
 

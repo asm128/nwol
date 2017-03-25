@@ -1,4 +1,4 @@
-#include "misc.h"
+#include "nwol_misc.h"
 #include "label.h"
 #include "ascii_target.h"
 #include <cstring>

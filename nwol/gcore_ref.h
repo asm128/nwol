@@ -129,8 +129,8 @@ namespace nwol
 #pragma pack(pop)
 	
 
-	template <typename _TRef>
-	static			bool													checkOverrun				(const _TRef* p)		{																										
+	template <typename _tRef>
+	static			bool													checkOverrun				(const _tRef* p)		{																										
 		if(0 == p) 
 			return false;																			
 		bool																		r							= false;																						
@@ -162,22 +162,22 @@ namespace nwol
 
 	void			nwol_shutdown	();
 
-	template<typename _TRef>	static inline	_TRef*			acquire		(_TRef* instanceRef)								{ return instanceRef ? instanceRef->acquire() : nullptr; }
-	template<typename _TRef>	static inline	void			release		(_TRef** instanceRef)								{
-		typedef		void			(*TFunctionRelease)	(_TRef**);
-		_TRef															* pRef		= *instanceRef;
+	template<typename _tRef>	static inline	_tRef*			acquire		(_tRef* instanceRef)								{ return instanceRef ? instanceRef->acquire() : nullptr; }
+	template<typename _tRef>	static inline	void			release		(_tRef** instanceRef)								{
+		typedef		void			(*TFunctionRelease)	(_tRef**);
+		_tRef															* pRef		= *instanceRef;
 		*instanceRef												= 0;
 		if(pRef)
 			((TFunctionRelease)pRef->Globals->__prelease)(&pRef);
 	}
 
-	template<typename _TRef>	static inline	void			set			(_TRef** out_Ref, _TRef* in_Ref)					{
-		_TRef															* old		= *out_Ref;																
+	template<typename _tRef>	static inline	void			set			(_tRef** out_Ref, _tRef* in_Ref)					{
+		_tRef															* old		= *out_Ref;																
 		*out_Ref													= ::nwol::acquire(in_Ref);															
 		::nwol::release(&old);																		
 	}																																	
 
-	template<typename _TRef>	static inline	void			release		(_TRef** instanceRefs, uint32_t* instanceCount)		{
+	template<typename _tRef>	static inline	void			release		(_tRef** instanceRefs, uint32_t* instanceCount)		{
 		for(uint32_t i=0, count = *instanceCount; i<count; ++i)			
 			::nwol::release(&instanceRefs[i]);							
 	}

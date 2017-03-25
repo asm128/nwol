@@ -1,7 +1,7 @@
 #include "netlib_client.h"
 #include "netlib_private.h"
 
-#include "misc.h"
+#include "nwol_misc.h"
 
 #include <cstdio>
 #include <cstring>

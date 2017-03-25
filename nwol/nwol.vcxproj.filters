@@ -31,11 +31,11 @@
     <Filter Include="math">
       <UniqueIdentifier>{f259e5b9-4ab6-492d-9cb2-409d3995561b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="runtime">
+      <UniqueIdentifier>{5afff5f1-1613-47d5-88cc-2531e709aa59}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="misc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="evaluation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -63,9 +63,6 @@
     <ClInclude Include="fill.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="size.h">
-      <Filter>array</Filter>
-    </ClInclude>
     <ClInclude Include="array_view.h">
       <Filter>array</Filter>
     </ClInclude>
@@ -90,25 +87,13 @@
     <ClInclude Include="noise.h">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="input.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="text.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="multithread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="nwol_mutex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="log.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="enum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ascii_reference.h">
@@ -168,12 +153,6 @@
     <ClInclude Include="type_identifier.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="runtime_impl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="runtime.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gcore_ref.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -194,6 +173,30 @@
     </ClInclude>
     <ClInclude Include="nwol_value.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime.h">
+      <Filter>runtime</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime_impl.h">
+      <Filter>runtime</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_misc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_enum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_size.h">
+      <Filter>array</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -231,12 +234,12 @@
       <Filter>gdescriptor</Filter>
     </ClCompile>
     <ClCompile Include="runtime_module.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>runtime</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="nwor.def">
-      <Filter>Source Files</Filter>
+      <Filter>runtime</Filter>
     </None>
   </ItemGroup>
 </Project>

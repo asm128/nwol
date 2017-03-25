@@ -9,7 +9,7 @@ namespace nwol
 
 	//namespace nwol
 	//{
-	//	template <typename _TRef>	static constexpr inline		uint32_t		writable	( const gptr_nco<_TRef>& in_Ref )		{ return in_Ref && !in_Ref->shared(); };	
+	//	template <typename _tRef>	static constexpr inline		uint32_t		writable	( const gptr_nco<_tRef>& in_Ref )		{ return in_Ref && !in_Ref->shared(); };	
 	//}
 
 	template<typename _tBase, ::nwol::GDATA_TYPE _F, ::nwol::GDATA_USAGE _USAGE> class gbuffer : public nwol::array_view<_tBase>

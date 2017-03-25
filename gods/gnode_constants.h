@@ -1,4 +1,4 @@
-#include "enum.h"
+#include "nwol_enum.h"
 
 #ifndef __GNODE_CONSTANTS_H__928374902378__
 #define __GNODE_CONSTANTS_H__928374902378__

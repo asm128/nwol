@@ -1,4 +1,4 @@
-#include "log.h"
+#include "nwol_log.h"
 #include "typeint.h"
 
 #ifndef __ARRAY_VIEW_H__926340923746098743230948__

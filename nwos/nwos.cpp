@@ -114,7 +114,6 @@ void										serverListen					(::nwol::CServer* pServer)									{
 			error_print("Failed to accept queued client or no client queued.");
 			::std::this_thread::sleep_for(::std::chrono::milliseconds(400));
 		}
-
 		::std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		//WriteTitle( pServer->ClientConnections.size() );
 	}
@@ -168,7 +167,6 @@ void										serverListen					( void* server )											{ serverListen((::nwol
 		//);
 	}
 	else {
-		
 		const char										mypong	[]						= "INVALIDMSG\r\n";									// Get current time
 		uint32_t										bytesToSend						= ::nwol::size(mypong) * (uint32_t)sizeof(char_t);	// Send data back
 
@@ -181,7 +179,6 @@ void										serverListen					( void* server )											{ serverListen((::nwol
 				,	(uint32_t)port_number
 				);
 		}
-
 		debug_printf("Sent invalid message response to %u.%u.%u.%u:%u."
 			,	(uint32_t)a1
 			,	(uint32_t)a2

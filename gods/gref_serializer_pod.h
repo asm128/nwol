@@ -119,9 +119,9 @@ void getInfoString( wchar_t* pOutputBuffer, uint32_t nBufferSize, const baseType
 #endif
 namespace nwol
 {
-	template <typename _TRef> class gref_serializer_pod
+	template <typename _tRef> class gref_serializer_pod
 	{
-		typedef typename _TRef::TBase _tBase;
+		typedef typename _tRef::TBase _tBase;
 
 #if defined(_DEBUG) || defined(DEBUG)
 		struct SPODSerializerCounters
@@ -150,7 +150,7 @@ namespace nwol
 				||	Counters.FileRead
 				)
 			{
-				debug_printf("Shutting down serializer for type: %s", _TRef::get_type_name().begin());
+				debug_printf("Shutting down serializer for type: %s", _tRef::get_type_name().begin());
 			}
 
 			if (Counters.MemSerialize)		{ debug_printf("Instances mem serialized successfully by this serializer: %u"	,	Counters.MemSerialize		);	}
@@ -165,14 +165,14 @@ namespace nwol
 	private:
 #endif
 	public:
-		static		gref_serializer_pod<_TRef>&			get							()																														{
-			static gref_serializer_pod<_TRef>					instance;
+		static		gref_serializer_pod<_tRef>&			get							()																														{
+			static gref_serializer_pod<_tRef>					instance;
 			return instance;
 		}
 		//--------------------------------------- NEW REFERENCE SYSTEM
-					uint32_t							memWriteData				(_TRef* const* in_DefinitionList, uint32_t nDefinitionCount, void* out_pMemoryBuffer, const _tBase* in_DefaultData)		{
+					uint32_t							memWriteData				(_tRef* const* in_DefinitionList, uint32_t nDefinitionCount, void* out_pMemoryBuffer, const _tBase* in_DefaultData)		{
 			PLATFORM_CRT_CHECK_MEMORY();
-			static const ::nwol::glabel							& typeName					= _TRef::get_type_name();
+			static const ::nwol::glabel							& typeName					= _tRef::get_type_name();
 			retnul_msg_if(0 == nDefinitionCount || 0 == in_DefinitionList
 					,	"Invalid parameters!\n"
 						"%s**				: 0x%p\n"
@@ -183,7 +183,7 @@ namespace nwol
 					, (int)nDefinitionCount
 					, out_pMemoryBuffer
 					);
-			::nwol::gptr_pod<_TRef>								defaultData					= in_DefaultData;
+			::nwol::gptr_pod<_tRef>								defaultData					= in_DefaultData;
 			if (0 == in_DefaultData) {
 				defaultData.create();
 				if (!defaultData) {
@@ -193,7 +193,7 @@ namespace nwol
 				memset(defaultData.get_address(), 0, sizeof(_tBase));
 			}
 			uint32_t											i, nSkipped = 0, byteIndex	= 0;
-			_TRef												* pInstanceToSave			= 0;
+			_tRef												* pInstanceToSave			= 0;
 			for (i = 0; i< nDefinitionCount; i++) {
 				PLATFORM_CRT_CHECK_MEMORY();
 				// Select instance values or default values if instance is NULL
@@ -215,9 +215,9 @@ namespace nwol
 			return byteIndex;
 		}	// method
 
-					uint32_t							memReadData					(_TRef** out_DefinitionList, uint32_t nDefinitionCount, const void* in_pMemoryBuffer)									{
+					uint32_t							memReadData					(_tRef** out_DefinitionList, uint32_t nDefinitionCount, const void* in_pMemoryBuffer)									{
 			PLATFORM_CRT_CHECK_MEMORY();
-			static const ::nwol::glabel							& typeName					= _TRef::get_type_name();
+			static const ::nwol::glabel							& typeName					= _tRef::get_type_name();
 			retnul_msg_if(0 == in_pMemoryBuffer
 					,	"Invalid parameters!"
 						"%s**			: 0x%p\n"
@@ -233,8 +233,8 @@ namespace nwol
 				,												byteIndex	= 0
 				,												nSkipped	= 0
 				;
-			::nwol::gptr_pod<_TRef>								newData, oldData;
-			::nwol::glist_pod<_TRef>							lstLoadedData(nDefinitionCount);
+			::nwol::gptr_pod<_tRef>								newData, oldData;
+			::nwol::glist_pod<_tRef>							lstLoadedData(nDefinitionCount);
 			for (i = 0; i< nDefinitionCount; i++) {
 				PLATFORM_CRT_CHECK_MEMORY();
 				newData.create();
@@ -266,9 +266,9 @@ namespace nwol
 			return byteIndex;
 		} // method
 
-					uint32_t							memSerializeData			(_TRef* const* in_DefinitionList, uint32_t nDefinitionCount, void* out_pMemoryBuffer)									{
+					uint32_t							memSerializeData			(_tRef* const* in_DefinitionList, uint32_t nDefinitionCount, void* out_pMemoryBuffer)									{
 			PLATFORM_CRT_CHECK_MEMORY();
-			static const ::nwol::glabel							& typeName					= _TRef::get_type_name();
+			static const ::nwol::glabel							& typeName					= _tRef::get_type_name();
 			retnul_msg_if(0 == nDefinitionCount || 0 == in_DefinitionList
 					,	"Invalid parameters!\n"
 						"%s**					: 0x%p\n"
@@ -305,9 +305,9 @@ namespace nwol
 			return byteIndex;
 		} // method
 
-					uint32_t							memDeserializeData			(_TRef** out_DefinitionList, uint32_t nDefinitionCount, const void* in_pMemoryBuffer)									{
+					uint32_t							memDeserializeData			(_tRef** out_DefinitionList, uint32_t nDefinitionCount, const void* in_pMemoryBuffer)									{
 			PLATFORM_CRT_CHECK_MEMORY();
-			static const ::nwol::glabel							& typeName					= _TRef::get_type_name();
+			static const ::nwol::glabel							& typeName					= _tRef::get_type_name();
 			retnul_msg_if(0 == in_pMemoryBuffer
 					,	"Invalid parameters!"
 						"%s**				: 0x%p\n"
@@ -321,14 +321,14 @@ namespace nwol
 
 			uint32_t											i, nSkipped = 0, byteIndex	= 0;
 			uint8_t bSaved;
-			::nwol::gptr_pod<_TRef>								newData, oldData;
+			::nwol::gptr_pod<_tRef>								newData, oldData;
 			for (i = 0; i< nDefinitionCount; i++) {
 				PLATFORM_CRT_CHECK_MEMORY();
 				bSaved											= ((char*)in_pMemoryBuffer)[byteIndex]; // read boolean telling if there's data or not
 				byteIndex++;
 				if (0 == bSaved) { // null definition, continue! 
 					++nSkipped;
-					typedef void(*funcType)(_TRef**);			
+					typedef void(*funcType)(_tRef**);			
 					if (out_DefinitionList)
 						((funcType)out_DefinitionList[i]->Globals->__prelease)(&out_DefinitionList[i]); // clear output
 					continue;
@@ -352,9 +352,9 @@ namespace nwol
 			return byteIndex;
 		} // method
 
-					uint32_t							fileWriteData				(_TRef* const* in_DefinitionList, uint32_t nDefinitionCount, FILE* out_fp, const _tBase* in_DefaultData)				{
+					uint32_t							fileWriteData				(_tRef* const* in_DefinitionList, uint32_t nDefinitionCount, FILE* out_fp, const _tBase* in_DefaultData)				{
 			PLATFORM_CRT_CHECK_MEMORY();
-			static const ::nwol::glabel							& typeName					= _TRef::get_type_name();
+			static const ::nwol::glabel							& typeName					= _tRef::get_type_name();
 			retnul_msg_if(0 == out_fp || 0 == in_DefinitionList
 					,	"Invalid parameters!\n"
 						"%s**				: 0x%p\n"
@@ -366,7 +366,7 @@ namespace nwol
 					, out_fp
 					);
 
-			::nwol::gptr_pod<_TRef>								instanceToSave
+			::nwol::gptr_pod<_tRef>								instanceToSave
 				,												defaultData					= in_DefaultData
 				;
 			if (0 == in_DefaultData) {
@@ -403,9 +403,9 @@ namespace nwol
 			return i;
 		} // method
 
-					uint32_t							fileReadData				(_TRef** out_DefinitionList, uint32_t nDefinitionCount, FILE* in_fp)													{
+					uint32_t							fileReadData				(_tRef** out_DefinitionList, uint32_t nDefinitionCount, FILE* in_fp)													{
 			PLATFORM_CRT_CHECK_MEMORY();
-			static const ::nwol::glabel							& typeName					= _TRef::get_type_name();
+			static const ::nwol::glabel							& typeName					= _tRef::get_type_name();
 			retnul_msg_if(0 == in_fp
 					,	"Invalid parameters!\n"
 						"%s**				: 0x%p\n"
@@ -418,8 +418,8 @@ namespace nwol
 					);
 
 			uint32_t											i, j, nLoaded = 0, nSkipped	= 0;
-			::nwol::gptr_pod<_TRef>								newData, oldData;
-			::nwol::glist_pod<_TRef>							lstLoadedData				(nDefinitionCount);
+			::nwol::gptr_pod<_tRef>								newData, oldData;
+			::nwol::glist_pod<_tRef>							lstLoadedData				(nDefinitionCount);
 			for (i = 0; i< nDefinitionCount; i++) {
 				PLATFORM_CRT_CHECK_MEMORY();
 				newData.create();
@@ -457,9 +457,9 @@ namespace nwol
 			return i;
 		} // method
 
-					uint32_t							fileDeserializeData			(_TRef** out_DefinitionList, uint32_t nDefinitionCount, FILE* in_fp)													{
+					uint32_t							fileDeserializeData			(_tRef** out_DefinitionList, uint32_t nDefinitionCount, FILE* in_fp)													{
 			PLATFORM_CRT_CHECK_MEMORY();
-			static const ::nwol::glabel							& typeName					= _TRef::get_type_name();
+			static const ::nwol::glabel							& typeName					= _tRef::get_type_name();
 			retnul_msg_if(0 == in_fp
 					,	"Invalid parameters!\n"
 						"%s**		: 0x%p\n"
@@ -474,7 +474,7 @@ namespace nwol
 			uint32_t											i, nSkipped					= 0;
 			uint8_t												bSaved;
 
-			::nwol::gptr_pod<_TRef>								newData, oldData;
+			::nwol::gptr_pod<_tRef>								newData, oldData;
 			for (i = 0; i< nDefinitionCount; i++){
 				if (fread(&bSaved, sizeof(bSaved), 1, in_fp) < 1) {
 					error_printf("Failed to read metadata from file.");
@@ -482,7 +482,7 @@ namespace nwol
 				}
 				if (0 == bSaved) {// null buffer, continue!
 					++nSkipped;
-					typedef void(*funcType)(_TRef**);			
+					typedef void(*funcType)(_tRef**);			
 					if(out_DefinitionList[i])
 						((funcType)out_DefinitionList[i]->Globals->__prelease)(&out_DefinitionList[i]); /*clear output*/
 					continue;
@@ -511,9 +511,9 @@ namespace nwol
 			return i;
 		} // method
 
-					uint32_t							fileSerializeData			(_TRef* const* in_DefinitionList, uint32_t nDefinitionCount, FILE* out_fp)												{
+					uint32_t							fileSerializeData			(_tRef* const* in_DefinitionList, uint32_t nDefinitionCount, FILE* out_fp)												{
 			PLATFORM_CRT_CHECK_MEMORY();
-			static const ::nwol::glabel							& typeName					= _TRef::get_type_name();
+			static const ::nwol::glabel							& typeName					= _tRef::get_type_name();
 			retnul_msg_if(0 == out_fp || 0 == in_DefinitionList
 					,	"Invalid parameters!\n"
 						"%s**				: 0x%p\n"

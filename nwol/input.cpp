@@ -1,4 +1,4 @@
-#include "input.h"
+#include "nwol_input.h"
 #include "nwol_error.h"
 
 #if defined(__WINDOWS__)

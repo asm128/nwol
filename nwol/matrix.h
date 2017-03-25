@@ -1,5 +1,5 @@
 #include "coord.h"
-#include "log.h"
+#include "nwol_log.h"
 
 #ifndef __MATRIX_H__283409263409234649837__
 #define __MATRIX_H__283409263409234649837__

@@ -1,5 +1,5 @@
-#include "enum.h"
-#include "input.h"
+#include "nwol_enum.h"
+#include "nwol_input.h"
 #include "coord.h"
 #include "ascii_color.h"
 #include "ascii_target.h"
@@ -24,7 +24,6 @@ namespace nwol
 	GDEFINE_ENUM_VALUE(CONTROL_FLAG, 0x200, PRESSED				);
 
 	//--------------------------------------------------------- PODs
-
 	struct SControlTextColorASCII	{
 					STextColorASCII											Color				;
 					STextColorASCII											ColorPressed		;

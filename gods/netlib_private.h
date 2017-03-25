@@ -14,7 +14,7 @@ typedef		int				SOCKET;
 #define INVALID_SOCKET		(SOCKET)(~0)
 #endif
 
-#include "enum.h"
+#include "nwol_enum.h"
 
 #ifndef __NETLIB_PRIVATE_H__92364982734698273469823462384238__
 #define __NETLIB_PRIVATE_H__92364982734698273469823462384238__

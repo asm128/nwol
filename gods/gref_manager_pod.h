@@ -13,47 +13,47 @@
 
 namespace nwol
 {
-	template <typename _TRef> class gref_manager_pod : public gref_manager_nco<_TRef, GREF_MANAGER_TYPE_POD>
+	template <typename _tRef> class gref_manager_pod : public gref_manager_nco<_tRef, GREF_MANAGER_TYPE_POD>
 	{
-		typedef		gref_manager_nco<_TRef, GREF_MANAGER_TYPE_POD>	base_manager_type;
-		typedef			typename _TRef::TBase						_tBase;
+		typedef		gref_manager_nco<_tRef, GREF_MANAGER_TYPE_POD>	base_manager_type;
+		typedef			typename _tRef::TBase						_tBase;
 		using			base_manager_type::							Globals;
 		using			base_manager_type::							createRef_noinit;
 
 	public:
-		static inline	gref_manager_pod<_TRef>&					get						()																		{
-			static gref_manager_pod<_TRef>	managerInstance;
+		static inline	gref_manager_pod<_tRef>&					get						()																		{
+			static gref_manager_pod<_tRef>	managerInstance;
 			return managerInstance;
 		}
 		using			base_manager_type::							allocRef;
 		using			base_manager_type::							allocRefs;
 
-																	gref_manager_pod		(void(*_funcFreeR)(_TRef**))											: base_manager_type::gref_manager_nco(_funcFreeR)			{}
+																	gref_manager_pod		(void(*_funcFreeR)(_tRef**))											: base_manager_type::gref_manager_nco(_funcFreeR)			{}
 
-						void										createRef				(_TRef** p1, const _tBase& _InitData)									{
-			_TRef															* newRef				= createRef_noinit();
+						void										createRef				(_tRef** p1, const _tBase& _InitData)									{
+			_tRef															* newRef				= createRef_noinit();
 			if( newRef )
 				::nwol::podcpy(newRef->Instance, &_InitData);
 
-			_TRef															* oldRef				= (*p1);
+			_tRef															* oldRef				= (*p1);
 			(*p1)														= newRef;
 			::nwol::release(&oldRef);
 		}
 
-						void										createRefs				(_TRef** p1, const _tBase* lstInstances, uint32_t nCount)				{
+						void										createRefs				(_tRef** p1, const _tBase* lstInstances, uint32_t nCount)				{
 			allocRefs(p1, nCount);
-			_TRef															* newRef;
+			_tRef															* newRef;
 			for( uint32_t i=0; i<nCount; i++ ) {
 				if (0 != (newRef = p1[i]))
 					::nwol::podcpy(newRef->Instance, &lstInstances[i]);
 			}
 		}
 
-						void										copyInstance			(_TRef* dst, const _tBase* src)									const	{
+						void										copyInstance			(_tRef* dst, const _tBase* src)									const	{
 			if (0 == dst && 0 == src)
 				return;
 			else if (0 == dst) {
-				error_printf("Cannot copy %s contents into a null pointer!", _TRef::get_type_name().begin());
+				error_printf("Cannot copy %s contents into a null pointer!", _tRef::get_type_name().begin());
 				return;
 			}
 			else if (0 == src)

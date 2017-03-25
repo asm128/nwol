@@ -45,10 +45,10 @@ namespace nwol
 	//template<typename baseType>	
 	//static				void								__gcustomDestruct						(baseType* p)											{ p->~baseType(); }
 
-	template <typename _TRef, uint32_t _PageSizeInInstances> 
+	template <typename _tRef, uint32_t _PageSizeInInstances> 
 	struct SReferencePage : public CMutex
 	{
-		typedef				typename _TRef::TBase				_tBase;
+		typedef				typename _tRef::TBase				_tBase;
 	
 		struct SInstanceEntry
 		{
@@ -59,7 +59,7 @@ namespace nwol
 
 		static constexpr	uint32_t							getPageBytes							()														{
 			return (uint32_t)
-				(	(sizeof(_TRef*)*_PageSizeInInstances+sizeof(_TRef)*_PageSizeInInstances)	// Stack of unused pointers and reference instance areas.
+				(	(sizeof(_tRef*)*_PageSizeInInstances+sizeof(_tRef)*_PageSizeInInstances)	// Stack of unused pointers and reference instance areas.
 				+	::nwol::get_type_size_padded<SInstanceEntry>(BASETYPE_ALIGN) * _PageSizeInInstances
 				+	BASETYPE_ALIGN*BASETYPE_ALIGN // this last one may be redundant as it may be considered already by the one_if() evaluation
 				);
@@ -85,8 +85,8 @@ namespace nwol
 		}
 
 							::nwol::SReferenceGlobals			Globals;
-							_TRef**								lstUnusedInstances						= 0;
-							_TRef*								lstReferences							= 0;
+							_tRef**								lstUnusedInstances						= 0;
+							_tRef*								lstReferences							= 0;
 							char*								Instances								= 0;
 							uint32_t							UnusedInstances							= 0;
 							uint32_t							UsedItems								= 0;
@@ -98,7 +98,7 @@ namespace nwol
 #endif
 		// Initializes the reference and sets the reference counter to 1.
 		// This function doesn't require to be called inside a critical section.
-							void								initRef									(_TRef* newRef, uint32_t dataIndex)						{
+							void								initRef									(_tRef* newRef, uint32_t dataIndex)						{
 			SInstanceEntry												* entry									= getInstanceEntry(dataIndex);
 			newRef->Instance										= &entry->ActualInstance; 
 			newRef->Globals											= &Globals;
@@ -111,7 +111,7 @@ namespace nwol
 
 																SReferencePage							(const ::nwol::SReferenceGlobals& globals )				: Globals(globals)
 		{
-			const ::nwol::glabel										& typeName								= _TRef::get_type_name();
+			const ::nwol::glabel										& typeName								= _tRef::get_type_name();
 				
 			debug_printf("Loading %s table.", typeName.begin());
 #if defined(DEBUG) || defined(_DEBUG)
@@ -125,9 +125,9 @@ namespace nwol
 			UNUSED const uint32_t										ActualAlign								= Globals.DataAlign;
 #endif
 			debug_printf("Size of base type: %u. Entry size: %u. Size of entry padded to %u bytes: %u", (uint32_t)sizeof(_tBase), (uint32_t)ActualEntrySize, (uint32_t)BASETYPE_ALIGN, (uint32_t)ActualSizePadded);
-			lstUnusedInstances										= (_TRef**)&PageBytes[0];
-			lstReferences											= (_TRef*)&PageBytes[sizeof(_TRef*)*_PageSizeInInstances];
-			Instances												= &PageBytes[sizeof(_TRef*)*_PageSizeInInstances+sizeof(_TRef)*_PageSizeInInstances];
+			lstUnusedInstances										= (_tRef**)&PageBytes[0];
+			lstReferences											= (_tRef*)&PageBytes[sizeof(_tRef*)*_PageSizeInInstances];
+			Instances												= &PageBytes[sizeof(_tRef*)*_PageSizeInInstances+sizeof(_tRef)*_PageSizeInInstances];
 #if defined(DEBUG) || defined(_DEBUG)
 			Instances												= &Instances[sizeof(SInstanceEntry::NWOL_DEBUG_CHECK_NAME_PRE)];
 #else
@@ -148,8 +148,8 @@ namespace nwol
 							const SInstanceEntry*				getInstanceEntry						(int32_t index)					const					{ return (SInstanceEntry*)&Instances[index*::nwol::get_type_size_padded<SInstanceEntry>(BASETYPE_ALIGN)];	}
 #endif
 		// Retrieves an unused reference or initializes a new one if there is enough capacity.
-							_TRef*								getUnusedInstance						()														{
-			_TRef														* newRef								= 0;
+							_tRef*								getUnusedInstance						()														{
+			_tRef														* newRef								= 0;
 			Lock();
 			if(UnusedInstances > 0) {
 				newRef													= lstUnusedInstances[--UnusedInstances];
@@ -168,8 +168,8 @@ namespace nwol
 		}
 
 		//	
-							_TRef*								getUnusedInstanceUnsafe					()														{
-			_TRef														* newRef								= 0;
+							_tRef*								getUnusedInstanceUnsafe					()														{
+			_tRef														* newRef								= 0;
 			if(UnusedInstances > 0)
 				newRef													= lstUnusedInstances[--UnusedInstances];
 			else if(UsedItems < _PageSizeInInstances) {
@@ -198,15 +198,15 @@ namespace nwol
 	};
 
 	// ----------------------------------------------------- gref_manager_nco
-	template <typename _TRef, GREF_MANAGER_TYPE _ManagerType=GREF_MANAGER_TYPE_NCO> class gref_manager_nco
+	template <typename _tRef, GREF_MANAGER_TYPE _ManagerType=GREF_MANAGER_TYPE_NCO> class gref_manager_nco
 	{
 	protected:
-		typedef				typename _TRef::TBase							_tBase;
-		typedef SReferencePage<_TRef, ::nwol::get_page_size<_tBase>()>		_TPage;
+		typedef				typename _tRef::TBase							_tBase;
+		typedef SReferencePage<_tRef, ::nwol::get_page_size<_tBase>()>		_TPage;
 
 							const ::nwol::SReferenceGlobals					Globals;
-		_TRef*																createRef_noinit						()														{																			
-			_TRef																	* newRef								= getNewInstanceFromLastPageUsed	();						
+		_tRef*																createRef_noinit						()														{																			
+			_tRef																	* newRef								= getNewInstanceFromLastPageUsed	();						
 			if(0 == newRef)	newRef													= getNewInstanceFromQuickAlloc	();							
 			if(0 == newRef)	newRef													= getNewInstanceFromPage		();									
 			if(0 == newRef)	newRef													= getNewInstanceFromNewPage		();								
@@ -233,8 +233,8 @@ namespace nwol
 							CMutex											QuickAllocLock							= {};		
 							uint32_t										LastPageUsed							= INVALID_ROW;						
 							uint32_t										QuickAllocCount							= 0;					
-							_TRef*											QuickAllocActual[PageSizeInInstances]	= {};				
-							array_view<_TRef*>								QuickAllocView							= {QuickAllocActual, PageSizeInInstances};				
+							_tRef*											QuickAllocActual[PageSizeInInstances]	= {};				
+							array_view<_tRef*>								QuickAllocView							= {QuickAllocActual, PageSizeInInstances};				
 
 		struct SCounters {					
 #if defined(__WINDOWS__)
@@ -263,16 +263,16 @@ namespace nwol
 		}
 
 		// Tries to get a pointer from the quick alloc list.
-							_TRef*											getNewInstanceFromQuickAlloc			()														{
+							_tRef*											getNewInstanceFromQuickAlloc			()														{
 			QuickAllocLock.Lock();
-			_TRef																	* result								= QuickAllocCount ? QuickAllocView[--QuickAllocCount] : 0;
+			_tRef																	* result								= QuickAllocCount ? QuickAllocView[--QuickAllocCount] : 0;
 			QuickAllocLock.Unlock();
 			return result;
 		}
 
 		// Creates new page and retrieves an instance from it.
-							_TRef*											getNewInstanceFromNewPage				()														{
-			_TRef																	* newRef								= 0;
+							_tRef*											getNewInstanceFromNewPage				()														{
+			_tRef																	* newRef								= 0;
 			::nwol::SReferenceGlobals												globals									= Globals;
 			ManagerLock.Lock();
 			uint32_t																expectedIndex = globals.Row				= (uint32_t)lstReferencePages.size();
@@ -296,8 +296,8 @@ namespace nwol
 		}
 
 		// Tries to get new instance from last page used.
-							_TRef*											getNewInstanceFromLastPageUsed			()														{
-			_TRef																	* newRef								= 0;
+							_tRef*											getNewInstanceFromLastPageUsed			()														{
+			_tRef																	* newRef								= 0;
 			ManagerLock.Lock();
 			if ((INVALID_ROW) != LastPageUsed) {
 				_TPage																	* pPage									= lstReferencePages[LastPageUsed];
@@ -312,8 +312,8 @@ namespace nwol
 		}
 
 		// Looks for an already-allocated page with an available instance.
-							_TRef*											getNewInstanceFromPage					()														{
-			_TRef																	* newRef								= 0;
+							_tRef*											getNewInstanceFromPage					()														{
+			_tRef																	* newRef								= 0;
 			for (uint32_t iPage = 0, pageCount = (uint32_t)lstReferencePages.size(); iPage < pageCount; iPage++) {
 				ManagerLock.Lock();
 				uint32_t																pageIndex								= (uint32_t)lstReferencePages.size() - iPage - 1;
@@ -342,7 +342,7 @@ namespace nwol
 					pPage->UsedItems													= PageSizeInInstances;					// both capacities exhausted so we can unlock the page and nobody will have a reason to use it.
 					pPage->UnusedInstances												= 0;									// both capacities exhausted so we can unlock the page and nobody will have a reason to use it.
 					pPage->Unlock();
-					_TRef																	* newRef								= nullptr;
+					_tRef																	* newRef								= nullptr;
 					// drain all reference capacity
 					while(usedItems < PageSizeInInstances) {
 						uint32_t																dataIndex								= usedItems;
@@ -383,7 +383,7 @@ namespace nwol
 				pPage->UsedItems													= PageSizeInInstances;	// Capacity exhausted
 				pPage->UnusedInstances												= 0;					// References exhausted
 				for( uint32_t iNewRef=0; iNewRef < PageSizeInInstances; iNewRef++ )	{ // Initialize all references
-					_TRef																	* newRef								= &pPage->lstReferences[iNewRef];
+					_tRef																	* newRef								= &pPage->lstReferences[iNewRef];
 					pPage->initRef(newRef, iNewRef);
 					SETREFALLOCID(newRef);
 				}
@@ -393,7 +393,7 @@ namespace nwol
 		}
 
 		// Allocate pages of references and output references to array. 
-							void											allocRefFullPage						(_TRef** lstRef, uint32_t nFullPageCount)				{
+							void											allocRefFullPage						(_tRef** lstRef, uint32_t nFullPageCount)				{
 			::nwol::array_pod<_TPage*>												lstPages								(nFullPageCount);	// store here the pages we get.
 			memset(&lstPages[0], 0, sizeof(_TPage*)*nFullPageCount);
 
@@ -410,7 +410,7 @@ namespace nwol
 				uint32_t																refOffset								= iNewPage*PageSizeInInstances;
 				for( uint32_t iNewRef=0; iNewRef < PageSizeInInstances; iNewRef++ ) {
 					int32_t																	outIndex								= refOffset+iNewRef;
-					_TRef*																	oldObject								= lstRef[outIndex];
+					_tRef*																	oldObject								= lstRef[outIndex];
 					lstRef[outIndex]													= &pPage->lstReferences[iNewRef];
 					::nwol::release(&oldObject);
 				}
@@ -418,7 +418,7 @@ namespace nwol
 		}
 
 		// Stores an unused reference into the QuickAlloc array.
-							void											releaseReferenceToQuickAlloc			(_TRef* p1)												{
+							void											releaseReferenceToQuickAlloc			(_tRef* p1)												{
 			QuickAllocLock.Lock();
 			if( QuickAllocCount == PageSizeInInstances )
 				emptyQuickAlloc();
@@ -444,11 +444,11 @@ namespace nwol
 		}
 
 		// Return a bunch of unused references to their pages of origin.
-							void											releaseReferenceListToPage				( _TRef** lstRef, uint32_t nReferenceCount)				{
+							void											releaseReferenceListToPage				( _tRef** lstRef, uint32_t nReferenceCount)				{
 			ManagerLock.Lock();
 			_TPage																	* pPage									= 0;
 			for( uint32_t iRef=0; iRef<nReferenceCount; iRef++ ) {
-				_TRef																	* p0									= lstRef[iRef];
+				_tRef																	* p0									= lstRef[iRef];
 				_TPage																	* pNextPage								= lstReferencePages[p0->Globals->Row];
 				if(0 == pNextPage) {
 					error_printf("Pages should never be null. Reasons for it to be null can be a missing lock causing this function to access while the list is being overwritten or overwriting the vectors memory.");
@@ -478,7 +478,7 @@ namespace nwol
 			ManagerLock.Unlock();
 		}
 
-							void											setRefAllocID							(_TRef* newRef)										{																									
+							void											setRefAllocID							(_tRef* newRef)										{																									
 			newRef->AllocID														= NWOL_INTERLOCKED_INCREMENT(Counters.CreatedRefs)-1;								
 #if defined(DEBUG) || defined(_DEBUG)
 			if (newRef->__breakAllocID != (INVALID_ALLOC_ID) && newRef->__breakAllocID == newRef->AllocID)	 {																								
@@ -489,23 +489,23 @@ namespace nwol
 		}
 
 		// Output an error message in case of detecting an invalid reference count.
-		static				void											_printRefCountZero						(const _TRef* p)									{
+		static				void											_printRefCountZero						(const _tRef* p)									{
 			errmsg_refcountnull();
 			ERROR_PRINTF_ALLOCID(p);
 			//printInfoString(p);
 		}
 
 	public:
-		static inline		gref_manager_nco<_TRef, _ManagerType>&			get										()													{
-			static gref_manager_nco<_TRef, _ManagerType> managerInstance;
+		static inline		gref_manager_nco<_tRef, _ManagerType>&			get										()													{
+			static gref_manager_nco<_tRef, _ManagerType> managerInstance;
 			return managerInstance;
 		}
 
-		inline constexpr													gref_manager_nco						(void(*_funcFreeR)(_TRef**)):
+		inline constexpr													gref_manager_nco						(void(*_funcFreeR)(_tRef**)):
 			Globals
-			(	_TRef::get_type_name().begin()							// Cue
+			(	_tRef::get_type_name().begin()							// Cue
 			,	_ManagerType											// object type (0 nco, 1 = c++ object, 2 = plain old data)
-			,	_TRef::get_type_name				().size()			//
+			,	_tRef::get_type_name				().size()			//
 			,	::nwol::get_type_size				<_tBase>()					//
 			,	::nwol::get_type_align				<_tBase>()					//
 			,	::nwol::get_type_align_multiplier	<_tBase>()					
@@ -518,12 +518,12 @@ namespace nwol
 																			~gref_manager_nco						()													{
 			if (Counters.CreatedRefs)																																		
 			{																																								
-				const ::nwol::glabel			& typeName			= _TRef::get_type_name();																									
+				const ::nwol::glabel			& typeName			= _tRef::get_type_name();																									
 				debug_printf("Instance manager(GREF(%s)) shutting down", typeName.begin());																					
 																																											
-				debug_printf("GREF(%s) instances created:	%llu (%llu bytes).", typeName.begin(), (uint64_t)Counters.CreatedRefs,	(uint64_t)(sizeof(_TRef)+sizeof(_TPage::SInstanceEntry))*Counters.CreatedRefs	);
-				debug_printf("GREF(%s) instances acquired:	%llu (%llu bytes).", typeName.begin(), (uint64_t)Counters.AcquiredRefs,	(uint64_t)(sizeof(_TRef)+sizeof(_TPage::SInstanceEntry))*Counters.AcquiredRefs	);
-				debug_printf("GREF(%s) instances freed:		%llu (%llu bytes).", typeName.begin(), (uint64_t)Counters.FreedRefs,	(uint64_t)(sizeof(_TRef)+sizeof(_TPage::SInstanceEntry))*Counters.FreedRefs		);
+				debug_printf("GREF(%s) instances created:	%llu (%llu bytes).", typeName.begin(), (uint64_t)Counters.CreatedRefs,	(uint64_t)(sizeof(_tRef)+sizeof(_TPage::SInstanceEntry))*Counters.CreatedRefs	);
+				debug_printf("GREF(%s) instances acquired:	%llu (%llu bytes).", typeName.begin(), (uint64_t)Counters.AcquiredRefs,	(uint64_t)(sizeof(_tRef)+sizeof(_TPage::SInstanceEntry))*Counters.AcquiredRefs	);
+				debug_printf("GREF(%s) instances freed:		%llu (%llu bytes).", typeName.begin(), (uint64_t)Counters.FreedRefs,	(uint64_t)(sizeof(_tRef)+sizeof(_TPage::SInstanceEntry))*Counters.FreedRefs		);
 				if (Counters.CreatedRefs > Counters.FreedRefs) { 																								
 					error_printf("Number of instances not released properly: %llu.", (uint64_t)Counters.CreatedRefs - Counters.FreedRefs);						
 				}																																				
@@ -541,7 +541,7 @@ namespace nwol
 			// Delete all pages on shutdown.
 			uint32_t																pageCount								= (uint32_t)lstReferencePages.size();
 			if (pageCount) {
-				const ::nwol::glabel&												typeName								= _TRef::get_type_name();
+				const ::nwol::glabel&												typeName								= _tRef::get_type_name();
 				debug_printf("Preparing to deallocate %llu gcore_ref<%s> pages. (%llu bytes)", (uint64_t)pageCount, typeName.begin(), ((uint64_t)sizeof(_TPage))*pageCount );
 				for (uint32_t i = 0; i < pageCount; i++) {
 					if (lstReferencePages[i])
@@ -553,14 +553,14 @@ namespace nwol
 		}
 
 		// Allocate a new reference.
-							void											allocRef								(_TRef** p1)										{
-			_TRef																	* oldObject								= (*p1);
+							void											allocRef								(_tRef** p1)										{
+			_tRef																	* oldObject								= (*p1);
 			(*p1)																= createRef_noinit();
 			::nwol::release(&oldObject);	// we do not use releaseRef() method because grelease acts as proxy for instances managed by other modules.
 		}
 
 		// Allocates a list of references at once.
-							void											allocRefs								(_TRef** lstRef, uint32_t nCount)					{
+							void											allocRefs								(_tRef** lstRef, uint32_t nCount)					{
 			uint32_t																nRandAllocInstances						= nCount % PageSizeInInstances;	// These are the remaining instances that aren't enough to fill a page. 
 			uint32_t																nFullPageCount							= nCount / PageSizeInInstances;		// The amount of pages needed for nCount allocations.
 			
@@ -573,7 +573,7 @@ namespace nwol
 		}
 	
 		// Acquire a reference.
-							_TRef*											acquireRef								(_TRef* p)											{
+							_tRef*											acquireRef								(_tRef* p)											{
 			if (p) {
 				if (0 == p->ReferenceCount)
 					_printRefCountZero(p);
@@ -586,8 +586,8 @@ namespace nwol
 		}
 
 		// Release a reference and set the pointer to null.
-							void											releaseRef								(_TRef** _p)										{
-			_TRef																	* p0									= *_p;
+							void											releaseRef								(_tRef** _p)										{
+			_tRef																	* p0									= *_p;
 			(*_p)																= 0;
 
 			CHECKBUFFEROVERRUNREF(p0);

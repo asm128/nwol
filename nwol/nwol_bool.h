@@ -1,4 +1,4 @@
-#include "size.h"
+#include "nwol_size.h"
 #ifndef __NWOL_BOOL_H__20987340928374092837__
 #define __NWOL_BOOL_H__20987340928374092837__
 

@@ -1,5 +1,4 @@
 #include "runtime.h"
-#include "log.h"
 #include "label.h"
 
 #if defined(__WINDOWS__)
