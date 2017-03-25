@@ -143,7 +143,7 @@ namespace nwol
 					{	(_tBase)(A/det), (_tBase)(D/det), (_tBase)(G/det)
 					,	(_tBase)(B/det), (_tBase)(E/det), (_tBase)(H/det)
 					,	(_tBase)(C/det), (_tBase)(F/det), (_tBase)(I/det)
-					}
+					};
 			}
 
 			return result;
@@ -375,8 +375,7 @@ namespace nwol
 		constexpr			_TCoord3			InverseTranslate			(const _TCoord3& vec)															const	noexcept	{ return { vec.x - _41, vec.y - _42, vec.z - _43 }; }
 							void				InverseTranslateInPlace		(_TCoord3& fpVec)																const	noexcept	{ vec.x -= _41; vec.y -= _42; vec.z -= _43; }
 
-		constexpr			_TCoord3			Transform					(const _TCoord3& v)																const
-		{
+		constexpr			_TCoord3			Transform					(const _TCoord3& v)																const				{
 			return 
 			_TCoord3
 				{	(v.x*_11 + v.y*_21 + v.z*_31 + _41)	// x
@@ -387,8 +386,7 @@ namespace nwol
 			;
 		}
 
-		constexpr			_TCoord3			TransformDirection			(const _TCoord3& vector)														const	noexcept
-		{
+		constexpr			_TCoord3			TransformDirection			(const _TCoord3& vector)														const	noexcept	{
 			return 
 				{	vector.x * _11 + vector.y * _21 + vector.z * _31
 				,	vector.x * _12 + vector.y * _22 + vector.z * _32
@@ -396,18 +394,16 @@ namespace nwol
 				};
 		}
 
-		constexpr			_TCoord3			TransformInverseDirection	(const _TCoord3& _v)															const	noexcept
-		{
+		constexpr			_TCoord3			TransformInverseDirection	(const _TCoord3& _v)															const	noexcept	{
 			return	
 				{	_v.x * _11 + _v.y * _12 + _v.z * _13 
 				,	_v.x * _21 + _v.y * _22 + _v.z * _23
 				,	_v.x * _31 + _v.y * _32 + _v.z * _33
 				};
 		} 
-
 		//- Rotate avector using the inverse of the matrix
-		//inline				void				InverseRotateInPlace		(_TCoord3& vector)				const			{ fpVec = InverseRotate(vector); }
-		//					_TCoord3	InverseRotate				(const _TCoord3& fpVec)			const
+		//inline				void				InverseRotateInPlace	(_TCoord3& vector)				const			{ fpVec = InverseRotate(vector); }
+		//					_TCoord3				InverseRotate			(const _TCoord3& fpVec)			const
 		//{
 		//	return 
 		//	{	fpVec.x * _11 + fpVec.y * _21 + fpVec.z * _31
@@ -415,7 +411,6 @@ namespace nwol
 		//	,	fpVec.x * _13 + fpVec.y * _23 + fpVec.z * _33
 		//	};
 		//}
-
 							void				Identity					(void)																					noexcept	{
 			*this = 
 				{ (_tBase)1,  (_tBase)0,  (_tBase)0,  (_tBase)0
@@ -424,7 +419,6 @@ namespace nwol
 				, (_tBase)0,  (_tBase)0,  (_tBase)0,  (_tBase)1
 				};
 		}
-
 							void				RotationX					(double angle)																			noexcept	{	
 			::nwol::SPairSinCos							angleSinCos					= ::nwol::getSinCos(angle);
 			_11 = (_tBase)1;	_12 =							_13 = 
@@ -433,7 +427,6 @@ namespace nwol
 			// 
 			_41 = _42 = _43 = _14 = _24 = _34 = (_tBase)0; _44 = (_tBase)1;
 		}
-
 							void				RotationY					(double angle)																			noexcept	{	
 			::nwol::SPairSinCos							angleSinCos					= ::nwol::getSinCos(angle);
 			_11 = (_tBase)angleSinCos.Cos;	_12 = (_tBase)0;	_13 = -(_tBase)angleSinCos.Sin;
@@ -442,7 +435,6 @@ namespace nwol
 			// 
 			_41 = _42 = _43 = _14 = _24 = _34 = (_tBase)0; _44 = (_tBase)1;
 		}
-
 							void				RotationZ					(double angle)																			noexcept	{	
 			::nwol::SPairSinCos							angleSinCos					= ::nwol::getSinCos(angle);
 			_11 =  (_tBase)angleSinCos.Cos;	_12 = (_tBase)angleSinCos.Sin;	_13 = (_tBase)0;
