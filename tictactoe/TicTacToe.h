@@ -73,14 +73,14 @@ namespace ttt
 							uint32_t									Winner						: 2;
 							uint32_t									PlayerControls				: 2;
 		//				
-		inline constexpr												TicTacToeBoard32			()																									noexcept	: Cells(0), MovesLeft(9), PlayerIndex(0), Winner(CELL_VALUE_EMPTY), PlayerControls(0x1) {}
+		inline constexpr												TicTacToeBoard32			()																									noexcept	: Cells(0), MovesLeft(9), PlayerIndex(0), Winner(CELL_VALUE_EMPTY), PlayerControls(0x1)	{}
 		//
-		inline constexpr	CELL_VALUE									GetWinner					()																							const	noexcept	{ return (CELL_VALUE)Winner;												}
-		inline constexpr	PLAYER_CONTROL								GetPlayerControl			(const int playerIndex)																		const	noexcept	{ return (PLAYER_CONTROL)(PlayerControls & (1 << playerIndex));				}
-		inline constexpr	PLAYER_CONTROL								GetPlayerControlCurrent		()																							const	noexcept	{ return GetPlayerControl(PlayerIndex);										}
-		inline constexpr	CELL_VALUE									GetCellValue				(const int row, const int column)															const	noexcept	{ return GetCellValue(column*3+row);										}
-		inline				void										SetCellValue				(const int row, const int column, const CELL_VALUE value)											noexcept	{ SetCellValue(column*3+row, value);										}
-		inline constexpr	CELL_VALUE									GetCellValue				(const int index)																			const	noexcept	{ return (CELL_VALUE)((Cells & (CELL_VALUE_MASK << (index*2))) >> index*2);	}
+		inline constexpr	CELL_VALUE									GetWinner					()																							const	noexcept	{ return (CELL_VALUE)Winner;															}
+		inline constexpr	PLAYER_CONTROL								GetPlayerControl			(const int playerIndex)																		const	noexcept	{ return (PLAYER_CONTROL)((PlayerControls & (1 << playerIndex)) >> playerIndex);		}
+		inline constexpr	PLAYER_CONTROL								GetPlayerControlCurrent		()																							const	noexcept	{ return GetPlayerControl(PlayerIndex);													}
+		inline constexpr	CELL_VALUE									GetCellValue				(const int row, const int column)															const	noexcept	{ return GetCellValue(column*3+row);													}
+		inline				void										SetCellValue				(const int row, const int column, const CELL_VALUE value)											noexcept	{ SetCellValue(column*3+row, value);													}
+		inline constexpr	CELL_VALUE									GetCellValue				(const int index)																			const	noexcept	{ return (CELL_VALUE)((Cells & (CELL_VALUE_MASK << (index*2))) >> index*2);				}
 		inline				void										SetCellValue				(const int index, const CELL_VALUE value)															noexcept	{
 					const CELL_VALUE											currentValue				= (CELL_VALUE)(value & CELL_VALUE_MASK);
 			Cells															= Cells | (currentValue << (index * 2));
