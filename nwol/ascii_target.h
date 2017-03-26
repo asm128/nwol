@@ -5,8 +5,7 @@
 
 namespace nwol
 {
-	struct SASCIITarget
-	{
+	struct SASCIITarget {
 							::nwol::grid_view<char		>	Text		= {};
 							::nwol::grid_view<uint16_t	>	Attributes	= {};
 

@@ -83,7 +83,7 @@ int32_t										update							(::SApplication& instanceApp, bool exitRequested)	
 	static const ::nwol::glabel						symbols[]						= {" O ", " X "};
 	::nwol::array_pod<::nwol::CONTROL_FLAG>			& controlFlags					= guiSystem.Controls.ControlFlags;
 
-	const ::ttt::PLAYER_CONTROL						& currentPlayer					= game.PlayerControls[game.PlayerIndex];
+	const ::ttt::PLAYER_CONTROL						& currentPlayer					= game.PlayerControls[game.Board.PlayerIndex];
 	::ttt::CellPick									cellPicked;
 	static uint8_t									tickDelay						= 0;
 	for(uint32_t iControl = 0, controlCount = controlFlags.size(); iControl < controlCount; ++iControl)
@@ -106,7 +106,7 @@ int32_t										update							(::SApplication& instanceApp, bool exitRequested)	
 				break;
 
 			default: 
-				if(currentPlayer == ::ttt::PLAYER_CONTROL_HUMAN && game.MovesLeft && !game.Winner) {
+				if(currentPlayer == ::ttt::PLAYER_CONTROL_HUMAN && game.Board.MovesLeft && !game.Winner) {
 					uint8_t											cellIndex			= (uint8_t)(iControl-1);
 					cellPicked									= {::ttt::CELL_VALUE_EMPTY, cellIndex};
 					if(::ttt::CELL_VALUE_EMPTY == instanceApp.Game.Board.GetCellValue(cellIndex)) {
@@ -121,7 +121,7 @@ int32_t										update							(::SApplication& instanceApp, bool exitRequested)	
 			}
 		}
 
-	if(currentPlayer != ::ttt::PLAYER_CONTROL_HUMAN && game.MovesLeft && !game.Winner && !tickDelay && !cellPicked.Value)
+	if(currentPlayer != ::ttt::PLAYER_CONTROL_HUMAN && game.Board.MovesLeft && !game.Winner && !tickDelay && !cellPicked.Value)
 		cellPicked									= game.Tick((uint8_t)~(uint8_t)0);
 
 	if(cellPicked.Value) {
@@ -143,25 +143,21 @@ int32_t										render							(::SApplication& instanceApp)							{
 	::nwol::error_t									errMy							= ::nwol::getASCIIBackBuffer(target);
 	reterr_error_if_errored(errMy, "%s", "Failed to get ASCII target!");
 
-	static const uint32_t							screenWidth						= instanceApp.Game.Screen.Width;
-	static const uint32_t							screenHeight					= instanceApp.Game.Screen.Height;
-
-	::ttt::ScreenASCII<screenWidth, screenHeight>	& screen						= instanceApp.Game.Screen;
-	memset(screen.Cells[0], ' ', ::nwol::size(screen.Cells));
+	static constexpr const uint32_t					screenWidth						= ttt::TicTacToe::SCREEN_WIDTH+1;
+	static constexpr const uint32_t					screenHeight					= ttt::TicTacToe::SCREEN_HEIGHT;
+	ttt::ScreenASCII<screenWidth, screenHeight>		targetScreenTTT					= {};
 
 	::ttt::TicTacToe								& game							= instanceApp.Game;
-
-	if(game.Winner || !game.MovesLeft)
-		instanceApp.Game.DrawResults(game.Winner, screenWidth>>1, (screenHeight>>1)+2, screen.Cells);
-
-	instanceApp.Game.DrawBoard(1, 1, screen.Cells);
-	instanceApp.Game.DrawBoard(::ttt::CELL_VALUE_O, 1, 5, screen.Cells);
-	instanceApp.Game.DrawBoard(::ttt::CELL_VALUE_X, 1, 9, screen.Cells);
+	game.DrawBoard(1, 1, targetScreenTTT.Cells);
+	game.DrawBoard(::ttt::CELL_VALUE_O, 1, 5, targetScreenTTT.Cells);
+	game.DrawBoard(::ttt::CELL_VALUE_X, 1, 9, targetScreenTTT.Cells);
+	if(game.Winner || !game.Board.MovesLeft)
+		game.DrawResults(game.Winner, screenWidth>>1, (screenHeight>>1)+2, targetScreenTTT.Cells);
 
 	for(uint32_t y = 0, yMax = ::nwol::min(screenHeight, target.Height()); y<yMax; ++y)
 		for(uint32_t x = 0, xMax = ::nwol::min(screenWidth, target.Width()); x<xMax; ++x) {
 			uint32_t										indexLinear						= y * target.Width() + x;
-			target.Text.begin()[indexLinear]			= screen.Cells[y][x];
+			target.Text.begin()[indexLinear]			= targetScreenTTT.Cells[y][x];
 		}
 
 	::nwol::renderGUIASCII(target, instanceApp.GUI);

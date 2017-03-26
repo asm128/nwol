@@ -7,7 +7,7 @@
 //--------------------------------------------------------------- Runtime Interface
 #define DEFINE_RUNTIME_INTERFACE_TITLE(_YourCustomClass, _PluginTitle)																						\
 const char*								appTitle				()																noexcept		{			\
-	static constexpr const char						customAppTitle[]	= _PluginTitle;																		\
+	static constexpr const char					customAppTitle[]		= _PluginTitle;																		\
 	return customAppTitle; 																																	\
 }
 
