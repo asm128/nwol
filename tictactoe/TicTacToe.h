@@ -24,12 +24,12 @@ namespace ttt
 	struct CellPick {
 							CELL_VALUE									Value						: 2;
 							uint16_t									IndexCell					: 4;
-							uint16_t									Row							: 2;
-							uint16_t									Column						: 2;
+							uint16_t									Row							: 2;	// Row		= IndexCell % 3
+							uint16_t									Column						: 2;	// Column	= IndexCell / 3
 							uint16_t									IndexPlayer					: 1;
 		//
-		inline constexpr												CellPick					()																									noexcept	: Value(CELL_VALUE_EMPTY)	, IndexCell(0)		, Row(0)		, Column(0)			, IndexPlayer(0)	{}
-		inline constexpr												CellPick					(CELL_VALUE value, uint8_t index)																	noexcept	: Value(value)				, IndexCell(index)	, Row(index%3)	, Column(index/3)	, IndexPlayer(0)	{}
+		inline constexpr												CellPick					()																									noexcept	: Value(CELL_VALUE_EMPTY)	, IndexCell(0)		, Row(0)		, Column(0)			, IndexPlayer(0)		{}
+		inline constexpr												CellPick					(CELL_VALUE value, uint8_t cell, uint8_t player)													noexcept	: Value(value)				, IndexCell(cell)	, Row(cell%3)	, Column(cell/3)	, IndexPlayer(player)	{}
 	};	// struct
 
 	struct TicTacToeBoard16 {
@@ -82,16 +82,15 @@ namespace ttt
 		inline				void										SetCellValue				(const int row, const int column, const CELL_VALUE value)											noexcept	{ SetCellValue(column*3+row, value);										}
 		inline constexpr	CELL_VALUE									GetCellValue				(const int index)																			const	noexcept	{ return (CELL_VALUE)((Cells & (CELL_VALUE_MASK << (index*2))) >> index*2);	}
 		inline				void										SetCellValue				(const int index, const CELL_VALUE value)															noexcept	{
-					CELL_VALUE													currentValue				= GetCellValue(index);
-			currentValue													= (CELL_VALUE)(value & CELL_VALUE_MASK);
-			Cells															= Cells | (currentValue << (index*2));
+					const CELL_VALUE											currentValue				= (CELL_VALUE)(value & CELL_VALUE_MASK);
+			Cells															= Cells | (currentValue << (index * 2));
 		}
 		inline				TicTacToeBoard16							GetCells					(const CELL_VALUE value)																	const	noexcept	{
 					TicTacToeBoard16											result;
 			for(int y=0; y<3; ++y)
 				for(int x=0; x<3; ++x) {
-							int32_t														indexLinear					= y*3+x;
-							CELL_VALUE													currentValue				= GetCellValue(indexLinear);
+							const int32_t												indexLinear					= y * 3 + x;
+							const CELL_VALUE											currentValue				= GetCellValue(indexLinear);
 					if(currentValue == value) {
 						result.SetCell(indexLinear, true);
 						++result.Used;
@@ -111,7 +110,7 @@ namespace ttt
 	struct TicTacToe {
 		static constexpr	const uint16_t								SCREEN_WIDTH				= 40;
 		static constexpr	const uint16_t								SCREEN_HEIGHT				= 12;
-		static constexpr	const char									Symbols[3]					= {'-', 'X', 'O'};
+		static constexpr	const char									Symbols[]					= {'-', 'X', 'O'};
 
 							TicTacToeBoard32							Board						= {};
 
@@ -125,7 +124,7 @@ namespace ttt
 		// Returns useful information about the move
 							CellPick									TurnPlay					(uint8_t cellIndex)																					noexcept	{
 					CELL_VALUE													result_value				= CELL_VALUE_EMPTY;
-					const int													playerIndex					= Board.PlayerIndex;
+					const uint8_t												playerIndex					= Board.PlayerIndex;
 
 			// Handle turn depending on the player type. Currently there is no AI system other than random behavior which from time to time makes it look like it knows what she's doing.
 			switch(Board.GetPlayerControl(playerIndex))	{	
@@ -146,9 +145,7 @@ namespace ttt
 				TurnChange();
 				--Board.MovesLeft;
 			}
-					CellPick													result_pick					= {result_value, cellIndex};
-			result_pick.IndexPlayer											= playerIndex;
-			return result_pick;
+			return {result_value, cellIndex, playerIndex};
 		}
 		// returns true if a full line was found
 		inline				CELL_VALUE									EvaluateBoard				()																							const	noexcept	{
@@ -181,7 +178,7 @@ namespace ttt
 		// Display match results text 
 		template <size_t _Width, size_t _Height>
 							void										DrawResults					(CELL_VALUE winner, uint32_t x, uint32_t y, char (&screen)[_Height][_Width])				const	noexcept	{
-					char														text[28];
+					char														text[25];
 					int32_t														len;
 			//
 			if(winner)	len														= (int32_t)sprintf_s(text, "Player %u won the match!", (uint32_t)winner);
@@ -192,8 +189,8 @@ namespace ttt
 		//	Display the board
 		template <size_t _Width, size_t _Height>
 							void										DrawBoard					(uint32_t offsetx, uint32_t offsety, char (&screen)[_Height][_Width])						const	noexcept	{
-			for(uint8_t y=0; y<3; ++y) {
-				for(uint8_t x=0; x<3; ++x) 
+			for(uint8_t y=0, maxY = (_Height < 3) ? _Height : 3; y < maxY; ++y) {
+				for(uint8_t x=0, maxX = (_Width < 3) ? _Width : 3; x < maxX; ++x)
 					screen[offsety+y][offsetx+x]									= Symbols[Board.GetCellValue(x, y)];
 				screen[offsety+y][_Width-1]										= '\n';
 			}
@@ -203,11 +200,13 @@ namespace ttt
 		template <size_t _Width, size_t _Height>
 							void										DrawBoard					(CELL_VALUE cellValue, uint32_t offsetx, uint32_t offsety, char (&screen)[_Height][_Width])	const	noexcept	{
 					const TicTacToeBoard16										board						= Board.GetCells(cellValue);
-			for(uint8_t y=0; y<3; ++y) {
-				for(uint8_t x=0; x<3; ++x)
+			for(uint8_t y=0, maxY = (_Height < 3) ? _Height : 3; y < maxY; ++y) {
+				for(uint8_t x=0, maxX = (_Width < 3) ? _Width : 3; x < maxX; ++x)
 					screen[offsety+y][offsetx+x]									= Symbols[board.GetCell({x, y}) ? cellValue : 0];
 				screen[offsety+y][_Width-1]										= '\n';
 			}
+			if((offsety + 2) < _Height && (offsetx + 4) < _Width)	// print number of cells used if the screen is large enough
+				screen[offsety+2][offsetx+4]									= (char)('0' + board.Used);
 			screen[_Height-1][_Width-1]										= 0;
 		}	
 	};	// struct

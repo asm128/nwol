@@ -122,7 +122,7 @@ int32_t										update							(::SApplication& instanceApp, bool exitRequested)	
 			default:	// Board cell clicked 
 				if(::ttt::PLAYER_CONTROL_HUMAN == currentPlayer && gameBoard.MovesLeft && !gameBoard.Winner) {
 					uint8_t											cellIndex						= (uint8_t)(iControl-1);
-					cellPicked									= {::ttt::CELL_VALUE_EMPTY, cellIndex};
+					cellPicked									= {::ttt::CELL_VALUE_EMPTY, cellIndex, (uint8_t)gameBoard.PlayerIndex};
 					if(::ttt::CELL_VALUE_EMPTY == gameBoard.GetCellValue(cellIndex)) {
 						cellPicked									= instanceApp.Game.Tick(cellIndex);
 						tickDelay									= 2;
@@ -155,6 +155,8 @@ int32_t										update							(::SApplication& instanceApp, bool exitRequested)	
 
 	sizeof(::SApplication);
 	sizeof(ttt::TicTacToe);
+	sizeof(ttt::TicTacToeBoard16);
+	sizeof(ttt::TicTacToeBoard32);
 	sizeof(ttt::CellCoord);
 	sizeof(ttt::CellPick);
 	return 0; 
