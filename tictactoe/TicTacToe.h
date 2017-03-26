@@ -17,23 +17,26 @@ namespace ttt
 		};	// enum
 
 	struct CellCoord {
-							uint8_t										Row			: 4;
-							uint8_t										Column		: 4;
+							uint8_t										Row							: 4;
+							uint8_t										Column						: 4;
 	};	// struct
 
 	struct CellPick {
-							CELL_VALUE									Value		: 2;
-							uint16_t									IndexCell	: 4;
-							uint16_t									Row			: 2;
-							uint16_t									Column		: 2;
-							uint16_t									IndexPlayer	: 1;
+							CELL_VALUE									Value						: 2;
+							uint16_t									IndexCell					: 4;
+							uint16_t									Row							: 2;
+							uint16_t									Column						: 2;
+							uint16_t									IndexPlayer					: 1;
 		//
 		inline constexpr												CellPick					()																									noexcept	: Value(CELL_VALUE_EMPTY)	, IndexCell(0)		, Row(0)		, Column(0)			, IndexPlayer(0)	{}
 		inline constexpr												CellPick					(CELL_VALUE value, uint8_t index)																	noexcept	: Value(value)				, IndexCell(index)	, Row(index%3)	, Column(index/3)	, IndexPlayer(0)	{}
 	};	// struct
 
 	struct TicTacToeBoard16 {
-							uint16_t									Cells																																		= 0;
+							uint16_t									Cells						: 9;
+							uint16_t									Used						: 4;	// Keep track of the amount of cells used.
+
+		inline constexpr												TicTacToeBoard16			()																									noexcept	: Cells(0), Used(0)									{}
 		// methods
 		inline constexpr	bool										GetCell						(CellCoord coord)																			const	noexcept	{ return GetCell(coord.Column*3+coord.Row);			}
 		inline				void										SetCell						(CellCoord coord, bool value)																		noexcept	{ SetCell		(coord.Column*3+coord.Row, value);	}
@@ -76,15 +79,12 @@ namespace ttt
 		inline constexpr	PLAYER_CONTROL								GetPlayerControl			(const int playerIndex)																		const	noexcept	{ return (PLAYER_CONTROL)(PlayerControls & (1 << playerIndex));				}
 		inline constexpr	PLAYER_CONTROL								GetPlayerControlCurrent		()																							const	noexcept	{ return GetPlayerControl(PlayerIndex);										}
 		inline constexpr	CELL_VALUE									GetCellValue				(const int row, const int column)															const	noexcept	{ return GetCellValue(column*3+row);										}
-		inline				CELL_VALUE									SetCellValue				(const int row, const int column, const CELL_VALUE value)											noexcept	{ return SetCellValue(column*3+row, value);									}
+		inline				void										SetCellValue				(const int row, const int column, const CELL_VALUE value)											noexcept	{ SetCellValue(column*3+row, value);										}
 		inline constexpr	CELL_VALUE									GetCellValue				(const int index)																			const	noexcept	{ return (CELL_VALUE)((Cells & (CELL_VALUE_MASK << (index*2))) >> index*2);	}
-		inline				CELL_VALUE									SetCellValue				(const int index, const CELL_VALUE value)															noexcept	{
+		inline				void										SetCellValue				(const int index, const CELL_VALUE value)															noexcept	{
 					CELL_VALUE													currentValue				= GetCellValue(index);
-			if(currentValue)
-				return currentValue;
 			currentValue													= (CELL_VALUE)(value & CELL_VALUE_MASK);
 			Cells															= Cells | (currentValue << (index*2));
-			return currentValue;
 		}
 		inline				TicTacToeBoard16							GetCells					(const CELL_VALUE value)																	const	noexcept	{
 					TicTacToeBoard16											result;
@@ -92,7 +92,10 @@ namespace ttt
 				for(int x=0; x<3; ++x) {
 							int32_t														indexLinear					= y*3+x;
 							CELL_VALUE													currentValue				= GetCellValue(indexLinear);
-					result.SetCell(indexLinear, (currentValue == value) ? true : false);
+					if(currentValue == value) {
+						result.SetCell(indexLinear, true);
+						++result.Used;
+					}
 				}
 			return result;
 		}
@@ -192,9 +195,9 @@ namespace ttt
 			for(uint8_t y=0; y<3; ++y) {
 				for(uint8_t x=0; x<3; ++x) 
 					screen[offsety+y][offsetx+x]									= Symbols[Board.GetCellValue(x, y)];
-				screen[offsety+y][_Width-1] = '\n';
+				screen[offsety+y][_Width-1]										= '\n';
 			}
-			screen[_Height-1][_Width-1] = 0;
+			screen[_Height-1][_Width-1]										= 0;
 		}
 		//	Display the board for a given team
 		template <size_t _Width, size_t _Height>
@@ -203,10 +206,9 @@ namespace ttt
 			for(uint8_t y=0; y<3; ++y) {
 				for(uint8_t x=0; x<3; ++x)
 					screen[offsety+y][offsetx+x]									= Symbols[board.GetCell({x, y}) ? cellValue : 0];
-
-				screen[offsety+y][_Width-1] = '\n';
+				screen[offsety+y][_Width-1]										= '\n';
 			}
-			screen[_Height-1][_Width-1] = 0;
+			screen[_Height-1][_Width-1]										= 0;
 		}	
 	};	// struct
 #pragma pack( pop )
