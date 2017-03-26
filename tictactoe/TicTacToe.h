@@ -1,4 +1,5 @@
 // Tic Tac Toe implementation which stores its whole state in just 4 bytes.
+// Pablo Ariel Zorrilla Cepeda (c) 2017 - Distributed under the MIT License.
 #include <cstdint>
 #include <random>
 
