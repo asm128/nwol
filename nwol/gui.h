@@ -38,24 +38,24 @@ namespace nwol
 
 	//--------------------------------------------------------- Objects
 	struct SGUIControl				{				
+					::nwol::glabel											Text				= {"GUI Control", (uint32_t)-1}									;
 					::nwol::SRectangle2D<int32_t>							AreaASCII			= {{1, 1}, {11, 1}}												;
 					STextColor32											TextColors32		= {0xFFFFFFFF, 0xFF000000}										;
 					SControlTextColorASCII									TextColorsASCII		= {{COLOR_BLUE, COLOR_DARKGREY}, {COLOR_YELLOW, COLOR_BLUE}}	;
 					::nwol::ALIGN_SCREEN									AlignArea			= ::nwol::SCREEN_BOTTOM_RIGHT									;
 					::nwol::ALIGN_SCREEN									AlignText			= ::nwol::SCREEN_TOP_LEFT										;
 					CONTROL_FLAG											ControlFlags		= ::nwol::CONTROL_FLAG_NONE										;
-					::nwol::glabel											Text				= {"GUI Control", (uint32_t)-1}									;
 	};																				   
 
 	struct SGUIControlTable			{				
-					::nwol::array_pod	<::nwol::SRectangle2D<int32_t>	>	AreasRealigned		;
-					::nwol::array_pod	<::nwol::SRectangle2D<int32_t>	>	AreasASCII			;
-					::nwol::array_pod	<::nwol::ALIGN_SCREEN			>	AlignArea			;
-					::nwol::array_pod	<::nwol::ALIGN_SCREEN			>	AlignText			;
-					::nwol::array_pod	<SControlTextColorASCII			>	TextColorsASCII		;
-					::nwol::array_pod	<STextColor32					>	TextColors32		;
-					::nwol::array_pod	<CONTROL_FLAG					>	ControlFlags		;
-					::nwol::array_obj	<::nwol::glabel					>	Text				;
+					::nwol::array_pod<::nwol::SRectangle2D<int32_t>	>		AreasRealigned		;
+					::nwol::array_pod<::nwol::SRectangle2D<int32_t>	>		AreasASCII			;
+					::nwol::array_pod<::nwol::ALIGN_SCREEN			>		AlignArea			;
+					::nwol::array_pod<::nwol::ALIGN_SCREEN			>		AlignText			;
+					::nwol::array_pod<SControlTextColorASCII		>		TextColorsASCII		;
+					::nwol::array_pod<STextColor32					>		TextColors32		;
+					::nwol::array_pod<CONTROL_FLAG					>		ControlFlags		;
+					::nwol::array_obj<::nwol::glabel				>		Text				;
 
 					void													Clear				()						{
 						::nwol::clear
@@ -88,6 +88,7 @@ namespace nwol
 					::nwol::SCoord2<uint32_t>								TargetSize32		;
 					::nwol::SCoord2<uint32_t>								TargetSizeASCII		;
 					::nwol::SCoord2<int32_t>								MousePosition		;
+
 					SGUIControlTable										Controls			;
 	};
 #pragma pack(pop)

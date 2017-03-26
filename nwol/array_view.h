@@ -11,7 +11,6 @@ namespace nwol
 	protected:
 							_tBase				* Data			= nullptr;
 							uint32_t			Count			= 0;
-
 	public:
 		typedef				_tBase				TBase			;
 		static				const uint32_t		element_size	= (uint32_t)sizeof(_tBase);

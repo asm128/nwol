@@ -7,16 +7,29 @@
 namespace nwol
 {
 	struct IHandlerKeyboard		{
-		virtual	void										OnKeyUp									(uint8_t key)											= 0;
-		virtual	void										OnKeyDown								(uint8_t key)											= 0;
+		virtual				void							OnKeyUp									(uint8_t key)											= 0;
+		virtual				void							OnKeyDown								(uint8_t key)											= 0;
 	};
 	struct IHandlerMouse		{
-		virtual	void										OnMouseButtonUp							(uint8_t buttonIndex)									= 0;
-		virtual	void										OnMouseButtonDown						(uint8_t buttonIndex)									= 0;
-		virtual	void										OnMouseMove								(int32_t x, int32_t y, int32_t z)						= 0;
+		virtual				void							OnMouseButtonUp							(uint8_t buttonIndex)									= 0;
+		virtual				void							OnMouseButtonDown						(uint8_t buttonIndex)									= 0;
+		virtual				void							OnMouseMove								(int32_t x, int32_t y, int32_t z)						= 0;
 	};
 
 	struct SInput				{
+		static constexpr	const uint16_t					KeyCount								= 256U;
+		static constexpr	const uint16_t					ButtonCount								= 16U;
+
+							array_pod<IHandlerKeyboard	*>	HandlersKeyboard						= {};
+							array_pod<IHandlerMouse		*>	HandlersMouse							= {};
+
+							int32_t							MouseX									= 0;
+							int32_t							MouseY									= 0;
+
+							uint8_t							Keys					[KeyCount]		= {};
+							uint8_t							PreviousKeys			[KeyCount]		= {};
+							uint8_t							MouseButtons			[ButtonCount]	= {};
+							uint8_t							PreviousMouseButtons	[ButtonCount]	= {};
 		struct SInputDetail			{
 #if defined(__ANDROID__)
 								void							(*handleAppInput)						();
@@ -24,19 +37,6 @@ namespace nwol
 								void							(*handleAppInput)						();	
 #endif
 		}													Detail;
-		static constexpr	const uint16_t					KeyCount								= 256U;
-		static constexpr	const uint16_t					ButtonCount								= 16U;
-
-							uint8_t							Keys					[KeyCount]		= {};
-							uint8_t							PreviousKeys			[KeyCount]		= {};
-							uint8_t							MouseButtons			[ButtonCount]	= {};
-							uint8_t							PreviousMouseButtons	[ButtonCount]	= {};
-
-							uint32_t						MouseX									= 0;
-							uint32_t						MouseY									= 0;
-
-							array_pod<IHandlerKeyboard	*>	HandlersKeyboard						= {};
-							array_pod<IHandlerMouse		*>	HandlersMouse							= {};
 
 		inline				bool							KeyUp									(uint8_t index)						const	noexcept	{ return 0 == Keys			[index] && 0 != PreviousKeys			[index]; }
 		inline				bool							KeyDown									(uint8_t index)						const	noexcept	{ return 0 != Keys			[index] && 0 == PreviousKeys			[index]; }

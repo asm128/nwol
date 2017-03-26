@@ -12,19 +12,17 @@ namespace nwol
 	template <typename... _Args>	void	clear	(_Args&&... args)						{ const int32_t results[] = {args.clear		()			..., 0}; }
 	template <typename... _Args>	void	resize	(uint32_t newSize, _Args&&... args)		{ const int32_t results[] = {args.resize	(newSize)	..., 0}; }
 
-#pragma pack(push, 1)
-
 	template<typename _tBase, size_t _Size>				struct array_static_base				{ protected: _tBase Block[_Size]; };
 	template<typename _tBase, size_t _Size>
 	struct array_static : public ::nwol::array_view<_tBase>, public ::nwol::array_static_base<_tBase, _Size> {
 		typedef ::nwol::array_static_base<_tBase, _Size>	_ArrayStaticBase;
 	public:
-		using				_ArrayStaticBase::			Block									;
-		using				array_view<_tBase>	::			Data									;
-		using				array_view<_tBase>	::			Count									;
-		typedef				array_view<_tBase>				_TArrayView;
+		using				_ArrayStaticBase	::		Block									;
+		using				array_view<_tBase>	::		Data									;
+		using				array_view<_tBase>	::		Count									;
+		typedef				array_view<_tBase>			_TArrayView;
 
-		inline constexpr								array_static							()																							: array_view<_tBase>(Block)													{}
+		inline constexpr								array_static							()																								: array_view<_tBase>(Block)													{}
 		template<size_t _SizeOther>
 		inline											array_static							(const _tBase (&sourceData)[_SizeOther])														: array_view<_tBase>(Block)													{
 			Count											= 0;
@@ -38,17 +36,17 @@ namespace nwol
 	template<typename _tBase>
 	struct vector_base : public array_view<_tBase> {
 	protected:
-		using				array_view<_tBase>::			Count;
+		using				array_view<_tBase>::		Count;
 							uint32_t					Size									= 0;
 
-		inline constexpr								vector_base								()																				noexcept	= default;
+		inline constexpr								vector_base								()																					noexcept	= default;
 		inline constexpr								vector_base								(const vector_base<_tBase>&		other)												noexcept	= delete;
 		inline constexpr								vector_base								(const vector_base<_tBase>&&	other)												noexcept	= delete;
 
 							vector_base<_tBase>&		operator =								(const vector_base<_tBase>&		other)															= delete;
 							vector_base<_tBase>&		operator =								(const vector_base<_tBase>&&	other)															= delete;
 		// This helper method is used to prevent redundancies. It returns a safe integer of the same or a higher value than the one passed as argument.
-		inline constexpr	uint32_t					calc_reserve_size						(const uint32_t newSize)												const	noexcept	{ return ::nwol::max(newSize, newSize+nwol::max(newSize>>1, 4U));				}
+		inline constexpr	uint32_t					calc_reserve_size						(const uint32_t newSize)												const	noexcept	{ return ::nwol::max(newSize, newSize+nwol::max(newSize>>1, 4U));						}
 		inline constexpr	uint32_t					calc_malloc_size						(const uint32_t newSize)												const	noexcept	{ return ::nwol::max(newSize*(uint32_t)sizeof(_tBase), Count*(uint32_t)sizeof(_tBase));	}
 	}; // vector_base
 
@@ -65,7 +63,7 @@ namespace nwol
 		using				_TVectorBase::				calc_malloc_size							;
 		using				_TVectorBase::				operator[]									;
 
-		inline											~array_pod									()																							{ safe_nwol_free(Data);	}
+		inline											~array_pod									()																							{ safe_nwol_free(Data);		}
 		inline constexpr								array_pod									()																				noexcept	= default;
 		inline											array_pod									(uint32_t initialSize)																		{ resize(initialSize);		}
 		inline											array_pod									(array_pod<_TPOD>&& other)														noexcept	{
@@ -415,6 +413,7 @@ namespace nwol
 
 			return Count;
 		}
+		// returns the index or -1 if not found.
 		inline				int32_t						find										(const _TObj& valueToLookFor)										const				{
 			for(uint32_t i=0; i<Count; ++i)
 				if(Data[i] == valueToLookFor)
@@ -422,7 +421,6 @@ namespace nwol
 			return -1;
 		}
 	}; // array_obj
-#pragma pack(pop)
 } // namespace
 
 #endif // __ARRAY_H__652434654236655143465__

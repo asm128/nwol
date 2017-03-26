@@ -135,7 +135,6 @@ void										serverListen					( void* server )											{ serverListen((::nwol
 	return 0;
 }
 
-
 ::nwol::error_t								executeCommand					(::nwol::CClient* client, const char* buffer)
 {
 	uint64_t										current_time					= time(0);	// Get current time
@@ -148,7 +147,6 @@ void										serverListen					( void* server )											{ serverListen((::nwol
 	::nwol::getAddress( client->m_ClientTarget, &a1, &a2, &a3, &a4, &port_number );
 
 	if (strcmp(buffer, "GET PLAYER\r\n") == 0) {
-		//klib::SPlayer player;
 		if(::nwol::sendUserCommand(client->m_ClientListener, client->m_ClientTarget, ::nwol::USER_COMMAND_RESPONSE, (const uint8_t*)&current_time, (uint32_t)sizeof(current_time))) {
 			error_printf("Failed to send player data to %u.%u.%u.%u:%u.", 
 				(uint32_t)a1,
