@@ -15,7 +15,7 @@
 
 DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
 
-int32_t										setupGUI						(::SApplication& instanceApp)																	{ 
+				int32_t						setupGUI						(::SApplication& instanceApp)																	{ 
 	::nwol::SGUI									& guiSystem						= instanceApp.GUI;
 
 	// Create exit button
@@ -26,19 +26,21 @@ int32_t										setupGUI						(::SApplication& instanceApp)																	{
 	::nwol::error_t									errMy							= ::nwol::createControl(guiSystem, newControl);
 	reterr_msg_if_error(errMy, "%s: \"%s\".", "Failed to create control", newControlLabel.begin());
 
+	// Create game board buttons: each board cell is a button.
 	newControl.AlignArea						= (::nwol::ALIGN_SCREEN)(::nwol::SCREEN_CENTER | ::nwol::SCREEN_VCENTER)	;
-	for(int32_t y=0; y<3; ++y) 
-		for(int32_t x=0; x<3; ++x) {
-			newControl.AreaASCII						= {{-3+x*3, -3+y}, {3, 1}}								;
-			newControl.Text								= ::nwol::glabel::statics().space						;
-			::nwol::SControlTextColorASCII					& colorsConsole				= newControl.TextColorsASCII;
-			colorsConsole.Color.Background				= ((y*3+x) % 2) ? COLOR_DARKGREY : COLOR_WHITE			;
-			colorsConsole.Color.Foreground				= COLOR_YELLOW											;
-			colorsConsole.ColorPressed					= {COLOR_DARKGREY, COLOR_YELLOW}						;
-			//newControl.AlignText						= ::nwol::SCREEN_CENTER									; this is not working yet
-			::nwol::createControl(guiSystem, newControl);
+	for(int32_t y = 0; y < 3; ++y) 
+		for(int32_t x = 0; x < 3; ++x) {
+			newControl.AreaASCII						= {{-3 + x * 3, -3 + y}, {3, 1}}									;
+			newControl.Text								= ::nwol::glabel::statics().space									;
+			::nwol::SControlTextColorASCII					& colorsConsole					= newControl.TextColorsASCII	;
+			colorsConsole.Color.Background				= ((y * 3 + x) % 2) ? COLOR_DARKGREY : COLOR_WHITE					;
+			colorsConsole.Color.Foreground				= COLOR_YELLOW														;
+			colorsConsole.ColorPressed					= {COLOR_DARKGREY, COLOR_YELLOW}									;
+			//newControl.AlignText						= ::nwol::SCREEN_CENTER												this is not working yet
+			error_if(errored(::nwol::createControl(guiSystem, newControl)), "%s", "Failed to create control");
 		}
 
+	// Create restart button
 	newControlLabel								= "Restart"																;
 	newControl									= ::nwol::SGUIControl()													;
 	newControl.AlignArea						= (::nwol::ALIGN_SCREEN)(::nwol::SCREEN_CENTER | ::nwol::SCREEN_BOTTOM)	;
@@ -51,7 +53,7 @@ int32_t										setupGUI						(::SApplication& instanceApp)																	{
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-int32_t										cleanup							(::SApplication& instanceApp)							{ 
+				int32_t						cleanup							(::SApplication& instanceApp)																	{ 
 	::nwol::shutdownASCIIScreen();
 
 	::networkDisable(instanceApp);
@@ -61,7 +63,7 @@ int32_t										cleanup							(::SApplication& instanceApp)							{
 
 
 
-int32_t										setup							(::SApplication& instanceApp)																	{ 
+				int32_t						setup							(::SApplication& instanceApp)																	{ 
 	srand((unsigned int)time(0));
 
 	::nwol::SGUI									& guiSystem						= instanceApp.GUI;
@@ -85,7 +87,7 @@ int32_t										setup							(::SApplication& instanceApp)																	{
 #error "Unsupported platform. Define key code for this platform in order to continue."
 #endif
 
-int32_t										update							(::SApplication& instanceApp, bool exitRequested)												{
+				int32_t						update							(::SApplication& instanceApp, bool exitRequested)												{
 	if(exitRequested)
 		return ::nwol::APPLICATION_STATE_EXIT;
 
@@ -119,7 +121,7 @@ int32_t										update							(::SApplication& instanceApp, bool exitRequested)	
 						guiControls.TextColorsASCII						[controlIndex].ColorPressed			= {COLOR_DARKGREY, COLOR_YELLOW};
 					}
 				}
-				debug_printf("%s", "Game restarted.");
+				always_printf("%s", "Game restarted.");
 				handledControlEvent							= true;
 				break;
 
@@ -167,13 +169,13 @@ int32_t										update							(::SApplication& instanceApp, bool exitRequested)	
 }
 
 template<uint32_t _screenWidth, uint32_t _screenHeight>
-void										bltASCIIScreen					(const ttt::ScreenASCII<_screenWidth, _screenHeight>& source, ::nwol::SASCIITarget& target)		{
+				void						bltASCIIScreen					(const ttt::ScreenASCII<_screenWidth, _screenHeight>& source, ::nwol::SASCIITarget& target)		{
 	for(uint32_t y = 0, yMax = ::nwol::min(_screenHeight, target.Height()); y<yMax; ++y)
 		for(uint32_t x = 0, xMax = ::nwol::min(_screenWidth, target.Width()); x<xMax; ++x)
 			target.Text[y][x]							= source.Cells[y][x];
 }
 
-int32_t										render							(::SApplication& instanceApp)																	{ 
+				int32_t						render							(::SApplication& instanceApp)																	{ 
 	static constexpr const uint32_t					screenWidth						= ttt::TicTacToe::SCREEN_WIDTH+1;
 	static constexpr const uint32_t					screenHeight					= ttt::TicTacToe::SCREEN_HEIGHT;
 	ttt::ScreenASCII<screenWidth, screenHeight>		targetScreenTTT					= {};
