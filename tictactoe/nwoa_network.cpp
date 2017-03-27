@@ -7,14 +7,21 @@
 #include <process.h>	// This is a Windows SDK header used for _beginthread().
 #endif
 
+::nwol::error_t								queryGameState							()												{
+	//::nwol::error_t									
+	//result				= ::nwol::sendUserCommand			();
+	//result				= ::nwol::receiveUserCommand		();
+	return 0;
+}
+
 // Loops sending and updating messages from/to the queues.
 int											runCommunications						(::nwol::SApplicationNetworkClient& appNetwork)	{
 	::nwol::SClientConnection						& instanceClient						= appNetwork.Connection;
 
-	reterr_msg_if_error(::nwol::initClientConnection	(instanceClient), "Failed to initialize client connection.");
-	reterr_msg_if_error(::nwol::connect					(instanceClient), "Failed to connect.");
+	::nwol::error_t									
+	result					= ::nwol::initClientConnection		(instanceClient);	reterr_error_if_errored(result, "%s", "Failed to initialize client connection.");
+	result					= ::nwol::connect					(instanceClient);	reterr_error_if_errored(result, "%s", "Failed to connect.");
 
-	::nwol::error_t									result									= 0;
 	while gbit_true(appNetwork.State, ::nwol::NETWORK_STATE_ENABLED) {
 
 		if(false == ::nwol::ping(instanceClient.pClient, instanceClient.pServer))	{	// Ping before anything else to make sure everything is more or less in order.

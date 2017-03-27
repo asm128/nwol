@@ -11,6 +11,8 @@
 #include <process.h>
 #include <ctime>
 
+#include <algorithm>
+
 DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
 
 int32_t										setupGUI						(::SApplication& instanceApp)																	{ 
@@ -56,6 +58,8 @@ int32_t										cleanup							(::SApplication& instanceApp)							{
 
 	return 0; 
 }
+
+
 
 int32_t										setup							(::SApplication& instanceApp)																	{ 
 	srand((unsigned int)time(0));
@@ -196,3 +200,5 @@ int32_t										render							(::SApplication& instanceApp)																	{
 	
 	return 0; 
 }
+
+
