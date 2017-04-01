@@ -26,19 +26,19 @@ typedef unsigned	__int128			uint128_t;
 #if defined(__WINDOWS__)
 typedef				float				float32_t;
 typedef				double				float64_t;
-typedef				unsigned char		byte_t;
+typedef				unsigned char		uchar_t, byte_t;
 typedef				char				char_t;
 typedef				bool				bool_t;
 #elif defined(__ANDROID__)
 typedef				float				float32_t;
 typedef				double				float64_t;
-typedef				unsigned char		byte_t;
+typedef				unsigned char		uchar_t, byte_t;
 typedef				char				char_t;
 typedef				bool				bool_t;
 #elif defined(__LINUX__)
 typedef				float				float32_t;
 typedef				double				float64_t;
-typedef				unsigned char		byte_t;
+typedef				unsigned char		uchar_t, byte_t;
 typedef				char				char_t;
 typedef				bool				bool_t;
 #else
