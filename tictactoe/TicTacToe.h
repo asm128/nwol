@@ -29,6 +29,7 @@ namespace ttt
 							uint8_t										Column						: 4;
 	};	// struct
 
+	// This structure is only suitable for boards of up to 3x3 cells.
 	struct CellPick {
 							CELL_VALUE									Value						: 2;
 							uint16_t									IndexCell					: 4;
@@ -40,10 +41,11 @@ namespace ttt
 		inline constexpr												CellPick					(const CELL_VALUE value, const uint8_t cell, const uint8_t player)									noexcept	: Value(value)				, IndexCell(cell)	, Row(cell % 3)	, Column(cell / 3)	, IndexPlayer(player)	{}
 	};	// struct
 
+	// This structure represents a boolean layout of the board. It's used to determine the cells occupied by a given player. 
 	struct TicTacToeBoard16 {
 
 							uint16_t									Cells						: 9;	
-							uint16_t									Used						: 4;	// Keep track of the amount of cells used.
+							uint16_t									Used						: 4;	// Keep track of the amount of cells set to true.
 
 		inline constexpr												TicTacToeBoard16			()																									noexcept	: Cells(0), Used(0)										{}
 		// methods
@@ -52,8 +54,8 @@ namespace ttt
 		inline constexpr	bool										GetCell						(const int index)																			const	noexcept	{ return (Cells & (1 << index)) ? true : false;			}
 		inline				void										SetCell						(const int index, const bool value)																	noexcept	{ Cells |= ((value ? 1 : 0) << index);					}
 							bool										EvaluateLines				()																							const	noexcept	{
-			static constexpr	const uint16_t									maskHorizontal				= 0x7;	// horizontal line mask
-			static constexpr	const uint16_t									maskVertical				= 0x49;	// vertical line mask
+			static constexpr	const uint16_t									maskHorizontal				= 0x7;	
+			static constexpr	const uint16_t									maskVertical				= 0x49;	
 			static constexpr	const uint16_t									cellMaskRows	[3]			= {(maskHorizontal	<< (0 * 3)), (maskHorizontal	<< (1 * 3)), (maskHorizontal	<< (2 * 3)), };		
 			static constexpr	const uint16_t									cellMaskColumns	[3]			= {(maskVertical	<< (0 * 1)), (maskVertical		<< (1 * 1)), (maskVertical		<< (2 * 1)), };		
 			for(int rowOrCol = 0; rowOrCol < 3; ++rowOrCol) {
@@ -188,13 +190,9 @@ namespace ttt
 
 		// Display match results text 
 		template <size_t _Width, size_t _Height>
-							void										DrawResults					(const CELL_VALUE winner, const Coord2Du32& textCenter, char (&screen)[_Height][_Width])	const	noexcept	{
+		inline				void										DrawResults					(const CELL_VALUE winner, const Coord2Du32& textCenter, char (&screen)[_Height][_Width])	const	noexcept	{
 					char														text[25];
-					int32_t														len;
-			//
-			if(winner)	len														= (int32_t)sprintf_s(text, "Player %u won the match!", (uint32_t)winner);
-			else		len														= (int32_t)sprintf_s(text, "Tie!");
-
+					const int32_t												len							= (int32_t)(winner ? sprintf_s(text, "Player %u won the match!", (uint32_t)winner) : sprintf_s(text, "Tie!"));
 			memcpy(&screen[textCenter.y][textCenter.x - (len >> 1)], text, len);
 		}
 
