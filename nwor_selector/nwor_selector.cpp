@@ -27,7 +27,8 @@ int32_t										cleanup							(::SApplication& instanceApp)																				
 
 int32_t										loadValidModules				(const char* modulesPath, ::nwol::SRuntimeValues* runtimeValues, ::nwol::array_pod<::nwol::SModuleInterface>& loadedModules)	{
 	::nwol::array_obj<::nwol::glabel>			fileNames;
-	reterr_msg_if_error(::nwol::listFiles(modulesPath, fileNames), "Cannot load modules from path: %s.", modulesPath);
+	::nwol::error_t								errMy								= ::nwol::listFiles(modulesPath, fileNames);
+	reterr_error_if_errored(errMy, "Cannot load modules from path: %s.", modulesPath);
 
 	char										fileExtensionToLookFor	[]			= ".dll";
 	::nwol::array_obj<::nwol::glabel>			possibleModuleNames;

@@ -401,7 +401,7 @@ int32_t									nwol::sendUserCommand				(SConnectionEndpoint* pOrigin, ::nwol::
 	// Send data back
 	const ::nwol::NETLIB_COMMAND					commandUserSend					= (requestOrResponse == ::nwol::USER_COMMAND_REQUEST) ? ::nwol::NETLIB_COMMAND_USER_REQUEST : ::nwol::NETLIB_COMMAND_USER_RESPONSE;
 	error_t											errMy							= ::nwol::sendSystemCommand(pOrigin, pTarget, commandUserSend);
-	reterr_msg_if_error(errMy, "Error sending system command.");
+	reterr_error_if_errored(errMy, "Error sending system command.");
 
 	int32_t							
 	sentBytes									= 0;
@@ -429,7 +429,7 @@ int32_t									nwol::receiveUserCommand			(::nwol::SConnectionEndpoint* pOrigin
 	// Send data back
 	::nwol::NETLIB_COMMAND							commandUserReceive				= ::nwol::NETLIB_COMMAND_INVALID;
 	error_t											errMy							= ::nwol::receiveSystemCommand(pOrigin, pTarget, commandUserReceive);
-	reterr_msg_if_error(errMy, "Error receiving system command.");
+	reterr_error_if_errored(errMy, "Error receiving system command.");
 
 	requestOrResponse							= (commandUserReceive == ::nwol::NETLIB_COMMAND_USER_REQUEST) ? ::nwol::USER_COMMAND_REQUEST : ::nwol::USER_COMMAND_UNKNOWN;
 	if(requestOrResponse != USER_COMMAND_REQUEST) {

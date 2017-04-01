@@ -173,7 +173,7 @@ namespace nwol
 					uint32_t							memWriteData				(_tRef* const* in_DefinitionList, uint32_t nDefinitionCount, void* out_pMemoryBuffer, const _tBase* in_DefaultData)		{
 			PLATFORM_CRT_CHECK_MEMORY();
 			static const ::nwol::glabel							& typeName					= _tRef::get_type_name();
-			retnul_msg_if(0 == nDefinitionCount || 0 == in_DefinitionList
+			retnul_error_if(0 == nDefinitionCount || 0 == in_DefinitionList
 					,	"Invalid parameters!\n"
 						"%s**				: 0x%p\n"
 						"uint32_t			: %i\n"
@@ -218,7 +218,7 @@ namespace nwol
 					uint32_t							memReadData					(_tRef** out_DefinitionList, uint32_t nDefinitionCount, const void* in_pMemoryBuffer)									{
 			PLATFORM_CRT_CHECK_MEMORY();
 			static const ::nwol::glabel							& typeName					= _tRef::get_type_name();
-			retnul_msg_if(0 == in_pMemoryBuffer
+			retnul_error_if(0 == in_pMemoryBuffer
 					,	"Invalid parameters!"
 						"%s**			: 0x%p\n"
 						"uint32_t		: %i\n"
@@ -269,7 +269,7 @@ namespace nwol
 					uint32_t							memSerializeData			(_tRef* const* in_DefinitionList, uint32_t nDefinitionCount, void* out_pMemoryBuffer)									{
 			PLATFORM_CRT_CHECK_MEMORY();
 			static const ::nwol::glabel							& typeName					= _tRef::get_type_name();
-			retnul_msg_if(0 == nDefinitionCount || 0 == in_DefinitionList
+			retnul_error_if(0 == nDefinitionCount || 0 == in_DefinitionList
 					,	"Invalid parameters!\n"
 						"%s**					: 0x%p\n"
 						"uint32_t				: %i\n"
@@ -308,7 +308,7 @@ namespace nwol
 					uint32_t							memDeserializeData			(_tRef** out_DefinitionList, uint32_t nDefinitionCount, const void* in_pMemoryBuffer)									{
 			PLATFORM_CRT_CHECK_MEMORY();
 			static const ::nwol::glabel							& typeName					= _tRef::get_type_name();
-			retnul_msg_if(0 == in_pMemoryBuffer
+			retnul_error_if(0 == in_pMemoryBuffer
 					,	"Invalid parameters!"
 						"%s**				: 0x%p\n"
 						"uint32_t			: %i\n"
@@ -355,7 +355,7 @@ namespace nwol
 					uint32_t							fileWriteData				(_tRef* const* in_DefinitionList, uint32_t nDefinitionCount, FILE* out_fp, const _tBase* in_DefaultData)				{
 			PLATFORM_CRT_CHECK_MEMORY();
 			static const ::nwol::glabel							& typeName					= _tRef::get_type_name();
-			retnul_msg_if(0 == out_fp || 0 == in_DefinitionList
+			retnul_error_if(0 == out_fp || 0 == in_DefinitionList
 					,	"Invalid parameters!\n"
 						"%s**				: 0x%p\n"
 						"uint32_t			: %i\n"
@@ -406,7 +406,7 @@ namespace nwol
 					uint32_t							fileReadData				(_tRef** out_DefinitionList, uint32_t nDefinitionCount, FILE* in_fp)													{
 			PLATFORM_CRT_CHECK_MEMORY();
 			static const ::nwol::glabel							& typeName					= _tRef::get_type_name();
-			retnul_msg_if(0 == in_fp
+			retnul_error_if(0 == in_fp
 					,	"Invalid parameters!\n"
 						"%s**				: 0x%p\n"
 						"uint32_t			: %i\n"
@@ -460,7 +460,7 @@ namespace nwol
 					uint32_t							fileDeserializeData			(_tRef** out_DefinitionList, uint32_t nDefinitionCount, FILE* in_fp)													{
 			PLATFORM_CRT_CHECK_MEMORY();
 			static const ::nwol::glabel							& typeName					= _tRef::get_type_name();
-			retnul_msg_if(0 == in_fp
+			retnul_error_if(0 == in_fp
 					,	"Invalid parameters!\n"
 						"%s**		: 0x%p\n"
 						"uint32_t			: %i\n"
@@ -514,7 +514,7 @@ namespace nwol
 					uint32_t							fileSerializeData			(_tRef* const* in_DefinitionList, uint32_t nDefinitionCount, FILE* out_fp)												{
 			PLATFORM_CRT_CHECK_MEMORY();
 			static const ::nwol::glabel							& typeName					= _tRef::get_type_name();
-			retnul_msg_if(0 == out_fp || 0 == in_DefinitionList
+			retnul_error_if(0 == out_fp || 0 == in_DefinitionList
 					,	"Invalid parameters!\n"
 						"%s**				: 0x%p\n"
 						"uint32_t			: %i\n"

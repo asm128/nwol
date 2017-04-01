@@ -168,7 +168,7 @@ namespace nwol
 #endif
 #define error_if(condition, ...)					if(condition) { error_printf	(__VA_ARGS__); }
 #define warn_if(retVal, condition, ...)				if(condition) { warning_printf	(__VA_ARGS__); }
-#define retval_msg_if(retVal, condition, ...)		if(condition) { error_printf	(__VA_ARGS__); return retVal; }
+#define info_if(retVal, condition, ...)				if(condition) { debug_printf	(__VA_ARGS__); }
 
 #define retval_error_if(retVal, condition, ...)		if(condition) { error_printf	(__VA_ARGS__); return retVal; }
 #define retval_warn_if( retVal, condition, ...)		if(condition) { warning_printf	(__VA_ARGS__); return retVal; }
@@ -185,13 +185,6 @@ namespace nwol
 #define retwarn_error_if(condition, ...)			retval_error_if ( 1, condition, __VA_ARGS__)
 #define retwarn_warn_if( condition, ...)			retval_warn_if	( 1, condition, __VA_ARGS__)
 #define retwarn_info_if( condition, ...)			retval_info_if	( 1, condition, __VA_ARGS__)
-
-//#define reterr_msg_if( condition, ...)				retval_msg_if	(-1, condition, __VA_ARGS__)
-#define retnul_msg_if( condition, ...)				retval_msg_if	( 0, condition, __VA_ARGS__)
-#define retwarn_msg_if(condition, ...)				retval_msg_if	( 1, condition, __VA_ARGS__)
-#define reterr_msg_if_error(statement, ...)			retval_msg_if	(-1, errored(statement), __VA_ARGS__)
-
-#define msg_and_return_if							retval_msg_if
 
 #define retval_error_if_errored(retVal, errorCode, format, ...)	retval_error_if( retVal, errored(errorCode), "Error code: 0x%X. " format, errorCode, __VA_ARGS__)
 #define retwarn_error_if_errored(errorCode, format, ...)		retval_error_if( 1, errorCode, format, __VA_ARGS__)

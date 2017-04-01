@@ -128,10 +128,10 @@ void										serverListen					( void* server )											{ serverListen((::nwol
 	reterr_error_if(sscanf_s(&port_number_str[0], "%u", &port_number) != 1	, "%s.", "Invalid server port string.");	// Only run if port is provided
 
 	// Open windows connection 
-	reterr_msg_if_error(::nwol::initNetwork()								, "%s.", "Failed to initialize network.");
-	reterr_msg_if_error(instanceApp.NetworkServer.InitServer(port_number)	, "%s.", "Failed to initialize connection server.");
-
-	_beginthread( serverListen, 0, &instanceApp.NetworkServer );	// Print out server information
+	::nwol::error_t									
+	errMy	= ::nwol::initNetwork()								; reterr_error_if_errored(errMy, "%s", "Failed to initialize network."			);
+	errMy	= instanceApp.NetworkServer.InitServer(port_number)	; reterr_error_if_errored(errMy, "%s", "Failed to initialize connection server.");
+	_beginthread( serverListen, 0, &instanceApp.NetworkServer );	
 	return 0;
 }
 

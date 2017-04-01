@@ -74,7 +74,7 @@ void										runCommunications						(void* pInstanceAppNetwork)					{
 
 ::nwol::error_t								networkEnable							(::SApplication& instanceApp)				{
 	::nwol::error_t									errMy									= ::nwol::initNetwork();
-	reterr_msg_if_error(errMy, "Failed to initialize network. Error code: 0x%X.", (uint32_t)errMy);
+	reterr_error_if_errored(errMy, "Failed to initialize network. Error code: 0x%X.", (uint32_t)errMy);
 
 	debug_printf("%s", "Network successfully initialized.");
 

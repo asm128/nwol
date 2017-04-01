@@ -82,7 +82,7 @@ int32_t										mainLoop						(SRuntimeState & runtimeState, ::nwol::SModuleInt
 
 	RUNTIME_FLAG									executionState					= RUNTIME_FLAG_RUNNING | RUNTIME_FLAG_NOT_YET_REQUESTED;
 	
-	reterr_msg_if_error(launchRenderThread(runtimeState), "Failed to start render thread.");
+	reterr_error_if_errored(launchRenderThread(runtimeState), "Failed to start render thread.");
 
 	static	const char*								errorFormat2					= "Module function failed with code 0x%x: %s.";
 	int32_t											errLoop							= 0;

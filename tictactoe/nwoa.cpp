@@ -49,7 +49,7 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
 	newControl.Text								= labelRestart															;
 
 	errMy										= ::nwol::createControl(guiSystem, newControl);
-	reterr_msg_if_error(errMy, "%s: \"%s\".", "Failed to create control", labelRestart.begin());
+	reterr_error_if_errored(errMy, "%s: \"%s\".", "Failed to create control", labelRestart.begin());
 
     debug_printf("%s", "Done initializing GUI.");
 	return 0;

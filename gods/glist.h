@@ -286,7 +286,7 @@ namespace nwol
 			return 0;
 		}
 		virtual				uint32_t						serialize				(void* out_pByteArray)																const									{
-			retnul_msg_if(0 == out_pByteArray, "%s", "Cannot serialize to a null address!");
+			retnul_error_if(0 == out_pByteArray, "%s", "Cannot serialize to a null address!");
 
 			uint32_t												nSize					= this->Count;
 			uint32_t												nBytesWritten			= 0;
@@ -300,7 +300,7 @@ namespace nwol
 			return nBytesWritten;
 		}
 		virtual				uint32_t						deserialize				(const void* in_pByteArray)																									{
-			retnul_msg_if(0 == in_pByteArray, "%s", "Cannot deserialize from a null address!");
+			retnul_error_if(0 == in_pByteArray, "%s", "Cannot deserialize from a null address!");
 
 			this->SetBufferData(0);
 
@@ -354,7 +354,7 @@ namespace nwol
 			return 0;
 		}
 		virtual				uint32_t						write					(void* out_pByteArray, const _tBase* DefaultData = 0)								const									{
-			retnul_msg_if(0 == out_pByteArray, "%s", "Cannot write to a null address!");
+			retnul_error_if(0 == out_pByteArray, "%s", "Cannot write to a null address!");
 			uint32_t												nSize					= this->Count;
 			uint32_t												nBytesWritten			= 0;
 			if (out_pByteArray)
@@ -368,7 +368,7 @@ namespace nwol
 			return nBytesWritten;
 		}
 		virtual				uint32_t						read					(const void* in_pByteArray)																									{
-			retnul_msg_if(0 == in_pByteArray, "%s", "Cannot read from a null address!");
+			retnul_error_if(0 == in_pByteArray, "%s", "Cannot read from a null address!");
 
 			this->SetBufferData(0);
 
