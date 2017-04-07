@@ -104,7 +104,7 @@ int32_t										update									(::SApplication& instanceApp, bool exitRequested
 
 	for(uint32_t iControl = 0, controlCount = controlFlags.size(); iControl < controlCount; ++iControl)
 		if(::nwol::bit_true(controlFlags[iControl], ::nwol::CONTROL_FLAG_EXECUTE)) {
-			debug_printf("Execute control %u.", iControl);
+			info_printf("Execute control %u.", iControl);
 			switch(iControl) {
 			case 0:		
 				return ::nwol::APPLICATION_STATE_EXIT; 

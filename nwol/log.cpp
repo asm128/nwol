@@ -31,7 +31,7 @@ void										nwol::__internal_debug_print_debugger			(const char* chars)						{
 }
 
 void										nwol::__internal_debug_print_file				(const char* chars, int nCharCount )	{
-//	_gods_internal_debug_printf_debugger( chars );
+//	_gods_internal_info_printf_debugger( chars );
 //	return;
 	static	char										__debug_file_name[48]						= {};												
 	static	const time_t								__today_0									= time(0);		

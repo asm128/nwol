@@ -34,11 +34,11 @@ int32_t										nwol::listFiles								(const char* directory, ::nwol::array_ob
 
             //Is the entity a File or Folder?
             if(fdFile.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-                debug_printf("Directory: %s.", sPath);
+                info_printf("Directory: %s.", sPath);
 				//folder.Folders.push_back(sPath);
             }
             else{ fileNames.push_back(sPath);
-                debug_printf("File: %s.", sPath);
+                info_printf("File: %s.", sPath);
             }
         }
     }

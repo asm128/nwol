@@ -239,11 +239,11 @@ namespace nwol
 			uint64_t								totalChars					= 0;
 			for( uint32_t iItem=1, count=ItemOffsets.size(); iItem<count; iItem++) {
 				const ::nwol::array_view<const _tBase>		arrayView					= this->get_array_view((int32_t)iItem);
-				debug_printf("Data string found. Data: '%s'. Offset: %u. Size: %u.", arrayView.begin(), ItemOffsets[iItem], (uint32_t)arrayView.size());
+				info_printf("Data string found. Data: '%s'. Offset: %u. Size: %u.", arrayView.begin(), ItemOffsets[iItem], (uint32_t)arrayView.size());
 				totalChars							+= arrayView.size();
 			}
 			if(ItemOffsets.size())
-				debug_printf("Total strings: %u. Total characters: %llu. Average string size: %u.", (uint32_t)ItemOffsets.size(), totalChars, ItemOffsets.size() ? (uint32_t)(totalChars/ItemOffsets.size()) : 0);
+				info_printf("Total strings: %u. Total characters: %llu. Average string size: %u.", (uint32_t)ItemOffsets.size(), totalChars, ItemOffsets.size() ? (uint32_t)(totalChars/ItemOffsets.size()) : 0);
 #endif
 			DELETE_CRITICAL_SECTION(Lock);
 		}

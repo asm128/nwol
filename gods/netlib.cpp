@@ -87,7 +87,7 @@ int32_t									nwol::createConnectionByHostName	( char_t* host_name, uint16_t p
 
 	const ::addrinfo								* createdAddrInfo				= 0;
 	int32_t											sockErr							= ::getaddrinfo(host_name, portString, &hints, (::addrinfo**)&createdAddrInfo);
-	::nwol::error_t									errMy							= sockErr != -1;
+	::nwol::error_t									errMy							= sockErr == -1;
 	reterr_error_if_errored(errMy, "gettaddrinfo failed! Return value: %i", sockErr);
 
 	// Retrieve each address and print out the hex bytes
@@ -97,8 +97,8 @@ int32_t									nwol::createConnectionByHostName	( char_t* host_name, uint16_t p
 
 	//sockaddr_in6 *sockaddr_ipv6;
 	for(const addrinfo* ptr = createdAddrInfo; ptr != NULL; ptr = ptr->ai_next)  {
-		debug_printf("getaddrinfo response %d", iAddress++);
-		debug_printf("Flags: 0x%x", ptr->ai_flags);
+		info_printf("getaddrinfo response %d", iAddress++);
+		info_printf("Flags: 0x%x", ptr->ai_flags);
 		debug_print("Family: ");
 		DWORD											ipbufferlength					= 46;
 		char_t											ipstringbuffer	[46]			= {};
@@ -110,15 +110,15 @@ int32_t									nwol::createConnectionByHostName	( char_t* host_name, uint16_t p
 	    INT												iRetval;
 
 		switch (ptr->ai_family)  {
-		default			:	debug_printf("Other %ld", ptr->ai_family	); break;
-		case AF_NETBIOS	:	debug_printf("%s", "AF_NETBIOS (NetBIOS)"	); break;
-		case AF_UNSPEC	:	debug_printf("%s", "Unspecified"			); break;
+		default			:	info_printf("Other %ld", ptr->ai_family	); break;
+		case AF_NETBIOS	:	info_printf("%s", "AF_NETBIOS (NetBIOS)"	); break;
+		case AF_UNSPEC	:	info_printf("%s", "Unspecified"			); break;
 		case AF_INET	:
 			debug_print("AF_INET (IPv4)");
 			sockaddr_ipv4								= (::sockaddr_in *) ptr->ai_addr;
 			ipbufferlength								= 46;
  			inet_ntop(AF_INET, ptr->ai_addr, ipstringbuffer, ipbufferlength);
-			debug_printf("IPv4 address %s", ipstringbuffer);
+			info_printf("IPv4 address %s", ipstringbuffer);
 			/* Copy address */
 			b1											= sockaddr_ipv4->sin_addr.S_un.S_un_b.s_b1;
 			b2											= sockaddr_ipv4->sin_addr.S_un.S_un_b.s_b2;
@@ -131,14 +131,14 @@ int32_t									nwol::createConnectionByHostName	( char_t* host_name, uint16_t p
 			debug_print("AF_INET6 (IPv6)");
 			// the InetNtop function is available on Windows Vista and later
 			sockaddr_ipv6								= (struct ::sockaddr_in6 *) ptr->ai_addr;
-			//debug_printf("IPv6 address %s", InetNtop(AF_INET6, &sockaddr_ipv6->sin6_addr, ipwstringbuffer, 46) );
+			//info_printf("IPv6 address %s", InetNtop(AF_INET6, &sockaddr_ipv6->sin6_addr, ipwstringbuffer, 46) );
 
 			
 			sockaddr_ip									= (LPSOCKADDR)ptr->ai_addr;
 			ipbufferlength								= 46;	// The buffer length is changed by each call to WSAAddresstoString, so we need to set it for each iteration through the loop for safety
 			iRetval										= WSAAddressToStringW(sockaddr_ip, (DWORD) ptr->ai_addrlen, NULL, ipwstringbuffer, &ipbufferlength );	// We use WSAAddressToString since it is supported on Windows XP and later
 			if (iRetval) {
-				debug_printf("WSAAddressToString failed with %u", WSAGetLastError() );
+				info_printf("WSAAddressToString failed with %u", WSAGetLastError() );
 			}
 			else    
 				wprintf(L"IPv6 address %s\n", ipwstringbuffer);
@@ -154,7 +154,7 @@ int32_t									nwol::createConnectionByHostName	( char_t* host_name, uint16_t p
 		case SOCK_RDM		:	debug_print("SOCK_RDM (reliable message datagram)"	);	break;
 		case SOCK_SEQPACKET	:	debug_print("SOCK_SEQPACKET (pseudo-stream packet)"	);	break;
 		default:
-			debug_printf("Other %ld", ptr->ai_socktype);
+			info_printf("Other %ld", ptr->ai_socktype);
 			break;
 		}
 
@@ -164,11 +164,11 @@ int32_t									nwol::createConnectionByHostName	( char_t* host_name, uint16_t p
 		case IPPROTO_TCP	:	debug_print("IPPROTO_TCP (TCP)"						);	break;
 		case IPPROTO_UDP	:	debug_print("IPPROTO_UDP (UDP)"						);	break;
 		default:
-			debug_printf("Other %ld", ptr->ai_protocol);
+			info_printf("Other %ld", ptr->ai_protocol);
 			break;
 		}
-		debug_printf("Length of this sockaddr: %d", (int32_t)ptr->ai_addrlen);
-		debug_printf("Canonical name: %s", ptr->ai_canonname);
+		info_printf("Length of this sockaddr: %d", (int32_t)ptr->ai_addrlen);
+		info_printf("Canonical name: %s", ptr->ai_canonname);
 	}
 
 	freeaddrinfo((::addrinfo*)createdAddrInfo);
@@ -247,14 +247,12 @@ int32_t									nwol::connectionAccept				( ::nwol::SConnectionEndpoint* conn, :
 	}
 
 	*out_newConn = newConnection;
-	debug_printf("Client connected.");
+	info_printf("Client connected.");
 	return 0;
 }
 
-int32_t									nwol::sendToConnection				( ::nwol::SConnectionEndpoint* connection, const byte_t* buffer, uint32_t bytesToSend, int32_t* _bytesSent, ::nwol::SConnectionEndpoint* targetConnection )
-{
-	// Tranmsit data to get time
-	reterr_error_if(0 == connection, "Invalid argument: Connection endpoint is null.");
+int32_t									nwol::sendToConnection				( ::nwol::SConnectionEndpoint* connection, const byte_t* buffer, uint32_t bytesToSend, int32_t* _bytesSent, ::nwol::SConnectionEndpoint* targetConnection ) {
+	reterr_error_if(0 == connection, "Invalid argument: Connection endpoint is null.");	// Tranmsit data to get time
 
 	int32_t											bytesSent						= ::sendto(connection->sd, (const char_t*)buffer, bytesToSend, 0, (::sockaddr *)&targetConnection->sockaddr, (int)sizeof(::sockaddr_in));
 	reterr_error_if(bytesSent == -1, "Error transmitting data.");
@@ -336,7 +334,7 @@ bool									nwol::ping							(::nwol::SConnectionEndpoint* pClient, ::nwol::SCo
 		,											a4								= 0
 		;
 	::nwol::getAddress( pServer, &a1, &a2, &a3, &a4, &port_number );
-	debug_printf("Sent ping command to %u.%u.%u.%u:%u.", (int)a1, (int)a2, (int)a3, (int)a4, (int)port_number);
+	info_printf("Sent ping command to %u.%u.%u.%u:%u.", (int)a1, (int)a2, (int)a3, (int)a4, (int)port_number);
 
 	// Receive answer
 	bytesTransmitted							= -1;
@@ -348,9 +346,9 @@ bool									nwol::ping							(::nwol::SConnectionEndpoint* pClient, ::nwol::SCo
 		return false;
 	}
 
-	debug_printf("Received pong command from %u.%u.%u.%u:%u.", (uint32_t)a1, (uint32_t)a2, (uint32_t)a3, (uint32_t)a4, (uint32_t)port_number);
+	info_printf("Received pong command from %u.%u.%u.%u:%u.", (uint32_t)a1, (uint32_t)a2, (uint32_t)a3, (uint32_t)a4, (uint32_t)port_number);
 
-	debug_printf("Command received: %s", ::nwol::get_value_label(pongCommand).c_str());		
+	info_printf("Command received: %s", ::nwol::get_value_label(pongCommand).c_str());		
 	return true;
 }
 
@@ -372,7 +370,7 @@ int32_t									nwol::sendSystemCommand				(::nwol::SConnectionEndpoint* pOrigin
 		,											a4								= 0
 		;
 	::nwol::getAddress( pTarget, &a1, &a2, &a3, &a4, &port_number );
-	debug_printf("Sent sytem command to %u.%u.%u.%u:%u: %s.", (uint32_t)a1, (uint32_t)a2, (uint32_t)a3, (uint32_t)a4, (uint32_t)port_number, ::nwol::get_value_label( commandToSend ).c_str());
+	info_printf("Sent sytem command to %u.%u.%u.%u:%u: %s.", (uint32_t)a1, (uint32_t)a2, (uint32_t)a3, (uint32_t)a4, (uint32_t)port_number, ::nwol::get_value_label( commandToSend ).c_str());
 	return 0;
 }
 
@@ -392,7 +390,7 @@ int32_t									nwol::receiveSystemCommand			(::nwol::SConnectionEndpoint* pLoca
 		,											a4								= 0
 		;
 	::nwol::getAddress( pRemote, &a1, &a2, &a3, &a4, &port_number );
-	debug_printf("Received sytem command from %u.%u.%u.%u:%u: %s.", (uint32_t)a1, (uint32_t)a2, (uint32_t)a3, (uint32_t)a4, (uint32_t)port_number, ::nwol::get_value_label( commandReceived ).c_str());
+	info_printf("Received sytem command from %u.%u.%u.%u:%u: %s.", (uint32_t)a1, (uint32_t)a2, (uint32_t)a3, (uint32_t)a4, (uint32_t)port_number, ::nwol::get_value_label( commandReceived ).c_str());
 
 	return 0;
 }
@@ -420,7 +418,7 @@ int32_t									nwol::sendUserCommand				(SConnectionEndpoint* pOrigin, ::nwol::
 		,											a4								= 0
 		;
 	::nwol::getAddress( pTarget, &a1, &a2, &a3, &a4, &port_number );
-	debug_printf("Sent user command of %u bytes to %u.%u.%u.%u:%u.", bufferSize, (uint32_t)a1, (uint32_t)a2, (uint32_t)a3, (uint32_t)a4, (uint32_t)port_number);
+	info_printf("Sent user command of %u bytes to %u.%u.%u.%u:%u.", bufferSize, (uint32_t)a1, (uint32_t)a2, (uint32_t)a3, (uint32_t)a4, (uint32_t)port_number);
 
 	return 0;
 }
@@ -459,7 +457,7 @@ int32_t									nwol::receiveUserCommand			(::nwol::SConnectionEndpoint* pOrigin
 		,											a4								= 0
 		;	
 	::nwol::getAddress( pTarget, &a1, &a2, &a3, &a4, &port_number );
-	debug_printf("Sent user command of %u bytes to %u.%u.%u.%u:%u.", bufferSize, (uint32_t)a1, (uint32_t)a2, (uint32_t)a3, (uint32_t)a4, (uint32_t)port_number);
+	info_printf("Sent user command of %u bytes to %u.%u.%u.%u:%u.", bufferSize, (uint32_t)a1, (uint32_t)a2, (uint32_t)a3, (uint32_t)a4, (uint32_t)port_number);
 
 	return 0;
 }

@@ -63,7 +63,7 @@ bool										bListenFailure					= false;
 	::nwol::array_pod<::nwol::CONTROL_FLAG>			& controlFlags					= guiSystem.Controls.ControlFlags;
 	for(uint32_t iControl = 0, controlCount = controlFlags.size(); iControl < controlCount; ++iControl)
 		if(::nwol::bit_true(controlFlags[iControl], ::nwol::CONTROL_FLAG_EXECUTE)) {
-			debug_printf("Execute %u.", iControl);
+			info_printf("Execute %u.", iControl);
 			switch(iControl) {
 			case 0:		return ::nwol::APPLICATION_STATE_EXIT; 
 			default:	break;
@@ -156,7 +156,7 @@ void										serverListen					( void* server )											{ serverListen((::nwol
 				(uint32_t)port_number
 			);
 		}
-		//debug_printf("Sent player data (%s) to %u.%u.%u.%u:%u.", player.Name.c_str(), 
+		//info_printf("Sent player data (%s) to %u.%u.%u.%u:%u.", player.Name.c_str(), 
 		//	(int)a1,
 		//	(int)a2,
 		//	(int)a3,
@@ -177,7 +177,7 @@ void										serverListen					( void* server )											{ serverListen((::nwol
 				,	(uint32_t)port_number
 				);
 		}
-		debug_printf("Sent invalid message response to %u.%u.%u.%u:%u."
+		info_printf("Sent invalid message response to %u.%u.%u.%u:%u."
 			,	(uint32_t)a1
 			,	(uint32_t)a2
 			,	(uint32_t)a3

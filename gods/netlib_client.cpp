@@ -22,13 +22,13 @@ int32_t										nwol::requestDisconnect						(::nwol::SClientConnection& conn)	
 	::nwol::error_t										errMy									= ::nwol::sendToConnection( conn.pClient, (const byte_t*)&commandDisconnect, (uint32_t)sizeof(::nwol::NETLIB_COMMAND), &bytesTransmitted, conn.pServer );
 	reterr_error_if_errored(errMy, "%s", "Error sending disconnect message.");
 	reterr_error_if(bytesTransmitted == -1, "%s", "Error sending disconnect message.");
-	debug_printf("%s", "Disconnect message sent successfully.");
+	info_printf("%s", "Disconnect message sent successfully.");
 	return 0;
 }
 
 int32_t										nwol::disconnectClient						(::nwol::SClientConnection& client)									{
 	/* Get current time */
-	debug_printf("%s", "Disconnecting client.");
+	info_printf("%s", "Disconnecting client.");
 	::nwol::shutdownConnection(&client.pClient);
 	::nwol::shutdownConnection(&client.pServer);
 	return 0;
@@ -37,7 +37,7 @@ int32_t										nwol::disconnectClient						(::nwol::SClientConnection& client)
 #define MAX_SEND_SIZE 128
 
 int											nwol::connect								(::nwol::SClientConnection& conn)									{
-	debug_printf("%s", "Sending connection request.");
+	info_printf("%s", "Sending connection request.");
 	static	const ::nwol::NETLIB_COMMAND				send_buffer								= ::nwol::NETLIB_COMMAND_CONNECT;
 
 	int32_t												bytesTransmitted						=-1;
@@ -51,7 +51,7 @@ int											nwol::connect								(::nwol::SClientConnection& conn)									{
 	errMy											= ::nwol::receiveFromConnection(conn.pClient, (byte_t*)&connect_buffer, (uint32_t)sizeof(::nwol::NETLIB_COMMAND), &bytesTransmitted, 0);
 
 	reterr_error_if(connect_buffer != ::nwol::NETLIB_COMMAND_PORT, "Error receiving data. 0x%x, 0x%x", errMy, ::nwol::disconnectClient(conn));
-	debug_printf("response: %s.", ::nwol::get_value_label(connect_buffer).c_str());
+	info_printf("response: %s.", ::nwol::get_value_label(connect_buffer).c_str());
 
 	::nwol::shutdownConnection(&conn.pServer);
 
@@ -60,7 +60,7 @@ int											nwol::connect								(::nwol::SClientConnection& conn)									{
 
 	reterr_error_if(::nwol::failed(errMy) || (port_buffer == -1), "Error receiving port number. 0x%x, 0x%x", errMy, ::nwol::disconnectClient(conn));
 	// Got an available port to connect to? 
-	debug_printf("port reported available: %i.", port_buffer);
+	info_printf("port reported available: %i.", port_buffer);
 	errMy											= ::nwol::createConnection(conn.r1, conn.r2, conn.r3, conn.r4, (uint16_t)port_buffer, &conn.pServer);
 
 	reterr_error_if_errored(errMy, "%s", "Error creating new server connection.");
@@ -78,7 +78,7 @@ int											nwol::serverTime							(::nwol::SClientConnection& conn, uint64_t&
 	errMy											= ::nwol::receiveSystemCommand(conn.pClient, conn.pServer, commandTimeSet);
 	reterr_error_if_errored(errMy, "%s", "Error receiving data.");
 	
-	debug_printf("response: %s.", ::nwol::get_value_label(commandTimeSet).c_str());
+	info_printf("response: %s.", ::nwol::get_value_label(commandTimeSet).c_str());
 
 	uint64_t											receive_time							= ~0ULL;
 	int32_t												bytesTransmitted						= ~0U;

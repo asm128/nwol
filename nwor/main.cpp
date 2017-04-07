@@ -26,7 +26,7 @@ struct SRuntimeState {
 };
 
 void										loopThreadRender				(SRuntimeState& stateRuntime)																				{
-	debug_printf("Beginning render loop.");
+	info_printf("Beginning render loop.");
 	static const char								* errorFormat1					= "Dynamically loaded function is null, maybe due to a buffer overrun which erased the pointers: %s.";
 	static const char								* errorFormat2					= "Module function failed with code 0x%x: %s.";
 	::nwol::SModuleInterface						& containerForCallbacks			= stateRuntime.Interface;
@@ -47,7 +47,7 @@ void										loopThreadRender				(SRuntimeState& stateRuntime)																	
 		}
 	}
 
-	debug_printf("Render loop ended. Last error code: 0x%x.", (uint32_t)lastError);
+	info_printf("Render loop ended. Last error code: 0x%x.", (uint32_t)lastError);
 }
 
 void										runRender						(void* pStateRuntime)																						{
@@ -56,14 +56,14 @@ void										runRender						(void* pStateRuntime)																						{
 		return;
 	}
 
-	debug_printf("Render thread started.");
+	info_printf("Render thread started.");
 
 	::SRuntimeState									& stateRuntime					= *(::SRuntimeState*)pStateRuntime;
 	INTERLOCKED_INCREMENT	(stateRuntime.RenderThreadUsers);
 	loopThreadRender		(stateRuntime);
 	INTERLOCKED_DECREMENT	(stateRuntime.RenderThreadUsers);
 
-	debug_printf("Render loop exited.");
+	info_printf("Render loop exited.");
 }
 
 int32_t										launchRenderThread				(::SRuntimeState& runtimeState)																				{
@@ -127,12 +127,12 @@ int32_t										mainLoop						(SRuntimeState & runtimeState, ::nwol::SModuleInt
 		if(runtimeState.Quit) {
 			if(false == runtimeState.Processing) {
 				executionState								&= ~RUNTIME_FLAG_RUNNING;
-				debug_printf("Execution shutting down...");
+				info_printf("Execution shutting down...");
 				break;
 			}
 			else if(executionState & RUNTIME_FLAG_NOT_YET_REQUESTED) {
 				executionState								&= ~RUNTIME_FLAG_NOT_YET_REQUESTED;
-				debug_printf("Client module requested exit.");
+				info_printf("Client module requested exit.");
 			}
 		}
 	}
@@ -248,7 +248,7 @@ int											rtMain							(::nwol::SRuntimeValues& runtimeValues)
 // Android entry point. A note on app_dummy(): This is required as the compiler may otherwise remove the main entry point of the application
 void										app_dummy						()																											{}
 void										ANativeActivity_onCreate		(ANativeActivity* activity, void* savedState, size_t savedStateSize)										{
-    debug_printf("Entering: %s", __FUNCTION__);
+    info_printf("Entering: %s", __FUNCTION__);
 	app_dummy();	
 	::nwol::SRuntimeValues							runtimeValues					= {};
 	runtimeValues.PlatformValues.activity		= activity;
@@ -274,7 +274,7 @@ void										ANativeActivity_onCreate		(ANativeActivity* activity, void* savedS
 	static const char								defaultModuleName[]				= "modules/nwor_selector.os";
 	loadPlatformValues(runtimeValues, defaultModuleName, 0, 0);
 	rtMain(runtimeValues);
-    debug_printf("Exiting function normally: %s", __FUNCTION__);
+    info_printf("Exiting function normally: %s", __FUNCTION__);
 }
 #else
 int											main							(int argc, char** argv)																						{ 

@@ -114,17 +114,17 @@ namespace nwol
 #if defined(NWOL_DEBUG_ENABLED)
 			const ::nwol::glabel										& typeName								= _tRef::get_type_name();
 				
-			debug_printf("Loading %s table.", typeName.begin());
-				 if( Globals.DataAlign == 32 )				{ debug_printf("Detected align to 32 bytes: %llu."		, (uint64_t)Globals.DataAlign);	}	
-			else if( Globals.DataAlign == 16 )				{ debug_printf("Detected align to 16 bytes: %llu."		, (uint64_t)Globals.DataAlign);	}	
-			else if( !(Globals.DataAlign % sizeof(void*)) ) { debug_printf("Detected align to native size: %llu."	, (uint64_t)sizeof(void*));		}	
-			else { debug_printf("Type is not of an aligned size. %llu padding bytes will be added.", (uint64_t)ActualSizePadded-ActualEntrySize);	}
+			info_printf("Loading %s table.", typeName.begin());
+				 if( Globals.DataAlign == 32 )				{ info_printf("Detected align to 32 bytes: %llu."		, (uint64_t)Globals.DataAlign);	}	
+			else if( Globals.DataAlign == 16 )				{ info_printf("Detected align to 16 bytes: %llu."		, (uint64_t)Globals.DataAlign);	}	
+			else if( !(Globals.DataAlign % sizeof(void*)) ) { info_printf("Detected align to native size: %llu."	, (uint64_t)sizeof(void*));		}	
+			else { info_printf("Type is not of an aligned size. %llu padding bytes will be added.", (uint64_t)ActualSizePadded-ActualEntrySize);	}
 #else
 			UNUSED const uint32_t										ActualEntrySize							= sizeof(SInstanceEntry);
 			UNUSED const uint32_t										ActualSizePadded						= Globals.DataSizePadded;
 			UNUSED const uint32_t										ActualAlign								= Globals.DataAlign;
 #endif
-			debug_printf("Size of base type: %u. Entry size: %u. Size of entry padded to %u bytes: %u", (uint32_t)sizeof(_tBase), (uint32_t)ActualEntrySize, (uint32_t)BASETYPE_ALIGN, (uint32_t)ActualSizePadded);
+			info_printf("Size of base type: %u. Entry size: %u. Size of entry padded to %u bytes: %u", (uint32_t)sizeof(_tBase), (uint32_t)ActualEntrySize, (uint32_t)BASETYPE_ALIGN, (uint32_t)ActualSizePadded);
 			lstUnusedInstances										= (_tRef**)&PageBytes[0];
 			lstReferences											= (_tRef*)&PageBytes[sizeof(_tRef*)*_PageSizeInInstances];
 			Instances												= &PageBytes[sizeof(_tRef*)*_PageSizeInInstances+sizeof(_tRef)*_PageSizeInInstances];
@@ -521,11 +521,11 @@ namespace nwol
 			if (Counters.CreatedRefs) {	
 #if defined(NWOL_DEBUG_ENABLED)
 				static const ::nwol::glabel												& typeName								= _tRef::get_type_name();																									
-				debug_printf("Instance manager(GREF(%s)) shutting down", typeName.begin());																					
+				info_printf("Instance manager(GREF(%s)) shutting down", typeName.begin());																					
 																																											
-				debug_printf("GREF(%s) instances created:	%llu (%llu bytes).", typeName.begin(), (uint64_t)Counters.CreatedRefs,	(uint64_t)(sizeof(_tRef)+sizeof(_TPage::SInstanceEntry))*Counters.CreatedRefs	);
-				debug_printf("GREF(%s) instances acquired:	%llu (%llu bytes).", typeName.begin(), (uint64_t)Counters.AcquiredRefs,	(uint64_t)(sizeof(_tRef)+sizeof(_TPage::SInstanceEntry))*Counters.AcquiredRefs	);
-				debug_printf("GREF(%s) instances freed:		%llu (%llu bytes).", typeName.begin(), (uint64_t)Counters.FreedRefs,	(uint64_t)(sizeof(_tRef)+sizeof(_TPage::SInstanceEntry))*Counters.FreedRefs		);
+				info_printf("GREF(%s) instances created:	%llu (%llu bytes).", typeName.begin(), (uint64_t)Counters.CreatedRefs,	(uint64_t)(sizeof(_tRef)+sizeof(_TPage::SInstanceEntry))*Counters.CreatedRefs	);
+				info_printf("GREF(%s) instances acquired:	%llu (%llu bytes).", typeName.begin(), (uint64_t)Counters.AcquiredRefs,	(uint64_t)(sizeof(_tRef)+sizeof(_TPage::SInstanceEntry))*Counters.AcquiredRefs	);
+				info_printf("GREF(%s) instances freed:		%llu (%llu bytes).", typeName.begin(), (uint64_t)Counters.FreedRefs,	(uint64_t)(sizeof(_tRef)+sizeof(_TPage::SInstanceEntry))*Counters.FreedRefs		);
 #endif
 				if (Counters.CreatedRefs > Counters.FreedRefs) { 																								
 					error_printf("Number of instances not released properly: %llu.", (uint64_t)Counters.CreatedRefs - Counters.FreedRefs);						
@@ -534,7 +534,7 @@ namespace nwol
 					error_printf("Number of instances deleted but not created by this manager: %llu.", (uint64_t)Counters.FreedRefs - Counters.CreatedRefs);	
 				}																																				
 				else {																																			
-					debug_printf("No count mismatch detected.");																								
+					info_printf("No count mismatch detected.");																								
 				}
 			}																																					
 			else if (0 != Counters.FreedRefs) {																													
@@ -545,12 +545,12 @@ namespace nwol
 			uint32_t																pageCount								= (uint32_t)lstReferencePages.size();
 			if (pageCount) {
 				static const ::nwol::glabel												& typeName								= _tRef::get_type_name();
-				debug_printf("Preparing to deallocate %llu gcore_ref<%s> pages. (%llu bytes)", (uint64_t)pageCount, typeName.begin(), ((uint64_t)sizeof(_TPage))*pageCount );
+				info_printf("Preparing to deallocate %llu gcore_ref<%s> pages. (%llu bytes)", (uint64_t)pageCount, typeName.begin(), ((uint64_t)sizeof(_TPage))*pageCount );
 				for (uint32_t i = 0; i < pageCount; i++) {
 					if (lstReferencePages[i])
 						delete(lstReferencePages[i]);
 				};
-				debug_printf("Deallocation finished");
+				info_printf("Deallocation finished");
 			}
 			lstReferencePages.clear();
 		}

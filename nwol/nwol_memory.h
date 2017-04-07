@@ -28,11 +28,11 @@ namespace nwol
 {
 
 #if defined(__WINDOWS__)
-static void*																					nwol_malloc					(size_t size)										{ return _aligned_malloc(size, NWOL_MALLOC_CUSTOM_ALIGN);	}
-static void																						nwol_free					(void* ptr)											{ _aligned_free(ptr);				}
+	static inline void*																			nwol_malloc					(size_t size)										{ return _aligned_malloc(size, NWOL_MALLOC_CUSTOM_ALIGN);	}
+	static inline void																			nwol_free					(void* ptr)											{ _aligned_free(ptr);										}
 #elif defined(__LINUX__) || defined(__ANDROID__)
-static void*																					nwol_malloc					(size_t size)										{ return ::memalign(NWOL_MALLOC_CUSTOM_ALIGN, size);		}
-static void																						nwol_free					(void* ptr)											{ ::free(ptr);												}
+	static inline void*																			nwol_malloc					(size_t size)										{ return ::memalign(NWOL_MALLOC_CUSTOM_ALIGN, size);		}
+	static inline void																			nwol_free					(void* ptr)											{ ::free(ptr);												}
 #endif
 
 #define GREF_PAGE_SIZE_MAX (4096)

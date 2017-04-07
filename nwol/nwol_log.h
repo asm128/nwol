@@ -26,30 +26,30 @@ namespace nwol
 #endif
 
 #if defined( USE_FILE_DEBUG_PRINTF ) && !defined( FORCE_STD_PRINTF_DEBUG )
-#define _nwol_internal_debug_printf( chars, nCharCount ) ::nwol::__internal_debug_print_file( chars, nCharCount )
+#define _nwol_internal_info_printf( chars, nCharCount ) ::nwol::__internal_debug_print_file( chars, nCharCount )
 #define _nwol_internal_debug_wprintf( chars, nCharCount )  OutputDebugStringW( chars )
 #elif (defined(__WINDOWS__)) && !defined( FORCE_STD_PRINTF_DEBUG )
-#define _nwol_internal_debug_printf( chars, nCharCount ) ::nwol::__internal_debug_print_debugger( chars )
+#define _nwol_internal_info_printf( chars, nCharCount ) ::nwol::__internal_debug_print_debugger( chars )
 #define _nwol_internal_debug_wprintf( chars, nCharCount )  OutputDebugStringW( chars )
 #else // I use this because I don't have the debugger attached during release build test. Anyway it should be replaced with a proper fprintf to an open log stream.
-#define _nwol_internal_debug_printf( chars, nCharCount ) ::nwol::__internal_debug_print_console( chars )
+#define _nwol_internal_info_printf( chars, nCharCount ) ::nwol::__internal_debug_print_console( chars )
 #define _nwol_internal_debug_wprintf( chars, nCharCount ) //wprintf( L"%s", chars )
 #endif
 
 	template<typename... Args>	void			__nwol_printf					(const char* prefix, int /*prefixSize*/, const wchar_t* format, const Args... args){
-		_nwol_internal_debug_printf(prefix, prefixSize);
+		_nwol_internal_info_printf(prefix, prefixSize);
 		wchar_t											customDynamicString	[4096]		={0};
 		const size_t									stringLength					= swprintf_s(customDynamicString, format, args...);
 		_nwol_internal_debug_wprintf(customDynamicString, (int)stringLength);
-		_nwol_internal_debug_printf("\n", 1);
+		_nwol_internal_info_printf("\n", 1);
 	}
 
 	template<typename... Args>	void			__nwol_printf					(const char* prefix, int /*prefixSize*/, const char* format, const Args... args)	{
-		_nwol_internal_debug_printf(prefix, prefixSize);
+		_nwol_internal_info_printf(prefix, prefixSize);
 		char											customDynamicString	[4096]		={0};
 		const size_t									stringLength					= sprintf_s(customDynamicString, format, args...);
-		_nwol_internal_debug_printf(customDynamicString, (int)stringLength);
-		_nwol_internal_debug_printf("\n", 1);
+		_nwol_internal_info_printf(customDynamicString, (int)stringLength);
+		_nwol_internal_info_printf("\n", 1);
 	}
 
 #define NWOL_ERROR_SEVERITY_REALTIME	"0"	// I love feedback.
@@ -78,12 +78,12 @@ namespace nwol
 
 #ifdef DEBUG_PRINTF_ENABLED
 #	if defined( ANDROID )
-#		define debug_printf( ... )					__android_log_print( ANDROID_LOG_DEBUG, __FILE__ ":", __VA_ARGS__ )
+#		define info_printf( ... )					__android_log_print( ANDROID_LOG_DEBUG, __FILE__ ":", __VA_ARGS__ )
 #	else
-#		define debug_printf( format, ... )			nwol_printf(NWOL_ERROR_SEVERITY_DEBUG, "info", format, __VA_ARGS__)
+#		define info_printf( format, ... )			nwol_printf(NWOL_ERROR_SEVERITY_DEBUG, "info", format, __VA_ARGS__)
 #	endif
 #else
-#	define debug_printf( ... ) do {} while(false)
+#	define info_printf( ... ) do {} while(false)
 #endif
 
 #ifdef WARNING_PRINTF_ENABLED
@@ -159,7 +159,7 @@ namespace nwol
 // These are meant for messages that don't require formatting.
 #define error_print( message )						error_printf	("%s", message)
 #define warning_print( message )					warning_printf	("%s", message)
-#define debug_print( message )						debug_printf	("%s", message)
+#define debug_print( message )						info_printf	("%s", message)
 
 #if defined(__ANDROID__)
 #define throw_if(condition, exception, ...)			if(condition) { error_printf	(__VA_ARGS__); char* _tasdas = 0; *_tasdas = 123; }
@@ -167,12 +167,12 @@ namespace nwol
 #define throw_if(condition, exception, ...)			if(condition) { error_printf	(__VA_ARGS__); throw(exception); }
 #endif
 #define error_if(condition, ...)					if(condition) { error_printf	(__VA_ARGS__); }
-#define warn_if(retVal, condition, ...)				if(condition) { warning_printf	(__VA_ARGS__); }
-#define info_if(retVal, condition, ...)				if(condition) { debug_printf	(__VA_ARGS__); }
+#define warn_if(condition, ...)						if(condition) { warning_printf	(__VA_ARGS__); }
+#define info_if(condition, ...)						if(condition) { info_printf	(__VA_ARGS__); }
 
 #define retval_error_if(retVal, condition, ...)		if(condition) { error_printf	(__VA_ARGS__); return retVal; }
 #define retval_warn_if( retVal, condition, ...)		if(condition) { warning_printf	(__VA_ARGS__); return retVal; }
-#define retval_info_if( retVal, condition, ...)		if(condition) { debug_printf	(__VA_ARGS__); return retVal; }
+#define retval_info_if( retVal, condition, ...)		if(condition) { info_printf	(__VA_ARGS__); return retVal; }
 
 #define reterr_error_if(condition, ...)				retval_error_if (-1, condition, __VA_ARGS__)
 #define reterr_warn_if( condition, ...)				retval_warn_if	(-1, condition, __VA_ARGS__)

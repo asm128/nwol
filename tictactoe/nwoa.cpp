@@ -16,7 +16,7 @@
 DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
 
 				int32_t						setupGUI							(::SApplication& instanceApp)																			{ 
-    debug_printf("%s", "Initializing Graphical User Interface.");
+    info_printf("%s", "Initializing Graphical User Interface.");
 	::nwol::SGUI									& guiSystem							= instanceApp.GUI;
 
 	// Create exit button
@@ -51,22 +51,22 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
 	errMy										= ::nwol::createControl(guiSystem, newControl);
 	reterr_error_if_errored(errMy, "%s: \"%s\".", "Failed to create control", labelRestart.begin());
 
-    debug_printf("%s", "Done initializing GUI.");
+    info_printf("%s", "Done initializing GUI.");
 	return 0;
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 				int32_t						cleanup								(::SApplication& instanceApp)																			{
-    debug_printf("%s", "Cleaning up resources...");
+    info_printf("%s", "Cleaning up resources...");
 	::nwol::shutdownASCIIScreen();
 
 	::networkDisable(instanceApp);
-	debug_printf("%s", "Done cleaning up resources.");
+	info_printf("%s", "Done cleaning up resources.");
 	return 0; 
 }
 
 				int32_t						setup								(::SApplication& instanceApp)																			{ 
-    debug_printf("%s", "Initializing application...");
+    info_printf("%s", "Initializing application...");
 	srand((unsigned int)time(0));
 
 	::nwol::SGUI									& guiSystem							= instanceApp.GUI;
@@ -80,7 +80,7 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
 	//errMy										= ::setupREST		(instanceApp);	reterr_error_if_errored(errMy, "%s", "Failed to set up REST."		);
 	errMy										= ::setupGUI		(instanceApp);	reterr_error_if_errored(errMy, "%s", "Failed to set up GUI."		);
 
-    debug_printf("%s", "Done initializing application.");
+    info_printf("%s", "Done initializing application.");
 	return 0; 
 }
 
@@ -113,7 +113,7 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
 	bool											handledControlEvent					= false;
 	for(uint32_t iControl = 0, controlCount = controlFlags.size(); iControl < controlCount; ++iControl) {
 		if(::nwol::bit_true(controlFlags[iControl], ::nwol::CONTROL_FLAG_EXECUTE)) {
-			debug_printf("Execute %u.", iControl);
+			info_printf("Execute %u.", iControl);
 			switch(iControl) {
 			case 0:		return ::nwol::APPLICATION_STATE_EXIT; // Exit button clicked.
 			case 10:	// Restart button clicked.
@@ -127,7 +127,7 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
 						guiControls.TextColorsASCII						[controlIndex].ColorPressed			= {COLOR_DARKGREY, COLOR_YELLOW};
 					}
 				}
-				debug_printf("%s", "Game restarted.");
+				info_printf("%s", "Game restarted.");
 				handledControlEvent							= true;
 				break;
 

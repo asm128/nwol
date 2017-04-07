@@ -40,7 +40,7 @@ int											runCommunications						(::nwol::SApplicationNetworkClient& appNetw
 		{	// here we update the game instance with the data received from the server.
 			::nwol::CLock									thelock									(appNetwork.ServerTimeMutex);
 			appNetwork.ServerTime						= current_time;
-			debug_printf("%s", "Client instance updated successfully.");
+			info_printf("%s", "Client instance updated successfully.");
 		}
 
 		if gbit_false(appNetwork.State, ::nwol::NETWORK_STATE_ENABLED)	// Disconnect if the network was disabled.
@@ -60,7 +60,7 @@ int											runCommunications						(::nwol::SApplicationNetworkClient& appNetw
 
 // Proxy function to match the signature required by Windows' _beginthread().
 void										runCommunications						(void* pInstanceAppNetwork)					{
-	debug_printf("Communications loop initializing.");
+	info_printf("Communications loop initializing.");
 	if(0 == pInstanceAppNetwork)
 		return;
 
@@ -69,14 +69,14 @@ void										runCommunications						(void* pInstanceAppNetwork)					{
 	const ::nwol::error_t							errMyComm								= ::runCommunications(instanceAppNetwork);
 
 	gbit_clear(instanceAppNetwork.State, ::nwol::NETWORK_STATE_RUNNING);			
-	debug_printf("Communications loop exited with code 0x%X.", errMyComm);
+	info_printf("Communications loop exited with code 0x%X.", errMyComm);
 }
 
 ::nwol::error_t								networkEnable							(::SApplication& instanceApp)				{
 	::nwol::error_t									errMy									= ::nwol::initNetwork();
 	reterr_error_if_errored(errMy, "Failed to initialize network. Error code: 0x%X.", (uint32_t)errMy);
 
-	debug_printf("%s", "Network successfully initialized.");
+	info_printf("%s", "Network successfully initialized.");
 
 	::nwol::SApplicationNetworkClient				& instanceAppNetwork					= instanceApp.NetworkClient;
 	gbit_set(instanceAppNetwork.State, ::nwol::NETWORK_STATE_ENABLED);
@@ -84,7 +84,7 @@ void										runCommunications						(void* pInstanceAppNetwork)					{
 	_beginthread(::runCommunications, 0, &instanceAppNetwork);
 	::std::this_thread::sleep_for(::std::chrono::milliseconds(1000));
 
-	debug_printf("%s", "Communications thread started.");
+	info_printf("%s", "Communications thread started.");
 	return 0;
 }
 

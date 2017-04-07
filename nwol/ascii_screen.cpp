@@ -79,7 +79,7 @@ int32_t							nwol::getASCIIBackBuffer			(::nwol::SASCIITarget& target)									
 		::nwol::clearASCIIBackBuffer(' ', COLOR_WHITE);
 	target.Text							= __g_ASCIIScreen.ASCIIBackBuffer ? ::nwol::grid_view<char_t	>(__g_ASCIIScreen.ASCIIBackBuffer, ::nwol::getASCIIBackBufferWidth(), getASCIIBackBufferHeight()) : ::nwol::grid_view<char_t	>{};
 	target.Attributes					= __g_ASCIIScreen.ColorBackBuffer ? ::nwol::grid_view<uint16_t	>(__g_ASCIIScreen.ColorBackBuffer, ::nwol::getASCIIBackBufferWidth(), getASCIIBackBufferHeight()) : ::nwol::grid_view<uint16_t	>{};
-	return 0;
+	return __g_ASCIIScreen.bCreated ? 0 : -1;
 }
 
 int32_t							nwol::getASCIIFrontBuffer			(::nwol::SASCIITarget& target)											{

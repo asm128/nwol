@@ -80,7 +80,7 @@ namespace nwol
 			STypeRecord																			record;
 			::nwol::STypeMetrics																typeSizes;
 			typeSizes.set<_tBase>(BASETYPE_ALIGN);
-			debug_printf("Registering type: %s::%s. Size: %u. Size Padded: %u. Align: %u. Align multiplier: %u.", identifier.NameSpace.begin(), identifier.Name.begin(), typeSizes.Size, typeSizes.SizePadded, typeSizes.Align, typeSizes.AlignMultiplier);
+			info_printf("Registering type: %s::%s. Size: %u. Size Padded: %u. Align: %u. Align multiplier: %u.", identifier.NameSpace.begin(), identifier.Name.begin(), typeSizes.Size, typeSizes.SizePadded, typeSizes.Align, typeSizes.AlignMultiplier);
 
 			record.Namespace		= Namespaces		.find(identifier.NameSpace	);	if(-1 == record.Namespace	)	record.Namespace	= Namespaces	.push_back(identifier.NameSpace	);
 			record.Type				= TypeNames			.find(identifier.Name		);	if(-1 == record.Type		)	record.Type			= TypeNames		.push_back(identifier.Name		);

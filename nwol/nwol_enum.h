@@ -19,7 +19,7 @@ namespace nwol
 							::nwol::array_pod<_T>			Values;
 							::nwol::array_pod<gsyslabel>	Names;
 
-		inline												genum_definition				()																	: Name("Enum definition name not set.")						{};
+		inline												genum_definition				()																	: Name("Enum definition name not set.")						{}
 		inline static		genum_definition<_T>&			get								()																	{
 			static	genum_definition<_T>	valueRegistry;
 			return valueRegistry;
@@ -28,7 +28,7 @@ namespace nwol
 					genum_definition<_T>&							instanceHere					= get();
 
 			if( instanceHere.Name != enumName || (instanceHere.Values.size() && (instanceHere.Values[0] != ((_T)~(_T)0))) )
-				debug_printf("Initializing enumeration type: '%s'.", enumName.begin());
+				info_printf("Initializing enumeration type: '%s'.", enumName.begin());
 
 			static	::nwol::gsyslabel								newName							= instanceHere.Name = enumName;
 			static	::nwol::error_t									errDummy						= instanceHere.add_value((_T)(~(_T)0), INVALID_ENUM_VALUE_STR);
@@ -200,13 +200,13 @@ namespace nwol
 	enum EnumName : IntType {};																																												\
 	static					const ::nwol::gsyslabel		EnumName##_STR					= #EnumName;																										\
 	static					const EnumName				EnumName##_INVALID				= (EnumName)::nwol::genum_definition<EnumName>::init(EnumName##_STR);												\
-	static inline			EnumName					operator &						(EnumName a, EnumName b)					noexcept	{ return (EnumName)		(a & (IntType)b);				}	\
-	static inline			EnumName					operator ~						(EnumName a)								noexcept	{ return (EnumName)		(~(IntType)a);					}	\
-	static inline			EnumName					operator ^						(EnumName a, EnumName b)					noexcept	{ return (EnumName)		(a ^ (IntType)b);				}	\
+	static inline			EnumName					operator &						(EnumName  a, EnumName b)					noexcept	{ return (EnumName)		(a & (IntType)b);				}	\
+	static inline			EnumName					operator ~						(EnumName  a)								noexcept	{ return (EnumName)		(~(IntType)a);					}	\
+	static inline			EnumName					operator ^						(EnumName  a, EnumName b)					noexcept	{ return (EnumName)		(a ^ (IntType)b);				}	\
 	static inline			EnumName&					operator |=						(EnumName &a, EnumName b)					noexcept	{ return (EnumName&)	( ((IntType&)a) |= (IntType)b); }	\
 	static inline			EnumName&					operator &=						(EnumName &a, EnumName b)					noexcept	{ return (EnumName&)	( ((IntType&)a) &= (IntType)b); }	\
 	static inline			EnumName&					operator ^=						(EnumName &a, EnumName b)					noexcept	{ return (EnumName&)	( ((IntType&)a) ^= (IntType)b); }	\
-	static inline constexpr	EnumName					operator |						(EnumName a, EnumName b)					noexcept	{ return (EnumName)		(a | (IntType)b);					}
+	static inline constexpr	EnumName					operator |						(EnumName  a, EnumName b)					noexcept	{ return (EnumName)		(a | (IntType)b);					}
 
 #define GDEFINE_ENUM_VALUE(EnumName, EnumValue, ValueName)																												\
 	static constexpr		const EnumName				EnumName##_##ValueName			= (EnumName)(EnumValue);														\

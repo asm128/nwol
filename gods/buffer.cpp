@@ -202,7 +202,7 @@ uint32_t									nwol::fileDeserializeData								(GODS(SBuffer)* out_Definition
 	if (pNewData)
 		memset(pNewData.get_address(), 0, ::nwol::get_type_size<SBuffer>());
 
-	debug_printf("%i GODS(SBuffer) instances read from file, %i skipped.", i - nSkipped, nSkipped);
+	info_printf("%i GODS(SBuffer) instances read from file, %i skipped.", i - nSkipped, nSkipped);
 	return i;
 }
 
@@ -255,7 +255,7 @@ uint32_t									nwol::memDeserializeData								(GODS(SBuffer)* out_DefinitionL
 	if (pNewData)
 		memset(pNewData.get_address(), 0, ::nwol::get_type_size<SBuffer>());
 
-	debug_printf("%i _GBUFFER_DATA instances read from memory stream, %i skipped.", i - nSkipped, nSkipped);
+	info_printf("%i _GBUFFER_DATA instances read from memory stream, %i skipped.", i - nSkipped, nSkipped);
 	return byteIndex;
 }
 
@@ -281,7 +281,7 @@ uint32_t									nwol::fileSerializeData									(GREF(SBuffer)* const* in_Defin
 		size1											= sizeof(bSavedBuffer);
 		if (fwrite(&bSavedBuffer, size1, 1, out_fp) != 1) {
 			error_printf("Failed to write metadata to file.");
-			debug_printf("%i GODS(SBuffer) instances read from memory stream, %i skipped.", i - nSkipped, nSkipped);
+			info_printf("%i GODS(SBuffer) instances read from memory stream, %i skipped.", i - nSkipped, nSkipped);
 			return i;
 		}
 		if (0 == bSavedBuffer) {
@@ -292,7 +292,7 @@ uint32_t									nwol::fileSerializeData									(GREF(SBuffer)* const* in_Defin
 		size1											= sizeof(SBuffer) - sizeof(void*)*4;
 		if (fwrite(pDef->get(), size1, 1, out_fp) != 1) {
 			error_printf("Error saving buffer data at index %u:\n", i);
-			debug_printf("%i GODS(SBuffer) instances saved to memory stream, %i skipped.", i - nSkipped, nSkipped);
+			info_printf("%i GODS(SBuffer) instances saved to memory stream, %i skipped.", i - nSkipped, nSkipped);
 			return i;
 		}
 		const ::nwol::SBuffer								* instanceToWrite									= pDef->get();
@@ -300,13 +300,13 @@ uint32_t									nwol::fileSerializeData									(GREF(SBuffer)* const* in_Defin
 			size1											= GTYPEID_TOTALBYTES(instanceToWrite->DataFormat);
 			if (fwrite(instanceToWrite->pByteArray, size1, count1, out_fp) != (size_t)count1) {
 				error_printf("Error (2) saving buffer data at index %i:\n", i);
-				debug_printf("%i GODS(SBuffer) instances saved to memory stream, %i skipped.", i - nSkipped, nSkipped);
+				info_printf("%i GODS(SBuffer) instances saved to memory stream, %i skipped.", i - nSkipped, nSkipped);
 				return i;
 			}
 		}
 	}
 
-	debug_printf("%i GODS(SBuffer) instances serialized to file, %i skipped.", i - nSkipped, nSkipped);
+	info_printf("%i GODS(SBuffer) instances serialized to file, %i skipped.", i - nSkipped, nSkipped);
 	return i;
 }
 
@@ -352,6 +352,6 @@ uint32_t									nwol::memSerializeData									(GODS(SBuffer) const* in_Definit
 		}
 	}
 
-	debug_printf("%i GODS(SBuffer) instances serialized to memory, %i skipped.", i - nSkipped, nSkipped);
+	info_printf("%i GODS(SBuffer) instances serialized to memory, %i skipped.", i - nSkipped, nSkipped);
 	return byteIndex;
 }

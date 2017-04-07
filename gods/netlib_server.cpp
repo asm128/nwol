@@ -43,7 +43,7 @@ int32_t									nwol::CServer::Listen							()																			{
 
 	int														a1, a2, a3, a4, port_number;	// Components of address in xxx.xxx.xxx.xxx form
 	::nwol::getAddress( ServerConnection, &a1, &a2, &a3, &a4, &port_number );
-	debug_printf("Server listening on %u.%u.%u.%u:%u"
+	info_printf("Server listening on %u.%u.%u.%u:%u"
 		,(uint32_t)a1
 		,(uint32_t)a2
 		,(uint32_t)a3
@@ -52,7 +52,7 @@ int32_t									nwol::CServer::Listen							()																			{
 		);
 
 	// Information about the client
-	struct SConnectionEndpoint								* client;	
+	SConnectionEndpoint										* client							= nullptr;		
 
 	// Receive bytes from client
 	int32_t													bytes_received						= 0;
@@ -61,7 +61,7 @@ int32_t									nwol::CServer::Listen							()																			{
 	reterr_error_if(bytes_received < 0, "Could not receive datagram. 0x%x.", errMy);
 
 	errMy												= ::nwol::getAddress( client, &a1, &a2, &a3, &a4, &port_number );
-	debug_printf("Received %u bytes from %u.%u.%u.%u:%u. Command: %s", bytes_received, 
+	info_printf("Received %u bytes from %u.%u.%u.%u:%u. Command: %s", bytes_received, 
 		(uint32_t)a1,
 		(uint32_t)a2,
 		(uint32_t)a3,
@@ -81,7 +81,7 @@ int32_t									nwol::CServer::Listen							()																			{
 
 void									disconnectClient								(nwol::CClient* client)														{
 	/* Get current time */
-	debug_printf("Disconnecting client %u.", client->m_id);
+	info_printf("Disconnecting client %u.", client->m_id);
 	::nwol::shutdownConnection(&client->m_ClientListener);
 	::nwol::shutdownConnection(&client->m_ClientTarget);
 }
@@ -91,7 +91,7 @@ int32_t									sendSystemCommand								(::nwol::CClient* pClient, const ::nwol
 }
 
 int32_t									processCommandInternal							(::nwol::CClient* client, ::nwol::NETLIB_COMMAND command)					{
-	debug_printf("Processing system command: %s.", ::nwol::get_value_label(command).c_str());
+	info_printf("Processing system command: %s.", ::nwol::get_value_label(command).c_str());
 	
 	if (command == ::nwol::NETLIB_COMMAND_DISCONNECT)		{
 		debug_print("Disconnect requested by client.");
@@ -120,7 +120,7 @@ int32_t									processCommandInternal							(::nwol::CClient* client, ::nwol::N
 		int											a1, a2, a3, a4;			// Components of address in xxx.xxx.xxx.xxx form
 		errMy									= ::nwol::getAddress(client->m_ClientTarget, &a1, &a2, &a3, &a4, &port_number);
 		timestring[strlen(timestring)-1]		= 0;
-		debug_printf("Sent time (%s) to %u.%u.%u.%u:%u."
+		info_printf("Sent time (%s) to %u.%u.%u.%u:%u."
 			, timestring
 			, (int)a1
 			, (int)a2
@@ -233,7 +233,7 @@ int32_t									nwol::CServer::Accept							()																			{
 
 	// Display time
 	::nwol::getAddress( targetConn, &a1, &a2, &a3, &a4, &client_port_number );
-	debug_printf("Sent available port (%u) to %u.%u.%u.%u:%u." 
+	info_printf("Sent available port (%u) to %u.%u.%u.%u:%u." 
 		, (uint32_t)local_port_number
 		, (uint32_t)a1
 		, (uint32_t)a2

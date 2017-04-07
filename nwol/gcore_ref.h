@@ -11,6 +11,7 @@
 namespace nwol
 {
 #pragma pack(push, 1)
+
 #define NWOL_DEBUG_CHECK_TYPE				size_t
 #define NWOL_DEBUG_CHECK_VALUE_PRE			BINFIBO
 #define NWOL_DEBUG_CHECK_VALUE_POST			BINFIBO
@@ -33,7 +34,6 @@ namespace nwol
 #	define GLOBALSOVERRUNINIT_START
 #	define GLOBALSOVERRUNINIT_END
 #endif		
-
 	struct SReferenceGlobals {
 																			__GPRECHECK();
 									::nwol::cue_t							Cue							= 0;
@@ -77,14 +77,9 @@ namespace nwol
 
 	}; // 
 
-	// This is the common interface for gcore_ref types
-	//struct SReferenceInt
-	//{
-	//};
-
-	template <typename _tBase, ::nwol::GDATA_TYPE... Args> struct gcore_ref //: public SReferenceInt	
-	{																
-		typedef						gcore_ref<_tBase, Args...>				TRef;	
+	template <typename _tBase, ::nwol::GDATA_TYPE... _tArgs> 
+	struct gcore_ref {																
+		typedef						gcore_ref<_tBase, _tArgs...>			TRef;	
 		typedef						_tBase									TBase;	
 		__GPRECHECK();
 									::nwol::refcount_t						ReferenceCount;	
@@ -97,7 +92,7 @@ namespace nwol
 		static						uint64_t								__breakAllocID;
 #endif	
 		inline						TRef*									acquire						()						{ 
-			int64_t finalCount;
+			int64_t																	finalCount;
 			if( 1 >= (finalCount = (int64_t)NWOL_INTERLOCKED_INCREMENT(ReferenceCount)) )	{															
 				error_printf("Invalid reference count: %llu. Instance type: '%s'.", finalCount, get_type_name().begin());			
 				PLATFORM_CRT_BREAKPOINT();											
@@ -114,50 +109,35 @@ namespace nwol
 
 		// static accessors
 		static inline				const ::nwol::gdescriptor&				get_type_descriptor			()						{
-			static constexpr	const ::nwol::GDATA_TYPE							dataTypes[]					= {Args..., (GDATA_TYPE)0};									
-			static				const ::nwol::gdescriptor							typeDescriptor				= ::nwol::gdescriptor(dataTypes, ~0U);							
+			static constexpr	const ::nwol::GDATA_TYPE							dataTypes[]					= {_tArgs..., (GDATA_TYPE)0};									
+			static				const ::nwol::gdescriptor							typeDescriptor				= ::nwol::gdescriptor(dataTypes, ~0U);
 			static				const ::nwol::error_t								err							= ::nwol::validate_type_descriptor<_tBase>(typeDescriptor);	
 			return typeDescriptor;																								
 		}			
 
 		static inline				const ::nwol::gsyslabel&				get_type_name				()						{
-			static	const ::nwol::gsyslabel											typeName					= ::nwol::gsyslabel(__kCue, ~0U);											
+			static	const ::nwol::gsyslabel											typeName					= ::nwol::gsyslabel(__kCue, ~0U);
 			return typeName;																									
 		}
 	}; // template struct
-
 #pragma pack(pop)
-	
 
 	template <typename _tRef>
-	static			bool													checkOverrun				(const _tRef* p)		{																										
-		if(0 == p) 
-			return false;																			
-		bool																		r							= false;																						
+	static			bool													checkOverrun				(const _tRef* p)		{
+		if(0 == p)
+			return false;
+		bool																		result						= false;
 																											
 		// reference check 
-		if (BINFIBO != p->NWOL_DEBUG_CHECK_NAME_PRE) {																									
-			error_printf("Memory was overwritten before the reference metadata. AllocID: %llu. Value: %u. Expected: %u."	, p->AllocID, (uint32_t)p->NWOL_DEBUG_CHECK_NAME_PRE			, (uint32_t)BINFIBO);								
-			r	= true;																						
-		}																									
-		if (BINFIBO != p->NWOL_DEBUG_CHECK_NAME_POST) {																									
-			error_printf("Memory was overwritten after the reference metadata. AllocID: %llu. Value: %u. Expected: %u."		, p->AllocID, (uint32_t)p->NWOL_DEBUG_CHECK_NAME_POST			, (uint32_t)BINFIBO);								
-			r	= true;																						
-		}																									
-		// globals check 
-		if (BINFIBO != p->Globals->NWOL_DEBUG_CHECK_NAME_PRE) {																									
-			error_printf("Memory was overwritten before the globals section. AllocID: %llu. Value: %u. Expected: %u."		, p->AllocID, (uint32_t)p->Globals->NWOL_DEBUG_CHECK_NAME_PRE	, (uint32_t)BINFIBO);						
-			r	= true;																						
-		}																									
-		if (BINFIBO != p->Globals->NWOL_DEBUG_CHECK_NAME_POST) {																										
-			error_printf("Memory was overwritten after the globals section. AllocID: %llu. Value: %u. Expected: %u."		, p->AllocID, (uint32_t)p->Globals->NWOL_DEBUG_CHECK_NAME_POST	, (uint32_t)BINFIBO);						
-			r	= true;																						
-		}																									
-		if(r) {																									
-			error_printf("AllocID: %u.", uint32_t(p->AllocID));												
-			//printInfoString(p);																				
-		}																									
-		return r;																							
+		if (BINFIBO != p->NWOL_DEBUG_CHECK_NAME_PRE				) { error_printf("Memory was overwritten before the reference metadata. AllocID: %llu. Value: %u. Expected: %u."	, p->AllocID, (uint32_t)p->NWOL_DEBUG_CHECK_NAME_PRE			, (uint32_t)BINFIBO); result = true; }																									
+		if (BINFIBO != p->NWOL_DEBUG_CHECK_NAME_POST			) { error_printf("Memory was overwritten after the reference metadata. AllocID: %llu. Value: %u. Expected: %u."		, p->AllocID, (uint32_t)p->NWOL_DEBUG_CHECK_NAME_POST			, (uint32_t)BINFIBO); result = true; }																									
+		// globals check 																																																														 
+		if (BINFIBO != p->Globals->NWOL_DEBUG_CHECK_NAME_PRE	) { error_printf("Memory was overwritten before the globals section. AllocID: %llu. Value: %u. Expected: %u."		, p->AllocID, (uint32_t)p->Globals->NWOL_DEBUG_CHECK_NAME_PRE	, (uint32_t)BINFIBO); result = true; }																									
+		if (BINFIBO != p->Globals->NWOL_DEBUG_CHECK_NAME_POST	) { error_printf("Memory was overwritten after the globals section. AllocID: %llu. Value: %u. Expected: %u."		, p->AllocID, (uint32_t)p->Globals->NWOL_DEBUG_CHECK_NAME_POST	, (uint32_t)BINFIBO); result = true; }																									
+		if(result) {
+			error_printf("AllocID: %u.", uint32_t(p->AllocID));
+		}
+		return result;
 	}
 
 	void			nwol_shutdown	();

@@ -34,7 +34,7 @@ int32_t										loadValidModules				(const char* modulesPath, ::nwol::SRuntimeV
 	::nwol::array_obj<::nwol::glabel>			possibleModuleNames;
 	for(uint32_t iFile = 0, fileCount = fileNames.size(); iFile < fileCount; ++iFile) {
 		const ::nwol::glabel						& moduleName						= fileNames[iFile];
-		debug_printf("File found: %s.", moduleName.begin());
+		info_printf("File found: %s.", moduleName.begin());
 		if(moduleName.size() > 4) {
 			const char									* nameText							= &moduleName[moduleName.size()-4];
 			char										fileExtension	[5]					= {};
@@ -42,7 +42,7 @@ int32_t										loadValidModules				(const char* modulesPath, ::nwol::SRuntimeV
 				fileExtension[iChar]					= (char)tolower(nameText[iChar]);
 
 			if(0 == strcmp(fileExtension, fileExtensionToLookFor)) {
-				debug_printf("DLL found: %s.", moduleName.begin());
+				info_printf("DLL found: %s.", moduleName.begin());
 				possibleModuleNames.push_back(moduleName);
 			}
 		}
@@ -60,7 +60,7 @@ int32_t										loadValidModules				(const char* modulesPath, ::nwol::SRuntimeV
 		}
 
 		loadedModules.push_back(loadedModule);
-		debug_printf("Valid module found: %s.", moduleName.begin());
+		info_printf("Valid module found: %s.", moduleName.begin());
 	}
 
 	return 0;
@@ -71,7 +71,7 @@ int32_t										listDLLFiles					(const char* modulesPath, ::nwol::array_obj<::
 	::nwol::listFiles(modulesPath, fileNames);
 	for(uint32_t iFile=0, fileCount = fileNames.size(); iFile < fileCount; ++iFile) {
 		const ::nwol::glabel							& moduleName					= fileNames[iFile];
-		debug_printf("File found: %s.", moduleName.begin());
+		info_printf("File found: %s.", moduleName.begin());
 		if(moduleName.size() > 4) {
 			const char										* nameText						= &moduleName[moduleName.size()-4];
 			char											fileExtension	[5]				= {};
@@ -87,7 +87,7 @@ int32_t										listDLLFiles					(const char* modulesPath, ::nwol::array_obj<::
 
 
 int32_t										refreshModules					(::SApplication& instanceApp)																									{
-	debug_printf("Refreshing modules...");
+	info_printf("Refreshing modules...");
 #if defined(__WINDOWS__)
 	const char										modulesPath	[]					= ".\\modules";
 #else
@@ -104,7 +104,7 @@ int32_t										refreshModules					(::SApplication& instanceApp)															
 	PLATFORM_CRT_CHECK_MEMORY();
 	for(uint32_t iFile=0, fileCount = possibleModuleNames.size(); iFile < fileCount; ++iFile) {
 		const ::nwol::glabel							& moduleName					= possibleModuleNames[iFile];
-		debug_printf("DLL found: %s.", moduleName.begin());
+		info_printf("DLL found: %s.", moduleName.begin());
 		::nwol::SModuleInterface						loadedModule					= {};
 		loadedModule.RuntimeValues					= instanceApp.RuntimeValues;
 		int32_t											errorLoad						= ::nwol::loadModule(loadedModule, moduleName.begin());
@@ -117,7 +117,7 @@ int32_t										refreshModules					(::SApplication& instanceApp)															
 		maxModuleNameLength							= (maxModuleNameLength > moduleName.size()) ? maxModuleNameLength : moduleName.size();
 		maxModuleTitleLength						= (maxModuleTitleLength > titleLen) ? maxModuleTitleLength : titleLen;
 		loadedModules.push_back(loadedModule);
-		debug_printf("Valid module found: %s." , moduleName.begin());
+		info_printf("Valid module found: %s." , moduleName.begin());
 	}
 	PLATFORM_CRT_CHECK_MEMORY();
 
@@ -154,7 +154,7 @@ int32_t										refreshModules					(::SApplication& instanceApp)															
 		++newControl.AreaASCII.Offset.y;
 	}
 
-	debug_printf("Finished refreshing modules.");
+	info_printf("Finished refreshing modules.");
 	return 0;
 }
 
@@ -200,7 +200,7 @@ int32_t										updateSelectorApp				(::SApplication& instanceApp, bool exitReq
 	::nwol::array_pod<::nwol::CONTROL_FLAG>			& controlFlags					= guiSystem.Controls.ControlFlags;
 	for(uint32_t iControl = 0, controlCount = controlFlags.size(); iControl < controlCount; ++iControl)
 		if(::nwol::bit_true(controlFlags[iControl], ::nwol::CONTROL_FLAG_EXECUTE)) {
-			debug_printf("Execute %u.", iControl);
+			info_printf("Execute %u.", iControl);
 			uint32_t										selectedModuleIndex					= UINT_MAX;
 			switch(iControl) {
 			case 0:		
@@ -240,6 +240,7 @@ int32_t										loadSelection					(::SApplication& instanceApp)																
 		if(0 > errSetup) { 
 			error_printf(errorFormat2, errSetup, "appSetup()" ); 
 			retVal										= -1;
+			moduleInterface.Cleanup();
 			::nwol::initASCIIScreen();
 		} 
 		else {
@@ -249,7 +250,7 @@ int32_t										loadSelection					(::SApplication& instanceApp)																
 				retVal										= -1;
 			}
 			else {
-				debug_printf("Client application \"%s\" set up. Starting update loop.", moduleInterface.ModuleTitle ? moduleInterface.ModuleTitle : "Untitled");
+				info_printf("Client application \"%s\" set up. Starting update loop.", moduleInterface.ModuleTitle ? moduleInterface.ModuleTitle : "Untitled");
 				instanceApp.SelectorState					= SELECTOR_STATE_RUNNING_SELECTION;
 			}
 		}
@@ -317,7 +318,7 @@ int32_t										update							(::SApplication & instanceApp, bool exitRequested)
 				errResult								= ::nwol::APPLICATION_STATE_FATAL;
 			}
 			else { 
-				debug_printf("Client application cleanup succeeded."); 
+				info_printf("Client application cleanup succeeded."); 
 			}
 				
 			::nwol::error_t								errDelete							= moduleSelected->Delete(); 
@@ -332,7 +333,7 @@ int32_t										update							(::SApplication & instanceApp, bool exitRequested)
 			else {	// Reinitialize the selector window which was probably closed before starting the new app.
 				::nwol::initASCIIScreen(instanceApp.GUI.TargetSizeASCII.x, instanceApp.GUI.TargetSizeASCII.y);
 				refreshModules(instanceApp);
-				debug_printf("Client application instance deleted successfully."); 
+				info_printf("Client application instance deleted successfully."); 
 			}
 			while(INTERLOCKED_COMPARE_EXCHANGE(instanceApp.RenderSemaphore, 0, 2) == 3)
 				continue;
@@ -361,10 +362,10 @@ int32_t										render							(::SApplication& instanceApp)																					
 	// sync here. This is necessary for when the client application requests shutdown but may still be rendering a frame, so we have to wait the render call to finish before deleting the object.
 	if( 1 == INTERLOCKED_INCREMENT(instanceApp.RenderSemaphore) ) {
 		switch(instanceApp.SelectorState) {
-		case SELECTOR_STATE_START:
-		case SELECTOR_STATE_MENU:				
-		case SELECTOR_STATE_LOADING_SELECTION:	retVal	= renderSelectorApp(instanceApp);														break;
-		case SELECTOR_STATE_RUNNING_SELECTION:	if errored(renderSelection(instanceApp)) error_printf("Failed to render client application");	break;
+		case SELECTOR_STATE_START				:
+		case SELECTOR_STATE_MENU				: retVal = renderSelectorApp(instanceApp);														break;
+		case SELECTOR_STATE_LOADING_SELECTION	: break;	// careful because of unique ASCII screen instance.
+		case SELECTOR_STATE_RUNNING_SELECTION	: if errored(renderSelection(instanceApp)) error_printf("Failed to render client application");	break;
 		default:
 			error_printf("Unrecognized state: %u", (uint32_t)instanceApp.SelectorState);
 		}

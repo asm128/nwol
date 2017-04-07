@@ -51,7 +51,7 @@ namespace nwol
 						__g_SBufferManager.releaseRef(&Data[iBuffer]);
 						nTotalInstances ++;
 					}
-				debug_printf("SBuffer instances released:%u", nTotalInstances);
+				info_printf("SBuffer instances released:%u", nTotalInstances);
 			}
 			return array_pod<GODS(SBuffer)>::clear();
 		}
@@ -63,7 +63,7 @@ namespace nwol
 	public:
 										__CBufferManager			()										{ (void)INIT_CRITICAL_SECTION(cs); }
 										~__CBufferManager			()										{
-			debug_printf("Buffer manager shutting down.");
+			info_printf("Buffer manager shutting down.");
 
 			DELETE_CRITICAL_SECTION(cs);
 
@@ -75,7 +75,7 @@ namespace nwol
 			for( uint32_t iTotalBytes	= 0; iTotalBytes	< 1024	; ++iTotalBytes		) {
 				SBufferManagerStorage				* pStorage = Storage[iBigEndian][iNorm][iFloat][iSigned][iElementBytes][iTotalBytes];
 				if( pStorage ) {
-					debug_printf("Deleting SBuffer* storage:\n"
+					info_printf("Deleting SBuffer* storage:\n"
 						"isBigEndian:%s\n"
 						"isNorm:%s\n"
 						"isFloat:%s\n"

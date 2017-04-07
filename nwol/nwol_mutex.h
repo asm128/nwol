@@ -13,6 +13,7 @@
 namespace nwol
 {
 	class CMutex {
+		friend	class			CLock;
 		DECLARE_SHARED_SECTION	(CriticalSection);
 	public:
 								CMutex			()							{ (void)(INIT_SHARED_SECTION	(CriticalSection)); }
@@ -20,15 +21,15 @@ namespace nwol
 #if defined(__WINDOWS__)
 		_Acquires_lock_(this->CriticalSection)
 #endif
-		void					Lock			()							{ ENTER_SHARED_SECTION			(CriticalSection);	}
+				void			Lock			()							{ ENTER_SHARED_SECTION			(CriticalSection);	}
 #if defined(__WINDOWS__)
 		_Releases_lock_(this->CriticalSection)
 #endif
-		void					Unlock			()							{ LEAVE_SHARED_SECTION			(CriticalSection);	}
+				void			Unlock			()							{ LEAVE_SHARED_SECTION			(CriticalSection);	}
 	};
 
 	class CLock {
-		CMutex					& mutex;
+				CMutex			& mutex;
 	public:
 		inline					~CLock			()							{ mutex.Unlock	(); }
 		inline					CLock			(CMutex& m) : mutex(m)		{ mutex.Lock	(); }

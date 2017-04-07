@@ -121,9 +121,9 @@ namespace nwol
 {
 	template <typename _tRef> class gref_serializer_pod
 	{
-		typedef typename _tRef::TBase _tBase;
+		typedef		typename _tRef::TBase				_tBase;
 
-#if defined(_DEBUG) || defined(DEBUG)
+#if defined(NWOL_DEBUG_ENABLED)
 		struct SPODSerializerCounters
 		{
 		public:
@@ -140,7 +140,7 @@ namespace nwol
 
 	public:
 														~gref_serializer_pod		()																														{
-			if(	Counters.MemSerialize
+			if	(	Counters.MemSerialize
 				||	Counters.MemWrite
 				||	Counters.MemDeserialize
 				||	Counters.MemRead
@@ -150,23 +150,23 @@ namespace nwol
 				||	Counters.FileRead
 				)
 			{
-				debug_printf("Shutting down serializer for type: %s", _tRef::get_type_name().begin());
+				info_printf("Shutting down serializer for type: %s", _tRef::get_type_name().begin());
 			}
 
-			if (Counters.MemSerialize)		{ debug_printf("Instances mem serialized successfully by this serializer: %u"	,	Counters.MemSerialize		);	}
-			if (Counters.MemWrite)			{ debug_printf("Instances mem streamed successfully by this serializer: %u"		,	Counters.MemWrite			);	}
-			if (Counters.MemDeserialize)	{ debug_printf("Instances mem serialized successfully by this serializer: %u"	,	Counters.MemDeserialize		);	}
-			if (Counters.MemRead)			{ debug_printf("Instances mem streamed successfully by this serializer: %u"		,	Counters.MemRead			);	}
-			if (Counters.FileSerialize)		{ debug_printf("Instances file serialized successfully by this serializer: %u"	,	Counters.FileSerialize		);	}
-			if (Counters.FileWrite)			{ debug_printf("Instances file streamed successfully by this serializer: %u"	,	Counters.FileWrite			);	}
-			if (Counters.FileDeserialize)	{ debug_printf("Instances file serialized successfully by this serializer: %u"	,	Counters.FileDeserialize	);	}
-			if (Counters.FileRead)			{ debug_printf("Instances file streamed successfully by this serializer: %u"	,	Counters.FileRead			);	}
+			info_if(Counters.MemWrite			, "Instances mem-streamed successfully by this serializer: %u"		,	Counters.MemWrite			);
+			info_if(Counters.MemRead			, "Instances mem-streamed successfully by this serializer: %u"		,	Counters.MemRead			);
+			info_if(Counters.FileWrite			, "Instances file-streamed successfully by this serializer: %u"		,	Counters.FileWrite			);
+			info_if(Counters.FileRead			, "Instances file-streamed successfully by this serializer: %u"		,	Counters.FileRead			);
+			info_if(Counters.MemSerialize		, "Instances mem-serialized successfully by this serializer: %u"	,	Counters.MemSerialize		);
+			info_if(Counters.MemDeserialize		, "Instances mem-serialized successfully by this serializer: %u"	,	Counters.MemDeserialize		);
+			info_if(Counters.FileSerialize		, "Instances file-serialized successfully by this serializer: %u"	,	Counters.FileSerialize		);
+			info_if(Counters.FileDeserialize	, "Instances file-serialized successfully by this serializer: %u"	,	Counters.FileDeserialize	);
 		}
 	private:
 #endif
 	public:
 		static		gref_serializer_pod<_tRef>&			get							()																														{
-			static gref_serializer_pod<_tRef>					instance;
+			static	gref_serializer_pod<_tRef>					instance;
 			return instance;
 		}
 		//--------------------------------------- NEW REFERENCE SYSTEM
@@ -209,7 +209,7 @@ namespace nwol
 				}
 				byteIndex									+= sizeof(_tBase);
 			}
-			debug_printf("%i %s instances written to memory stream, %i written with default values.", i, typeName.begin(), nSkipped);
+			info_printf("%i %s instances written to memory stream, %i written with default values.", i, typeName.begin(), nSkipped);
 			//i_ = 0;//??
 			PLATFORM_CRT_CHECK_MEMORY();
 			return byteIndex;
@@ -262,7 +262,7 @@ namespace nwol
 				}
 			}
 			PLATFORM_CRT_CHECK_MEMORY();
-			debug_printf("%i %s instances read from memory stream, %i referenced.", i, typeName.begin(), nSkipped);
+			info_printf("%i %s instances read from memory stream, %i referenced.", i, typeName.begin(), nSkipped);
 			return byteIndex;
 		} // method
 
@@ -301,7 +301,7 @@ namespace nwol
 				byteIndex										+= sizeof(_tBase);
 			}
 			PLATFORM_CRT_CHECK_MEMORY();
-			debug_printf("%i %s instances written to memory stream, %i skipped.", i - nSkipped, typeName.begin(), nSkipped);
+			info_printf("%i %s instances written to memory stream, %i skipped.", i - nSkipped, typeName.begin(), nSkipped);
 			return byteIndex;
 		} // method
 
@@ -348,7 +348,7 @@ namespace nwol
 				}
 			}
 			PLATFORM_CRT_CHECK_MEMORY();
-			debug_printf("%i %s instances read from memory stream, %i skipped.", i - nSkipped, typeName.begin(), nSkipped);
+			info_printf("%i %s instances read from memory stream, %i skipped.", i - nSkipped, typeName.begin(), nSkipped);
 			return byteIndex;
 		} // method
 
@@ -398,7 +398,7 @@ namespace nwol
 				}
 				INCREASECOUNTERFILEWRITE;
 			}
-			debug_printf("%i %s instances written to file, %i written with default values.", i, typeName.begin(), nSkipped);
+			info_printf("%i %s instances written to file, %i written with default values.", i, typeName.begin(), nSkipped);
 			PLATFORM_CRT_CHECK_MEMORY();
 			return i;
 		} // method
@@ -453,7 +453,7 @@ namespace nwol
 				}
 			}
 			PLATFORM_CRT_CHECK_MEMORY();
-			debug_printf("%i %s instances read from file, %i referenced.", i, typeName.begin(), nSkipped);
+			info_printf("%i %s instances read from file, %i referenced.", i, typeName.begin(), nSkipped);
 			return i;
 		} // method
 
@@ -507,7 +507,7 @@ namespace nwol
 				}
 			}
 			PLATFORM_CRT_CHECK_MEMORY();
-			debug_printf("%i %s instances read from file, %i skipped.", i - nSkipped, typeName.begin(), nSkipped);
+			info_printf("%i %s instances read from file, %i skipped.", i - nSkipped, typeName.begin(), nSkipped);
 			return i;
 		} // method
 
@@ -550,7 +550,7 @@ namespace nwol
 			}
 
 			PLATFORM_CRT_CHECK_MEMORY();
-			debug_printf("%i %s instances written to file, %i skipped.", i - nSkipped, typeName.begin(), nSkipped);
+			info_printf("%i %s instances written to file, %i skipped.", i - nSkipped, typeName.begin(), nSkipped);
 			return i;
 		} // method
 
