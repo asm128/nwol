@@ -12,13 +12,13 @@ namespace nwol
 	{
 							uint8_t			b = 0, g = 0, r = 0, a = 0xff; 
 
-		inline constexpr					SColor32		()																			= default;
-		inline constexpr					SColor32		(const SColor32& other)														= default;
-		inline constexpr					SColor32		(uint8_t r_, uint8_t g_, uint8_t b_, uint8_t a_=0xff)						: b(b_), g(g_), r(r_), a(a_)																																								{}
-		inline constexpr					SColor32		(uint32_t other)															: b((uint8_t)(((other & 0x000000FF) >> 0))), g((uint8_t)(((other & 0x0000FF00) >> 8))), r((uint8_t)(((other & 0x00FF0000) >> 16))), a((uint8_t)(((other & 0xFF000000) >> 24)))				{}
+		inline constexpr					SColor32		()																noexcept	= default;
+		inline constexpr					SColor32		(const SColor32& other)											noexcept	= default;
+		inline constexpr					SColor32		(uint8_t r_, uint8_t g_, uint8_t b_, uint8_t a_=0xff)			noexcept	: b(b_), g(g_), r(r_), a(a_)																																								{}
+		inline constexpr					SColor32		(uint32_t other)												noexcept	: b((uint8_t)(((other & 0x000000FF) >> 0))), g((uint8_t)(((other & 0x0000FF00) >> 8))), r((uint8_t)(((other & 0x00FF0000) >> 16))), a((uint8_t)(((other & 0xFF000000) >> 24)))				{}
 
 		inline constexpr	operator		uint32_t		()														const				{ return (((uint32_t)a) << 24) | (((uint32_t)r) << 16) | (((uint32_t)g) << 8) | (((uint32_t)b) << 0);																						}
-		inline				SColor32&		operator=		(const SColor32& color)														= default;
+		inline				SColor32&		operator=		(const SColor32& color)											noexcept	= default;
 		inline constexpr	bool			operator ==		(uint32_t other)										const	noexcept	{ return other == *((const uint32_t*)this);																																					}
 		inline constexpr	bool			operator ==		(const SColor32& other)									const	noexcept	{ return b == other.b && g == other.g && r == other.r && a == other.a;																														}
 		inline constexpr	bool			operator !=		(const SColor32& other)									const	noexcept	{ return b != other.b || g != other.g || r != other.r || a != other.a;																														}
@@ -37,12 +37,12 @@ namespace nwol
 	{
 							uint8_t			b = 0, g = 0, r = 0; 
 
-		inline constexpr					SColor24		()																			= default;
-		inline constexpr					SColor24		(const SColor24& otherColorInt)												= default;
-		inline constexpr					SColor24		(uint8_t r_, uint8_t g_, uint8_t b_)										: b(b_), g(g_), r(r_)																																										{}
-		inline constexpr					SColor24		(const SColor32& other)														: b(other.b), g(other.b), r(other.r)																																						{}
-		inline constexpr					SColor24		(const SColor16& other)														: b((uint8_t)((other & 0x001F) / ((float)(0x1F))*255))	, g((uint8_t)(((other & 0x07E0) >>5) / ((float)(0x3F))*255)), r((uint8_t)(((other & 0xF800) >>11) / ((float)(0x1F))*255))			{}
-		inline constexpr					SColor24		(uint32_t other)															: b((uint8_t)(((other & 0x000000FF) >> 0)))				, g((uint8_t)((other & 0x0000FF00) >> 8))					, r((uint8_t)(((other & 0x00FF0000) >> 16)))							{}
+		inline constexpr					SColor24		()																noexcept	= default;
+		inline constexpr					SColor24		(const SColor24& otherColorInt)									noexcept	= default;
+		inline constexpr					SColor24		(uint8_t r_, uint8_t g_, uint8_t b_)							noexcept	: b(b_), g(g_), r(r_)																																										{}
+		inline constexpr					SColor24		(const SColor32& other)											noexcept	: b(other.b), g(other.b), r(other.r)																																						{}
+		inline constexpr					SColor24		(const SColor16& other)											noexcept	: b((uint8_t)((other & 0x001F) / ((float)(0x1F))*255))	, g((uint8_t)(((other & 0x07E0) >>5) / ((float)(0x3F))*255)), r((uint8_t)(((other & 0xF800) >>11) / ((float)(0x1F))*255))			{}
+		inline constexpr					SColor24		(uint32_t other)												noexcept	: b((uint8_t)(((other & 0x000000FF) >> 0)))				, g((uint8_t)((other & 0x0000FF00) >> 8))					, r((uint8_t)(((other & 0x00FF0000) >> 16)))							{}
 
 		inline constexpr	operator		uint32_t		()														const	noexcept	{ return			0xFF000000 | (((uint32_t)r) << 16)	| (((uint32_t)g) << 8)							| (((uint32_t)b) << 0);																}
 		inline constexpr	operator		SColor32		()														const	noexcept	{ return SColor32(	0xFF000000 | (((uint32_t)r) << 16)	| (((uint32_t)g) << 8)							| (((uint32_t)b) << 0));															}
@@ -69,13 +69,13 @@ namespace nwol
 	{// store the color values as floating point ranged in the values (0,1)
 							float32_t		r = 0, g = 0, b = 0, a = 0; 
 
-		inline constexpr					SColorFloat		()																			= default;
-		inline constexpr					SColorFloat		(const SColorFloat& color)													= default;
-		inline constexpr					SColorFloat		(float _r, float _g, float _b, float _a=1.0f)								: r(_r) ,g(_g) ,b(_b) ,a(_a)																																								{}
-		inline constexpr					SColorFloat		(uint16_t Color)															: SColorFloat(SColor24(Color))																																								{}
-		inline constexpr					SColorFloat		(uint32_t Color)															: r(((Color & 0x00FF0000L)>>16)	*(1/255.0f)), g(((Color & 0x0000FF00L)>>8)*(1/255.0f)), b(((Color & 0x000000FFL)>>0)*(1/255.0f)), a(((Color & 0xFF000000L)>>24)*(1/255.0f))					{}
-		inline constexpr					SColorFloat		(SColor32 Color)															: r(Color.r * (1/255.0f)), g(Color.g*(1/255.0f)), b(Color.b*(1/255.0f)), a(Color.a*(1/255.0f))																								{}
-		inline constexpr					SColorFloat		(SColor24 Color)															: r(Color.r	* (1/255.0f)), g(Color.g*(1/255.0f)), b(Color.b*(1/255.0f)), a(1.0f)																											{}
+		inline constexpr					SColorFloat		()																noexcept	= default;
+		inline constexpr					SColorFloat		(const SColorFloat& color)										noexcept	= default;
+		inline constexpr					SColorFloat		(float _r, float _g, float _b, float _a=1.0f)					noexcept	: r(_r) ,g(_g) ,b(_b) ,a(_a)																																								{}
+		inline constexpr					SColorFloat		(uint16_t Color)												noexcept	: SColorFloat(SColor24(Color))																																								{}
+		inline constexpr					SColorFloat		(uint32_t Color)												noexcept	: r(((Color & 0x00FF0000L)>>16)	*(1/255.0f)), g(((Color & 0x0000FF00L)>>8)*(1/255.0f)), b(((Color & 0x000000FFL)>>0)*(1/255.0f)), a(((Color & 0xFF000000L)>>24)*(1/255.0f))					{}
+		inline constexpr					SColorFloat		(SColor32 Color)												noexcept	: r(Color.r * (1/255.0f)), g(Color.g*(1/255.0f)), b(Color.b*(1/255.0f)), a(Color.a*(1/255.0f))																								{}
+		inline constexpr					SColorFloat		(SColor24 Color)												noexcept	: r(Color.r	* (1/255.0f)), g(Color.g*(1/255.0f)), b(Color.b*(1/255.0f)), a(1.0f)																											{}
 		inline constexpr					SColorFloat		(const float* rgbaColor)													: r(rgbaColor[0]), g(rgbaColor[1]), b(rgbaColor[2]), a(rgbaColor[3])																														{}		
 
 		inline				SColorFloat&	operator=		(const SColorFloat& color)													= default;
@@ -83,7 +83,7 @@ namespace nwol
 		inline constexpr	operator		SColor32		()														const	noexcept	{ return SColor32((uint8_t)(r*255), (uint8_t)(g*255), (uint8_t)(b*255), (uint8_t)(a*255));																									}
 		inline constexpr	operator		SColor24		()														const	noexcept	{ return SColor24((uint8_t)(r*255), (uint8_t)(g*255), (uint8_t)(b*255));																													}
 		inline constexpr	operator		SColor16		()														const	noexcept	{ return ((((uint16_t)(r*0x1F)) << 11) | (((uint16_t)(g*0x3F)) << 5) | (((uint16_t)(b*0x1F)) << 0));																						}
-		inline constexpr	operator		const float*	()														const				{ return &r;																																												}
+		inline constexpr	operator		const float*	()														const	noexcept	{ return &r;																																												}
 		inline constexpr	bool			operator ==		(const SColorFloat& color)								const	noexcept	{ return ((SColor24)color) == ((SColor24)*this);																																			}
 		inline constexpr	bool			operator !=		(const SColorFloat& color)								const	noexcept	{ return ((SColor24)color) != ((SColor24)*this);																																			}
 		inline				SColorFloat&	operator +=		(const SColorFloat& color)										noexcept	{ r = r + color.r;					g = g + color.g;				b = b + color.b;				return Clamp();																			}
@@ -107,7 +107,7 @@ namespace nwol
 		inline constexpr	SColorFloat		operator *		(float scalar)											const	noexcept	{ return ::nwol::SColorFloat(::nwol::clamp(r * scalar, 0.0f, 1.0f),	::nwol::clamp(g * scalar, 0.0f, 1.0f),	::nwol::clamp(b * scalar, 0.0f, 1.0f));											}
 		inline constexpr	SColorFloat		operator /		(float scalar)											const				{ return ::nwol::SColorFloat(::nwol::clamp(r / scalar, 0.0f, 1.0f),	::nwol::clamp(g / scalar, 0.0f, 1.0f),	::nwol::clamp(b / scalar, 0.0f, 1.0f));											}
 
-		inline				SColorFloat&	Clamp			()																			{ r = ::nwol::clamp(r, 0.0f, 1.0f); g = ::nwol::clamp(g, 0.0f, 1.0f); b = ::nwol::clamp(b, 0.0f, 1.0f); return  *this;																		}
+		inline				SColorFloat&	Clamp			()																noexcept	{ r = ::nwol::clamp(r, 0.0f, 1.0f); g = ::nwol::clamp(g, 0.0f, 1.0f); b = ::nwol::clamp(b, 0.0f, 1.0f); return *this;																		}
 	};	// struct
 #pragma pack( pop )
 

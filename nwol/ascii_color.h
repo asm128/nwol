@@ -7,7 +7,7 @@ namespace nwol
 					uint8_t													Foreground:4		;
 					uint8_t													Background:4		;
 
-		inline		operator												uint8_t				()	const	{ return *(const uint8_t*)this;	}	// This operator clamps the structure on purpose.
+		inline		operator												uint8_t				()	const	noexcept	{ return *(const uint8_t*)this;	}	// This operator clamps the structure on purpose.
 	};
 } // namespace
 
