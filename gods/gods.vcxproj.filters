@@ -75,9 +75,6 @@
     <ClInclude Include="gref_definition_common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gref_definition_pure.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gref_manager_nco.h">
       <Filter>Header Files</Filter>
     </ClInclude>

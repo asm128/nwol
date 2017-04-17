@@ -13,9 +13,9 @@
 
 namespace nwol
 {
-	template <typename _tRef> class gref_manager_pod : public gref_manager_nco<_tRef, GREF_MANAGER_TYPE_POD>
+	template <typename _tRef> class gref_manager_pod : public gref_manager_nco<_tRef, GREF_CATEGORY_POD>
 	{
-		typedef		gref_manager_nco<_tRef, GREF_MANAGER_TYPE_POD>	base_manager_type;
+		typedef		gref_manager_nco<_tRef, GREF_CATEGORY_POD>	base_manager_type;
 		typedef			typename _tRef::TBase						_tBase;
 		using			base_manager_type::							Globals;
 		using			base_manager_type::							createRef_noinit;
@@ -60,7 +60,7 @@ namespace nwol
 				memset(dst->get(), 0, dst->Globals->DataSize);
 			else
 				::nwol::podcpy(dst->Instance, src);
-#if defined(DEBUG) || defined(_DEBUG)
+#if defined(NWOL_DEBUG_ENABLED)
 			::nwol::checkOverrun(dst);
 #endif
 			PLATFORM_CRT_CHECK_MEMORY();

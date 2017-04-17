@@ -8,7 +8,7 @@ namespace nwol
 	struct	SConnectionEndpoint;
 
 	struct SIPV4 {
-		byte_t							addr[4]						= {127, 0, 0, 1};	// Address components 
+		ubyte_t							addr[4]						= {127, 0, 0, 1};	// Address components 
 		uint16_t						Port						= 45678;							// 
 	};
 
@@ -29,8 +29,8 @@ namespace nwol
 	int32_t							connectionAccept			(SConnectionEndpoint* connection, SConnectionEndpoint** newConnection);
 
 	int32_t							getAddress					(SConnectionEndpoint* connection, int32_t* a1, int32_t* a2, int32_t* a3, int32_t* a4, int32_t* port_number);
-	int32_t							sendToConnection			(SConnectionEndpoint* connection, const byte_t* buffer, uint32_t bytesToSend	, int32_t* sentBytes	, SConnectionEndpoint*	targetConnection);
-	int32_t							receiveFromConnection		(SConnectionEndpoint* connection, byte_t*		buffer, uint32_t bufLen			, int32_t* receivedBytes, SConnectionEndpoint** newConnection	);
+	int32_t							sendToConnection			(SConnectionEndpoint* connection, const ubyte_t* buffer, uint32_t bytesToSend	, int32_t* sentBytes	, SConnectionEndpoint*	targetConnection);
+	int32_t							receiveFromConnection		(SConnectionEndpoint* connection, ubyte_t*		buffer, uint32_t bufLen			, int32_t* receivedBytes, SConnectionEndpoint** newConnection	);
 	bool_t							ping						(SConnectionEndpoint* pClient, SConnectionEndpoint* pServer);
 
 	enum USER_COMMAND
@@ -39,8 +39,8 @@ namespace nwol
 		,	USER_COMMAND_RESPONSE		= 2
 		};
 
-	int32_t							sendUserCommand				(SConnectionEndpoint* pOrigin, SConnectionEndpoint* pTarget, USER_COMMAND	requestOrResponse, const byte_t	* buffer, uint32_t bufferSize);
-	int32_t							receiveUserCommand			(SConnectionEndpoint* pOrigin, SConnectionEndpoint* pTarget, USER_COMMAND &	requestOrResponse, byte_t		* buffer, uint32_t bufferSize);
+	int32_t							sendUserCommand				(SConnectionEndpoint* pOrigin, SConnectionEndpoint* pTarget, USER_COMMAND	requestOrResponse, const ubyte_t	* buffer, uint32_t bufferSize);
+	int32_t							receiveUserCommand			(SConnectionEndpoint* pOrigin, SConnectionEndpoint* pTarget, USER_COMMAND &	requestOrResponse, ubyte_t		* buffer, uint32_t bufferSize);
 }// namespace
 
 #endif // __NETLIB_H__934892734698236498236498716091782__

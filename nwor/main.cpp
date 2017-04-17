@@ -163,7 +163,7 @@ int32_t										loadPlatformValues				(::nwol::SRuntimeValues& runtimeValues, c
 
 int											rtMain							(::nwol::SRuntimeValues& runtimeValues)						
 {
-#if defined(__WINDOWS__) && defined(DEBUG) | defined(_DEBUG)
+#if defined(__WINDOWS__) && defined(NWOL_DEBUG_ENABLED)
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_DELAY_FREE_MEM_DF );	// Enable run-time memory check for debug builds.
 	//_CrtSetBreakAlloc( 322 );
 #endif	

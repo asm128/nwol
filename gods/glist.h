@@ -109,15 +109,11 @@ namespace nwol
 			return 0;
 		}
 		
-						::nwol::error_t						push					(_tRef* CoreInstance)																										{
+						::nwol::error_t						push_back				(_tRef* CoreInstance)																										{
 			uint32_t												nOldSize				= this->Count;
 			::nwol::error_t											errMy					= this->resize(nOldSize + 1);
-			if (0 > errMy) {
-				error_printf("%s", "Failed to resize list! Out of memory?");
-				return -1;
-			}
+			reterr_error_if_errored(errMy, "%s", "Failed to resize list! Out of memory?");
 			this->set(CoreInstance, nOldSize);
-
 			return 0;
 		}
 		

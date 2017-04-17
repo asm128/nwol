@@ -5,13 +5,15 @@
 /// This file is part of the Game Object Data System.
 /// 2012-2013 (c) Pablo Ariel Zorrilla Cepeda
 ///
-
 #include "gcore_ref.h"
+#include "gref_manager_pod.h"
+#include "gref_manager_obj.h"
+
 #include "type_registry.h"
 #include "nwol_memory.h"
 
-#ifndef __NWOL_MACROS_H__2398429385492835498234__
-#define __NWOL_MACROS_H__2398429385492835498234__
+#ifndef GREF_H_2398429385492835498234
+#define GREF_H_2398429385492835498234
 
 //-----------------------------------------------------------------------------// //--------------------------------------------------------------------------//
 #define __GDECLARE_COMMON_COPIABLE_FUNCTIONS(baseType)																\
@@ -19,8 +21,6 @@
 	void gcreate				(GREF(baseType)** inout_pCoreInstance, const baseType& in_InitData);				\
 	void gcreateAll				(GREF(baseType)** inout_pCoreInstance, uint32_t nCount);							\
 	void gcreateAll				(GREF(baseType)** p2, const baseType* lstInstances, uint32_t nCount);				\
-	void gcopy					(GREF(baseType)* dst_Target  , const GREF(baseType)* src_Data);						\
-	void gclone					(GREF(baseType)** out_pTarget, const GREF(baseType)* src_Data);	
 
 // This macro declares functions to retrieve formatted informative text about the structures. These must be coded individually for each structure 
 #define __GDECLARE_COMMON_DEBUG_STRING_FUNCTIONS(baseType)															\
@@ -107,6 +107,41 @@
 	__GDECLARE_COMMON_COPIABLE_FUNCTIONS(baseType);
 
 #define GDECLARE_OBJ(baseType)	GDECLARE_OBJ_CUSTOMPAGE(baseType)
+namespace nwol
+{
+	template<typename _tRef>	static inline	_tRef*			acquire			(_tRef* instanceRef)								{ return instanceRef ? instanceRef->acquire() : nullptr; }
+	//template<typename _tRef>	void							release			(_tRef** refToRelease)								{
+	//	_tRef															* pRef		= *refToRelease;
+	//	*refToRelease												= 0;
+	//	if(pRef)  
+	//		switch(pRef->Globals->ObjectCategory) {
+	//		case GREF_CATEGORY_NCO: { ::nwol::gref_manager_nco<_tRef>* pManager = (::nwol::gref_manager_nco<_tRef>*)pRef->Globals->ReferenceManager; pManager->releaseRef(&pRef); break; }
+	//		case GREF_CATEGORY_OBJ: { ::nwol::gref_manager_obj<_tRef>* pManager = (::nwol::gref_manager_obj<_tRef>*)pRef->Globals->ReferenceManager; pManager->releaseRef(&pRef); break; }
+	//		case GREF_CATEGORY_POD: { ::nwol::gref_manager_pod<_tRef>* pManager = (::nwol::gref_manager_pod<_tRef>*)pRef->Globals->ReferenceManager; pManager->releaseRef(&pRef); break; }
+	//		}
+	//}
+
+	template<typename _tRef>	static inline	void			release			(_tRef** instanceRef)								{
+		typedef		void			(*TFunctionRelease)	(_tRef**);
+		_tRef															* pRef		= *instanceRef;
+		*instanceRef												= 0;
+		if(pRef)
+			((TFunctionRelease)pRef->Globals->_prelease)(&pRef);
+	}
+
+	template<typename _tRef>	static inline	void			set				(_tRef** out_Ref, _tRef* in_Ref)					{
+		_tRef															* old		= *out_Ref;																
+		*out_Ref													= ::nwol::acquire(in_Ref);															
+		::nwol::release(&old);																		
+	}																																	
+
+	template<typename _tRef>	static inline	void			release			(_tRef** instanceRefs, uint32_t* instanceCount)		{
+		for(uint32_t i=0, count = *instanceCount; i<count; ++i)			
+			::nwol::release(&instanceRefs[i]);							
+	}
 
 
-#endif // __NWOL_MACROS_H__2398429385492835498234__
+
+
+} // namespace
+#endif // GREF_H_2398429385492835498234

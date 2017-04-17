@@ -12,12 +12,13 @@
 /// 2013 (c) Pablo Ariel Zorrilla Cepeda
 #ifndef __GREF_DEFINITION_H__20347892374__
 #define __GREF_DEFINITION_H__20347892374__
-
 #include "gcore_ref.h"
 #include "gref_serializer_pod.h"
 #include "gref_manager_pod.h"
 #include "gref_manager_obj.h"
-#include "gref_definition_pure.h"
+
+#include "gref_definition_common.h"
+
 
 //-------------------------------------------------------------// GDEFINE_POD() //------------------------------------------------------------------------// 
 

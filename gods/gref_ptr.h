@@ -114,7 +114,7 @@ namespace nwol
 		}
 
 		// Clone in-place
-		virtual					void							unbind					()																								{ gclone(&InstanceRef, InstanceRef);					}
+		virtual					void							unbind					()																								{ clone(*this);											}
 		// For cloning in-place, use unbind()
 		virtual					void							clone					(gptr_obj<_tRef>& target)													const				{ 
 			if (0 == InstanceRef) {															
@@ -122,8 +122,7 @@ namespace nwol
 				return;													
 			}				
 			gptr_obj<_tRef>												_target;
-			_target.create();
-			gcopy(_target, InstanceRef);											
+			_target.create(*InstanceRef->get());
 			target													= _target;
 		}
 	};

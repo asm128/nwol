@@ -29,8 +29,8 @@
 	return 0;
 }
 
-template<typename _TChar>
-void						drawText			(_TChar* target, int32_t targetWidth, int32_t targetHeight, const char* text, int32_t textLen, const ::nwol::SRectangle2D<int32_t>& rectangle, nwol::ALIGN_SCREEN alignText, bool bWordWrap)
+template<typename _tChar>
+void						drawText			(_tChar* target, int32_t targetWidth, int32_t targetHeight, const char* text, int32_t textLen, const ::nwol::SRectangle2D<int32_t>& rectangle, nwol::ALIGN_SCREEN alignText, bool bWordWrap)
 {
 	int32_t							ystart				= ::nwol::max(0, ::nwol::min(targetHeight	, rectangle.Offset.y					));
 	int32_t							xstart				= ::nwol::max(0, ::nwol::min(targetWidth	, rectangle.Offset.x					));

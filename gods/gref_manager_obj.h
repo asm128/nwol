@@ -15,9 +15,9 @@
 
 namespace nwol
 {
-	template <typename _tRef> class gref_manager_obj : public gref_manager_nco<_tRef, GREF_MANAGER_TYPE_OBJ>
+	template <typename _tRef> class gref_manager_obj : public gref_manager_nco<_tRef, GREF_CATEGORY_OBJ>
 	{
-		typedef				gref_manager_nco<_tRef, GREF_MANAGER_TYPE_OBJ>	base_manager_type	;
+		typedef				gref_manager_nco<_tRef, GREF_CATEGORY_OBJ>	base_manager_type	;
 		using				base_manager_type::								createRef_noinit	;
 		typedef				typename _tRef::TBase							_tBase;
 	public:

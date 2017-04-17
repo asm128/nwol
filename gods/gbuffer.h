@@ -78,17 +78,17 @@ namespace nwol
 				return -1;
 			}
 			else if(m_ArrayBuffer.writable()) {
-				this->Data[index]														= value;
+				this->Data[index]												= value;
 				return 0;
 			}
 
-			static const bool													bIsText				= _USAGE == GUSAGE_TEXT;
+			static constexpr const bool											bIsText				= _USAGE == GUSAGE_TEXT;
 
 			GPNCO(::nwol, SBuffer)												newListBuffer;
 			reterr_error_if(0 > ::nwol::createBuffer(_F, _USAGE, this->Count, &newListBuffer), "Failed to create buffer for array! Out of memory? Element count requested: %u", (uint32_t)this->Count);
 		
 			memcpy(newListBuffer->pByteArray, this->Data, sizeof(_tBase)*this->Count);
-			((_tBase*)newListBuffer->pByteArray)[index]						 = value;
+			((_tBase*)newListBuffer->pByteArray)[index]						= value;
 
 			if(bIsText)
 				memset( &((_tBase*)newListBuffer->pByteArray)[this->Count], 0, sizeof(_tBase) );
@@ -150,7 +150,7 @@ namespace nwol
 					this->Data[iFirst]												= newValue;
 				else {
 					GPNCO(::nwol, SBuffer)												newArray;
-					gclone(&newArray, m_ArrayBuffer);
+					cloneBuffer(&newArray, m_ArrayBuffer);
 					((_tBase*)newArray->pByteArray)[iFirst]							= newValue;
 					set(newArray);
 				}
@@ -168,7 +168,7 @@ namespace nwol
 					this->Data[iLast]												= newValue;
 				else {
 					GPNCO(::nwol, SBuffer)												newArray;
-					gclone(&newArray, m_ArrayBuffer);
+					cloneBuffer(&newArray, m_ArrayBuffer);
 					reterr_error_if(0 == newArray || 0 == newArray->pByteArray, "Failed to allocate new buffer.");
 					((_tBase*)newArray->pByteArray)[iLast]							= newValue;
 					set(newArray);
@@ -195,7 +195,7 @@ namespace nwol
 				uint32_t															firstOccurrence		= find(oldValue);
 				if( -1 != firstOccurrence ) {
 					GPNCO(::nwol, SBuffer)												newArray;
-					gclone(&newArray, m_ArrayBuffer);
+					cloneBuffer(&newArray, m_ArrayBuffer);
 					for( uint32_t iEl=firstOccurrence; iEl < this->Count; iEl++ ) {
 						_tBase																* pElArray		= (_tBase*)newArray->pByteArray;
 						if( 0 == memcmp(&pElArray[iEl], &oldValue, sizeof(_tBase)) ) {
@@ -218,7 +218,7 @@ namespace nwol
 				return 0;
 			}
 
-			static const bool													bIsText				= _USAGE == GUSAGE_TEXT;
+			static constexpr const bool											bIsText				= _USAGE == GUSAGE_TEXT;
 
 			if( m_ArrayBuffer.writable() 
 				&& ((newSize+one_if(bIsText))*sizeof(_tBase)) <= m_ArrayBuffer->nSizeInBytes )
@@ -243,25 +243,20 @@ namespace nwol
 			return 0;
 		}
 
-								::nwol::error_t							push				(const _tBase& value)																	{
+								::nwol::error_t							push_back			(const _tBase& value)																	{
 			uint32_t															oldSize				= this->Count;
 			uint32_t															newSize				= oldSize+1;
-			if( 0 > resize(newSize) ) {
-				error_printf("%s", "Cannot resize array! Out of memory?");
-				return -1;
-			}
+			reterr_error_if(0 > resize(newSize), "%s", "Cannot resize array! Out of memory?")
 			else if(m_ArrayBuffer.writable())
 				this->Data[oldSize]													= value;
-			else {
-				// how does this happen?
+			else {	// how does this happen?
 				PLATFORM_CRT_BREAKPOINT();
 				GPNCO(::nwol, SBuffer)												newListBuffer;
 				if(m_ArrayBuffer) {
 					reterr_error_if(0 > ::nwol::createBuffer(_F, _USAGE, newSize, m_ArrayBuffer->nColumnCount, m_ArrayBuffer->nSliceCount, &newListBuffer), "Failed to create buffer for array! Out of memory? Element count requested: %u", (uint32_t)newSize);
 					memcpy(newListBuffer->pByteArray, this->Data, oldSize);
 				}
-				else {
-					// Entering here doesn't make any sense either if we resized() +1 successfully in a previous statement.
+				else {	// Entering here doesn't make any sense either if we resized()+1 successfully in a previous statement.
 					PLATFORM_CRT_BREAKPOINT();
 					reterr_error_if(0 > ::nwol::createBuffer(_F, _USAGE, newSize, &newListBuffer), "Failed to create buffer for array! Out of memory? Element count requested: %u", (uint32_t)newSize);
 				}
@@ -328,7 +323,7 @@ namespace nwol
 			}
 
 			uint32_t															newSize					= this->Count-1;
-			static const bool													bIsText					= _USAGE == GUSAGE_TEXT;
+			static constexpr const bool											bIsText					= _USAGE == GUSAGE_TEXT;
 			if( m_ArrayBuffer.writable() ) {
 				for( uint32_t nOldIndex = nIndex; nOldIndex<newSize; nOldIndex++ )
 					this->Data[nOldIndex]												= this->Data[nOldIndex+1];
@@ -450,7 +445,8 @@ namespace nwol
 	};
 
 	// Binary string type
-	typedef gbuffer<char,			GDATA_TYPE_INT8,			GUSAGE_BINARY>									gabstring;
+	typedef gbuffer<ubyte_t,			GDATA_TYPE_INT8,			GUSAGE_BINARY>									gabstring;
+	//typedef gbuffer<ubyte_t,			GDATA_TYPE_UINT8,			GUSAGE_BINARY>									gabstring;
 
 	// Index lists of different sizes.
 	typedef gbuffer<uint8_t,		GDATA_TYPE_UINT8,			GUSAGE_INDEX>									gauindex8;

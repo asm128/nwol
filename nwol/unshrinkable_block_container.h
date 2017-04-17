@@ -24,15 +24,15 @@ namespace nwol
 
 		// Absolute coordinates of a stored item 
 
-		typedef ::nwol::SDataBlock<_tBase, _BlockSize>	SBlock;	// Better to alias this because we're gonna need to reference it later
-		typedef nwol::array_pod<SBlock*>				SBlockArray;	// Better to alias this because we're gonna need to reference it later
+		typedef ::nwol::SDataBlock<_tBase, _BlockSize>	TBlock;	// Better to alias this because we're gonna need to reference it later
+		typedef nwol::array_pod<TBlock*>				TBlockArray;	// Better to alias this because we're gonna need to reference it later
 
-		SBlockArray							BlockArray;	/// Store here the data blocks.
+		TBlockArray							BlockArray;	/// Store here the data blocks.
 		nwol::array_pod<uint32_t>			RemainingBlockSpace;
 
 											~block_container_base		()																																	{
 			for(uint32_t iBlock=0, count=BlockArray.size(); iBlock<count; iBlock++) {
-				SBlock*								p							= BlockArray[iBlock];
+				TBlock*								p							= BlockArray[iBlock];
 				if(p)
 					::nwol::nwol_free(p);
 			}
@@ -70,7 +70,7 @@ namespace nwol
 		nwol::error_t						pushSanitizedData			(const _tBase* data, uint32_t dataElementCount, ::nwol::array_view<const _tBase>& arrayView, SBlockCoord& dataCoords)		{
 
 			bool									blockFound					= false;		// Look for a suitable block.
-			const uint32_t							dataFinalElementCount		= dataElementCount+one_if(_bTrailingNull);
+			const uint32_t							dataFinalElementCount		= dataElementCount + one_if(_bTrailingNull);
 
 			for( uint32_t iBlock = 0, blockCount = BlockArray.size(); iBlock < blockCount; iBlock++ ) {
 				if( RemainingBlockSpace[iBlock] >= dataFinalElementCount) {
@@ -83,7 +83,7 @@ namespace nwol
 
 			if(!blockFound) {	// we need to create a new block
 				// We assume the block array has enough size now, so create the new block and set its members.
-				SBlock*									newBlock					= (SBlock*)::nwol::nwol_malloc(sizeof(SBlock));
+				TBlock*									newBlock					= (TBlock*)::nwol::nwol_malloc(sizeof(TBlock));
 
 				if(0 == newBlock) {
 					error_printf("Failed to allocate new data block. Out of memory?");
@@ -138,8 +138,8 @@ namespace nwol
 	template<typename _tBase, uint32_t _BlockInstanceCount>
 	class unordered_pod_set : public block_container_base<_tBase, _BlockInstanceCount, false> {
 		typedef block_container_base<_tBase, _BlockInstanceCount, false>	container_base;
-		typedef ::nwol::SDataBlock<_tBase, _BlockInstanceCount>						SBlock;	// Better to alias this because we're gonna need to reference it later
-		typedef ::nwol::array_pod<SBlock*>										SBlockArray;	// Better to alias this because we're gonna need to reference it later
+		typedef ::nwol::SDataBlock<_tBase, _BlockInstanceCount>					TBlock;			// Better to alias this because we're gonna need to reference it later
+		typedef ::nwol::array_pod<TBlock*>										TBlockArray;	// Better to alias this because we're gonna need to reference it later
 
 	public:
 
@@ -184,9 +184,8 @@ namespace nwol
 	// the actual name for this would be unshrinkable block container for null-terminated data.
 	class unordered_string_set : public block_container_base<_tBase, _BlockSize, true> {
 
-		typedef	block_container_base<_tBase, _BlockSize, true>	container_base;
-		typedef	::nwol::SDataBlock<_tBase, _BlockSize>						SBlock;	// Better to alias this because we're gonna need to reference it later
-		typedef	::nwol::array_pod<SBlock*>								SBlockArray;	// Better to alias this because we're gonna need to reference it later
+		typedef	block_container_base<_tBase, _BlockSize, true>			container_base;
+		typedef	::nwol::SDataBlock<_tBase, _BlockSize>					TBlock;	// Better to alias this because we're gonna need to reference it later
 
 		using	container_base::			pushSanitizedData;
 		using	container_base::			BlockArray;
@@ -209,52 +208,45 @@ namespace nwol
 			reterr_error_if(newItemIndex != newSizesIndex, "%s", "Indices don't match. newItemIndex: %u, newSizesIndex: %u.", newItemIndex, newSizesIndex);
 			if(itemIndex)
 				*itemIndex							= (int32_t)newItemIndex;
-			return 0;
+			return newItemIndex;
 		}
 
 		::nwol::error_t						init						()																																	{
 			if( bInitialized )
 				return 0;
-
-			if( 0 > pushItemRange(0, 0, 0) ) {
-				error_printf("Failed to allocate item array!");
-				return -1;
-			}
-
-			SBlock									*firstBlock					= (SBlock*)::nwol::nwol_malloc(sizeof(SBlock));
-			if( 0 == firstBlock ) {
-				error_printf("Failed to allocate initial block! Out of memory?");
-				return -1;
-			}
+			const int32_t							newItemIndex				= pushItemRange(0, 0, 0);						reterr_error_if_errored(newItemIndex, "%s", "Failed to allocate item array!");
+			TBlock									*firstBlock					= (TBlock*)::nwol::nwol_malloc(sizeof(TBlock));	reterr_error_if(0 == firstBlock, "%s", "Failed to allocate initial block! Out of memory?");
 			firstBlock->Data[0]					= (_tBase)0;
-			this->BlockArray			.push_back(firstBlock);
-			this->RemainingBlockSpace	.push_back(_BlockSize - 1);
+			const int32_t							blockIndex					= this->BlockArray			.push_back(firstBlock);
+			const int32_t							blockSpaceIndex				= this->RemainingBlockSpace	.push_back(_BlockSize - 1);
+			if errored(blockIndex		) { error_printf("%s", "Failed to allocate array!"); this->RemainingBlockSpace	.clear(); return -1; }
+			if errored(blockSpaceIndex	) { error_printf("%s", "Failed to allocate array!"); this->BlockArray			.clear(); return -1; }
 			bInitialized						= true;
 			return 0;
 		}
 	public:
 											unordered_string_set		()																																	: bInitialized(false)	{ (void)INIT_CRITICAL_SECTION(Lock); }
 											~unordered_string_set		()																																	{
-#if defined(DEBUG) || defined(_DEBUG)
+#if defined(NWOL_DEBUG_ENABLED)
 			uint64_t								totalChars					= 0;
 			for( uint32_t iItem=1, count=ItemOffsets.size(); iItem<count; iItem++) {
-				const ::nwol::array_view<const _tBase>		arrayView					= this->get_array_view((int32_t)iItem);
+				const ::nwol::array_view<const _tBase>	arrayView					= this->get_array_view((int32_t)iItem);
 				info_printf("Data string found. Data: '%s'. Offset: %u. Size: %u.", arrayView.begin(), ItemOffsets[iItem], (uint32_t)arrayView.size());
 				totalChars							+= arrayView.size();
 			}
-			if(ItemOffsets.size())
+			if(ItemOffsets.size()) {
 				info_printf("Total strings: %u. Total characters: %llu. Average string size: %u.", (uint32_t)ItemOffsets.size(), totalChars, ItemOffsets.size() ? (uint32_t)(totalChars/ItemOffsets.size()) : 0);
+			}
 #endif
 			DELETE_CRITICAL_SECTION(Lock);
 		}
 
 		// Returns an array view of a given item.
-		array_view<const _tBase>				get_array_view				(const int32_t itemIndex)																											{
-
+		array_view<const _tBase>			get_array_view				(const int32_t itemIndex)																											{
 			ENTER_CRITICAL_SECTION(Lock);
 			init();
 			// return empty string in case of failure
-			::nwol::array_view<const _tBase>			result						= ::nwol::array_view<const _tBase>(&this->BlockArray[0]->Data[0], 0);
+			::nwol::array_view<const _tBase>		result						= ::nwol::array_view<const _tBase>(&this->BlockArray[0]->Data[0], 0);
 
 			if( itemIndex >= (int32_t)ItemOffsets.size() ) {
 				LEAVE_CRITICAL_SECTION(Lock);
@@ -269,7 +261,6 @@ namespace nwol
 			}
 			const int32_t							dataIndex					= ItemOffsets	[itemIndex];
 			const int32_t							dataLength					= ItemSizes		[itemIndex];
-
 			SBlockCoord								dataCoords;
 			if( 0 > this->getDataCoordsFromDataIndex(dataIndex, dataCoords) ) {
 				LEAVE_CRITICAL_SECTION(Lock);
@@ -326,10 +317,11 @@ namespace nwol
 					LEAVE_CRITICAL_SECTION(Lock);
 					if(itemIndex)
 						*itemIndex							= (int32_t)iItem;
-					return 0;
+					return iItem;
 				}
 			}
 			::nwol::error_t							errMy						= this->pushSanitizedData(data, textLen, arrayView, dataCoords);
+			int32_t									newItemIndex				= -1;
 			if(0 > errMy) {
 				error_printf("Failed to push data to container!");
 			}
@@ -337,15 +329,16 @@ namespace nwol
 				verbose_printf("Registered new data string: %s. Character count: %u.", arrayView.begin(), arrayView.size());
 				// Calculate the virtual range and push the range to the item list.
 				const int32_t							newItemOffset				= dataCoords.BlockIndex * _BlockSize + dataCoords.DataOffset;
-				if( 0 > pushItemRange(newItemOffset, textLen, itemIndex) ) {
-					error_printf("Failed to push new item range!");
+				newItemIndex						= pushItemRange(newItemOffset, textLen, itemIndex);
+				if( 0 > newItemIndex ) {
+					error_printf("%s", "Failed to push new item range!");
 					errMy								= -1;
 				}
 
 			}
 			LEAVE_CRITICAL_SECTION(Lock);
 
-			return errMy ? -1 : 0;
+			return (0 > errMy) ? -1 : newItemIndex;
 		}
 	};	// class
 }	// namespace

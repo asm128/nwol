@@ -17,7 +17,7 @@
 
 	unsigned char										key			= ((unsigned char)text[0]) % MAX_LABELDATA_ARRAYS;
 	int32_t												itemIndex	= -1;
-	reterr_error_if( LabelData[key].push_back(text, maxReadSize, &itemIndex, arrayView), "Failed to add label! label: %s. key: 0x%X.", text, (uint32_t)key);
+	reterr_error_if(0 > LabelData[key].push_back(text, maxReadSize, &itemIndex, arrayView), "Failed to add label! label: %s. key: 0x%X.", text, (uint32_t)key);
 
 	return 0;
 }

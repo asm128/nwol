@@ -13,7 +13,7 @@
 namespace nwol
 {
 	class CMutex {
-		friend	class			CLock;
+		//friend	class			CLock;
 		DECLARE_SHARED_SECTION	(CriticalSection);
 	public:
 								CMutex			()							{ (void)(INIT_SHARED_SECTION	(CriticalSection)); }
@@ -30,6 +30,10 @@ namespace nwol
 
 	class CLock {
 				CMutex			& mutex;
+
+								CLock			()							= delete;
+								CLock			(const CLock&)				= delete;
+				CLock&			operator=		(const CLock&)				= delete;
 	public:
 		inline					~CLock			()							{ mutex.Unlock	(); }
 		inline					CLock			(CMutex& m) : mutex(m)		{ mutex.Lock	(); }

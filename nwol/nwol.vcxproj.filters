@@ -198,6 +198,9 @@
     <ClInclude Include="nwol_choice.h">
       <Filter>math</Filter>
     </ClInclude>
+    <ClInclude Include="gcore_ref_globals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="label.cpp">

@@ -12,10 +12,10 @@ namespace nwol
 		using			gbuffer<_tBase, _F, ::nwol::GUSAGE_TEXT>::		m_ArrayBuffer;
 
 		inline															gestring			()									= default;
-		inline															gestring			(const gestring& other)				: gbuffer<_tBase, _F, ::nwol::GUSAGE_TEXT>(other)				{}
-		inline															gestring			(uint32_t size)						: gbuffer<_tBase, _F, ::nwol::GUSAGE_TEXT>(size)				{}
-		template <size_t _S>											gestring			(const _tBase (&data)[_S])			: gestring(_S, data)											{}
-																		gestring			(uint32_t size, const _tBase* data)																	{
+		inline															gestring			(const gestring& other)				: gbuffer<_tBase, _F, ::nwol::GUSAGE_TEXT>(other)		{}
+		inline															gestring			(uint32_t size)						: gbuffer<_tBase, _F, ::nwol::GUSAGE_TEXT>(size)		{}
+		template <size_t _S>											gestring			(const _tBase (&data)[_S])			: gestring(_S, data)									{}
+																		gestring			(uint32_t size, const _tBase* data)															{
 			GPNCO(::nwol, SBuffer)												newListBuffer;
 			if( 0 > ::nwol::createBuffer(_F, ::nwol::GUSAGE_TEXT, size+1, &newListBuffer) ) {
 				error_printf("Failed to create string buffer of size %u.", size+1);
@@ -30,13 +30,13 @@ namespace nwol
 				set(newListBuffer);
 			}
 		}
-		template <size_t _S>				gestring&					operator+=			(const _tBase (&data)[_S])														{ append(data);												return *this;	}
-		inline								gestring&					operator+=			(const gestring<_tBase, _F>& other)												{ append(other);											return *this;	}
-		template <size_t _S>				gestring					operator+			(const _tBase (&data)[_S])												const	{ gestring<_tBase, _F> result = *this; result.append(data) ; return result; }
-		inline								gestring					operator+			(const gestring<_tBase, _F>& other)										const	{ gestring<_tBase, _F> result = *this; result.append(other); return result; }
-		inline constexpr					bool						operator!			()																		const	{ return 0 == Count;														}
-		inline constexpr												operator			bool()																	const	{ return 0 != Count;														}
-											void						clear				()																				{
+		template <size_t _S>				gestring&					operator+=			(const _tBase (&data)[_S])																	{ append(data);												return *this;	}
+		inline								gestring&					operator+=			(const gestring<_tBase, _F>& other)															{ append(other);											return *this;	}
+		template <size_t _S>				gestring					operator+			(const _tBase (&data)[_S])												const				{ gestring<_tBase, _F> result = *this; result.append(data) ; return result; }
+		inline								gestring					operator+			(const gestring<_tBase, _F>& other)										const				{ gestring<_tBase, _F> result = *this; result.append(other); return result; }
+		inline constexpr					bool						operator!			()																		const	noexcept	{ return 0 == Count;														}
+		inline constexpr					operator					bool				()																		const	noexcept	{ return 0 != Count;														}
+											void						clear				()																							{
 			if(this->m_ArrayBuffer.writable()) {
 				if( Count )
 					memset(&Data[0], 0, sizeof(_tBase));
@@ -46,7 +46,7 @@ namespace nwol
 				set(0);
 			Count															= 0;
 		}
-											::nwol::error_t				join				(const _tBase* _A, uint32_t _ASize, const _tBase* _B, uint32_t _BSize)			{
+											::nwol::error_t				join				(const _tBase* _A, uint32_t _ASize, const _tBase* _B, uint32_t _BSize)						{
 			bool																leftIsEmpty			= (0 == _ASize) || (_A[0] == 0);
 			bool																rightIsEmpty		= (0 == _BSize) || (_B[0] == 0);
 
@@ -75,7 +75,7 @@ namespace nwol
 			}
 			return 0;
 		}
-											::nwol::error_t				join				( const gestring<_tBase, _F>& _A, const gestring<_tBase, _F>& _B )				{
+											::nwol::error_t				join				( const gestring<_tBase, _F>& _A, const gestring<_tBase, _F>& _B )							{
 			bool																leftIsEmpty			= 0 == _A.size();
 			bool																rightIsEmpty		= 0 == _B.size();
 
@@ -90,7 +90,7 @@ namespace nwol
 
 			return 0;
 		}
-		template <size_t _S>				::nwol::error_t				join				( const gestring<_tBase, _F>& _A, const _tBase (&_B)[_S] )						{
+		template <size_t _S>				::nwol::error_t				join				( const gestring<_tBase, _F>& _A, const _tBase (&_B)[_S] )									{
 			const bool															leftIsEmpty			= 0 == _A.size();
 			const bool															rightIsEmpty		= 0 == _S || (_B[0] == 0);
 
@@ -102,7 +102,7 @@ namespace nwol
 
 			return 0;
 		}
-		template <size_t _S>				::nwol::error_t				join				( const _tBase (&_A)[_S], const gestring<_tBase, _F>& _B )						{
+		template <size_t _S>				::nwol::error_t				join				( const _tBase (&_A)[_S], const gestring<_tBase, _F>& _B )									{
 			const bool															leftIsEmpty			= 0 == _S || (_A[0] == 0);
 			const bool															rightIsEmpty		= 0 == _B.size();
 
@@ -113,7 +113,7 @@ namespace nwol
 				return join( _A, _S, _B.get_pointer(), _B.size() );
 			return 0;
 		}
-		template <size_t _S1, size_t _S2>	::nwol::error_t				join				( const _tBase (&_A)[_S1], const _tBase (&_B)[_S2] )							{
+		template <size_t _S1, size_t _S2>	::nwol::error_t				join				( const _tBase (&_A)[_S1], const _tBase (&_B)[_S2] )										{
 			const bool															leftIsEmpty			= 0 == _S1 || (_A[0] == 0);
 			const bool															rightIsEmpty		= 0 == _S2 || (_B[0] == 0);
 
@@ -124,8 +124,8 @@ namespace nwol
 				return join( _A, _S1, _B, _S2 );
 			return 0;
 		}
-		inline								::nwol::error_t				push				( const _tBase& element )														{ return append(element); }
-											::nwol::error_t				append				( const _tBase& element )														{
+		inline								::nwol::error_t				push_back			( const _tBase& element )																	{ return append(element); }
+											::nwol::error_t				append				( const _tBase& element )																	{
 			bool																leftIsEmpty			= 0 == Count;
 			if( element != 0 ) {
 				if( leftIsEmpty ) {
@@ -141,7 +141,7 @@ namespace nwol
 			}
 			return 0;
 		}	
-		template <size_t _S>				::nwol::error_t				append				( const _tBase (&_B)[_S] )														{
+		template <size_t _S>				::nwol::error_t				append				( const _tBase (&_B)[_S] )																	{
 			bool																leftIsEmpty			= 0 == size();
 			if( _S && (_B[0] != 0) ) {
 				if( leftIsEmpty ) {
@@ -159,7 +159,7 @@ namespace nwol
 			}
 			return 0;
 		}
-											::nwol::error_t				append				( const gestring<_tBase, _F>& _B )												{
+											::nwol::error_t				append				( const gestring<_tBase, _F>& _B )															{
 			bool																leftIsEmpty			= 0 == size();
 			uint32_t															sizeB				= _B.size();
 
@@ -171,7 +171,7 @@ namespace nwol
 			}
 			return 0;
 		}
-											::nwol::error_t				append				( const _tBase* _B, uint32_t nSize )											{
+											::nwol::error_t				append				( const _tBase* _B, uint32_t nSize )														{
 			if( nSize ) {
 				uint32_t															leftSize			= size();
 				if( 0 == leftSize ) {
@@ -197,15 +197,15 @@ namespace nwol
 						Data[this->m_ArrayBuffer->nElementCount = Count]				= 0;
 					}
 					else
-						join(Data, leftSize, _B, nSize);
+						return join(Data, leftSize, _B, nSize);
 				}
 			}
 			return 0;
 		}
-		template <size_t _S>				::nwol::error_t				prepend				( const _tBase (&_B)[_S] )														{ ::nwol::gestring<_tBase, _F> result(_B)			; if( 0 > result.append(*this) ) return -1; *this = result; return 0; }
-											::nwol::error_t				prepend				( const gestring<_tBase, _F>& _B )												{ ::nwol::gestring<_tBase, _F> result(_B)			; if( 0 > result.append(*this) ) return -1; *this = result; return 0; }
-											::nwol::error_t				prepend				( const _tBase* _B, uint32_t nSize )											{ ::nwol::gestring<_tBase, _F> result(nSize, _B)	; if( 0 > result.append(*this) ) return -1; *this = result; return 0; }
-											int32_t						replace_first		( const _tBase& oldValue, const _tBase& newValue )								{
+		template <size_t _S>				::nwol::error_t				prepend				( const _tBase (&_B)[_S] )																	{ ::nwol::gestring<_tBase, _F> result(_B)			; if( 0 > result.append(*this) ) return -1; *this = result; return 0; }
+											::nwol::error_t				prepend				( const gestring<_tBase, _F>& _B )															{ ::nwol::gestring<_tBase, _F> result(_B)			; if( 0 > result.append(*this) ) return -1; *this = result; return 0; }
+											::nwol::error_t				prepend				( const _tBase* _B, uint32_t nSize )														{ ::nwol::gestring<_tBase, _F> result(nSize, _B)	; if( 0 > result.append(*this) ) return -1; *this = result; return 0; }
+											int32_t						replace_first		( const _tBase& oldValue, const _tBase& newValue )											{
 			int32_t																iFirst				= gbuffer<_tBase, _F, ::nwol::GUSAGE_TEXT>::replace_first(oldValue);
 
 			if( -1 != iFirst && 0 == newValue )
@@ -213,20 +213,20 @@ namespace nwol
 
 			return iFirst;
 		}
-											int32_t						replace_last		( const _tBase& oldValue, const _tBase& newValue )								{
+											int32_t						replace_last		( const _tBase& oldValue, const _tBase& newValue )											{
 			int32_t																iLast				= gbuffer<_tBase, _F, ::nwol::GUSAGE_TEXT>::replace_last(oldValue);
 			if( -1 != iLast && 0 == newValue ) 
 				this->m_ArrayBuffer->nElementCount = Count					= iLast;
 
 			return iLast;
 		}
-											int32_t						replace				( const _tBase& oldValue, const _tBase& newValue )								{
+											int32_t						replace				( const _tBase& oldValue, const _tBase& newValue )											{
 			if( 0 == newValue )
 				return one_if(replace_first(oldValue, newValue) != -1);
 			else 
 				return gbuffer<_tBase, _F, ::nwol::GUSAGE_TEXT>::replace(oldValue, newValue);
 		}
-											::nwol::error_t				load				( FILE* fp )																	{
+											::nwol::error_t				load				( FILE* fp )																				{
 			::nwol::error_t														result				= (1 == fileDeserializeData( &this->m_ArrayBuffer, 1, fp )) ? 0 : -1;
 			if( this->m_ArrayBuffer ) {
 				Data														= (_tBase*)this->m_ArrayBuffer->pByteArray;
@@ -234,7 +234,7 @@ namespace nwol
 			}
 			return result;
 		}
-											uint32_t					load				( const char* fp )																{
+											uint32_t					load				( const char* fp )																			{
 			uint32_t															nBytesRead			= memDeserializeData( &this->m_ArrayBuffer, 1, fp );
 			if( this->m_ArrayBuffer ) {
 				Data														= (_tBase*)this->m_ArrayBuffer->pByteArray;

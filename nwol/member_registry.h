@@ -23,13 +23,13 @@
 namespace nwol
 {
 #pragma pack(push, 1)
-	template <typename... _TArgs>	struct member_registry {
-		static inline constexpr	const uint32_t												get_member_count				()							noexcept	{ return (uint32_t)sizeof...(_TArgs);																																																												}
-		static inline			const ::nwol::array_view<const ::nwol::STypeIdentifier	>&	get_types						()										{ static const ::nwol::STypeIdentifier	results[] = {{{_TArgs::get_member_namespace(), (uint32_t)-1}, {_TArgs::get_member_type_name(), (uint32_t)-1}}...,	{}}; static const ::nwol::array_view<const ::nwol::STypeIdentifier	> results_view = {results}; return results_view;	}
-		static inline			const ::nwol::array_view<const ::nwol::gsyslabel		>&	get_names						()										{ static const ::nwol::gsyslabel		results[] = {{_TArgs::get_member_name			(), (uint32_t)-1}	...,											""}; static const ::nwol::array_view<const ::nwol::gsyslabel		> results_view = {results}; return results_view;	}
-		static inline			const ::nwol::array_view<const ::nwol::glabel			>&	get_display_names				()										{ static const ::nwol::glabel			results[] = {{_TArgs::get_member_display_name	(), (uint32_t)-1}	...,											""}; static const ::nwol::array_view<const ::nwol::glabel			> results_view = {results}; return results_view;	}
-		static inline			const ::nwol::array_view<const ::nwol::glabel			>&	get_descriptions				()										{ static const ::nwol::glabel			results[] = {{_TArgs::get_member_description	(), (uint32_t)-1}	...,											""}; static const ::nwol::array_view<const ::nwol::glabel			> results_view = {results}; return results_view;	}
-		static inline			const ::nwol::array_view<const ::nwol::GDATA_TYPE		>&	get_data_type_ids				()							noexcept	{ static const ::nwol::GDATA_TYPE		results[] = {_TArgs::get_member_data_type_id	()					...,					::nwol::GDATA_TYPE_UNKNOWN}; static const ::nwol::array_view<const ::nwol::GDATA_TYPE		> results_view = {results}; return results_view;	}
+	template <typename... _tArgs>	struct member_registry {
+		static inline constexpr	const uint32_t												get_member_count				()							noexcept	{ return (uint32_t)sizeof...(_tArgs);																																																												}
+		static inline			const ::nwol::array_view<const ::nwol::STypeIdentifier	>&	get_types						()										{ static const ::nwol::STypeIdentifier	results[] = {{{_tArgs::get_member_namespace(), (uint32_t)-1}, {_tArgs::get_member_type_name(), (uint32_t)-1}}...,	{}}; static const ::nwol::array_view<const ::nwol::STypeIdentifier	> results_view = {results}; return results_view;	}
+		static inline			const ::nwol::array_view<const ::nwol::gsyslabel		>&	get_names						()										{ static const ::nwol::gsyslabel		results[] = {{_tArgs::get_member_name			(), (uint32_t)-1}	...,											""}; static const ::nwol::array_view<const ::nwol::gsyslabel		> results_view = {results}; return results_view;	}
+		static inline			const ::nwol::array_view<const ::nwol::glabel			>&	get_display_names				()										{ static const ::nwol::glabel			results[] = {{_tArgs::get_member_display_name	(), (uint32_t)-1}	...,											""}; static const ::nwol::array_view<const ::nwol::glabel			> results_view = {results}; return results_view;	}
+		static inline			const ::nwol::array_view<const ::nwol::glabel			>&	get_descriptions				()										{ static const ::nwol::glabel			results[] = {{_tArgs::get_member_description	(), (uint32_t)-1}	...,											""}; static const ::nwol::array_view<const ::nwol::glabel			> results_view = {results}; return results_view;	}
+		static inline			const ::nwol::array_view<const ::nwol::GDATA_TYPE		>&	get_data_type_ids				()							noexcept	{ static const ::nwol::GDATA_TYPE		results[] = {_tArgs::get_member_data_type_id	()					...,					::nwol::GDATA_TYPE_UNKNOWN}; static const ::nwol::array_view<const ::nwol::GDATA_TYPE		> results_view = {results}; return results_view;	}
 	}; // struct
 #	define NWOM_NAMED_REGISTRY(registryName, ...)	typedef ::nwol::member_registry<__VA_ARGS__> TRegistry;		static	const TRegistry&	get_member_registry	()	{ static const TRegistry registryName; return registryName;	}
 #pragma pack(pop)

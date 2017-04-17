@@ -176,7 +176,6 @@
     <ClInclude Include="gref.h" />
     <ClInclude Include="gref_definition.h" />
     <ClInclude Include="gref_definition_common.h" />
-    <ClInclude Include="gref_definition_pure.h" />
     <ClInclude Include="gref_manager_nco.h" />
     <ClInclude Include="gref_manager_obj.h" />
     <ClInclude Include="gref_manager_pod.h" />

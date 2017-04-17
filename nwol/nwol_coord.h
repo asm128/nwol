@@ -27,8 +27,8 @@ namespace nwol
 		inline constexpr	bool		operator!=				(const TCoord2& other)										const	noexcept	{ return !operator==(other);											}
 		inline constexpr	TCoord2		operator-				()															const	noexcept	{ return {x*-1, y*-1};													}
 		//
-		template<typename _T>
-		constexpr inline	SCoord2<_T>	Cast					()															const	noexcept	{ return {(_T)x, (_T)y};												}
+		template<typename _t>
+		constexpr inline	SCoord2<_t>	Cast					()															const	noexcept	{ return {(_t)x, (_t)y};												}
 		inline				TCoord2&	Normalize				()																	noexcept	{ return *this /= sqlen_safe(LengthSquared());							}
 		inline constexpr	double		Dot						(const TCoord2& other)										const	noexcept	{ return x*other.x + y*other.y;											}
 		inline constexpr	_tBase		LengthSquared			()															const	noexcept	{ return x * x + y * y;													}
@@ -68,8 +68,8 @@ namespace nwol
 		constexpr inline	bool		operator==				(const TCoord3& other)										const	noexcept	{ return x == other.x && y == other.y && z == other.z;											}
 		constexpr inline	bool		operator!=				(const TCoord3& other)										const	noexcept	{ return !operator==(other);																	}
 		constexpr inline	TCoord3		operator-				()															const	noexcept	{ return {x*-1, y*-1, z*-1};																	}
-		template<typename _T>
-		constexpr inline	SCoord3<_T>	Cast					()															const	noexcept	{ return SCoord3<_T>({(_T)x, (_T)y, (_T)z});													}
+		template<typename _t>
+		constexpr inline	SCoord3<_t>	Cast					()															const	noexcept	{ return SCoord3<_t>({(_t)x, (_t)y, (_t)z});													}
 		inline				TCoord3&	Normalize				()																	noexcept	{ return *this /= sqlen_safe(LengthSquared());													}
 		constexpr			double		Dot						(const TCoord3& other)										const	noexcept	{ return x*other.x + y*other.y + z*other.z;														}
 		constexpr inline	_tBase		LengthSquared			()															const	noexcept	{ return x * x + y * y + z * z;																	}
@@ -138,8 +138,8 @@ namespace nwol
 		//										 
 		constexpr inline	TCoord4		operator -				()															const	noexcept	{ return {x*-1, y*-1, z*-1, w*-1}; }
 		//
-		template<typename _T>
-		constexpr inline	SCoord4<_T>	Cast					()															const	noexcept	{ return SCoord4<_T>({(_T)x, (_T)y, (_T)z, (_T)w}); }
+		template<typename _t>
+		constexpr inline	SCoord4<_t>	Cast					()															const	noexcept	{ return SCoord4<_t>({(_t)x, (_t)y, (_t)z, (_t)w}); }
 		inline				TCoord4&	Normalize				()																	noexcept	{ return *this /= ::nwol::sqlen_safe(LengthSquared()); }
 		constexpr			double		Dot						(const TCoord4& other)										const	noexcept	{ return x*other.x + y*other.y + z*other.z + w*other.w; }
 		constexpr inline	_tBase		LengthSquared			()															const	noexcept	{ return x * x + y * y + z * z + w * w; }
@@ -192,8 +192,8 @@ namespace nwol
 		// Unary operators
 		constexpr inline	TQuat		operator-				()															const	noexcept	{ return {x*-1, y*-1, z*-1, w*-1}; }
 		constexpr inline	TQuat		operator~				()															const	noexcept	{ return {-x, -y, -z, w}; }
-		template<typename _T>
-		constexpr inline	SQuat<_T>	Cast					()															const	noexcept	{ return {(_T)x, (_T)y, (_T)z, (_T)w}; }
+		template<typename _t>
+		constexpr inline	SQuat<_t>	Cast					()															const	noexcept	{ return {(_t)x, (_t)y, (_t)z, (_t)w}; }
 		inline				void		Identity				()																	noexcept	{ x = y = z = 0.0f; w = 1.0f; }
 		inline				TQuat&		Normalize				()																	noexcept	{ double l = sqlen_safe(LengthSquared()); if(l) return *this /= l; Identity(); return *this; }
 		constexpr			double		Dot						(const TQuat& other)										const	noexcept	{ return x*other.x + y*other.y + z*other.z + w*other.w; }

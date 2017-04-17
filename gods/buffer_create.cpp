@@ -9,7 +9,7 @@
 __GCORE_REF_INIT_STATIC_MEMBERS(nwol, SBuffer)			
 namespace nwol {									
 			void															grelease				(GODS(SBuffer)*);
-	static	::nwol::gref_manager_nco<GREF(SBuffer), GREF_MANAGER_TYPE_NCO>	__g_SBufferManager	(grelease);
+	static	::nwol::gref_manager_nco<GREF(SBuffer), GREF_CATEGORY_NCO>	__g_SBufferManager	(grelease);
 	//__GDEFINE_ACQUIRE(SBuffer);				
 	__GDEFINE_ALLOC(SBuffer);																			
 }	
@@ -292,15 +292,12 @@ namespace nwol
 	static nwol::__CBufferManager __g_BufferManager;
 }	
 
-void ::nwol::nwol_shutdown()
-{
-	::nwol::__g_BufferManager.shutdown();
-};
+void ::nwol::nwol_shutdown() { ::nwol::__g_BufferManager.shutdown(); }
 
 
 void* nwol::allocSBufferBlock(uint32_t sizeInBytes)
 {
-//#if defined(DEBUG) || defined(_DEBUG)
+//#if defined(NWOL_DEBUG_ENABLED)
 	char* pBlock = (char*)malloc(sizeInBytes+sizeof(NWOL_DEBUG_CHECK_TYPE)*2+BASETYPE_ALIGN);
 
 	// Handle errors outside this function.
@@ -325,7 +322,7 @@ void* nwol::allocSBufferBlock(uint32_t sizeInBytes)
 
 void nwol::freeSBufferBlock(SBuffer* pBuffer)
 {
-//#if defined(DEBUG) || defined(_DEBUG)
+//#if defined(NWOL_DEBUG_ENABLED)
 	checkBlockBoundaries(pBuffer);
 	free(pBuffer->__pBlock - sizeof(NWOL_DEBUG_CHECK_TYPE));
 //#else
@@ -335,7 +332,7 @@ void nwol::freeSBufferBlock(SBuffer* pBuffer)
 
 void nwol::checkBlockBoundaries(SBuffer* pBuffer)
 {
-//#if defined(DEBUG) || defined(_DEBUG)
+//#if defined(NWOL_DEBUG_ENABLED)
 	char* pBlock = pBuffer->__pBlock;
 	NWOL_DEBUG_CHECK_TYPE checkPre	= *(NWOL_DEBUG_CHECK_TYPE*)	(pBlock-sizeof(NWOL_DEBUG_CHECK_TYPE));
 	NWOL_DEBUG_CHECK_TYPE checkPost	= *(NWOL_DEBUG_CHECK_TYPE*)	&pBlock[pBuffer->nSizeInBytes+calc_align_address(BASETYPE_ALIGN, pBlock)];
@@ -386,28 +383,19 @@ nwol::error_t nwol::createBuffer(GDATA_TYPE DataFormat, GDATA_USAGE Usage, uint3
 	return errMy;
 }
 
-void nwol::grelease( GODS(SBuffer)* pBufferData )
-{
+void nwol::grelease( GODS(SBuffer)* pBufferData ) {
 	if( 0 == (*pBufferData) ) 
 		return;
 
-	typedef void(*funcType)(::nwol::GODS(SBuffer)*);
-	if( (*pBufferData)->Globals->__prelease != (funcType)grelease )
-	{
-		((funcType)(*pBufferData)->Globals->__prelease)(pBufferData);
-		return;
-	}
 	::nwol::GODS(SBuffer) oldBuffer = *pBufferData;
 	*pBufferData = 0;
 
-#if defined(DEBUG) || defined(_DEBUG)
+	#if defined(NWOL_DEBUG_ENABLED)
 	SBuffer* pBufferInstance = oldBuffer->get();
 	if( pBufferInstance->pByteArray )
 		checkBlockBoundaries(pBufferInstance);
 #endif	
-
-	switch(NWOL_INTERLOCKED_DECREMENT( oldBuffer->ReferenceCount ))//( oldBuffer->ReferenceCount )
-	{
+	switch(NWOL_INTERLOCKED_DECREMENT(oldBuffer->ReferenceCount)) {
 	case ((REFCOUNT_T)0)-1:
 		errmsg_refcountnull();
 		//printInfoString( oldBuffer );

@@ -13,59 +13,59 @@ namespace nwol
 
 	// This template is intended to store the name of an enumeration, the values of such enumeration and a string representing each value.
 	// The implementation separates names from values for improving search speed by reducing the memory usage when performing searches for names/values.
-	template <typename _T>
+	template <typename _tValue>
 	struct genum_definition {
 							::nwol::gsyslabel				Name;
-							::nwol::array_pod<_T>			Values;
+							::nwol::array_pod<_tValue>		Values;
 							::nwol::array_pod<gsyslabel>	Names;
 
 		inline												genum_definition				()																	: Name("Enum definition name not set.")						{}
-		inline static		genum_definition<_T>&			get								()																	{
-			static	genum_definition<_T>	valueRegistry;
+		inline static		genum_definition<_tValue>&		get								()																	{
+			static	genum_definition<_tValue>						valueRegistry;
 			return valueRegistry;
 		}
-		inline static		_T								init							(const ::nwol::gsyslabel& enumName)									{
-					genum_definition<_T>&							instanceHere					= get();
+		inline static		_tValue							init							(const ::nwol::gsyslabel& enumName)									{
+					genum_definition<_tValue>&						instanceHere					= get();
 
-			if( instanceHere.Name != enumName || (instanceHere.Values.size() && (instanceHere.Values[0] != ((_T)~(_T)0))) )
+			if( instanceHere.Name != enumName || (instanceHere.Values.size() && (instanceHere.Values[0] != ((_tValue)~(_tValue)0))) )
 				info_printf("Initializing enumeration type: '%s'.", enumName.begin());
 
 			static	::nwol::gsyslabel								newName							= instanceHere.Name = enumName;
-			static	::nwol::error_t									errDummy						= instanceHere.add_value((_T)(~(_T)0), INVALID_ENUM_VALUE_STR);
+			static	::nwol::error_t									errDummy						= instanceHere.add_value((_tValue)(~(_tValue)0), INVALID_ENUM_VALUE_STR);
 
-			return (_T)~(_T)0;
+			return (_tValue)~(_tValue)0;
 		}
-							::nwol::error_t					get_value						(const ::nwol::gsyslabel& name, _T& value)			const			{
+							::nwol::error_t					get_value						(const ::nwol::gsyslabel& name, _tValue& value)			const			{
 			for(uint32_t i=0, count = Names.size(); i<count; ++i)
 				if(name == Names[i]) {
 					value												= Values[i];
 					return 0;
 				}
 			error_printf("Enumeration value not found! Name: %s.", name.begin());
-			value = (_T)~(_T)0;
+			value = (_tValue)~(_tValue)0;
 			return -1;
 		}
-							_T								get_value						(const ::nwol::gsyslabel& name)						const			{
+							_tValue							get_value						(const ::nwol::gsyslabel& name)						const			{
 			for(uint32_t i=0, count = Names.size(); i<count; ++i)
 				if(name == Names[i])
 					return Values[i];
 
 			error_printf("Enumeration value not found! Name: %s.", name.begin());
-			return (_T)~(_T)0;
+			return (_tValue)~(_tValue)0;
 		}
-							::nwol::error_t					get_value_by_index				(uint32_t index, _T& value)							const			{
+							::nwol::error_t					get_value_by_index				(uint32_t index, _tValue& value)							const			{
 			if( index < Values.size() ) {
 				value												= Values[index];
 				return 0;
 			}
 			else {
 				error_printf("Enumeration index out of range! Index: 0x%u.", index);
-				value = (_T)~(_T)0;
+				value = (_tValue)~(_tValue)0;
 				return -1;
 			}
 		}
-							_T								get_value_by_index				(uint32_t index)									const			{
-			retval_msg_if((_T)~(_T)0, index >= Values.size(), "Enumeration index out of range! Index: 0x%u.", index)
+							_tValue							get_value_by_index				(uint32_t index)									const			{
+			retval_msg_if((_tValue)~(_tValue)0, index >= Values.size(), "Enumeration index out of range! Index: 0x%u.", index)
 			return Values[index];
 		}
 							::nwol::error_t					get_label_by_index				(uint32_t index, ::nwol::gsyslabel& value)			const			{
@@ -106,7 +106,7 @@ namespace nwol
 			error_printf("Enumeration value not found! Name: %s.", name.begin());
 			return -1;
 		}
-							::nwol::error_t					get_value_index					(const _T& value, int32_t& index)					const			{
+							::nwol::error_t					get_value_index					(const _tValue& value, int32_t& index)					const			{
 			for(uint32_t i=0, count = Names.size(); i<count; ++i)
 				if(value == Values[i]) {
 					index												= (int32_t)i;
@@ -116,7 +116,7 @@ namespace nwol
 			index = -1;
 			return -1;
 		}
-							int32_t							get_value_index					(const _T& value)									const			{
+							int32_t							get_value_index					(const _tValue& value)									const			{
 			for(uint32_t i=0, count = Names.size(); i<count; ++i)
 				if(value == Values[i])
 					return (int32_t)i;
@@ -124,7 +124,7 @@ namespace nwol
 			error_printf("Enumeration value not found! Value: %llX.", (uint64_t)value);
 			return -1;
 		}
-							::nwol::error_t					get_value_label					(const _T& value, ::nwol::gsyslabel& name)			const			{
+							::nwol::error_t					get_value_label					(const _tValue& value, ::nwol::gsyslabel& name)			const			{
 			for(uint32_t i=0, count = Values.size(); i<count; ++i)
 				if(value == Values[i]) {
 					name												= Names[i];
@@ -134,7 +134,7 @@ namespace nwol
 			name = UNRESOLVED_ENUM_LABEL_STR;
 			return -1;
 		}
-							::nwol::gsyslabel				get_value_label					(const _T& value)									const			{
+							::nwol::gsyslabel				get_value_label					(const _tValue& value)									const			{
 			for(uint32_t i=0, count = Values.size(); i<count; ++i)
 				if(value == Values[i])
 					return Names[i];
@@ -142,7 +142,7 @@ namespace nwol
 			error_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
 			return UNRESOLVED_ENUM_LABEL_STR;
 		}
-							::nwol::error_t					add_value						(const _T& value, const ::nwol::gsyslabel& name)					{
+							::nwol::error_t					add_value						(const _tValue& value, const ::nwol::gsyslabel& name)					{
 			for(uint32_t i=0, count = Values.size(); i<count; ++i)
 				if(Values[i] == value) {
 					if(Names[i] != name) {
@@ -176,23 +176,23 @@ namespace nwol
 	};
 
 	// This type is used to initialize an enumeration value.
-	template <typename _T>
+	template <typename _tValue>
 	struct genum_value {
-							_T								Value							= (_T)~(_T)0;
+							_tValue							Value							= (_tValue)~(_tValue)0;
 							::nwol::gsyslabel				Name							= INVALID_ENUM_VALUE_STR;
 		// 
 		inline												genum_value						()																	= default;
 		inline constexpr									genum_value						(const genum_value& other)											= default;
-		inline												genum_value						(const _T& value)													: Value((_T)value), Name(::nwol::genum_definition<_T>::get().get_value_name(value))	{}
-		inline constexpr									genum_value						(const _T& value, const ::nwol::gsyslabel& name)					: Value((_T)value), Name(name)														{ 
-			::nwol::genum_definition<_T>::get().add_value(value, name); 
+		inline												genum_value						(const _tValue& value)												: Value((_tValue)value), Name(::nwol::genum_definition<_tValue>::get().get_value_name(value))	{}
+		inline constexpr									genum_value						(const _tValue& value, const ::nwol::gsyslabel& name)				: Value((_tValue)value), Name(name)														{ 
+			::nwol::genum_definition<_tValue>::get().add_value(value, name); 
 		}
-		inline constexpr	operator						const	_T&						()														const		{ return Value; }
+		inline constexpr	operator						const	_tValue&				()														const		{ return Value; }
 	};
 
-	template <typename _TEnum>	::nwol::gsyslabel		get_value_label					(const _TEnum& statusBit				)							{ return ::nwol::genum_definition<_TEnum>::get().get_value_label	(statusBit);	}
-	template <typename _TEnum>	int32_t					get_value_index					(const _TEnum& statusBit				)							{ return ::nwol::genum_definition<_TEnum>::get().get_value_index	(statusBit);	}
-	template <typename _TEnum>	_TEnum					get_value						(const ::nwol::gsyslabel& valueLabel	)							{ return ::nwol::genum_definition<_TEnum>::get().get_value			(valueLabel);	}
+	template <typename _tEnum>	::nwol::gsyslabel		get_value_label					(const _tEnum& statusBit				)							{ return ::nwol::genum_definition<_tEnum>::get().get_value_label	(statusBit);	}
+	template <typename _tEnum>	int32_t					get_value_index					(const _tEnum& statusBit				)							{ return ::nwol::genum_definition<_tEnum>::get().get_value_index	(statusBit);	}
+	template <typename _tEnum>	_tEnum					get_value						(const ::nwol::gsyslabel& valueLabel	)							{ return ::nwol::genum_definition<_tEnum>::get().get_value			(valueLabel);	}
 } // namespace
 
 // Defines the enumeration type, the invalid value (-1) and the flag operators 

@@ -70,7 +70,7 @@ int32_t										nwol::gcompare											(const SBuffer* bA, const SBuffer* bB)
 	return 0;
 }
 
-void										nwol::gclone											(GODS(SBuffer)* ppdstData, const GREF(SBuffer)* psrcData) {
+void										nwol::cloneBuffer											(GODS(SBuffer)* ppdstData, const GREF(SBuffer)* psrcData) {
 	if (0 == psrcData) {
 		::nwol::release(ppdstData);
 		return;

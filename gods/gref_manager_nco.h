@@ -1,4 +1,4 @@
-#include "gref_definition_common.h"
+#include "gcore_ref_globals.h"
 
 #include "nwol_array.h"
 #include "nwol_mutex.h"
@@ -7,11 +7,23 @@
 #ifndef __GREF_MANAGER_NCO_H__287346872__
 #define __GREF_MANAGER_NCO_H__287346872__
 
-#if defined(DEBUG) || defined(_DEBUG)
+#if defined(ERROR_PRINTF_ENABLED)	// otherwise error_printf() has no effect and these macros resolve into nothing. Removing them reduces warnings from the compiler because of the unused string array.
+static const char* __string_table_errors[2]= 
+										{	"Reference counter is zero! This is often because of a gptr_pod being cast to a GODS() type and then released with grelease(). As casting to a reference to GODS doesn't mean the pointer is being copied, the reference counter is not incremented."
+										,	"Failed to allocate! Out of memory?"
+										};		
+
+#define errmsg_refcountnull()		error_printf("%s", __string_table_errors[0])
+#define errmsg_alloc()				error_printf("%s", __string_table_errors[1])
+#else
+#define errmsg_refcountnull()		
+#define errmsg_alloc()				
+#endif
+
+#if defined(NWOL_DEBUG_ENABLED)
 
 #	define CHECKBUFFEROVERRUNINSTANCE()													\
-	if( pNextPage->isBufferOverrunInstance(pNextPage->getInstanceEntry(p0->Column)) )	\
-	{																					\
+	if( pNextPage->isBufferOverrunInstance(pNextPage->getInstanceEntry(p0->Column)) ) {	\
 		ERROR_PRINTF_ALLOCID(p0);														\
 		_CrtDbgBreak();																	\
 	}
@@ -44,7 +56,7 @@ namespace nwol
 {
 	//template<typename baseType>	
 	//static				void								__gcustomDestruct						(baseType* p)											{ p->~baseType(); }
-
+	
 	template <typename _tRef, uint32_t _PageSizeInInstances> 
 	struct SReferencePage : public CMutex
 	{
@@ -91,7 +103,7 @@ namespace nwol
 							uint32_t							UnusedInstances							= 0;
 							uint32_t							UsedItems								= 0;
 							char								PageBytes[getPageBytes()]				= {};
-#if defined(DEBUG) || defined(_DEBUG)
+#if defined(NWOL_DEBUG_ENABLED)
 		static constexpr	const uint32_t						ActualEntrySize							= sizeof(SInstanceEntry);
 		static constexpr	const uint32_t						ActualSizePadded						= ::nwol::get_type_size_padded<SInstanceEntry>(BASETYPE_ALIGN);
 		static constexpr	const uint32_t						ActualAlign								= ::nwol::get_type_align<SInstanceEntry>();
@@ -103,7 +115,7 @@ namespace nwol
 			newRef->Instance										= &entry->ActualInstance; 
 			newRef->Globals											= &Globals;
 			newRef->ReferenceCount									= 1;
-#if defined(DEBUG) || defined(_DEBUG)
+#if defined(NWOL_DEBUG_ENABLED)
 			newRef->Column											= dataIndex;
 			entry->NWOL_DEBUG_CHECK_NAME_PRE	= entry->NWOL_DEBUG_CHECK_NAME_POST = newRef->NWOL_DEBUG_CHECK_NAME_PRE = newRef->NWOL_DEBUG_CHECK_NAME_POST = BINFIBO;
 #endif
@@ -128,7 +140,7 @@ namespace nwol
 			lstUnusedInstances										= (_tRef**)&PageBytes[0];
 			lstReferences											= (_tRef*)&PageBytes[sizeof(_tRef*)*_PageSizeInInstances];
 			Instances												= &PageBytes[sizeof(_tRef*)*_PageSizeInInstances+sizeof(_tRef)*_PageSizeInInstances];
-#if defined(DEBUG) || defined(_DEBUG)
+#if defined(NWOL_DEBUG_ENABLED)
 			Instances												= &Instances[sizeof(SInstanceEntry::NWOL_DEBUG_CHECK_NAME_PRE)];
 #else
 #endif
@@ -140,7 +152,7 @@ namespace nwol
 		}
 
 							uint32_t							getAvailableInstanceCountNoLock			()								const noexcept			{ return UnusedInstances+(_PageSizeInInstances-UsedItems);	}
-#if defined(DEBUG) || defined(_DEBUG)
+#if defined(NWOL_DEBUG_ENABLED)
 							SInstanceEntry*						getInstanceEntry						(int32_t index)											{ return (SInstanceEntry*)&Instances[index*::nwol::get_type_size_padded<SInstanceEntry>(BASETYPE_ALIGN)-sizeof(SInstanceEntry::NWOL_DEBUG_CHECK_NAME_PRE)];	}
 							const SInstanceEntry*				getInstanceEntry						(int32_t index)					const					{ return (SInstanceEntry*)&Instances[index*::nwol::get_type_size_padded<SInstanceEntry>(BASETYPE_ALIGN)-sizeof(SInstanceEntry::NWOL_DEBUG_CHECK_NAME_PRE)];	}
 #else
@@ -191,14 +203,10 @@ namespace nwol
 
 	}; // struct
 
-	enum GREF_MANAGER_TYPE
-	{	GREF_MANAGER_TYPE_NCO = 0
-	,	GREF_MANAGER_TYPE_OBJ = 1
-	,	GREF_MANAGER_TYPE_POD = 2
-	};
+	template<typename _tRef>	void							_nwol_ref_release						(_tRef* refToRelease);
 
 	// ----------------------------------------------------- gref_manager_nco
-	template <typename _tRef, GREF_MANAGER_TYPE _ManagerType=GREF_MANAGER_TYPE_NCO> class gref_manager_nco
+	template <typename _tRef, GREF_CATEGORY _managerType=GREF_CATEGORY_NCO> class gref_manager_nco
 	{
 	protected:
 		typedef				typename _tRef::TBase							_tBase;
@@ -219,7 +227,6 @@ namespace nwol
 				errmsg_alloc();														
 				PLATFORM_CRT_BREAKPOINT();														
 			}																		
-																					
 			PLATFORM_CRT_CHECK_MEMORY();
 			return newRef;															
 		}
@@ -480,7 +487,7 @@ namespace nwol
 
 							void											setRefAllocID							(_tRef* newRef)										{																									
 			newRef->AllocID														= NWOL_INTERLOCKED_INCREMENT(Counters.CreatedRefs)-1;								
-#if defined(DEBUG) || defined(_DEBUG)
+#if defined(NWOL_DEBUG_ENABLED)
 			if (newRef->__breakAllocID != (INVALID_ALLOC_ID) && newRef->__breakAllocID == newRef->AllocID)	 {																								
 				warning_printf("Allocation break triggered.");												
 				PLATFORM_CRT_BREAKPOINT();																				
@@ -498,24 +505,25 @@ namespace nwol
 #endif
 
 	public:
-		static inline		gref_manager_nco<_tRef, _ManagerType>&			get										()													{
-			static gref_manager_nco<_tRef, _ManagerType> managerInstance;
+		static inline		gref_manager_nco<_tRef, _managerType>&			get										()													{
+			static gref_manager_nco<_tRef, _managerType> managerInstance;
 			return managerInstance;
 		}
 
-		inline constexpr													gref_manager_nco						(void(*_funcFreeR)(_tRef**)):
-			Globals
-			(	_tRef::get_type_name().begin()							// Cue
-			,	_ManagerType											// object type (0 nco, 1 = c++ object, 2 = plain old data)
-			,	_tRef::get_type_name				().size()			//
-			,	::nwol::get_type_size				<_tBase>()					//
-			,	::nwol::get_type_align				<_tBase>()					//
-			,	::nwol::get_type_align_multiplier	<_tBase>()					
-			,	::nwol::get_type_size_padded		<_tBase>(BASETYPE_ALIGN)	
-			,	(uint32_t)INVALID_ROW									// row (invalid row)
-			,	PageSizeInInstances										
-			,	(void*)_funcFreeR // deallocator function
-			)
+		inline constexpr													gref_manager_nco						(void(*_funcFreeR)(_tRef**))
+			: Globals
+				(	_tRef::get_type_name().begin()									// Cue
+				,	_managerType													// object type (0 nco, 1 = c++ object, 2 = plain old data)
+				,	_tRef::get_type_name				().size()					//
+				,	::nwol::get_type_size				<_tBase>()					//
+				,	::nwol::get_type_align				<_tBase>()					//
+				,	::nwol::get_type_align_multiplier	<_tBase>()					
+				,	::nwol::get_type_size_padded		<_tBase>(BASETYPE_ALIGN)	
+				,	(uint32_t)INVALID_ROW											// row (invalid row)
+				,	PageSizeInInstances										
+				,	(void*)_funcFreeR												// deallocator function
+				,	this
+				)
 		{}
 																			~gref_manager_nco						()													{
 			if (Counters.CreatedRefs) {	
@@ -606,12 +614,12 @@ namespace nwol
 #endif
 				p0->ReferenceCount													= 0;
 			case 0:
-				switch(_ManagerType) {
-				case GREF_MANAGER_TYPE_NCO	: 
-				case GREF_MANAGER_TYPE_OBJ	: p0->get()->~_tBase();
+				switch(_managerType) {
+				case GREF_CATEGORY_NCO	: 
+				case GREF_CATEGORY_OBJ	: p0->get()->~_tBase();
 				default						: break;
 				}
-				//if(_ManagerType != GREF_MANAGER_TYPE_POD)
+				//if(_ManagerType != GREF_CATEGORY_POD)
 				//	p0->get()->~_tBase();
 
 				releaseReferenceToQuickAlloc(p0);
@@ -619,7 +627,6 @@ namespace nwol
 			PLATFORM_CRT_CHECK_MEMORY();
 		}
 	}; // class
-
 }// namespace
 
 #endif // __GREF_MANAGER_NCO_H__287346872__

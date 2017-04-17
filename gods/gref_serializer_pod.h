@@ -3,68 +3,26 @@
 #ifndef __GREF_SERIALIZER_POD_H_886465456489__
 #define __GREF_SERIALIZER_POD_H_886465456489__
 
-#define __GDEFINE_PRINTGENERIC_FUNCTION( baseType, refType, format, ... )																																	\
-void printInfoString	( const refType* in_CoreInstance )													{	printInfoString( in_CoreInstance ? in_CoreInstance->get() : 0 );	}						\
-void getInfoString		( char* pOutputBuffer, uint32_t nBufferSize, const refType* in_CoreInstance )		{	getInfoString(pOutputBuffer, nBufferSize, in_CoreInstance ? in_CoreInstance->get() : 0); }	\
-void getInfoString		( wchar_t* pOutputBuffer, uint32_t nBufferSize, const refType* in_CoreInstance )	{	getInfoString(pOutputBuffer, nBufferSize, in_CoreInstance ? in_CoreInstance->get() : 0); }	\
-void printInfoString	( const baseType* Data )															{																								\
-	if( 0 == Data )	{																																														\
-		warning_printf("[<"#baseType"*>=NULL]");																																							\
-		return;																																																\
-	}																																																		\
-	data_printf("[<"#baseType"*>=0x%p]:\n"																																									\
-		format																																																\
-		, Data																																																\
-		, __VA_ARGS__																																														\
-	);																																																		\
-}
-
-#if defined(ANDROID) || defined(__linux__)
-//---------------------
-#define GDEFINE_PRINTGENERIC( baseType, refType, format, ... )								\
-__GDEFINE_PRINTGENERIC_FUNCTION( baseType, refType, format, __VA_ARGS__ )					\
-void getInfoString( char* pOutputBuffer, uint32_t nBufferSize, const baseType* Data )		\
-{																							\
-	if( 0 == Data )																			\
-	{																						\
-		sprintf( pOutputBuffer, "%s\n", "[<" #baseType "*>=NULL]" );						\
-		return;																				\
-	}																						\
-	sprintf( pOutputBuffer, format "\n", __VA_ARGS__	);									\
-}																							\
-void getInfoString( wchar_t* pOutputBuffer, uint32_t nBufferSize, const baseType* Data )	\
-{																							\
-	if( 0 == Data )																			\
-	{																						\
-		/*swprintf( pOutputBuffer, L"%s\n", L"(null)" );*/									\
-		return;																				\
-	}																						\
-	char buffer[2048];																		\
-	sprintf( buffer, format "\n", __VA_ARGS__	);											\
-	mbstowcs( pOutputBuffer, buffer, 2048 );												\
-}
-#else
-//---------------------
-#define GDEFINE_PRINTGENERIC( baseType, refType, format, ... )								\
-__GDEFINE_PRINTGENERIC_FUNCTION( baseType, refType, format, __VA_ARGS__ )					\
+#define GDEFINE_PRINTGENERIC( baseType, refType, format, ... )																																		\
+void printInfoString	( const refType* in_CoreInstance )													{	printInfoString( in_CoreInstance ? in_CoreInstance->get() : 0 );							}	\
+void getInfoString		( char		* pOutputBuffer, uint32_t nBufferSize, const refType* in_CoreInstance )	{	getInfoString(pOutputBuffer, nBufferSize, in_CoreInstance ? in_CoreInstance->get() : 0);	}	\
+void printInfoString	( const baseType* Data )															{																									\
+	if( 0 == Data )	{																																															\
+		warning_printf("[<"#baseType"*>=NULL]");																																								\
+		return;																																																	\
+	}																																																			\
+	data_printf("[<"#baseType"*>=0x%p]:\n" format																																								\
+		, Data																																																	\
+		, __VA_ARGS__																																															\
+	);																																																			\
+}																																																				\
 void getInfoString( char* pOutputBuffer, uint32_t nBufferSize, const baseType* Data ) {		\
 	if( 0 == Data )	{																		\
 		sprintf_s( pOutputBuffer, nBufferSize, "%s\n", "[<"#baseType"*>=NULL]" );			\
 		return;																				\
 	}																						\
 	sprintf_s( pOutputBuffer, nBufferSize, format "\n", __VA_ARGS__	);						\
-}																							\
-void getInfoString( wchar_t* pOutputBuffer, uint32_t nBufferSize, const baseType* Data ) {	\
-	if( 0 == Data )	{																		\
-		swprintf_s( pOutputBuffer, nBufferSize, L"%s\n", L"[<"#baseType"*>=NULL]" );		\
-		return;																				\
-	}																						\
-	char buffer[2048];																		\
-	sprintf_s( buffer, nBufferSize, format "\n", __VA_ARGS__ );								\
-	size_t n;																				\
-	mbstowcs_s( &n, pOutputBuffer, nBufferSize, buffer, 2048 );								\
 }
-#endif // ANDROID
 
 #define GDEFINE_PRINTPOD( NameSpace, baseType, format, ... )	namespace NameSpace{ GDEFINE_PRINTGENERIC( baseType, GREF(baseType), format,   __VA_ARGS__ )	}
 #define GDEFINE_PRINTOBJ( NameSpace, baseType, format, ... )	namespace NameSpace{ GDEFINE_PRINTGENERIC( baseType, GREF(baseType), format, __VA_ARGS__ )		}
@@ -98,7 +56,7 @@ void getInfoString( wchar_t* pOutputBuffer, uint32_t nBufferSize, const baseType
 #include "glist.h"
 #endif
 
-#if defined(_DEBUG) || defined(DEBUG)
+#if defined(NWOL_DEBUG_ENABLED)
 #	define	INCREASECOUNTERMEMSERIALIZE			Counters.MemSerialize		++
 #	define	INCREASECOUNTERMEMWRITE				Counters.MemWrite			++
 #	define	INCREASECOUNTERMEMDESERIALIZE		Counters.MemDeserialize		++
@@ -119,14 +77,12 @@ void getInfoString( wchar_t* pOutputBuffer, uint32_t nBufferSize, const baseType
 #endif
 namespace nwol
 {
-	template <typename _tRef> class gref_serializer_pod
-	{
+	template <typename _tRef> 
+	class gref_serializer_pod {
 		typedef		typename _tRef::TBase				_tBase;
 
 #if defined(NWOL_DEBUG_ENABLED)
-		struct SPODSerializerCounters
-		{
-		public:
+		struct SPODSerializerCounters {
 			uint32_t MemSerialize	= 0
 				, MemWrite			= 0
 				, MemDeserialize	= 0
@@ -136,8 +92,7 @@ namespace nwol
 				, FileDeserialize	= 0
 				, FileRead			= 0
 				;
-		} Counters;
-
+		}												Counters;
 	public:
 														~gref_serializer_pod		()																														{
 			if	(	Counters.MemSerialize
@@ -330,7 +285,7 @@ namespace nwol
 					++nSkipped;
 					typedef void(*funcType)(_tRef**);			
 					if (out_DefinitionList)
-						((funcType)out_DefinitionList[i]->Globals->__prelease)(&out_DefinitionList[i]); // clear output
+						::nwol::release(&out_DefinitionList[i]); // clear output
 					continue;
 				}
 				// Create new instance to store data
@@ -484,7 +439,7 @@ namespace nwol
 					++nSkipped;
 					typedef void(*funcType)(_tRef**);			
 					if(out_DefinitionList[i])
-						((funcType)out_DefinitionList[i]->Globals->__prelease)(&out_DefinitionList[i]); /*clear output*/
+						::nwol::release(&out_DefinitionList[i]); /*clear output*/
 					continue;
 				}
 				newData.create();

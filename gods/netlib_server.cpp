@@ -57,7 +57,7 @@ int32_t									nwol::CServer::Listen							()																			{
 	// Receive bytes from client
 	int32_t													bytes_received						= 0;
 	::nwol::NETLIB_COMMAND									command								= NETLIB_COMMAND_INVALID;
-	::nwol::error_t											errMy								= ::nwol::receiveFromConnection( ServerConnection, (byte_t*)&command, sizeof(NETLIB_COMMAND), &bytes_received, &client );
+	::nwol::error_t											errMy								= ::nwol::receiveFromConnection( ServerConnection, (ubyte_t*)&command, sizeof(NETLIB_COMMAND), &bytes_received, &client );
 	reterr_error_if(bytes_received < 0, "Could not receive datagram. 0x%x.", errMy);
 
 	errMy												= ::nwol::getAddress( client, &a1, &a2, &a3, &a4, &port_number );
@@ -105,7 +105,7 @@ int32_t									processCommandInternal							(::nwol::CClient* client, ::nwol::N
 		uint64_t									current_time									= time(0);
 		int32_t										sentBytes										= 0;
 		// Send data back
-		::nwol::error_t								errMy											= ::nwol::sendToConnection(client->m_ClientListener, (byte_t *)&current_time, (int)sizeof(current_time), &sentBytes, client->m_ClientTarget);
+		::nwol::error_t								errMy											= ::nwol::sendToConnection(client->m_ClientListener, (ubyte_t *)&current_time, (int)sizeof(current_time), &sentBytes, client->m_ClientTarget);
 		reterr_error_if(0 > errMy || sentBytes != (int32_t)sizeof(current_time), "Failed to send time to client. 0x%x.", errMy);
 		// Display time
 		char										timestring		[256]							= {};
@@ -213,7 +213,7 @@ int32_t									nwol::CServer::Accept							()																			{
 		if(bFoundEmpty)
 			ClientConnections.set(newClient, indexFound);
 		else if(!bFound)
-			ClientConnections.push(newClient);
+			ClientConnections.push_back(newClient);
 	}
 #if defined(__WINDOWS__)
 	_beginthread( clientProc, 0, newClient.get_address() );
@@ -227,7 +227,7 @@ int32_t									nwol::CServer::Accept							()																			{
 
 	int32_t													sentBytes							= 0;
 	local_port_number									= htons((u_short)local_port_number);
-	result												= ::nwol::sendToConnection( newClientListener, (const byte_t*)&local_port_number, sizeof(int32_t), &sentBytes, targetConn );
+	result												= ::nwol::sendToConnection( newClientListener, (const ubyte_t*)&local_port_number, sizeof(int32_t), &sentBytes, targetConn );
 	reterr_error_if_errored(result, "Failed to send port number to client: %u", (uint32_t)local_port_number);
 	reterr_error_if(sentBytes != sizeof(int32_t), "%s", "Failed to send port command to client.");
 

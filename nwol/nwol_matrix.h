@@ -39,8 +39,8 @@ namespace nwol
 		inline				TMat2&				operator /=					(double scalar)																						{ return *this = operator/(scalar	); }
 		inline				TMat2&				operator *=					(const TMat2& right)																	noexcept	{ return *this = operator*(right	); }
 		//
-		template <typename _T>
-		constexpr inline	SMatrix2<_T>		Cast						()																				const	noexcept	{ return { (_T)_11, (_T)_12, (_T)_21, (_T)_22 }; }
+		template <typename _t>
+		constexpr inline	SMatrix2<_t>		Cast						()																				const	noexcept	{ return { (_t)_11, (_t)_12, (_t)_21, (_t)_22 }; }
 		constexpr			_tBase				GetDeterminant				()																				const	noexcept	{ return _11* _22 - _12* _21;	}
 		constexpr			TMat2				GetTranspose				()																				const	noexcept	{ return {_11, _21, _12, _22};	}
 		inline				void				SetTranspose				(const TMat2& m)																					{ *this = m.GetTranspose(); }	

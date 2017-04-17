@@ -251,7 +251,7 @@ int32_t									nwol::connectionAccept				( ::nwol::SConnectionEndpoint* conn, :
 	return 0;
 }
 
-int32_t									nwol::sendToConnection				( ::nwol::SConnectionEndpoint* connection, const byte_t* buffer, uint32_t bytesToSend, int32_t* _bytesSent, ::nwol::SConnectionEndpoint* targetConnection ) {
+int32_t									nwol::sendToConnection				( ::nwol::SConnectionEndpoint* connection, const ubyte_t* buffer, uint32_t bytesToSend, int32_t* _bytesSent, ::nwol::SConnectionEndpoint* targetConnection ) {
 	reterr_error_if(0 == connection, "Invalid argument: Connection endpoint is null.");	// Tranmsit data to get time
 
 	int32_t											bytesSent						= ::sendto(connection->sd, (const char_t*)buffer, bytesToSend, 0, (::sockaddr *)&targetConnection->sockaddr, (int)sizeof(::sockaddr_in));
@@ -261,7 +261,7 @@ int32_t									nwol::sendToConnection				( ::nwol::SConnectionEndpoint* connect
 	return 0;
 }
 
-int32_t									nwol::receiveFromConnection			( ::nwol::SConnectionEndpoint* connection, byte_t* buffer, uint32_t bufLen, int32_t* _bytesReceived, ::nwol::SConnectionEndpoint** newConnection )
+int32_t									nwol::receiveFromConnection			( ::nwol::SConnectionEndpoint* connection, ubyte_t* buffer, uint32_t bufLen, int32_t* _bytesReceived, ::nwol::SConnectionEndpoint** newConnection )
 {
 	int32_t											server_length					= (int32_t)sizeof(::sockaddr_in);
 	int32_t											bytesReceived					= -1;
@@ -320,7 +320,7 @@ bool									nwol::ping							(::nwol::SConnectionEndpoint* pClient, ::nwol::SCo
 	// send our command
 	int32_t											bytesTransmitted				= -1;
 	static const ::nwol::NETLIB_COMMAND				pingCommand						= ::nwol::NETLIB_COMMAND_PING;
-	::nwol::error_t									transmResult					= ::nwol::sendToConnection( pClient, (const byte_t*)&pingCommand, sizeof(::nwol::NETLIB_COMMAND), &bytesTransmitted, pServer );
+	::nwol::error_t									transmResult					= ::nwol::sendToConnection( pClient, (const ubyte_t*)&pingCommand, sizeof(::nwol::NETLIB_COMMAND), &bytesTransmitted, pServer );
 	if(transmResult < 0 || bytesTransmitted != (int32_t)sizeof(::nwol::NETLIB_COMMAND))
 	{
 		error_print("Error pinging server.");
@@ -339,7 +339,7 @@ bool									nwol::ping							(::nwol::SConnectionEndpoint* pClient, ::nwol::SCo
 	// Receive answer
 	bytesTransmitted							= -1;
 	::nwol::NETLIB_COMMAND							pongCommand						= ::nwol::NETLIB_COMMAND_INVALID;
-	::nwol::receiveFromConnection( pClient, (byte_t*)&pongCommand, sizeof(::nwol::NETLIB_COMMAND), &bytesTransmitted, 0 );
+	::nwol::receiveFromConnection( pClient, (ubyte_t*)&pongCommand, sizeof(::nwol::NETLIB_COMMAND), &bytesTransmitted, 0 );
 	if(pongCommand != ::nwol::NETLIB_COMMAND_PONG)
 	{
 		error_print("Error receiving pong from server.");
@@ -356,7 +356,7 @@ int32_t									nwol::sendSystemCommand				(::nwol::SConnectionEndpoint* pOrigin
 	// Pong client
 	int32_t											sentBytes						= 0;
 
-	::nwol::error_t									errMy							= sendToConnection(pOrigin, (const byte_t*)&commandToSend, (uint32_t)sizeof(::nwol::NETLIB_COMMAND), &sentBytes, pTarget);
+	::nwol::error_t									errMy							= sendToConnection(pOrigin, (const ubyte_t*)&commandToSend, (uint32_t)sizeof(::nwol::NETLIB_COMMAND), &sentBytes, pTarget);
 	if(errored(errMy) || sentBytes != (int32_t)sizeof(::nwol::NETLIB_COMMAND)) {
 		error_printf("Error sending system command to remote client. Command: %s.", ::nwol::get_value_label( commandToSend ).c_str());
 		return -1;
@@ -379,7 +379,7 @@ int32_t									nwol::receiveSystemCommand			(::nwol::SConnectionEndpoint* pLoca
 
 	commandReceived								= ::nwol::NETLIB_COMMAND_INVALID;
 	int32_t											bytes_received					= 0;
-	error_t											errMy							= ::nwol::receiveFromConnection( pLocal, (byte_t*)&commandReceived, sizeof(::nwol::NETLIB_COMMAND), &bytes_received, 0 );
+	error_t											errMy							= ::nwol::receiveFromConnection( pLocal, (ubyte_t*)&commandReceived, sizeof(::nwol::NETLIB_COMMAND), &bytes_received, 0 );
 	reterr_error_if(errored(errMy) || bytes_received < 0, "Error receiving system command.");
 	reterr_error_if(0 == pRemote, "Client target with was null.");
 
@@ -395,7 +395,7 @@ int32_t									nwol::receiveSystemCommand			(::nwol::SConnectionEndpoint* pLoca
 	return 0;
 }
 
-int32_t									nwol::sendUserCommand				(SConnectionEndpoint* pOrigin, ::nwol::SConnectionEndpoint* pTarget, ::nwol::USER_COMMAND requestOrResponse, const byte_t* buffer, uint32_t bufferSize) {
+int32_t									nwol::sendUserCommand				(SConnectionEndpoint* pOrigin, ::nwol::SConnectionEndpoint* pTarget, ::nwol::USER_COMMAND requestOrResponse, const ubyte_t* buffer, uint32_t bufferSize) {
 	// Send data back
 	const ::nwol::NETLIB_COMMAND					commandUserSend					= (requestOrResponse == ::nwol::USER_COMMAND_REQUEST) ? ::nwol::NETLIB_COMMAND_USER_REQUEST : ::nwol::NETLIB_COMMAND_USER_RESPONSE;
 	error_t											errMy							= ::nwol::sendSystemCommand(pOrigin, pTarget, commandUserSend);
@@ -403,7 +403,7 @@ int32_t									nwol::sendUserCommand				(SConnectionEndpoint* pOrigin, ::nwol::
 
 	int32_t							
 	sentBytes									= 0;
-	errMy										= ::nwol::sendToConnection(pOrigin, (const byte_t*)&bufferSize, (uint32_t)sizeof(int32_t), &sentBytes, pTarget );
+	errMy										= ::nwol::sendToConnection(pOrigin, (const ubyte_t*)&bufferSize, (uint32_t)sizeof(int32_t), &sentBytes, pTarget );
 	reterr_error_if(errored(errMy) || sentBytes != (int32_t)sizeof(int32_t)	, "Error sending user data.");
 
 	sentBytes									= 0;
@@ -423,7 +423,7 @@ int32_t									nwol::sendUserCommand				(SConnectionEndpoint* pOrigin, ::nwol::
 	return 0;
 }
 
-int32_t									nwol::receiveUserCommand			(::nwol::SConnectionEndpoint* pOrigin, ::nwol::SConnectionEndpoint* pTarget, ::nwol::USER_COMMAND& requestOrResponse, byte_t* buffer, uint32_t bufferSize) {
+int32_t									nwol::receiveUserCommand			(::nwol::SConnectionEndpoint* pOrigin, ::nwol::SConnectionEndpoint* pTarget, ::nwol::USER_COMMAND& requestOrResponse, ubyte_t* buffer, uint32_t bufferSize) {
 	// Send data back
 	::nwol::NETLIB_COMMAND							commandUserReceive				= ::nwol::NETLIB_COMMAND_INVALID;
 	error_t											errMy							= ::nwol::receiveSystemCommand(pOrigin, pTarget, commandUserReceive);
@@ -437,7 +437,7 @@ int32_t									nwol::receiveUserCommand			(::nwol::SConnectionEndpoint* pOrigin
 
 	int32_t											receivedBytes					= 0;
 	int32_t											userBytesToReceive				= 0;
-	errMy										= ::nwol::receiveFromConnection( pOrigin, (byte_t*)&userBytesToReceive, (uint32_t)sizeof(int32_t), &receivedBytes, &pTarget );
+	errMy										= ::nwol::receiveFromConnection( pOrigin, (ubyte_t*)&userBytesToReceive, (uint32_t)sizeof(int32_t), &receivedBytes, &pTarget );
 	reterr_error_if(errored(errMy) || receivedBytes != (int32_t)sizeof(int32_t), "Error receiving user data.");
 
 	receivedBytes								= 0;

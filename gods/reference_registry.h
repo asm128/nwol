@@ -19,6 +19,7 @@ namespace nwol
 		inline	::nwol::error_t					validateIndex			(::nwol::id_t index)										const	{ return (index < 0 || ((uint32_t)index) >= DataNames.size()) ? -1 : 0; }
 	public:
 												~CReferenceContainer	()																	{ release_all(); }
+
 		inline	::nwol::error_t					GetDescription			(::nwol::id_t index, ::nwol::glabel& ref)					const	{ reterr_error_if(validateIndex(index), "Invalid instance index: '%i'", index); ref = DataDescriptions[index];	return 0; }
 		inline	::nwol::error_t					GetTypeName				(::nwol::id_t index, ::nwol::glabel& ref)					const	{ reterr_error_if(validateIndex(index), "Invalid instance index: '%i'", index); ref = DataNames[index];			return 0; }
 
@@ -46,10 +47,9 @@ namespace nwol
 		template <typename _tRef> 
 		inline	::nwol::error_t					PushReference			(const ::nwol::gptr_nco<_tRef>& ref, ::nwol::id_t* index, const ::nwol::glabel description = ::nwol::glabel::statics().empty)	{
 			uint32_t									newIndex				= DataNames.size();
-
-			Data				.push(ref.acquire());
-			DataNames			.push(ref.get_type_name());
-			DataDescriptions	.push(description);
+			Data				.push_back(ref.acquire());
+			DataNames			.push_back(ref.get_type_name());
+			DataDescriptions	.push_back(description);
 
 			if(index)
 				*index									= newIndex;

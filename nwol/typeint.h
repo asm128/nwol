@@ -26,19 +26,19 @@ typedef unsigned	__int128			uint128_t;
 #if defined(__WINDOWS__)
 typedef				float				float32_t;
 typedef				double				float64_t;
-typedef				unsigned char		uchar_t, byte_t;
+typedef				unsigned char		uchar_t, ubyte_t;
 typedef				char				char_t;
 typedef				bool				bool_t;
 #elif defined(__ANDROID__)
 typedef				float				float32_t;
 typedef				double				float64_t;
-typedef				unsigned char		uchar_t, byte_t;
+typedef				unsigned char		uchar_t, ubyte_t;
 typedef				char				char_t;
 typedef				bool				bool_t;
 #elif defined(__LINUX__)
 typedef				float				float32_t;
 typedef				double				float64_t;
-typedef				unsigned char		uchar_t, byte_t;
+typedef				unsigned char		uchar_t, ubyte_t;
 typedef				char				char_t;
 typedef				bool				bool_t;
 #else
@@ -50,12 +50,15 @@ namespace nwol
 		typedef int					refcount_t;
 #elif defined (__WINDOWS__)
 #	if defined(_WIN64) || defined(WIN64)
+#		define REFCOUNT_T __int64
 		typedef volatile __int64	refcount_t;
 #	else
+#		define REFCOUNT_T long
 		typedef volatile long		refcount_t;
 #	endif
 #else
 #		include <atomic>
+#		define REFCOUNT_T size_t
 		typedef std::atomic<size_t> refcount_t;
 #endif
 		typedef const char*			cue_t;	// Special thanks to Kragen Javier Sitaker for this cue_t idea.
@@ -63,5 +66,11 @@ namespace nwol
 		typedef int32_t				id_t;
 
 } // namespace
+
+#if defined( _WIN64 )
+#elif defined (_WIN32)
+#else
+#endif
+
 
 #endif // __TYPEINT_H__941234698724987234__

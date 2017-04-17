@@ -373,8 +373,8 @@ namespace nwol
 			return ++Count;
 		}
 		// Returns the new size of the array.
-		template <typename... _TArgs>
-							int32_t						resize										(uint32_t newSize, _TArgs&&... constructorArgs)											{
+		template <typename... _tArgs>
+							int32_t						resize										(uint32_t newSize, _tArgs&&... constructorArgs)											{
 			uint32_t											oldCount									= Count;
 			bool												failed										= false;
 			if(newSize > Size) {

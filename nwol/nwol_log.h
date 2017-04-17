@@ -21,7 +21,7 @@ namespace nwol
 
 //#define FORCE_STD_PRINTF_DEBUG	
 
-#if !(defined(_DEBUG) || defined(DEBUG))
+#if !(defined(NWOL_DEBUG_ENABLED))
 //#define USE_FILE_DEBUG_PRINTF
 #endif
 
@@ -36,17 +36,17 @@ namespace nwol
 #define _nwol_internal_debug_wprintf( chars, nCharCount ) //wprintf( L"%s", chars )
 #endif
 
-	template<typename... Args>	void			__nwol_printf					(const char* prefix, int /*prefixSize*/, const wchar_t* format, const Args... args){
+	template<typename... TArgs>	void			__nwol_printf					(const char* prefix, int /*prefixSize*/, const wchar_t* format, const TArgs... args){
 		_nwol_internal_info_printf(prefix, prefixSize);
-		wchar_t											customDynamicString	[4096]		={0};
+		wchar_t											customDynamicString	[4096]		= {0};
 		const size_t									stringLength					= swprintf_s(customDynamicString, format, args...);
 		_nwol_internal_debug_wprintf(customDynamicString, (int)stringLength);
 		_nwol_internal_info_printf("\n", 1);
 	}
 
-	template<typename... Args>	void			__nwol_printf					(const char* prefix, int /*prefixSize*/, const char* format, const Args... args)	{
+	template<typename... TArgs>	void			__nwol_printf					(const char* prefix, int /*prefixSize*/, const char* format, const TArgs... args)	{
 		_nwol_internal_info_printf(prefix, prefixSize);
-		char											customDynamicString	[4096]		={0};
+		char											customDynamicString	[4096]		= {0};
 		const size_t									stringLength					= sprintf_s(customDynamicString, format, args...);
 		_nwol_internal_info_printf(customDynamicString, (int)stringLength);
 		_nwol_internal_info_printf("\n", 1);

@@ -8,15 +8,12 @@ GDEFINE_OBJ(nwol, CGraphNode)
 ::nwol::error_t			nwol::CGraph::CreateNode				(::nwol::id_t* index, const ::nwol::glabel& nodeLabel)			{
 	GPtrObj(CGraphNode)						newNode						= CGraphNode();
 	uint32_t								newIndex					= (uint32_t)NodeInstances.size();
-	NodeInstances.push(newNode);
+	NodeInstances.push_back(newNode);
 	NodeLabels.push_back(nodeLabel);
 
 	SNodeRelationship						nodeParentship				= {-1, -1, NR_CHILD};
 
-	// The following swap provides safety on write access.
-	TParentshipRegistry						newNodeParentshipRegistry	= NodeParentshipRegistry;
-	newNodeParentshipRegistry.push(nodeParentship);
-	NodeParentshipRegistry				= newNodeParentshipRegistry;
+	NodeParentshipRegistry.push_back(nodeParentship);
 	if(index)
 		*index								= newIndex;
 	return 0;

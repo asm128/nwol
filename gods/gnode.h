@@ -9,7 +9,7 @@ namespace nwol
 	class gnode {
 										CGraph*				pGraph					= nullptr;
 										::nwol::id_t		Id						= -1;
-#if defined(DEBUG) || defined(_DEBUG)
+#if defined(NWOL_DEBUG_ENABLED)
 										::nwol::glabel		DebugLabel;	// This provides easier debugging by carrying along the node label.
 #endif
 	public:
@@ -19,10 +19,10 @@ namespace nwol
 		inline							operator			::nwol::id_t			()																																		const	noexcept	{ return Id; }
 
 										::nwol::error_t		getLabel				(::nwol::glabel& output)																												const;
-										::nwol::error_t		getAttributeLabel		(::nwol::id_t Index, ::nwol::DATA_DIRECTION direction, ::nwol::glabel& label)															const;
-										::nwol::error_t		getAttributeType		(::nwol::id_t Index, ::nwol::DATA_DIRECTION direction, ::nwol::glabel& label)															const;
+										::nwol::error_t		getAttributeLabel		(::nwol::id_t index, ::nwol::DATA_DIRECTION direction, ::nwol::glabel& label)															const;
+										::nwol::error_t		getAttributeType		(::nwol::id_t index, ::nwol::DATA_DIRECTION direction, ::nwol::glabel& label)															const;
 										::nwol::error_t		getAttributes			(::nwol::DATA_DIRECTION direction, ::nwol::gaindex32& attributes)																		const;
-		template<typename _tRef> inline	::nwol::error_t		getAttribute			(::nwol::id_t Index, ::nwol::DATA_DIRECTION direction, ::nwol::gptr_nco<_tRef>& attributeStruct)										const				{ reterr_error_if(0 == pGraph, "Uninitialized node."); return pGraph->GetAttribute	(Id, Index, direction, attributeStruct);				}
+		template<typename _tRef> inline	::nwol::error_t		getAttribute			(::nwol::id_t index, ::nwol::DATA_DIRECTION direction, ::nwol::gptr_nco<_tRef>& attributeStruct)										const				{ reterr_error_if(0 == pGraph, "Uninitialized node."); return pGraph->GetAttribute	(Id, index, direction, attributeStruct);				}
 		template<typename _tRef> inline	::nwol::error_t		pushAttribute			(::nwol::DATA_DIRECTION direction, ::nwol::gptr_nco<_tRef>& attributeStruct, ::nwol::id_t* index, const ::nwol::glabel& description="")	const				{ reterr_error_if(0 == pGraph, "Uninitialized node."); return pGraph->PushAttribute	(Id, direction, attributeStruct, index, description);	}
 		inline							::nwol::error_t		getInputAttributes		(::nwol::gaindex32& attributes)																											const				{ return getAttributes	(::nwol::DATA_DIRECTION_INPUT, attributes);																			}
 		inline							::nwol::error_t		getOutputAttributes		(::nwol::gaindex32& attributes)																											const				{ return getAttributes	(::nwol::DATA_DIRECTION_OUTPUT, attributes);																		}
