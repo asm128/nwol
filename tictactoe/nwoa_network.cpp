@@ -23,7 +23,6 @@ int											runCommunications						(::nwol::SApplicationNetworkClient& appNetw
 	result					= ::nwol::connect					(instanceClient);	reterr_error_if_errored(result, "%s", "Failed to connect.");
 
 	while gbit_true(appNetwork.State, ::nwol::NETWORK_STATE_ENABLED) {
-
 		if(false == ::nwol::ping(instanceClient.pClient, instanceClient.pServer))	{	// Ping before anything else to make sure everything is more or less in order.
 			error_printf("%s", "Ping timeout.");
 			result										= -1;
