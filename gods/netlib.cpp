@@ -9,14 +9,14 @@
 int32_t									nwol::initNetwork					()																								{
 #if defined(__WINDOWS__)
 	WSADATA											w								= {};	// Used to open Windows connection
-	reterr_error_if(WSAStartup(0x0101, &w) != 0, "Could not open Windows connection: 0x%X", WSAGetLastError());		// Open windows connection
+	reterr_error_if(WSAStartup(0x0101, &w) != 0, "Could not open Windows sockets: 0x%X", WSAGetLastError());		// Open windows connection
 #endif
 	return 0;
 }
 
 int32_t									nwol::shutdownNetwork				()																								{
 #if defined(__WINDOWS__)
-	reterr_error_if(WSACleanup() != 0, "Could not open Windows connection: 0x%X", WSAGetLastError());		// Open windows connection
+	reterr_error_if(WSACleanup() != 0, "Could not shut down Windows sockets: 0x%X", WSAGetLastError());		// Open windows connection
 #endif
 	return 0;
 }

@@ -76,6 +76,7 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
 	::nwol::setASCIIScreenTitle(appTitle());
 
 	::nwol::error_t									
+	errMy										= ::networkEnable	(instanceApp); reterr_error_if_errored(errMy, "Failed to enable network.");
 	//errMy										= ::setupDB			(instanceApp);	reterr_error_if_errored(errMy, "%s", "Failed to set up database."	);
 	//errMy										= ::setupREST		(instanceApp);	reterr_error_if_errored(errMy, "%s", "Failed to set up REST."		);
 	errMy										= ::setupGUI		(instanceApp);	reterr_error_if_errored(errMy, "%s", "Failed to set up GUI."		);
