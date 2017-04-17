@@ -13,9 +13,9 @@
 namespace nwol
 {
 	GDEFINE_ENUM_TYPE	(NETWORK_STATE, uint8_t);
-	GDEFINE_ENUM_VALUE	(NETWORK_STATE, 0, NONE		);
-	GDEFINE_ENUM_VALUE	(NETWORK_STATE, 1, ENABLED	);
-	GDEFINE_ENUM_VALUE	(NETWORK_STATE, 2, RUNNING	);
+	GDEFINE_ENUM_VALUE	(NETWORK_STATE, NONE	, 0);
+	GDEFINE_ENUM_VALUE	(NETWORK_STATE, ENABLED	, 1);
+	GDEFINE_ENUM_VALUE	(NETWORK_STATE, RUNNING	, 2);
 
 	struct SApplicationNetworkClient {
 		NWOM(::nwol, SClientConnection			,	Connection				, ::nwol::GDATA_TYPE_OBJ		, "Connection link"				, "Holds socket and connection information."					)	= {};

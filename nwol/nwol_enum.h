@@ -208,11 +208,11 @@ namespace nwol
 	static inline			EnumName&					operator ^=						(EnumName &a, EnumName b)					noexcept	{ return (EnumName&)	( ((IntType&)a) ^= (IntType)b); }	\
 	static inline constexpr	EnumName					operator |						(EnumName  a, EnumName b)					noexcept	{ return (EnumName)		(a | (IntType)b);					}
 
-#define GDEFINE_ENUM_VALUE(EnumName, EnumValue, ValueName)																												\
+#define GDEFINE_ENUM_VALUE(EnumName, ValueName, EnumValue)																												\
 	static constexpr		const EnumName				EnumName##_##ValueName			= (EnumName)(EnumValue);														\
 	static					const EnumName				__sei_##EnumName##_##ValueName	= (EnumName)::nwol::genum_value<EnumName>((EnumName)(EnumValue), #ValueName)
 
-#define GDEFINE_ENUM_VALUE_NOPREFIX(EnumName, EnumValue, ValueName)																										\
+#define GDEFINE_ENUM_VALUE_NOPREFIX(EnumName, ValueName, EnumValue)																										\
 	static constexpr		const EnumName				ValueName						= (EnumName)(EnumValue);														\
 	static					const EnumName				__sei_##EnumName##_##ValueName	= (EnumName)::nwol::genum_value<EnumName>((EnumName)(EnumValue), #ValueName)
 
