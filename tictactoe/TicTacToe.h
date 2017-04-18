@@ -109,11 +109,11 @@ namespace ttt
 		}
 	};	// struct
 
-	template <size_t _Width, size_t _Height>
+	template <size_t _sizeWidth, size_t _sizeHeight>
 	struct ScreenASCII {
-		static constexpr	const int									Width						= (int)_Width;
-		static constexpr	const int									Height						= (int)_Height;
-							char										Cells[_Height][_Width]		= {};
+		static constexpr	const int									Width						= (int)_sizeWidth;
+		static constexpr	const int									Height						= (int)_sizeHeight;
+							char										Cells[_sizeHeight][_sizeWidth]		= {};
 
 		inline constexpr												ScreenASCII					()																									noexcept	= default;
 	};
@@ -192,36 +192,36 @@ namespace ttt
 		}
 
 		// Display match results text 
-		template <size_t _Width, size_t _Height>
-		inline				void										DrawResults					(const CELL_VALUE winner, const Coord2Du32& textCenter, char (&screen)[_Height][_Width])	const	noexcept	{
+		template <size_t _sizeWidth, size_t _sizeHeight>
+		inline				void										DrawResults					(const CELL_VALUE winner, const Coord2Du32& textCenter, char (&screen)[_sizeHeight][_sizeWidth])	const	noexcept	{
 			char																text[25]					= {};
 			const int32_t														len							= (int32_t)(winner ? sprintf_s(text, "Player %u won the match!", (uint32_t)winner) : sprintf_s(text, "Tie!"));
 			memcpy(&screen[textCenter.y][textCenter.x - (len >> 1)], text, len);
 		}
 
 		//	Display the board
-		template <size_t _Width, size_t _Height>
-							void										DrawBoard					(const Coord2Du32& offset, char (&screen)[_Height][_Width])									const	noexcept	{
-			for(uint8_t y = 0, yMax = (_Height < 3) ? _Height : 3; y < yMax; ++y) {
-				for(uint8_t x = 0, xMax = (_Width < 3) ? _Width : 3; x < xMax; ++x)
+		template <size_t _sizeWidth, size_t _sizeHeight>
+							void										DrawBoard					(const Coord2Du32& offset, char (&screen)[_sizeHeight][_sizeWidth])									const	noexcept	{
+			for(uint8_t y = 0, yMax = (_sizeHeight < 3) ? _sizeHeight : 3; y < yMax; ++y) {
+				for(uint8_t x = 0, xMax = (_sizeWidth < 3) ? _sizeWidth : 3; x < xMax; ++x)
 					screen[offset.y + y][offset.x + x]								= Symbols[Board.GetCellValue(x, y)];
-				screen[offset.y + y][_Width - 1]								= '\n';
+				screen[offset.y + y][_sizeWidth - 1]								= '\n';
 			}
-			screen[_Height - 1][_Width - 1]									= 0;
+			screen[_sizeHeight - 1][_sizeWidth - 1]									= 0;
 		}
 
 		//	Display the board for a given team
-		template <size_t _Width, size_t _Height>
-							void										DrawBoard					(const CELL_VALUE cellValue, const Coord2Du32& offset, char (&screen)[_Height][_Width])		const	noexcept	{
+		template <size_t _sizeWidth, size_t _sizeHeight>
+							void										DrawBoard					(const CELL_VALUE cellValue, const Coord2Du32& offset, char (&screen)[_sizeHeight][_sizeWidth])		const	noexcept	{
 			const TicTacToeBoard16												board						= Board.GetCells(cellValue);
-			for(uint8_t y = 0, yMax = (_Height < 3) ? _Height : 3; y < yMax; ++y) {
-				for(uint8_t x = 0, xMax = (_Width < 3) ? _Width : 3; x < xMax; ++x)
+			for(uint8_t y = 0, yMax = (_sizeHeight < 3) ? _sizeHeight : 3; y < yMax; ++y) {
+				for(uint8_t x = 0, xMax = (_sizeWidth < 3) ? _sizeWidth : 3; x < xMax; ++x)
 					screen[offset.y + y][offset.x + x]								= Symbols[board.GetCell({x, y}) ? cellValue : 0];
-				screen[offset.y + y][_Width - 1]								= '\n';
+				screen[offset.y + y][_sizeWidth - 1]								= '\n';
 			}
-			if((offset.y + 2) < _Height && (offset.x + 4) < _Width)	// print number of cells used if the screen is large enough
+			if((offset.y + 2) < _sizeHeight && (offset.x + 4) < _sizeWidth)	// print number of cells used if the screen is large enough
 				screen[offset.y + 2][offset.x + 4]								= (char)('0' + board.Used);
-			screen[_Height - 1][_Width - 1]									= 0;
+			screen[_sizeHeight - 1][_sizeWidth - 1]									= 0;
 		}	
 	};	// struct
 #pragma pack( pop )

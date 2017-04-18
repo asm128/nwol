@@ -31,10 +31,10 @@
 		return result;
 	}
 
-	template<size_t _Size> static inline	int	_snprintf_s		(char (&buffer)[_Size], size_t count, const char* format, ...)						{
+	template<size_t _bufferSize> static inline	int	_snprintf_s	(char (&buffer)[_bufferSize], size_t count, const char* format, ...)				{
 		va_list args;
 		va_start(args, format);
-		const int										result			= _snprintf_s( buffer, _Size, count, format, args );
+		const int										result			= _snprintf_s( buffer, _bufferSize, count, format, args );
 		va_end(args);
 		return result;
 	}
@@ -55,10 +55,10 @@
 		return result;
 	}
 
-	template<size_t _Size> static inline	int	sprintf_s		(char (&buffer)[_Size], const char* format, ...)									{
+	template<size_t _bufferSize> static inline	int	sprintf_s	(char (&buffer)[_bufferSize], const char* format, ...)								{
 		va_list args;
 		va_start(args, format);
-		const int										result			= vsprintf_s(buffer, _Size, format, args);
+		const int										result			= vsprintf_s(buffer, _bufferSize, format, args);
 		va_end(args);
 		return result;
 	}
