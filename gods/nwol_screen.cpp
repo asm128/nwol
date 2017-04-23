@@ -60,7 +60,7 @@ LRESULT								nwol::SScreen::WndProc						(HWND hWnd, UINT uMsg, WPARAM wParam,
 		info_printf( "Received WM_CLOSE message. Calling ShutdownApplication()..." );
 		State.Closed									= true;
 		return 0;
-	};
+	}
 
 	if(State.RequiresResizeWindow) {
 		info_printf("Resizing window elements...");

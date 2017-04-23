@@ -30,7 +30,7 @@ int32_t										loadValidModules				(const char* modulesPath, ::nwol::SRuntimeV
 	::nwol::error_t								errMy								= ::nwol::listFiles(modulesPath, fileNames);
 	reterr_error_if_errored(errMy, "Cannot load modules from path: %s.", modulesPath);
 
-	char										fileExtensionToLookFor	[]			= ".dll";
+	char										fileExtensionToLookFor	[]			= "." DYNAMIC_LIBRARY_EXTENSION;
 	::nwol::array_obj<::nwol::glabel>			possibleModuleNames;
 	for(uint32_t iFile = 0, fileCount = fileNames.size(); iFile < fileCount; ++iFile) {
 		const ::nwol::glabel						& moduleName						= fileNames[iFile];
@@ -78,7 +78,7 @@ int32_t										listDLLFiles					(const char* modulesPath, ::nwol::array_obj<::
 			for(uint32_t iChar = 0, charCount = ::nwol::size(fileExtension)-1; iChar<charCount; ++iChar)
 				fileExtension[iChar]						= (char)tolower(nameText[iChar]);
 
-			if(0 == strcmp(fileExtension, ".dll"))
+			if(0 == strcmp(fileExtension, "." DYNAMIC_LIBRARY_EXTENSION))
 				possibleModuleNames.push_back(moduleName);
 		}
 	}
@@ -268,7 +268,7 @@ int32_t										renderSelection					(const ::SApplication & instanceApp)							
 	::nwol::RUNTIME_CALLBACK_ID						callbackPointersErased				= moduleInterface.TestForNullPointerFunctions();
 	if(callbackPointersErased) { 
 		printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
-		errVal = -1;
+		errVal										= -1;
 	}
 	return errVal;
 }
@@ -364,7 +364,7 @@ int32_t										render							(::SApplication& instanceApp)																					
 		switch(instanceApp.SelectorState) {
 		case SELECTOR_STATE_START				:
 		case SELECTOR_STATE_MENU				: retVal = renderSelectorApp(instanceApp);														break;
-		case SELECTOR_STATE_LOADING_SELECTION	: break;	// careful because of unique ASCII screen instance.
+		case SELECTOR_STATE_LOADING_SELECTION	: break;	// careful because of unique ASCII screen instance. We may be closing ours or the client app can be creating hers.
 		case SELECTOR_STATE_RUNNING_SELECTION	: if errored(renderSelection(instanceApp)) error_printf("Failed to render client application");	break;
 		default:
 			error_printf("Unrecognized state: %u", (uint32_t)instanceApp.SelectorState);

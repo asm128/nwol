@@ -28,4 +28,10 @@
 #	pragma warning(disable : 4592)	// We need this because of a bug in the compiler causing our static const variables to throw a warning as if its constructor was defined as constexpr.
 #endif
 
+#if defined(__WINDOWS__)
+#define DYNAMIC_LIBRARY_EXTENSION "dll"
+#else
+#define DYNAMIC_LIBRARY_EXTENSION "os"
+#endif
+
 #endif // __PLATFORM_GLOBALS_H__2983423__

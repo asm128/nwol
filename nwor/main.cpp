@@ -159,15 +159,13 @@ int32_t										loadPlatformValues				(::nwol::SRuntimeValues& runtimeValues, c
 	runtimeValues.FileNameApplication			= runtimeValues.CommandLineArgCount ? runtimeValues.CommandLineArgList[0] : filenameApplication;
 
 	return 0;
-};
+}
 
-int											rtMain							(::nwol::SRuntimeValues& runtimeValues)						
-{
+int											rtMain							(::nwol::SRuntimeValues& runtimeValues)	{
 #if defined(__WINDOWS__) && defined(NWOL_DEBUG_ENABLED)
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_DELAY_FREE_MEM_DF );	// Enable run-time memory check for debug builds.
 	//_CrtSetBreakAlloc( 322 );
 #endif	
-
 
 	::nwol::SModuleInterface						preContainerForCallbacks		= {};
 	preContainerForCallbacks.RuntimeValues			= &runtimeValues;
@@ -255,23 +253,9 @@ void										ANativeActivity_onCreate		(ANativeActivity* activity, void* savedS
 	runtimeValues.PlatformValues.savedState		= savedState;
 	runtimeValues.PlatformValues.savedStateSize	= savedStateSize;
 
-    //act->callbacks->onDestroy					= onDestroy					;
-    //act->callbacks->onStart					= onStart					;
-    //act->callbacks->onResume					= onResume					;
-    //act->callbacks->onSaveInstanceState		= onSaveInstanceState		;
-    //act->callbacks->onPause					= onPause					;
-    //act->callbacks->onStop					= onStop					;
-    //act->callbacks->onConfigurationChanged	= onConfigurationChanged	;
-    //act->callbacks->onLowMemory				= onLowMemory				;
-    //act->callbacks->onWindowFocusChanged		= onWindowFocusChanged		;
-    //act->callbacks->onNativeWindowCreated		= onNativeWindowCreated		;
-    //act->callbacks->onNativeWindowDestroyed	= onNativeWindowDestroyed	;
-    //act->callbacks->onInputQueueCreated		= onInputQueueCreated		;
-    //act->callbacks->onInputQueueDestroyed		= onInputQueueDestroyed		;
+	activity->instance							= &runtimeValues;
 
-    activity->instance							= &runtimeValues;
-
-	static const char								defaultModuleName[]				= "modules/nwor_selector.os";
+	static const char								defaultModuleName[]				= "modules/nwor_selector." DYNAMIC_LIBRARY_EXTENSION;
 	loadPlatformValues(runtimeValues, defaultModuleName, 0, 0);
 	rtMain(runtimeValues);
     info_printf("Exiting function normally: %s", __FUNCTION__);
@@ -279,9 +263,10 @@ void										ANativeActivity_onCreate		(ANativeActivity* activity, void* savedS
 #else
 int											main							(int argc, char** argv)																						{ 
 	::nwol::SRuntimeValues							runtimeValues					= {};
-	static const char								defaultModuleName[]				= "modules/nwor_selector.os";
-	loadPlatformValues(runtimeValues, defaultModuleName, argv, argc);
-	rtMain(runtimeValues);
+	static const char								defaultModuleName[]				= "modules/nwor_selector." DYNAMIC_LIBRARY_EXTENSION;
+	if( 0 > loadPlatformValues(runtimeValues, defaultModuleName, argv, argc) )
+		return -1;
+	return rtMain(runtimeValues);
 }
 #	if defined (__WINDOWS__)
 int WINAPI									WinMain 
@@ -298,12 +283,9 @@ int WINAPI									WinMain
 	runtimeValues.PlatformDetail.lpCmdLine		=  lpCmdLine		;
 	runtimeValues.PlatformDetail.nShowCmd		=  nShowCmd			;
 
-	static const char								defaultModuleName[]				= "modules/nwor_selector.dll";
-#if defined(__ANDROID__)
-	loadPlatformValues(runtimeValues, defaultModuleName, 0, 0);
-#else
-	loadPlatformValues(runtimeValues, defaultModuleName, __argv, __argc);
-#endif
+	static const char								defaultModuleName[]				= "modules/nwor_selector." DYNAMIC_LIBRARY_EXTENSION;
+	if(0 > loadPlatformValues(runtimeValues, defaultModuleName, __argv, __argc) )
+		return EXIT_FAILURE;
 
 	if(0 > rtMain(runtimeValues))
 		return EXIT_FAILURE;
