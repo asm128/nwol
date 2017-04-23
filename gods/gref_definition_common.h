@@ -12,9 +12,6 @@
 			case ::nwol::GREF_CATEGORY_OBJ: { ::nwol::gref_manager_obj<GREF(baseType)>* pManager = (::nwol::gref_manager_obj<GREF(baseType)>*)pRef->Globals->ReferenceManager; pManager->releaseRef(&pRef); break; }	\
 			case ::nwol::GREF_CATEGORY_POD: { ::nwol::gref_manager_pod<GREF(baseType)>* pManager = (::nwol::gref_manager_pod<GREF(baseType)>*)pRef->Globals->ReferenceManager; pManager->releaseRef(&pRef); break; }	\
 			}																																																			\
-		/*if( 0 == (*refToRelease) )						*/																																							\
-		/*	return;											*/																																							\
-		/*__g_##baseType##Manager.releaseRef(refToRelease);	*/																																							\
 	}
 
 #define __GDEFINE_COPY_REF_FUNCTIONS(baseType)	\

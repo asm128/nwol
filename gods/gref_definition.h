@@ -14,14 +14,11 @@
 #define __GREF_DEFINITION_H__20347892374__
 #include "gcore_ref.h"
 #include "gref_serializer_pod.h"
-#include "gref_manager_pod.h"
-#include "gref_manager_obj.h"
+#include "gref_manager.h"
 
 #include "gref_definition_common.h"
 
-
 //-------------------------------------------------------------// GDEFINE_POD() //------------------------------------------------------------------------// 
-
 #define __GDEFINE_POD_FUNCTIONS_BUT_CREATEDATA_AND_INITTYPE(baseType)					\
 	static ::nwol::gref_manager_pod<GREF(baseType)>	__g_##baseType##Manager(grelease);	\
 	static ::nwol::gref_serializer_pod<GREF(baseType)>	__g_##baseType##Serializer;		\
@@ -65,9 +62,10 @@
 	GDEFINE_PRINTPOD_NONS(baseType, "{%s}", "")	
 
 //-------------------------------------------------------------// GDEFINE_NCO() //------------------------------------------------------------------------// 
-#define GDEFINE_NCO_FUNCTIONS_NONS(baseType)											\
-	static ::nwol::gref_manager_nco<GREF(baseType)>	__g_##baseType##Manager(grelease);	\
-	__GDEFINE_COMMON_REF_FUNCTIONS(baseType);											\
+#define GDEFINE_NCO_FUNCTIONS_NONS(baseType)																						\
+	static	::nwol::gref_manager_nco<GREF(baseType)>	__g_##baseType##Manager(grelease);											\
+	/*static ::nwol::gref_manager_nco<GREF(baseType)>	__g_##baseType##Manager(::nwol::_nwol_internal_release<GREF(baseType)>);*/	\
+	__GDEFINE_COMMON_REF_FUNCTIONS(baseType);																						\
 	__GDEFINE_ALLOC(baseType)
 
 #define GDEFINE_NCO_CUSTOMCLEANUP_CUSTOMPAGE(NameSpace, baseType)	\

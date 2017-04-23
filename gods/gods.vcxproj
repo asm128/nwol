@@ -176,6 +176,7 @@
     <ClInclude Include="gref.h" />
     <ClInclude Include="gref_definition.h" />
     <ClInclude Include="gref_definition_common.h" />
+    <ClInclude Include="gref_manager.h" />
     <ClInclude Include="gref_manager_nco.h" />
     <ClInclude Include="gref_manager_obj.h" />
     <ClInclude Include="gref_manager_pod.h" />
@@ -186,6 +187,7 @@
     <ClInclude Include="netlib_client.h" />
     <ClInclude Include="netlib_private.h" />
     <ClInclude Include="netlib_server.h" />
+    <ClInclude Include="nwol_screen.h" />
     <ClInclude Include="parse_int.h" />
     <ClInclude Include="reference_registry.h" />
   </ItemGroup>
@@ -197,6 +199,7 @@
     <ClCompile Include="netlib.cpp" />
     <ClCompile Include="netlib_client.cpp" />
     <ClCompile Include="netlib_server.cpp" />
+    <ClCompile Include="nwol_screen.cpp" />
     <ClCompile Include="reference_registry.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

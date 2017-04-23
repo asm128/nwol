@@ -14,7 +14,7 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(::SApplication, "No Workflow Overhead Applica
 int32_t										cleanup									(::SApplication& instanceApp)							{ 
 	::nwol::shutdownASCIIScreen();
 
-	::networkDisable(instanceApp);
+	reterr_error_if(errored(::networkDisable(instanceApp)), "Error when disabling network.");
 
 	return 0; 
 }
@@ -71,7 +71,6 @@ int32_t										setup									(::SApplication& instanceApp)							{
 	::nwol::SCoord2<uint32_t>						& sizeTargetASCII						= instanceApp.GUI.TargetSizeASCII;
 	::nwol::initASCIIScreen(sizeTargetASCII.x, sizeTargetASCII.y);
 	::nwol::setASCIIScreenTitle(appTitle());
-
 
 	printTypeDebug();
 

@@ -8,6 +8,11 @@
 #include <android\log.h>
 #endif
 
+#if defined (__WINDOWS__)
+#include <windows.h>
+#include <string>
+#endif
+
 #include <malloc.h>
 
 #ifndef __LOG_H__9284087409823740923864192736__
@@ -69,7 +74,7 @@ namespace nwol
 	
 #define nwol_wprintf nwol_printf
 
-#if defined( ANDROID )
+#if defined( __ANDROID__ )
 #	define always_printf( ... )					__android_log_print( ANDROID_LOG_DEBUG, __FILE__ ":", __VA_ARGS__ )
 #else
 #	define always_printf( format, ... )			nwol_printf(NWOL_ERROR_SEVERITY_DEBUG, "info", format, __VA_ARGS__)
@@ -77,7 +82,7 @@ namespace nwol
 
 
 #ifdef DEBUG_PRINTF_ENABLED
-#	if defined( ANDROID )
+#	if defined( __ANDROID__ )
 #		define info_printf( ... )					__android_log_print( ANDROID_LOG_DEBUG, __FILE__ ":", __VA_ARGS__ )
 #	else
 #		define info_printf( format, ... )			nwol_printf(NWOL_ERROR_SEVERITY_DEBUG, "info", format, __VA_ARGS__)
@@ -87,9 +92,9 @@ namespace nwol
 #endif
 
 #ifdef WARNING_PRINTF_ENABLED
-#	if defined( ANDROID )
+#	if defined( __ANDROID__ )
 #		define warning_printf( ... )				__android_log_print(ANDROID_LOG_WARN, __FILE__ ":", __VA_ARGS__  )
-#	elif defined( WIN32 ) || defined ( _WIN32 )
+#	elif defined( __WINDOWS__ )
 #		define warning_printf( format, ... )		nwol_printf(NWOL_ERROR_SEVERITY_WARNING, "warning", format, __VA_ARGS__) 
 #	else 
 #		define warning_printf( format, ... )		nwol_printf(NWOL_ERROR_SEVERITY_WARNING, "warning", format, __VA_ARGS__ )
@@ -105,9 +110,9 @@ namespace nwol
 #endif
 
 #ifdef ERROR_PRINTF_ENABLED
-#	if defined( ANDROID )
+#	if defined( __ANDROID__ )
 #		define error_printf( ... )					__android_log_print(ANDROID_LOG_ERROR, __FILE__ ":", __VA_ARGS__  )
-#	elif defined( WIN32 ) || defined ( _WIN32 )
+#	elif defined( __WINDOWS__ )
 #		define error_printf( format, ... )	{		nwol_printf(NWOL_ERROR_SEVERITY_ERROR, "error", format, __VA_ARGS__ ); NWOL_PLATFORM_DEBUG_BREAK(); }
 #	else
 #		define error_printf( format, ... )			nwol_printf(NWOL_ERROR_SEVERITY_ERROR, "error", format, __VA_ARGS__ )
@@ -117,7 +122,7 @@ namespace nwol
 #endif
 
 #ifdef DATA_PRINTF_ENABLED
-#	if defined( ANDROID )
+#	if defined( __ANDROID__ )
 #		define data_printf( ... )					__android_log_print(ANDROID_LOG_DEBUG, __FILE__ ":", __VA_ARGS__  )
 #	else 
 #		define data_printf( format, ... )			nwol_printf(NWOL_ERROR_SEVERITY_EXTENDED, "data", format, __VA_ARGS__ )
@@ -127,7 +132,7 @@ namespace nwol
 #endif
 
 #ifdef RENDER_PRINTF_ENABLED
-#	if defined( ANDROID )
+#	if defined( __ANDROID__ )
 #		define render_printf( ... )					__android_log_print(ANDROID_LOG_DEBUG, __FILE__ ":", __VA_ARGS__  )
 #	else
 #		define render_printf( format, ... )			nwol_printf(NWOL_ERROR_SEVERITY_REALTIME, "render", format, __VA_ARGS__ )
@@ -137,7 +142,7 @@ namespace nwol
 #endif
 
 #ifdef SOUND_PRINTF_ENABLED
-#	if defined( ANDROID )
+#	if defined( __ANDROID__ )
 #		define sound_printf( ... )					__android_log_print(ANDROID_LOG_DEBUG, __FILE__ ":", __VA_ARGS__  )
 #	else
 #		define sound_printf( format, ... )			nwol_printf(NWOL_ERROR_SEVERITY_DEBUG, "sound", format, __VA_ARGS__ )
@@ -147,7 +152,7 @@ namespace nwol
 #endif
 
 #ifdef VERBOSE_PRINTF_ENABLED
-#	if defined( ANDROID )
+#	if defined( __ANDROID__ )
 #		define verbose_printf( ... )				__android_log_print( ANDROID_LOG_DEBUG, __FILE__ ":", __VA_ARGS__ )
 #	else
 #		define verbose_printf( format, ... )		nwol_printf(NWOL_ERROR_SEVERITY_REALTIME, "verbose", format, __VA_ARGS__ )
@@ -159,7 +164,7 @@ namespace nwol
 // These are meant for messages that don't require formatting.
 #define error_print( message )						error_printf	("%s", message)
 #define warning_print( message )					warning_printf	("%s", message)
-#define debug_print( message )						info_printf	("%s", message)
+#define debug_print( message )						info_printf		("%s", message)
 
 #if defined(__ANDROID__)
 #define throw_if(condition, exception, ...)			if(condition) { error_printf	(__VA_ARGS__); char* _tasdas = 0; *_tasdas = 123; }
@@ -168,11 +173,11 @@ namespace nwol
 #endif
 #define error_if(condition, ...)					if(condition) { error_printf	(__VA_ARGS__); }
 #define warn_if(condition, ...)						if(condition) { warning_printf	(__VA_ARGS__); }
-#define info_if(condition, ...)						if(condition) { info_printf	(__VA_ARGS__); }
+#define info_if(condition, ...)						if(condition) { info_printf		(__VA_ARGS__); }
 
 #define retval_error_if(retVal, condition, ...)		if(condition) { error_printf	(__VA_ARGS__); return retVal; }
 #define retval_warn_if( retVal, condition, ...)		if(condition) { warning_printf	(__VA_ARGS__); return retVal; }
-#define retval_info_if( retVal, condition, ...)		if(condition) { info_printf	(__VA_ARGS__); return retVal; }
+#define retval_info_if( retVal, condition, ...)		if(condition) { info_printf		(__VA_ARGS__); return retVal; }
 
 #define reterr_error_if(condition, ...)				retval_error_if (-1, condition, __VA_ARGS__)
 #define reterr_warn_if( condition, ...)				retval_warn_if	(-1, condition, __VA_ARGS__)
@@ -191,6 +196,9 @@ namespace nwol
 #define retnul_error_if_errored( errorCode, format, ...)		retval_error_if( 0, errorCode, format, __VA_ARGS__)
 #define reterr_error_if_errored( errorCode, format, ...)		retval_error_if(-1, errorCode, format, __VA_ARGS__)
 
+#if defined (__WINDOWS__)
+	std::string		getWindowsErrorAsString		(DWORD lastError);
+#endif
 } // namespace
 
 #endif //__LOG_H__9284087409823740923864192736__

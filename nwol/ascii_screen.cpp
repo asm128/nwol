@@ -28,7 +28,8 @@ static struct SASCIIScreen {
 	CONSOLE_FONT_INFOEX				InfoFontCurrent						= {};
 #endif
 									~SASCIIScreen						()														{
-		if( bCreated )	::nwol::shutdownASCIIScreen();
+		if( bCreated )	
+			::nwol::shutdownASCIIScreen();
 		safe_nwol_free( ASCIIBackBuffer		);
 		safe_nwol_free( ASCIIFrontBuffer	);
 		safe_nwol_free( ColorBackBuffer		);

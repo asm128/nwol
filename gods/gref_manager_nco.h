@@ -56,7 +56,8 @@ namespace nwol
 {
 	//template<typename baseType>	
 	//static				void								__gcustomDestruct						(baseType* p)											{ p->~baseType(); }
-	
+	template<typename _tRef>	void							_nwol_internal_release					(_tRef** refToRelease);
+
 	template <typename _tRef, uint32_t _PageSizeInInstances> 
 	struct SReferencePage : public CMutex
 	{
@@ -403,12 +404,10 @@ namespace nwol
 							void											allocRefFullPage						(_tRef** lstRef, uint32_t nFullPageCount)				{
 			::nwol::array_pod<_TPage*>												lstPages								(nFullPageCount);	// store here the pages we get.
 			memset(&lstPages[0], 0, sizeof(_TPage*)*nFullPageCount);
-
-			// Fill list with existing unused pages.
-			uint32_t																recycledPages							= getFullCapacityPages(lstPages.begin(), nFullPageCount);	
-
-			// Create missing pages.
-			if( nFullPageCount != recycledPages )
+		
+			uint32_t																recycledPages							= getFullCapacityPages(lstPages.begin(), nFullPageCount);	// Fill list with existing unused pages.
+			
+			if( nFullPageCount != recycledPages )	// Create missing pages.
 				createNewExhaustedPages( &lstPages.begin()[recycledPages], nFullPageCount-recycledPages);
 
 			// finish page initialization

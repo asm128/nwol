@@ -16,40 +16,21 @@ void										nwol::printErasedModuleInterfacePointers		(::nwol::RUNTIME_CALLBAC
 	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_RENDER	))	error_printf(errorFormat, "appRender()"		);
 	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_UPDATE	))	error_printf(errorFormat, "appUpdate()"		);
 }
-#if defined (__WINDOWS__)
-std::string GetWindowsErrorAsString(DWORD lastError)
-{
-    //Get the error message, if any.
-    if(lastError == 0)
-        return std::string(); //No error message has been recorded
-
-    LPSTR messageBuffer = nullptr;
-    size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-                                 NULL, lastError, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
-
-    std::string message(messageBuffer, size >= 2 ? size-2 : size);
-
-    //Free the buffer.
-    LocalFree(messageBuffer);
-
-    return message;
-}
-#endif
 
 ::nwol::error_t								nwol::loadModule								(::nwol::SModuleInterface& containerForCallbacks, const char_t* moduleName)		{
 
 #if defined(__WINDOWS__)
-#	define LOAD_FUNCTION_ADDRESS(hModule, lpProcName)	GetProcAddress((HMODULE)hModule, lpProcName)
-
-	static	const char_t*								errorFormat0								= "Failed to load library: %s: 0x%X - \"%s\"";
+	static	const char_t								* errorFormat0								= "Failed to load library: %s: 0x%X - \"%s\"";
 	std::string											errorString;
     DWORD												lastError;
-	reterr_error_if(0 == (containerForCallbacks.ModuleLibrary = LoadLibrary( moduleName )), errorFormat0, moduleName, (lastError = ::GetLastError()), (errorString = GetWindowsErrorAsString(::GetLastError())).c_str()); 
-#else
-#	define LOAD_FUNCTION_ADDRESS						dlsym
+	reterr_error_if(0 == (containerForCallbacks.ModuleLibrary = LoadLibrary( moduleName )), errorFormat0, moduleName, (lastError = ::GetLastError()), (errorString = getWindowsErrorAsString(::GetLastError())).c_str()); 
 
-	static	const char_t*								errorFormat0								= "Failed to load library: %s.";
+#	define LOAD_FUNCTION_ADDRESS(hModule, lpProcName)	GetProcAddress((HMODULE)hModule, lpProcName)
+#else
+	static	const char_t								* errorFormat0								= "Failed to load library: %s.";
 	reterr_error_if(0 == (containerForCallbacks.ModuleLibrary = dlopen( moduleName, RTLD_NOW | RTLD_LOCAL )), errorFormat0, moduleName); 
+
+#	define LOAD_FUNCTION_ADDRESS						dlsym
 #endif
 
 	containerForCallbacks.FunctionTitle				= (NWOL_RT_CALLBACK_appTitle	) LOAD_FUNCTION_ADDRESS( containerForCallbacks.ModuleLibrary, "appTitle"	);
@@ -64,7 +45,7 @@ std::string GetWindowsErrorAsString(DWORD lastError)
 	::nwol::RUNTIME_CALLBACK_ID							callbackPointersErased						= containerForCallbacks.TestForNullPointerFunctions();
 	if(callbackPointersErased) { 
 		unloadModule(containerForCallbacks);
-		static	const char_t*								errorFormat1								= "Failed to get dynamically loaded function: %s.";
+		static	const char_t								* errorFormat1								= "Failed to get dynamically loaded function: %s.";
 		printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
 		return -1;
 	}
@@ -74,7 +55,6 @@ std::string GetWindowsErrorAsString(DWORD lastError)
 
 	return 0;
 }
-
 
 ::nwol::error_t								nwol::unloadModule								(::nwol::SModuleInterface& containerForCallbacks)								{
 	retwarn_error_if(0 == containerForCallbacks.ModuleLibrary, "Invalid module handle! This could happen if the unloadModule() function was called twice for the same module.");

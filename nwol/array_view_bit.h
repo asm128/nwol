@@ -12,11 +12,11 @@ namespace nwol
 							uint32_t				Count			= 0;
 		static constexpr	const uint32_t			SizeBase		= (uint32_t)(sizeof(_tValue)*8);
 	public:
-		inline constexpr							array_view_bit	()														= default;
-		inline constexpr							array_view_bit	(array_view_bit	<_tValue>& other)						= default;
-		inline constexpr							array_view_bit	(_tValue* data, int32_t count)							: Data(data), Count(count)					{}
+		inline constexpr							array_view_bit	()														noexcept	= default;
+		inline constexpr							array_view_bit	(array_view_bit	<_tValue>& other)						noexcept	= default;
+		inline constexpr							array_view_bit	(_tValue* data, int32_t count)							noexcept	: Data(data), Count(count)					{}
 
-							bool					operator[]		(uint32_t index)								const	{
+							bool					operator[]		(uint32_t index)								const				{
 			if(index >= 8*sizeof(_tValue)*Count) {
 				error_printf("Invalid index: %u.", index);
 			}
@@ -30,11 +30,11 @@ namespace nwol
 	public:
 							uint32_t				Width			= 0;
 							uint32_t				Depth			= 0;
-		inline constexpr							grid_view_bit	()														= default;
-		inline constexpr							grid_view_bit	(const grid_view_bit<_tValue>& other)					= default;
-		inline constexpr							grid_view_bit	(_tValue* data, int32_t width, int32_t height)			: Data(data), Width(width), Depth(height)	{}
+		inline constexpr							grid_view_bit	()														noexcept	= default;
+		inline constexpr							grid_view_bit	(const grid_view_bit<_tValue>& other)					noexcept	= default;
+		inline constexpr							grid_view_bit	(_tValue* data, int32_t width, int32_t height)			noexcept	: Data(data), Width(width), Depth(height)	{}
 
-							array_view_bit<_tValue>	operator[]		(uint32_t index)								const	{
+							array_view_bit<_tValue>	operator[]		(uint32_t index)								const				{
 			if(index >= Depth) {
 				error_printf("Invalid index: %u.", index);
 			}

@@ -50,8 +50,8 @@ namespace nwol
 		inline				TMat2&				LinearInterpolate			(const TMat2& p, const TMat2& q, double fTime)											noexcept	{ return *this = ((q-p)*fTime)+p; }
 							void				RotationZ					(double angle)																			noexcept	{	
 			::nwol::SPairSinCos							angleSinCos					= ::nwol::getSinCos(angle);
-			_11		= (_tBase) angleSinCos.Cos; _12	= (_tBase)angleSinCos.Sin;
-			_21		= (_tBase)-angleSinCos.Sin; _22	= (_tBase)angleSinCos.Cos; 
+			_11	= (_tBase) angleSinCos.Cos; _12	= (_tBase)angleSinCos.Sin;
+			_21	= (_tBase)-angleSinCos.Sin; _22	= (_tBase)angleSinCos.Cos; 
 		}
 		constexpr			TCoord2D			TransformInverse			(const TCoord2D& _v)															const	noexcept	{
 			return
@@ -59,7 +59,7 @@ namespace nwol
 				, _v.x * _21 + _v.y * _22
 				};
 		} // ApplyInverseRota
-							void				Identity					()																									{
+							void				Identity					()																						noexcept	{
 			*this =
 				{ (_tBase)1,  (_tBase)0
 				, (_tBase)0,  (_tBase)1
@@ -408,7 +408,7 @@ namespace nwol
 		//	};
 		//}
 							void				Identity					()																						noexcept	{
-			*this = 
+			*this									= 
 				{ (_tBase)1,  (_tBase)0,  (_tBase)0,  (_tBase)0
 				, (_tBase)0,  (_tBase)1,  (_tBase)0,  (_tBase)0
 				, (_tBase)0,  (_tBase)0,  (_tBase)1,  (_tBase)0

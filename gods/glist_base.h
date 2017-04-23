@@ -25,8 +25,7 @@ namespace nwol
 					::nwol::release(&((_tRef**)buf->pByteArray)[--buf->nElementCount]);
 			}
 		}
-
-							// Assigns new buffer and releases old references in list if we're the only owner.
+		// Assigns new buffer and releases old references in list if we're the only owner.
 							void								SetBufferData			(::nwol::GODS(SBuffer) ListBuffer)							{
 			GPNCO(::nwol, SBuffer)										oldBuffer				= this->m_BufferData;	// Catch the old list so we can manage its elements.
 			m_BufferData											= ::nwol::acquire(ListBuffer);

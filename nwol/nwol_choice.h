@@ -10,7 +10,7 @@ namespace nwol
 		::nwol::array_pod<uint64_t>					totals									(weightCount);
 		uint64_t									running_total							= 0;
 
-		for( uint32_t i=0; i<weightCount; i++ ) {
+		for( uint32_t i=0; i<weightCount; ++i ) {
 			running_total							+= weights[i];
 			totals[i]								= running_total;
 		}

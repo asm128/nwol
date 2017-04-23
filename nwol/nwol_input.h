@@ -36,7 +36,7 @@ namespace nwol
 #else
 								void							(*handleAppInput)						();	
 #endif
-		}													Detail;
+		}													PlatformDetail;
 
 		inline				bool							KeyUp									(uint8_t index)						const	noexcept	{ return 0 == Keys			[index] && 0 != PreviousKeys			[index]; }
 		inline				bool							KeyDown									(uint8_t index)						const	noexcept	{ return 0 != Keys			[index] && 0 == PreviousKeys			[index]; }

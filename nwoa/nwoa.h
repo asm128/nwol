@@ -3,8 +3,7 @@
 #ifndef __NWOA_H__983264902__
 #define __NWOA_H__983264902__
 
-struct SApplication : public ::nwol::SApplicationBase 
-{
+struct SApplication : public ::nwol::SApplicationBase {
 	inline 						SApplication	(::nwol::SRuntimeValues	* runtimeValues)	: SApplicationBase(runtimeValues)	{}
 };
 

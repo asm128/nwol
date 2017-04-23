@@ -6,8 +6,7 @@
 /// 2012-2013 (c) Pablo Ariel Zorrilla Cepeda
 ///
 #include "gcore_ref.h"
-#include "gref_manager_pod.h"
-#include "gref_manager_obj.h"
+#include "gref_manager.h"
 
 #include "type_registry.h"
 #include "nwol_memory.h"
@@ -26,8 +25,6 @@
 #define __GDECLARE_COMMON_DEBUG_STRING_FUNCTIONS(baseType)															\
 	void printInfoString		(const baseType* in_Data);															\
 	void printInfoString		(const GREF(baseType)* in_Data);													\
-	void getInfoString			(wchar_t* dst_pOutputBuffer, uint32_t nBufferSize,	const baseType* in_Data);		\
-	void getInfoString			(wchar_t* dst_pOutputBuffer, uint32_t nBufferSize,	const GREF(baseType)* in_Data);	\
 	void getInfoString			(char* dst_pOutputBuffer, uint32_t nBufferSize,	const GREF(baseType)* in_Data);		\
 	void getInfoString			(char* dst_pOutputBuffer, uint32_t nBufferSize,	const baseType* in_Data);
 
@@ -43,17 +40,17 @@
 	}
 
 // This macro is used to declare read/write functions of the structure data (serialization)
-#define __GDECLARE_POD_SERIALIZATION_FUNCTIONS(baseType)																											\
-	uint32_t fileDeserializeData	(GREF(baseType)** out_lstDataInstances, uint32_t in_nInstanceCount, FILE* in_fp);												\
-	uint32_t fileSerializeData		(GREF(baseType)* const* in_lstDataInstances, uint32_t in_nInstanceCount, FILE* out_fp);											\
-	uint32_t memDeserializeData		(GREF(baseType)** out_lstDataInstances, uint32_t in_nInstanceCount, const void* in_pMemoryBuffer);								\
-	uint32_t memSerializeData		(GREF(baseType)* const* in_lstDataInstances, uint32_t in_nInstanceCount, void* out_pMemoryBuffer);
+#define __GDECLARE_POD_SERIALIZATION_FUNCTIONS(baseType)																									\
+	uint32_t fileDeserializeData	(GREF(baseType)** out_lstDataInstances		, uint32_t in_nInstanceCount, FILE* in_fp);									\
+	uint32_t fileSerializeData		(GREF(baseType)* const* in_lstDataInstances	, uint32_t in_nInstanceCount, FILE* out_fp);								\
+	uint32_t memDeserializeData		(GREF(baseType)** out_lstDataInstances		, uint32_t in_nInstanceCount, const void* in_pMemoryBuffer);				\
+	uint32_t memSerializeData		(GREF(baseType)* const* in_lstDataInstances	, uint32_t in_nInstanceCount, void* out_pMemoryBuffer);
 
-#define __GDECLARE_POD_STREAMING_FUNCTIONS( baseType )																												\
-	uint32_t fileReadData			(GREF(baseType)** out_lstDataInstances, uint32_t in_nInstanceCount, FILE* in_fp);												\
-	uint32_t fileWriteData			(GREF(baseType)* const* in_lstDataInstances, uint32_t in_nInstanceCount, FILE* out_fp, const baseType* DefaultData);			\
-	uint32_t memReadData			(GREF(baseType)** out_lstDataInstances, uint32_t in_nInstanceCount, const void* in_pMemoryBuffer);								\
-	uint32_t memWriteData			(GREF(baseType)* const* in_lstDataInstances, uint32_t in_nInstanceCount, void* out_pMemoryBuffer, const baseType* DefaultData);
+#define __GDECLARE_POD_STREAMING_FUNCTIONS( baseType )																										\
+	uint32_t fileReadData			(GREF(baseType)** out_lstDataInstances		, uint32_t in_nInstanceCount, FILE* in_fp);									\
+	uint32_t fileWriteData			(GREF(baseType)* const* in_lstDataInstances	, uint32_t in_nInstanceCount, FILE* out_fp, const baseType* DefaultData);	\
+	uint32_t memReadData			(GREF(baseType)** out_lstDataInstances		, uint32_t in_nInstanceCount, const void* in_pMemoryBuffer);				\
+	uint32_t memWriteData			(GREF(baseType)* const* in_lstDataInstances	, uint32_t in_nInstanceCount, void* out_pMemoryBuffer, const baseType* DefaultData);
 
 // This macro is used to declare all core functions at once
 #define __GDECLARE_POD_FUNCTIONS(baseType)					\
@@ -73,7 +70,6 @@
 	NWOL_REGISTER_POD(nameSpace, baseType, displayName, descriptionText);																													\
 	GDECLARE_REF(baseType, __VA_ARGS__);																				\
 	__GDECLARE_POD_FUNCTIONS(baseType);
-
 
 //-----------------------------------------------------------------------------// //--------------------------------------------------------------------------//
 #define GDECLARE_PURE_NO_TYPEDEFS(baseType)					\
@@ -110,38 +106,24 @@
 namespace nwol
 {
 	template<typename _tRef>	static inline	_tRef*			acquire			(_tRef* instanceRef)								{ return instanceRef ? instanceRef->acquire() : nullptr; }
-	//template<typename _tRef>	void							release			(_tRef** refToRelease)								{
-	//	_tRef															* pRef		= *refToRelease;
-	//	*refToRelease												= 0;
-	//	if(pRef)  
-	//		switch(pRef->Globals->ObjectCategory) {
-	//		case GREF_CATEGORY_NCO: { ::nwol::gref_manager_nco<_tRef>* pManager = (::nwol::gref_manager_nco<_tRef>*)pRef->Globals->ReferenceManager; pManager->releaseRef(&pRef); break; }
-	//		case GREF_CATEGORY_OBJ: { ::nwol::gref_manager_obj<_tRef>* pManager = (::nwol::gref_manager_obj<_tRef>*)pRef->Globals->ReferenceManager; pManager->releaseRef(&pRef); break; }
-	//		case GREF_CATEGORY_POD: { ::nwol::gref_manager_pod<_tRef>* pManager = (::nwol::gref_manager_pod<_tRef>*)pRef->Globals->ReferenceManager; pManager->releaseRef(&pRef); break; }
-	//		}
-	//}
-
 	template<typename _tRef>	static inline	void			release			(_tRef** instanceRef)								{
 		typedef		void			(*TFunctionRelease)	(_tRef**);
-		_tRef															* pRef		= *instanceRef;
-		*instanceRef												= 0;
-		if(pRef)
+		_tRef															* pRef			= *instanceRef;
+		if(pRef) {
+			*instanceRef												= 0;
 			((TFunctionRelease)pRef->Globals->_prelease)(&pRef);
+		}
 	}
 
 	template<typename _tRef>	static inline	void			set				(_tRef** out_Ref, _tRef* in_Ref)					{
-		_tRef															* old		= *out_Ref;																
+		_tRef															* old			= *out_Ref;																
 		*out_Ref													= ::nwol::acquire(in_Ref);															
 		::nwol::release(&old);																		
 	}																																	
 
 	template<typename _tRef>	static inline	void			release			(_tRef** instanceRefs, uint32_t* instanceCount)		{
-		for(uint32_t i=0, count = *instanceCount; i<count; ++i)			
+		for(uint32_t i = 0, count = *instanceCount; i < count; ++i)			
 			::nwol::release(&instanceRefs[i]);							
 	}
-
-
-
-
 } // namespace
 #endif // GREF_H_2398429385492835498234

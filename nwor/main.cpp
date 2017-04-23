@@ -293,12 +293,12 @@ int WINAPI									WinMain
 {
 	SetConsoleTitle("No Workflow Overhead Runtime");
 	::nwol::SRuntimeValues							runtimeValues					= {};
-	static const char								defaultModuleName[]				= "modules/nwor_selector.dll";
-	runtimeValues.PlatformValues.hInstance		=  hInstance		;
-	runtimeValues.PlatformValues.hPrevInstance	=  hPrevInstance	;
-	runtimeValues.PlatformValues.lpCmdLine		=  lpCmdLine		;
-	runtimeValues.PlatformValues.nShowCmd		=  nShowCmd			;
+	runtimeValues.PlatformDetail.hInstance		=  hInstance		;
+	runtimeValues.PlatformDetail.hPrevInstance	=  hPrevInstance	;
+	runtimeValues.PlatformDetail.lpCmdLine		=  lpCmdLine		;
+	runtimeValues.PlatformDetail.nShowCmd		=  nShowCmd			;
 
+	static const char								defaultModuleName[]				= "modules/nwor_selector.dll";
 #if defined(__ANDROID__)
 	loadPlatformValues(runtimeValues, defaultModuleName, 0, 0);
 #else

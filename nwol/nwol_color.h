@@ -17,7 +17,7 @@ namespace nwol
 		inline constexpr					SColor32		(uint8_t r_, uint8_t g_, uint8_t b_, uint8_t a_=0xff)			noexcept	: b(b_), g(g_), r(r_), a(a_)																																								{}
 		inline constexpr					SColor32		(uint32_t other)												noexcept	: b((uint8_t)(((other & 0x000000FF) >> 0))), g((uint8_t)(((other & 0x0000FF00) >> 8))), r((uint8_t)(((other & 0x00FF0000) >> 16))), a((uint8_t)(((other & 0xFF000000) >> 24)))				{}
 
-		inline constexpr	operator		uint32_t		()														const				{ return (((uint32_t)a) << 24) | (((uint32_t)r) << 16) | (((uint32_t)g) << 8) | (((uint32_t)b) << 0);																						}
+		inline constexpr	operator		uint32_t		()														const	noexcept	{ return (((uint32_t)a) << 24) | (((uint32_t)r) << 16) | (((uint32_t)g) << 8) | (((uint32_t)b) << 0);																						}
 		inline				SColor32&		operator=		(const SColor32& color)											noexcept	= default;
 		inline constexpr	bool			operator ==		(uint32_t other)										const	noexcept	{ return other == *((const uint32_t*)this);																																					}
 		inline constexpr	bool			operator ==		(const SColor32& other)									const	noexcept	{ return b == other.b && g == other.g && r == other.r && a == other.a;																														}

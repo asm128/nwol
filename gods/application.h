@@ -43,13 +43,13 @@ namespace nwol
 			);
 
 #if defined(__ANDROID__)
-		inline										SApplicationBase		(::nwol::SRuntimeValues	* runtimeValues)						: RuntimeValues(runtimeValues)									{
+		inline										SApplicationBase		(::nwol::SRuntimeValues	* runtimeValues)						noexcept	: RuntimeValues(runtimeValues)									{
 			runtimeValues->AndroidAppState->userData	= this;					
 			runtimeValues->AndroidAppState->onAppCmd	= SApplicationBase::handleAppCommand;	
 		}
  		static	void								handleAppCommand		(android_app * androidAppState, int32_t androidCommand)			{}
 #else
-		inline										SApplicationBase		(::nwol::SRuntimeValues	* runtimeValues)						: RuntimeValues(runtimeValues)									{}
+		inline										SApplicationBase		(::nwol::SRuntimeValues	* runtimeValues)						noexcept	: RuntimeValues(runtimeValues)									{}
 #endif
 	};	// struct
 

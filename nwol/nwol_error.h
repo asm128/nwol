@@ -5,8 +5,9 @@
 
 namespace nwol
 {
-	typedef				int32_t		error_t;
-	inline constexpr	bool		failed(error_t errorCode)		{ return 0 > errorCode; }
+	typedef				int32_t			error_t;
+	inline constexpr	bool			failed						(error_t errorCode)		noexcept	{ return 0 > errorCode; }
+
 } // namespace
 
 #define errored(errVal)		(::nwol::failed(errVal)) 

@@ -39,12 +39,12 @@ extern "C"
 	// --------
 	typedef const char*								(*NWOL_RT_CALLBACK_appTitle		)	()																		;
 	typedef uint8_t									(*NWOL_RT_CALLBACK_appVersion	)	()																		;
-	typedef int32_t									(*NWOL_RT_CALLBACK_appCreate	)	(void**, ::nwol::SRuntimeValues* runtimeValues)							;
-	typedef int32_t									(*NWOL_RT_CALLBACK_appDelete	)	(void**)																;
-	typedef int32_t									(*NWOL_RT_CALLBACK_appSetup		)	(void*)																	;
-	typedef int32_t									(*NWOL_RT_CALLBACK_appCleanup	)	(void*)																	;
-	typedef int32_t									(*NWOL_RT_CALLBACK_appRender	)	(void*)																	;
-	typedef ::nwol::APPLICATION_STATE				(*NWOL_RT_CALLBACK_appUpdate	)	(void*, bool requestedExit)												;
+	typedef int32_t									(*NWOL_RT_CALLBACK_appCreate	)	(void** customApplication, ::nwol::SRuntimeValues* runtimeValues)		;
+	typedef int32_t									(*NWOL_RT_CALLBACK_appDelete	)	(void** customApplication)												;
+	typedef int32_t									(*NWOL_RT_CALLBACK_appSetup		)	(void*  customApplication)												;
+	typedef int32_t									(*NWOL_RT_CALLBACK_appCleanup	)	(void*  customApplication)												;
+	typedef int32_t									(*NWOL_RT_CALLBACK_appRender	)	(void*  customApplication)												;
+	typedef ::nwol::APPLICATION_STATE				(*NWOL_RT_CALLBACK_appUpdate	)	(void*  customApplication, bool requestedExit)							;
 }
 
 namespace nwol
@@ -128,16 +128,16 @@ namespace nwol
 	};
 
 	struct SRuntimeValues {	
-		SRuntimeValuesDetail								PlatformValues						= {};
-		const char_t*										CommandLine							= 0;
+		SRuntimeValuesDetail								PlatformDetail						= {};
+		const char_t										* CommandLine						= 0;
 		uint32_t											CommandLineArgCount					= 0;
-		const char_t*										CommandLineArgList[64]				= {};
-		const char_t*										FileNameApplication					= 0;
-		const char_t*										FileNameRuntime						= 0;
+		const char_t										* CommandLineArgList[64]			= {};
+		const char_t										* FileNameApplication				= 0;
+		const char_t										* FileNameRuntime					= 0;
 		::nwol::array_pod<::nwol::SModuleInterface>			Modules								= {};
 
-		// Returns -1 on error or 
-		::nwol::error_t										ModuleLoad							(const char_t* moduleName)	{ 
+		// Returns -1 on error or the index of the loaded module.
+		::nwol::error_t										ModuleLoad							(const char_t* moduleName)	{
 			for(uint32_t i=0; i<Modules.size(); ++i) 
 				if(0 == strcmp(Modules[i].ModuleFile, moduleName)) 
 					return i; 

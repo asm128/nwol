@@ -29,7 +29,7 @@ namespace nwol
 				for(iCoreInstance = 0; iCoreInstance < nInstanceCount; iCoreInstance++)
 					pRefArray[iCoreInstance]							= ::nwol::acquire(in_lstCoreInstances[iCoreInstance]);
 
-				this->m_BufferData->nElementCount = this->Count			= nInstanceCount;
+				this->m_BufferData->nElementCount = this->Count = nInstanceCount;
 			}
 			else {
 				GPNCO(::nwol, SBuffer)									newListBuffer;

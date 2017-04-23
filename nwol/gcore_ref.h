@@ -24,7 +24,7 @@ namespace nwol
 									uint32_t								Column;
 		static						uint64_t								__breakAllocID;
 #endif	
-		inline						TRef*									acquire						()						{ 
+		inline						TRef*									acquire						()										{ 
 			int64_t																	finalCount;
 			if( 1 >= (finalCount = (int64_t)NWOL_INTERLOCKED_INCREMENT(ReferenceCount)) )	{															
 				error_printf("Invalid reference count: %llu. Instance type: '%s'.", finalCount, get_type_name().begin());			
@@ -33,22 +33,22 @@ namespace nwol
 			
 			return this;	
 		}
-		inline						_tBase*									get							()						{ return Instance;										}
-		inline constexpr			const _tBase*							get							()	const				{ return Instance;										}
-		inline constexpr			const bool								shared						()	const				{ return ReferenceCount > 1;							}
+		inline						_tBase*									get							()							noexcept	{ return Instance;										}
+		inline constexpr			const _tBase*							get							()					const	noexcept	{ return Instance;										}
+		inline constexpr			const bool								shared						()					const	noexcept	{ return ReferenceCount > 1;							}
 
 		// static members
 		static						const ::nwol::cue_t						__kCue;	
 
 		// static accessors
-		static inline				const ::nwol::gdescriptor&				get_type_descriptor			()						{
+		static inline				const ::nwol::gdescriptor&				get_type_descriptor			()										{
 			static constexpr	const ::nwol::GDATA_TYPE							dataTypes[]					= {_tArgs..., (GDATA_TYPE)0};									
 			static				const ::nwol::gdescriptor							typeDescriptor				= ::nwol::gdescriptor(dataTypes, ~0U);
 			static				const ::nwol::error_t								err							= ::nwol::validate_type_descriptor<_tBase>(typeDescriptor);	
 			return typeDescriptor;																								
 		}			
 
-		static inline				const ::nwol::gsyslabel&				get_type_name				()						{
+		static inline				const ::nwol::gsyslabel&				get_type_name				()										{
 			static	const ::nwol::gsyslabel											typeName					= ::nwol::gsyslabel(__kCue, ~0U);
 			return typeName;																									
 		}
@@ -56,7 +56,7 @@ namespace nwol
 #pragma pack(pop)
 
 	template <typename _tRef>
-	static			bool													checkOverrun				(const _tRef* p)		{
+	static			bool													checkOverrun				(const _tRef* p)						{
 		if(0 == p)
 			return false;
 		bool																		result						= false;

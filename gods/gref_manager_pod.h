@@ -39,7 +39,6 @@ namespace nwol
 			(*p1)														= newRef;
 			::nwol::release(&oldRef);
 		}
-
 						void										createRefs				(_tRef** p1, const _tBase* lstInstances, uint32_t nCount)				{
 			allocRefs(p1, nCount);
 			_tRef															* newRef;
@@ -48,23 +47,6 @@ namespace nwol
 					::nwol::podcpy(newRef->Instance, &lstInstances[i]);
 			}
 		}
-
-						void										copyInstance			(_tRef* dst, const _tBase* src)									const	{
-			if (0 == dst && 0 == src)
-				return;
-			else if (0 == dst) {
-				error_printf("Cannot copy %s contents into a null pointer!", _tRef::get_type_name().begin());
-				return;
-			}
-			else if (0 == src)
-				memset(dst->get(), 0, dst->Globals->DataSize);
-			else
-				::nwol::podcpy(dst->Instance, src);
-#if defined(NWOL_DEBUG_ENABLED)
-			::nwol::checkOverrun(dst);
-#endif
-			PLATFORM_CRT_CHECK_MEMORY();
-		} // func
 	}; // manager
 
 } // namespace 

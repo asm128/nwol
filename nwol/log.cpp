@@ -3,8 +3,8 @@
 #include "nwol_string.h"
 #include <time.h>
 
-#if defined(ANDROID) || defined(__linux__)
-    #ifdef ANDROID
+#if defined(__ANDROID__) || defined(__LINUX__)
+    #if defined(__ANDROID__)
         #include <android/log.h>
         #define GLOG(...) ((void)__android_log_print(__VA_ARGS__))
     #else // regular Linux
@@ -15,16 +15,15 @@
     #define GLOGI(format, ...) GLOG(ANDROID_LOG_INFO , "GODS", format, __VA_ARGS__)
     #define GLOGW(format, ...) GLOG(ANDROID_LOG_WARN , "GODS", format, __VA_ARGS__)
     #define GLOGE(format, ...) GLOG(ANDROID_LOG_ERROR, "GODS", format, __VA_ARGS__)
-
-#elif defined(WIN32) || defined(_WIN32) // Windows
+#elif defined(__WINDOWS__) // Windows
     #include <Windows.h>
 #endif
 
 void										nwol::__internal_debug_print_console			(const char* chars)						{ printf("%s", chars); }
 void										nwol::__internal_debug_print_debugger			(const char* chars)						{
-#if defined( ANDROID ) || defined(__linux__)
+#if defined(__ANDROID__) || defined(__LINUX__)
 	GLOGE( "%s", chars );
-#elif defined(WIN32) || defined(_WIN32)
+#elif defined(__WINDOWS__)
 	//printf("%s", chars);
 	OutputDebugStringA(chars);
 #endif
@@ -35,7 +34,7 @@ void										nwol::__internal_debug_print_file				(const char* chars, int nChar
 //	return;
 	static	char										__debug_file_name[48]						= {};												
 	static	const time_t								__today_0									= time(0);		
-#if defined( ANDROID ) || defined( __linux__ )
+#if defined(__ANDROID__) || defined(__LINUX__)
 	static	tm											* __debug_tm								= gmtime(&__today_0);
 	UNUSED static int									errMt_0										= _snprintf_s
 		(	__debug_file_name
@@ -53,12 +52,11 @@ void										nwol::__internal_debug_print_file				(const char* chars, int nChar
 			fclose( __debug_fp );
 		}
 	}
-	else //if( ferrMy == 0 )
-	{
+	else { //if( ferrMy == 0 ) {
 		fwrite( chars, sizeof( char ), nCharCount, __debug_fp );
 		fclose( __debug_fp );
 	}
-#elif defined( WIN32 ) || defined( _WIN32 )
+#elif defined(__WINDOWS__)
 	static tm											__debug_tm									= {};
 	static const errno_t								__errMy										= gmtime_s(&__debug_tm, &__today_0);
 	static const int									errMt_0										= _snprintf_s
@@ -74,7 +72,7 @@ void										nwol::__internal_debug_print_file				(const char* chars, int nChar
 	FILE												* __debug_fp								= 0;
 	OutputDebugStringA( chars );
 	errno_t												ferrMy										= 0;
-	if( 2 == (ferrMy=fopen_s( &__debug_fp, __debug_file_name, "ab" )) )	{
+	if( 2 == (ferrMy = fopen_s( &__debug_fp, __debug_file_name, "ab" )) )	{
 		if( (0 == fopen_s( &__debug_fp, __debug_file_name, "wb" )) && __debug_fp ) {
 			fwrite( chars, sizeof( char ), nCharCount, __debug_fp );
 			fclose( __debug_fp );
@@ -87,4 +85,19 @@ void										nwol::__internal_debug_print_file				(const char* chars, int nChar
 #endif 
 }
 
+::std::string		nwol::getWindowsErrorAsString		(DWORD lastError)					{
+	if(lastError == 0)	
+		return ::std::string(); // No error message has been recorded
 
+	// Get the error message, if any.
+	LPSTR											messageBuffer									= nullptr;
+	const size_t									size											= FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, lastError, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
+
+	if(nullptr != messageBuffer) {
+		const std::string								message											(messageBuffer, size >= 2 ? size-2 : size);
+		LocalFree(messageBuffer); 
+		return message;
+	}
+
+	return ::std::string();
+}

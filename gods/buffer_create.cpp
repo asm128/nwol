@@ -390,7 +390,7 @@ void nwol::grelease( GODS(SBuffer)* pBufferData ) {
 	::nwol::GODS(SBuffer) oldBuffer = *pBufferData;
 	*pBufferData = 0;
 
-	#if defined(NWOL_DEBUG_ENABLED)
+#if defined(NWOL_DEBUG_ENABLED)
 	SBuffer* pBufferInstance = oldBuffer->get();
 	if( pBufferInstance->pByteArray )
 		checkBlockBoundaries(pBufferInstance);

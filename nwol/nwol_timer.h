@@ -38,12 +38,11 @@ namespace nwol
 	};	// struct
 
 	//template<typename _ValueType>
-	//struct SAccumulatorStats
-	//{
-	//	_ValueType	Accumulated;
-	//	_ValueType	Depleted;
-	//	uint64_t	TimesAccumulated;
-	//	uint64_t	TimesDepleted;
+	//struct SAccumulatorStats {
+	//	_ValueType				Accumulated;
+	//	_ValueType				Depleted;
+	//	uint64_t				TimesAccumulated;
+	//	uint64_t				TimesDepleted;
 	//
 	//	inline _ValueType		Accumulate	( _ValueType amount ){ ++TimesAccumulated	;	return Accumulated	+= amount; } 
 	//	inline _ValueType		Deplete		( _ValueType amount ){ ++TimesDepleted		;	return Depleted		+= amount; } 
