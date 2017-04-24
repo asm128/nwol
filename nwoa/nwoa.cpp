@@ -11,8 +11,34 @@
 
 DEFINE_RUNTIME_INTERFACE_FUNCTIONS(::SApplication, "No Workflow Overhead Application", 0, 1);
 
+int32_t										shutdownScreen							(::SApplication& instanceApp)							{ 
+	::nwol::SScreenState						& screenState							= instanceApp.Screen.State;
+	::nwol::SScreenDetail						& screenDetail							= instanceApp.Screen.PlatformDetail;
+	if( screenDetail.hWnd ) {
+		MSG					windowMessage;
+		while(PeekMessageA(&windowMessage, instanceApp.Screen.PlatformDetail.hWnd, 0, 0, PM_REMOVE)) {
+			TranslateMessage( &windowMessage );
+			DispatchMessage	( &windowMessage );
+		}
+		screenState.NoDraw											= true;
+		HWND															oldWindow								= screenDetail.hWnd;
+		screenDetail.hWnd											= 0;
+		info_printf( "Calling DestroyWindow()." );
+		DestroyWindow( oldWindow );
+		while(PeekMessageA(&windowMessage, instanceApp.Screen.PlatformDetail.hWnd, 0, 0, PM_REMOVE)) {
+			TranslateMessage( &windowMessage );
+			DispatchMessage	( &windowMessage );
+		}
+	}
+
+	bool_t											bClassUnregistered						= (UnregisterClass(instanceApp.PlatformDetail.MainWindowClass.lpszClassName, instanceApp.PlatformDetail.MainWindowClass.hInstance) != 0) ? true : false;
+	reterr_error_if(!bClassUnregistered, "Failed to unregister WNDCLASS \"%s\".", instanceApp.PlatformDetail.MainWindowClass.lpszClassName);
+	return 0;
+}
+
 int32_t										cleanup									(::SApplication& instanceApp)							{ 
 	::nwol::shutdownASCIIScreen();
+	::shutdownScreen(instanceApp);
 
 	reterr_error_if(errored(::networkDisable(instanceApp)), "Error when disabling network.");
 
@@ -89,6 +115,7 @@ int32_t										setupScreen								(::SApplication& instanceApp)							{
 
 	instanceApp.Screen.PlatformDetail	.hWnd				= newWindow;
 	instanceApp.PlatformDetail			.MainWindowStyle	= dwStyle;
+	ShowWindow(newWindow, SW_SHOW);
 	return 0;
 }
 

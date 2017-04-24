@@ -21,6 +21,7 @@ uint8_t									appVersion				()																noexcept		{			\
 int32_t									appCreate				(void** instanceApp, ::nwol::SRuntimeValues* runtimeValues)		noexcept		{			\
 	reterr_error_if(instanceApp == 0, "%s", "Invalid pointer!");																							\
 	_YourCustomClass							* newApp				= new _YourCustomClass(runtimeValues), *oldApp = (_YourCustomClass*)*instanceApp; 	\
+	reterr_error_if(0 == newApp, "Cannot create application object. Not enough memory?");																	\
 	*instanceApp							= newApp; 																										\
 	safe_delete(oldApp); 																																	\
 	return 0;																																				\

@@ -36,7 +36,6 @@ extern "C"
 	int32_t											appRender							(void*	customApplication)												noexcept;
 	::nwol::APPLICATION_STATE						appUpdate							(void*	customApplication, bool requestedExit)							noexcept;
 
-	// --------
 	typedef const char*								(*NWOL_RT_CALLBACK_appTitle		)	()																		;
 	typedef uint8_t									(*NWOL_RT_CALLBACK_appVersion	)	()																		;
 	typedef int32_t									(*NWOL_RT_CALLBACK_appCreate	)	(void** customApplication, ::nwol::SRuntimeValues* runtimeValues)		;
@@ -90,7 +89,7 @@ namespace nwol
 		::nwol::error_t										Setup						()						const				{ retval_error_if(-1,									0 == FunctionSetup		, formatModuleFunctionPtrNull, "appSetup"	, ModuleTitle ? ModuleTitle : ModuleFile); return FunctionSetup		(ClientInstance	);					}
 		::nwol::error_t										Cleanup						()						const				{ retval_error_if(-1,									0 == FunctionCleanup	, formatModuleFunctionPtrNull, "appCleanup"	, ModuleTitle ? ModuleTitle : ModuleFile); return FunctionCleanup	(ClientInstance	);					}
 		::nwol::error_t										Render						()						const				{ retval_error_if(-1,									0 == FunctionRender		, formatModuleFunctionPtrNull, "appRender"	, ModuleTitle ? ModuleTitle : ModuleFile); return FunctionRender	(ClientInstance	);					}
-		::nwol::APPLICATION_STATE							Update						(bool bRequestedExit)	const				{ retval_error_if(::nwol::APPLICATION_STATE_FATAL,	0 == FunctionUpdate		, formatModuleFunctionPtrNull, "appUpdate"	, ModuleTitle ? ModuleTitle : ModuleFile); return FunctionUpdate	(ClientInstance, bRequestedExit);	}
+		::nwol::APPLICATION_STATE							Update						(bool bRequestedExit)	const				{ retval_error_if(::nwol::APPLICATION_STATE_FATAL	,	0 == FunctionUpdate		, formatModuleFunctionPtrNull, "appUpdate"	, ModuleTitle ? ModuleTitle : ModuleFile); return FunctionUpdate	(ClientInstance, bRequestedExit);	}
 		
 		::nwol::RUNTIME_CALLBACK_ID							TestForNullPointerFunctions	()						const				{
 			::nwol::RUNTIME_CALLBACK_ID								result						= RUNTIME_CALLBACK_ID_NONE;

@@ -249,9 +249,9 @@ void										ANativeActivity_onCreate		(ANativeActivity* activity, void* savedS
     info_printf("Entering: %s", __FUNCTION__);
 	app_dummy();	
 	::nwol::SRuntimeValues							runtimeValues					= {};
-	runtimeValues.PlatformValues.activity		= activity;
-	runtimeValues.PlatformValues.savedState		= savedState;
-	runtimeValues.PlatformValues.savedStateSize	= savedStateSize;
+	runtimeValues.PlatformDetail.activity		= activity;
+	runtimeValues.PlatformDetail.savedState		= savedState;
+	runtimeValues.PlatformDetail.savedStateSize	= savedStateSize;
 
 	activity->instance							= &runtimeValues;
 

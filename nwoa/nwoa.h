@@ -16,7 +16,7 @@ struct SApplication : public ::nwol::SApplicationBase {
 	::nwol::SScreen				Screen					= {};
 
 	inline 						SApplication			(::nwol::SRuntimeValues	* runtimeValues)	: SApplicationBase(runtimeValues)	{
-		Screen.Metrics				= {{10, 10}, {320, 240}};
+		Screen.Metrics				= {{10, 10}, {400*2, 300*2}};
 		GUI							= {Screen.Metrics.Size.Cast<uint32_t>(), {132, 60},};
 	}
 };

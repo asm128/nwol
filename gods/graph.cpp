@@ -33,22 +33,24 @@ uint32_t				nwol::CGraph::Load						(const char* in_pMemoryBuffer)									{
 	// Load node attributes
 	::nwol::suint32							nodeCount;
 	totalBytes							+= nodeCount.read(in_pMemoryBuffer);
-	NodeInstances.resize(nodeCount);
-	NodeInstances.create_all();
-	for(uint32_t i=0; i<nodeCount; ++i)
-		for(uint32_t direction=0; direction < 2; ++direction)
-			totalBytes							+= NodeInstances[i]->Attributes[direction].load(&in_pMemoryBuffer[totalBytes]);
+	throw_if(-1 == NodeInstances.resize(nodeCount), "", "Failed to resize array")
+	else {
+		NodeInstances.create_all();
+		for(uint32_t i=0; i<nodeCount; ++i)
+			for(uint32_t direction=0; direction < 2; ++direction)
+				totalBytes							+= NodeInstances[i]->Attributes[direction].load(&in_pMemoryBuffer[totalBytes]);
 
-	// Load labels
-	NodeLabels.resize(nodeCount);
-	for(uint32_t i=0; i<nodeCount; i++) {
-		::nwol::glabel							label						= NodeLabels[i];
-		totalBytes							+= label.load(&in_pMemoryBuffer[totalBytes]);
-		NodeLabels[i]						= label;
+		// Load labels
+		NodeLabels.resize(nodeCount);
+		for(uint32_t i=0; i<nodeCount; i++) {
+			::nwol::glabel							label						= NodeLabels[i];
+			totalBytes							+= label.load(&in_pMemoryBuffer[totalBytes]);
+			NodeLabels[i]						= label;
+		}
+		for( uint32_t i=0; i<2; ++i)
+			totalBytes							+= Attributes[i].Load(&in_pMemoryBuffer[totalBytes]);
+
 	}
-	for( uint32_t i=0; i<2; ++i)
-		totalBytes							+= Attributes[i].Load(&in_pMemoryBuffer[totalBytes]);
-
 	return totalBytes;
 }
 
