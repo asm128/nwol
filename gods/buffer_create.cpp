@@ -253,7 +253,7 @@ namespace nwol
 			int32_t								newIndex				= pStorage->push_back(oldBuffer);
 			if( expectedIndex != newIndex ) {
 				warning_printf("No more space for buffer caching!");
-				oldBuffer->ReferenceCount++;
+				++oldBuffer->ReferenceCount;
 				__g_SBufferManager.releaseRef(&oldBuffer);	// no more space, return to the main buffer manager.
 			}
 			return 0;

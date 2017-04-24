@@ -26,9 +26,9 @@ namespace nwol
 		template <typename _tRef> 
 		inline	::nwol::error_t					SetReference			(::nwol::id_t index, ::nwol::gptr_nco<_tRef>& ref)					{
 			reterr_error_if(validateIndex(index), "Invalid instance index: '%i'", index);
-			if(ref.get_type_name() != DataNames[index])
+			if(ref.get_type_name() != DataNames[index]) {
 				warning_printf("Changing reference type at index %u. Previous type: %s. New type: %s", DataNames[index].begin(), ref.get_type_name().begin());
-
+			}
 			DataNames.begin()[index]				= ref.get_type_name();
 			*reinterpret_cast<_tRef* const *>(&Data.begin()[index]) = ref.acquire();
 			return 0;
@@ -37,9 +37,9 @@ namespace nwol
 		template <typename _tRef> 
 		inline	::nwol::error_t					AcquireReference		(::nwol::id_t index, ::nwol::gptr_nco<_tRef>& ref)			const	{
 			reterr_error_if(validateIndex(index), "Invalid instance index: '%i'", index);
-			if(ref.get_type_name() != DataNames[index])
+			if(ref.get_type_name() != DataNames[index]) {
 				warning_printf("Casting stored reference to a different type! Stored type: '%s'. Casted type: '%s'.", DataNames[index].begin(), ref.get_type_name().begin());
-
+			}
 			ref										= ::nwol::acquire(*reinterpret_cast<_tRef* const *>(&Data.begin()[index]));
 			return 0;
 		}
@@ -47,9 +47,9 @@ namespace nwol
 		template <typename _tRef> 
 		inline	::nwol::error_t					PushReference			(const ::nwol::gptr_nco<_tRef>& ref, ::nwol::id_t* index, const ::nwol::glabel description = ::nwol::glabel::statics().empty)	{
 			uint32_t									newIndex				= DataNames.size();
-			Data				.push_back(ref.acquire());
-			DataNames			.push_back(ref.get_type_name());
-			DataDescriptions	.push_back(description);
+			reterr_error_if(-1 == Data				.push_back(ref.acquire())		, "Failed to push reference. Out of memory?");
+			reterr_error_if(-1 == DataNames			.push_back(ref.get_type_name())	, "Failed to push reference. Out of memory?");
+			reterr_error_if(-1 == DataDescriptions	.push_back(description)			, "Failed to push reference. Out of memory?");
 
 			if(index)
 				*index									= newIndex;

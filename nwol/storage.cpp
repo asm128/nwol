@@ -30,7 +30,7 @@ int32_t										nwol::listFiles								(const char* directory, ::nwol::array_ob
 				//folder.Folders.push_back(sPath);
             }
             else { 
-				fileNames.push_back(sPath);
+				reterr_error_if(-1 == fileNames.push_back(sPath), "Failed to push path to output list");
                 info_printf("File: %s.", sPath);
             }
         }

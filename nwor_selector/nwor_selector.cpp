@@ -43,7 +43,7 @@ int32_t										loadValidModules				(const char* modulesPath, ::nwol::SRuntimeV
 
 			if(0 == strcmp(fileExtension, fileExtensionToLookFor)) {
 				info_printf("DLL found: %s.", moduleName.begin());
-				possibleModuleNames.push_back(moduleName);
+				reterr_error_if(-1 == possibleModuleNames.push_back(moduleName), "Failed to push module name. Out of memory?");
 			}
 		}
 	}
@@ -59,7 +59,7 @@ int32_t										loadValidModules				(const char* modulesPath, ::nwol::SRuntimeV
 			continue;
 		}
 
-		loadedModules.push_back(loadedModule);
+		reterr_error_if(-1 == loadedModules.push_back(loadedModule), "Failed to push module to output list. Out of memory?");
 		info_printf("Valid module found: %s.", moduleName.begin());
 	}
 
@@ -78,8 +78,9 @@ int32_t										listDLLFiles					(const char* modulesPath, ::nwol::array_obj<::
 			for(uint32_t iChar = 0, charCount = ::nwol::size(fileExtension)-1; iChar<charCount; ++iChar)
 				fileExtension[iChar]						= (char)tolower(nameText[iChar]);
 
-			if(0 == strcmp(fileExtension, "." DYNAMIC_LIBRARY_EXTENSION))
-				possibleModuleNames.push_back(moduleName);
+			if(0 == strcmp(fileExtension, "." DYNAMIC_LIBRARY_EXTENSION)) {
+				reterr_error_if(-1 == possibleModuleNames.push_back(moduleName), "Failed to push module name to output list. Out of memory?");
+			}
 		}
 	}
 	return 0;
@@ -114,9 +115,15 @@ int32_t										refreshModules					(::SApplication& instanceApp)															
 		}
 			
 		const uint32_t									titleLen						= (uint32_t)strlen(loadedModule.ModuleTitle);
-		maxModuleNameLength							= (maxModuleNameLength > moduleName.size()) ? maxModuleNameLength : moduleName.size();
-		maxModuleTitleLength						= (maxModuleTitleLength > titleLen) ? maxModuleTitleLength : titleLen;
-		loadedModules.push_back(loadedModule);
+		maxModuleNameLength							= (maxModuleNameLength	> moduleName.size())	? maxModuleNameLength	: moduleName.size();
+		maxModuleTitleLength						= (maxModuleTitleLength > titleLen)				? maxModuleTitleLength	: titleLen;
+		int32_t											moduleIndex						= loadedModules.push_back(loadedModule);
+
+		if(-1 == moduleIndex) {
+			error_printf("Failed to push loaded module. Out of memory?");
+			::nwol::unloadModule(loadedModule);
+			return -1;
+		}
 		info_printf("Valid module found: %s." , moduleName.begin());
 	}
 	PLATFORM_CRT_CHECK_MEMORY();

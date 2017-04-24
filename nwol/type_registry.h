@@ -82,14 +82,14 @@ namespace nwol
 			typeSizes.set<_tBase>(BASETYPE_ALIGN);
 			info_printf("Registering type: %s::%s. Size: %u. Size Padded: %u. Align: %u. Align multiplier: %u.", identifier.NameSpace.begin(), identifier.Name.begin(), typeSizes.Size, typeSizes.SizePadded, typeSizes.Align, typeSizes.AlignMultiplier);
 
-			record.Namespace		= Namespaces		.find(identifier.NameSpace	);	if(-1 == record.Namespace	)	record.Namespace	= Namespaces	.push_back(identifier.NameSpace	);
-			record.Type				= TypeNames			.find(identifier.Name		);	if(-1 == record.Type		)	record.Type			= TypeNames		.push_back(identifier.Name		);
-			record.DisplayName		= DisplayNames		.find(name_display			);	if(-1 == record.DisplayName	)	record.DisplayName	= DisplayNames	.push_back(name_display			);
-			record.Description		= Descriptions		.find(description			);	if(-1 == record.Description	)	record.Description	= Descriptions	.push_back(description			);
-			record.DataTypeId		= DataTypeIds		.find(data_type_id			);	if(-1 == record.DataTypeId	)	record.DataTypeId	= DataTypeIds	.push_back(data_type_id			);
-			record.TypeMetrics		= TypeMetrics		.find(typeSizes				);	if(-1 == record.TypeMetrics	)	record.TypeMetrics	= TypeMetrics	.push_back(typeSizes			);
-			Types	.push_back(identifier);
-			Records	.push_back(record);
+			record.Namespace	= Namespaces	.find(identifier.NameSpace	); if(-1 == record.Namespace	) { record.Namespace	= Namespaces	.push_back(identifier.NameSpace	); throw_if(record.Namespace	== -1, "", "Failed to push \"%s\" to type registry record.", "Namespace"	) }
+			record.Type			= TypeNames		.find(identifier.Name		); if(-1 == record.Type			) { record.Type			= TypeNames		.push_back(identifier.Name		); throw_if(record.Type			== -1, "", "Failed to push \"%s\" to type registry record.", "Type"			) }
+			record.DisplayName	= DisplayNames	.find(name_display			); if(-1 == record.DisplayName	) { record.DisplayName	= DisplayNames	.push_back(name_display			); throw_if(record.DisplayName	== -1, "", "Failed to push \"%s\" to type registry record.", "DisplayName"	) }
+			record.Description	= Descriptions	.find(description			); if(-1 == record.Description	) { record.Description	= Descriptions	.push_back(description			); throw_if(record.Description	== -1, "", "Failed to push \"%s\" to type registry record.", "Description"	) }
+			record.DataTypeId	= DataTypeIds	.find(data_type_id			); if(-1 == record.DataTypeId	) { record.DataTypeId	= DataTypeIds	.push_back(data_type_id			); throw_if(record.DataTypeId	== -1, "", "Failed to push \"%s\" to type registry record.", "DataTypeId"	) }
+			record.TypeMetrics	= TypeMetrics	.find(typeSizes				); if(-1 == record.TypeMetrics	) { record.TypeMetrics	= TypeMetrics	.push_back(typeSizes			); throw_if(record.TypeMetrics	== -1, "", "Failed to push \"%s\" to type registry record.", "TypeMetrics"	) }
+			throw_if(-1 == Types	.push_back(identifier	), "", "Failed to push \"%s\" to type registry.",  "identifier"	);
+			throw_if(-1 == Records	.push_back(record		), "", "Failed to push \"%s\" to type registry.",  "record"		);
 			return 0;
 		}
 

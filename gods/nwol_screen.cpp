@@ -9,7 +9,6 @@ LRESULT								nwol::SScreen::WndProc						(HWND hWnd, UINT uMsg, WPARAM wParam,
 	sizeof(SScreenState		);
 	sizeof(SScreen			);
 	switch( uMsg ) {
-	// WM_DESTROY is sent when the window is being destroyed.
 	case WM_DESTROY:
 		info_printf( "Received WM_DESTROY message. Posting WM_QUIT..." );
 		PostQuitMessage(0);
@@ -110,7 +109,7 @@ struct SWindowClassRegistrator {
 	windowClass.lpfnWndProc					= mainWndProc									;
 	windowClass.cbClsExtra					= 0												;
 	windowClass.cbWndExtra					= 0												;
-	windowClass.hInstance					= 0; //RuntimeValues.PlatformDetail.hInstance		;
+	windowClass.hInstance					= RuntimeValues->PlatformDetail.hInstance		;
 	windowClass.hIcon						= LoadIcon(0, IDI_APPLICATION)					;
 	windowClass.hCursor						= LoadCursor(0, IDC_ARROW)						;
 	windowClass.hbrBackground				= CreateSolidBrush(GetSysColor(COLOR_3DFACE))	;

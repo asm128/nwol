@@ -197,7 +197,7 @@ namespace nwol
 				*itemIndex										= -1;
 			const int32_t										newItemIndex				= ItemOffsets	.push_back(itemOffset);	// This is for the user.
 			const int32_t										newSizesIndex				= ItemSizes		.push_back(itemSize); 
-			reterr_error_if(newItemIndex != newSizesIndex, "%s", "Indices don't match. newItemIndex: %u, newSizesIndex: %u.", newItemIndex, newSizesIndex);
+			reterr_error_if(newItemIndex != newSizesIndex || newItemIndex == -1, "%s", "Indices don't match. newItemIndex: %u, newSizesIndex: %u.", newItemIndex, newSizesIndex);
 			if(itemIndex)
 				*itemIndex										= (int32_t)newItemIndex;
 			return newItemIndex;

@@ -7,13 +7,21 @@ GDEFINE_OBJ(nwol, CGraphNode)
 
 ::nwol::error_t			nwol::CGraph::CreateNode				(::nwol::id_t* index, const ::nwol::glabel& nodeLabel)			{
 	GPtrObj(CGraphNode)						newNode						= CGraphNode();
-	uint32_t								newIndex					= (uint32_t)NodeInstances.size();
-	NodeInstances.push_back(newNode);
-	NodeLabels.push_back(nodeLabel);
+	int32_t								newIndex						= (int32_t)NodeInstances.size();
+	reterr_error_if(newIndex != NodeInstances.push_back(newNode), "Failed to push node instance. Out of memory?");
+	if(newIndex != NodeLabels.push_back(nodeLabel)) {
+		error_printf("Failed to push node label. Out of memory?");
+		NodeInstances.resize(NodeInstances.size()-1);
+		return -1;
+	}
 
 	SNodeRelationship						nodeParentship				= {-1, -1, NR_CHILD};
-
-	NodeParentshipRegistry.push_back(nodeParentship);
+	if(newIndex != NodeParentshipRegistry.push_back(nodeParentship)) { 
+		error_printf("Failed to push node parentship. Out of memory?");
+		NodeInstances	.resize(NodeInstances	.size()-1);
+		NodeLabels		.resize(NodeLabels		.size()-1);
+		return -1;
+	}
 	if(index)
 		*index								= newIndex;
 	return 0;

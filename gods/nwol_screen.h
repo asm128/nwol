@@ -34,9 +34,9 @@ namespace nwol
 #pragma pack(pop)
 
 	struct SScreen {
-		SScreenMetrics										Metrics						= {10, 10, 320, 240};
-		SScreenState										State						= {};
+		SScreenMetrics										Metrics						= {{10, 10}, {320, 240}};
 		SScreenDetail										PlatformDetail				= {};
+		SScreenState										State						= {};
 #if defined(__WINDOWS__)
 		LRESULT												WndProc						(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 #endif
@@ -45,11 +45,22 @@ namespace nwol
 
 	::nwol::error_t										createScreen				(GPNCO(::nwol, SScreen)& createdScreen, ::nwol::SRuntimeValues&);
 
+	struct SScreenManagerDetail {
+#if defined(__WINDOWS__)
+		WNDCLASSEX											WindowClass					;
+#endif
+	};
+
 	struct SScreenManager {
-		::nwol::array_obj<::nwol::SScreen>					Screens						;
+		SRuntimeValues										* RuntimeValues				= nullptr;
+		SScreenManagerDetail								PlatformDetail				= {};
+		::nwol::array_obj<::nwol::SScreen>					Screens						= {};
+
+		inline constexpr									SScreenManager				(SRuntimeValues* runtimeValues)									: RuntimeValues(runtimeValues) {}
+
 		::nwol::error_t										CreateScreen				(const SScreenMetrics & desiredMetrics, id_t& screenIndex);
 #if defined(__WINDOWS__)
-		LRESULT												WndProc						(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)	{
+		LRESULT												WndProc						(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)			{
 			if(hWnd) {
 				for(uint32_t iWindow = 0, windowCount = Screens.size(); iWindow < windowCount; ++iWindow) {
 					::nwol::SScreen											& currentWindow				= Screens[iWindow];
@@ -61,6 +72,15 @@ namespace nwol
 		}
 #endif
 	};
+
+	static inline ::nwol::error_t						initScreenManager			(SScreenManager& screenManager, SRuntimeValues* runtimeValues)	{
+		reterr_error_if(0 == runtimeValues, "%s", "Cannot initialize SScreenManager with a null SRuntimeValues*.");
+		screenManager										= {runtimeValues};
+#if defined(__WINDOWS__)
+		screenManager.PlatformDetail.WindowClass;
+#endif
+		return 0;
+	}
 }
 
 #endif // NWOL_WINDOW_H_9782365897236

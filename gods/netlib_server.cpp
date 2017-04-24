@@ -212,8 +212,13 @@ int32_t									nwol::CServer::Accept							()																			{
 
 		if(bFoundEmpty)
 			ClientConnections.set(newClient, indexFound);
-		else if(!bFound)
-			ClientConnections.push_back(newClient);
+		else if(!bFound) {
+			if(-1 == ClientConnections.push_back(newClient)) {
+				error_printf("Failed to push client connection. Out of memory?");
+				disconnectClient(newClient.get_address());
+				return -1;
+			};
+		}
 	}
 #if defined(__WINDOWS__)
 	_beginthread( clientProc, 0, newClient.get_address() );
