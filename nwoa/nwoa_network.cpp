@@ -82,11 +82,12 @@ void										runCommunications						(void* pInstanceApp)						{
 ::nwol::error_t								networkDisable							(::SApplication& instanceApp)				{
 	::nwol::SApplicationNetworkClient				& instanceAppNetwork					= instanceApp.NetworkClient;
 	gbit_clear(instanceAppNetwork.State, ::nwol::NETWORK_STATE_ENABLED);
-	::nwol::disconnectClient(instanceAppNetwork.Connection);
+	//::nwol::disconnectClient(instanceAppNetwork.Connection);
 	
 	while gbit_true(instanceAppNetwork.State, ::nwol::NETWORK_STATE_RUNNING)
 		::std::this_thread::sleep_for(::std::chrono::milliseconds(1000));
 
+	::std::this_thread::sleep_for(::std::chrono::milliseconds(1000));
 	::nwol::shutdownNetwork();
 
 	return 0;
