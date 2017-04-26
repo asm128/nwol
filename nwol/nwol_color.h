@@ -89,7 +89,7 @@ namespace nwol
 		inline				SColorFloat&	operator +=		(const SColorFloat& color)										noexcept	{ r = r + color.r;					g = g + color.g;				b = b + color.b;				return Clamp();																			}
 		inline				SColorFloat&	operator *=		(const SColorFloat& color)										noexcept	{ r = r * color.r;					g = g * color.g;				b = b * color.b;				return Clamp();																			}
 		inline				SColorFloat&	operator *=		(double scalar)													noexcept	{ r = (float)(r * scalar);			g = (float)(g * scalar);		b = (float)(b * scalar);		return Clamp();																			}
-		inline				SColorFloat&	operator /=		(double scalar)													noexcept	{ r = (float)(r / scalar);			g = (float)(g / scalar);		b = (float)(b / scalar);		return Clamp();																			}
+		inline				SColorFloat&	operator /=		(double scalar)																{ r = (float)(r / scalar);			g = (float)(g / scalar);		b = (float)(b / scalar);		return Clamp();																			}
 		inline				SColorFloat&	operator *=		(const SColor32& color)											noexcept	{ r = r * (color.r*(1/255.0f));		g = g * (color.g*(1/255.0f));	b = b * (color.b*(1/255.0f));	return Clamp();																			}
 		inline				SColorFloat&	operator +=		(const SColor32& color)											noexcept	{ r = r + (color.r*(1/255.0f));		g = g + (color.g*(1/255.0f));	b = b + (color.b*(1/255.0f));	return Clamp();																			}
 		inline				SColorFloat&	operator *=		(const SColor24& color)											noexcept	{ r = r * (color.r*(1/255.0f));		g = g * (color.g*(1/255.0f));	b = b * (color.b*(1/255.0f));	return Clamp();																			}

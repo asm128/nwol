@@ -45,7 +45,7 @@ namespace nwol
 			value = (_tValue)~(_tValue)0;
 			return -1;
 		}
-							_tValue							get_value						(const ::nwol::gsyslabel& name)						const			{
+							_tValue							get_value						(const ::nwol::gsyslabel& name)							const			{
 			for(uint32_t i=0, count = Names.size(); i<count; ++i)
 				if(name == Names[i])
 					return Values[i];
@@ -53,7 +53,7 @@ namespace nwol
 			error_printf("Enumeration value not found! Name: %s.", name.begin());
 			return (_tValue)~(_tValue)0;
 		}
-							::nwol::error_t					get_value_by_index				(uint32_t index, _tValue& value)							const			{
+							::nwol::error_t					get_value_by_index				(uint32_t index, _tValue& value)						const			{
 			if( index < Values.size() ) {
 				value												= Values[index];
 				return 0;
@@ -199,7 +199,8 @@ namespace nwol
 #define GDEFINE_ENUM_TYPE(EnumName, IntType)																																								\
 	enum EnumName : IntType {};																																												\
 	static					const ::nwol::gsyslabel		EnumName##_STR					= #EnumName;																										\
-	static					const EnumName				EnumName##_INVALID				= (EnumName)::nwol::genum_definition<EnumName>::init(EnumName##_STR);												\
+	static constexpr		const EnumName				EnumName##_INVALID				= (EnumName)~(EnumName)0;												\
+	static					const EnumName				__sei_##EnumName##_INVALID		= (EnumName)::nwol::genum_definition<EnumName>::init(EnumName##_STR);												\
 	static inline			EnumName					operator &						(EnumName  a, EnumName b)					noexcept	{ return (EnumName)		(a & (IntType)b);				}	\
 	static inline			EnumName					operator ~						(EnumName  a)								noexcept	{ return (EnumName)		(~(IntType)a);					}	\
 	static inline			EnumName					operator ^						(EnumName  a, EnumName b)					noexcept	{ return (EnumName)		(a ^ (IntType)b);				}	\
