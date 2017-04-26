@@ -8,8 +8,7 @@ namespace nwol
 
 #pragma pack( push, 1 )
 	// Stores BGRA color channels
-	struct SColor32
-	{
+	struct SColor32 {
 							uint8_t			b = 0, g = 0, r = 0, a = 0xff; 
 
 		inline constexpr					SColor32		()																noexcept	= default;
@@ -33,8 +32,7 @@ namespace nwol
 	typedef					uint16_t		SColor16;
 
 	// Stores BGR color channels
-	struct SColor24
-	{
+	struct SColor24 {
 							uint8_t			b = 0, g = 0, r = 0; 
 
 		inline constexpr					SColor24		()																noexcept	= default;
@@ -65,9 +63,8 @@ namespace nwol
 	};	// struct
 
 	// Stores RGBA floating point color channels
-	struct SColorFloat
-	{// store the color values as floating point ranged in the values (0,1)
-							float32_t		r = 0, g = 0, b = 0, a = 0; 
+	struct SColorFloat {	
+							float32_t		r = 0, g = 0, b = 0, a = 0;		// store the color values as floating point ranged in the values (0,1)
 
 		inline constexpr					SColorFloat		()																noexcept	= default;
 		inline constexpr					SColorFloat		(const SColorFloat& color)										noexcept	= default;
