@@ -3,10 +3,23 @@
 #ifndef __NWOA_H__983264902__
 #define __NWOA_H__983264902__
 
+struct SApplicationDetail {	
+#if defined(__WINDOWS__)
+	// We need to add the window management in this abstraction level because in some systems we can't control the creation of the window and 
+	// we require to mimic that situation from the beginning in order to keep platform compatibility.
+	WNDCLASSEX											WindowClass						= {};
+	DWORD												WindowStyle						= WS_OVERLAPPED | WS_THICKFRAME | WS_BORDER | WS_MAXIMIZEBOX | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX;
+#endif
+};
+
+
 struct SApplication : public ::nwol::SApplicationBase {
+	::SApplicationDetail		PlatformDetail			= {};
+	::nwol::SScreen				Screen					= {};
 
 	inline 						SApplication			(::nwol::SRuntimeValues	* runtimeValues)	: SApplicationBase(runtimeValues)	{
-		GUI							= {runtimeValues ? runtimeValues->Screen.Metrics.Size.Cast<uint32_t>() : ::nwol::SCoord2<uint32_t>{320, 240}, {132, 60},};
+		Screen.Metrics				= {{10, 10}, {640, 480}};
+		GUI							= {runtimeValues ? Screen.Metrics.Size.Cast<uint32_t>() : ::nwol::SCoord2<uint32_t>{320, 240}, {132, 60},};
 	}
 };
 

@@ -13,8 +13,8 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(::SApplication, "No Workflow Overhead Applica
 
 #if defined(__WINDOWS__)
 int32_t														shutdownScreen							(::SApplication& instanceApp)							{ 
-	::nwol::SScreenState											& screenState							= instanceApp.RuntimeValues->Screen.State;
-	::nwol::SScreenDetail											& screenDetail							= instanceApp.RuntimeValues->Screen.PlatformDetail;
+	::nwol::SScreenState											& screenState							= instanceApp.Screen.State;
+	::nwol::SScreenDetail											& screenDetail							= instanceApp.Screen.PlatformDetail;
 	if( screenDetail.hWnd ) {
 		HWND															oldWindow								= screenDetail.hWnd;
 		screenState.NoDraw											= true;
@@ -26,9 +26,9 @@ int32_t														shutdownScreen							(::SApplication& instanceApp)							{
 			TranslateMessage( &windowMessage );
 			DispatchMessage	( &windowMessage );
 		}
-		bool_t															bClassUnregistered						= (UnregisterClass(instanceApp.RuntimeValues->PlatformDetail.MainWindowClass.lpszClassName, instanceApp.RuntimeValues->PlatformDetail.MainWindowClass.hInstance) != 0) ? true : false;
+		bool_t															bClassUnregistered						= (UnregisterClass(instanceApp.PlatformDetail.WindowClass.lpszClassName, instanceApp.PlatformDetail.WindowClass.hInstance) != 0) ? true : false;
 		std::string														windowsError							= ::nwol::getWindowsErrorAsString(GetLastError());
-		reterr_error_if(!bClassUnregistered, "Failed to unregister WNDCLASS \"%s\". \"%s\"", instanceApp.RuntimeValues->PlatformDetail.MainWindowClass.lpszClassName, windowsError.c_str());
+		reterr_error_if(!bClassUnregistered, "Failed to unregister WNDCLASS \"%s\". \"%s\"", instanceApp.PlatformDetail.WindowClass.lpszClassName, windowsError.c_str());
 	}
 
 	return 0;
@@ -98,8 +98,8 @@ int32_t														setupScreen								(::SApplication& instanceApp)							{
 	windowClass.hIconSm											= LoadIcon(0, IDI_WINLOGO);
 	DWORD															dwStyle									= WS_OVERLAPPED | WS_THICKFRAME | WS_BORDER | WS_MAXIMIZEBOX | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX;
 
-	instanceApp.RuntimeValues->PlatformDetail.MainWindowClass	= windowClass;
-	bool_t															bClassRegistered						= (RegisterClassExA(&instanceApp.RuntimeValues->PlatformDetail.MainWindowClass) != 0) ? true : false;
+	instanceApp.PlatformDetail.WindowClass						= windowClass;
+	bool_t															bClassRegistered						= (RegisterClassExA(&instanceApp.PlatformDetail.WindowClass) != 0) ? true : false;
 	reterr_error_if(!bClassRegistered, "Failed to register WNDCLASS \"%s\".", windowClass.lpszClassName);
 
 	HWND															newWindow								= CreateWindowExA
@@ -107,16 +107,16 @@ int32_t														setupScreen								(::SApplication& instanceApp)							{
 		,	"nwoa_screen"
 		,	appTitle()
 		,	dwStyle
-		,	instanceApp.RuntimeValues->Screen.Metrics.Position.x
-		,	instanceApp.RuntimeValues->Screen.Metrics.Position.y
-		,	instanceApp.RuntimeValues->Screen.Metrics.Size.x + GetSystemMetrics( SM_CXFRAME ) * 2
-		,	instanceApp.RuntimeValues->Screen.Metrics.Size.y + GetSystemMetrics( SM_CYFRAME ) * 2 + GetSystemMetrics( SM_CYCAPTION )
+		,	instanceApp.Screen.Metrics.Position.x
+		,	instanceApp.Screen.Metrics.Position.y
+		,	instanceApp.Screen.Metrics.Size.x + GetSystemMetrics( SM_CXFRAME ) * 2
+		,	instanceApp.Screen.Metrics.Size.y + GetSystemMetrics( SM_CYFRAME ) * 2 + GetSystemMetrics( SM_CYCAPTION )
 		,	0, 0, windowClass.hInstance, 0
 		); 
 	reterr_error_if(0 == newWindow, "CreateWindow FAILED!");
 
-	instanceApp.RuntimeValues->Screen.PlatformDetail	.hWnd					= newWindow;
-	instanceApp.RuntimeValues->PlatformDetail			.MainWindowStyle		= dwStyle;
+	instanceApp.Screen.PlatformDetail	.hWnd					= newWindow;
+	instanceApp.PlatformDetail			.WindowStyle			= dwStyle;
 	ShowWindow(newWindow, SW_SHOW);
 	return 0;
 }
@@ -186,7 +186,7 @@ int32_t														update									(::SApplication& instanceApp, bool exitReque
 				break;
 			}
 		}
-	::nwol::SScreen													& mainScreen							= instanceApp.RuntimeValues->Screen;
+	::nwol::SScreen													& mainScreen							= instanceApp.Screen;
 #if defined(__WINDOWS__)
 	MSG																windowMessage;
 	while(PeekMessageA(&windowMessage, mainScreen.PlatformDetail.hWnd, 0, 0, PM_REMOVE)) {
@@ -194,7 +194,7 @@ int32_t														update									(::SApplication& instanceApp, bool exitReque
 		DispatchMessage	( &windowMessage );
 	}
 
-	::nwol::SScreenState											& screenState							= instanceApp.RuntimeValues->Screen.State;
+	::nwol::SScreenState											& screenState							= instanceApp.Screen.State;
 	if(windowMessage.message == WM_QUIT || screenState.Closed) {
 		return ::nwol::APPLICATION_STATE_EXIT; 
 	}
@@ -231,7 +231,7 @@ int32_t														render									(::SApplication& instanceApp)							{
 }
 
 LRESULT	WINAPI												mainWndProc								(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)	{
-	::nwol::SScreenState											& screenState							= g_App->RuntimeValues->Screen.State;
+	::nwol::SScreenState											& screenState							= g_App->Screen.State;
 	switch( uMsg ) {
 	case WM_DESTROY:
 		info_printf( "Received WM_DESTROY message." );

@@ -243,6 +243,7 @@ int32_t										loadSelection					(::SApplication& instanceApp)																
 	}
 	else  {
 		::nwol::shutdownASCIIScreen();
+		SetWindowText(instanceApp.RuntimeValues->Screen.PlatformDetail.hWnd, moduleInterface.ModuleTitle);
 		int32_t											errSetup						= moduleInterface.Setup(); 
 		if(0 > errSetup) { 
 			error_printf(errorFormat2, errSetup, "appSetup()" ); 
@@ -311,7 +312,6 @@ int32_t										update							(::SApplication & instanceApp, bool exitRequested)
 		}
 		else if(updateResult == ::nwol::APPLICATION_STATE_EXIT) {
 			instanceApp.SelectorState				= SELECTOR_STATE_MENU;
-
 			while(INTERLOCKED_COMPARE_EXCHANGE(instanceApp.RenderSemaphore, 2, 0) == 1)
 				continue;
 			::nwol::error_t								errCleanup							= moduleSelected->Cleanup(); 
@@ -339,6 +339,7 @@ int32_t										update							(::SApplication & instanceApp, bool exitRequested)
 			}
 			else {	// Reinitialize the selector window which was probably closed before starting the new app.
 				::nwol::initASCIIScreen(instanceApp.GUI.TargetSizeASCII.x, instanceApp.GUI.TargetSizeASCII.y);
+				SetWindowText(instanceApp.RuntimeValues->Screen.PlatformDetail.hWnd, appTitle());
 				refreshModules(instanceApp);
 				info_printf("Client application instance deleted successfully."); 
 			}
@@ -354,10 +355,10 @@ int32_t										update							(::SApplication & instanceApp, bool exitRequested)
 int32_t										renderSelectorApp				(const ::SApplication& instanceApp)																								{
 	::nwol::clearASCIIBackBuffer(' ', COLOR_WHITE);
 
-	::nwol::SASCIITarget						target;
-	::nwol::error_t								
-	errMy								= ::nwol::getASCIIBackBuffer(target);				reterr_error_if_errored(errMy, "%s", "Failed to get ASCII target!");
-	errMy								= ::nwol::renderGUIASCII(target, instanceApp.GUI);	reterr_error_if_errored(errMy, "%s", "renderGUIASCII() Failed!");
+	::nwol::SASCIITarget							target;
+	::nwol::error_t									
+	errMy										= ::nwol::getASCIIBackBuffer(target);				reterr_error_if_errored(errMy, "%s", "Failed to get ASCII target!");
+	errMy										= ::nwol::renderGUIASCII(target, instanceApp.GUI);	reterr_error_if_errored(errMy, "%s", "renderGUIASCII() Failed!");
 
 	::nwol::presentASCIIBackBuffer();
 	
