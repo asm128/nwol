@@ -243,7 +243,9 @@ int32_t										loadSelection					(::SApplication& instanceApp)																
 	}
 	else  {
 		::nwol::shutdownASCIIScreen();
-		SetWindowText(instanceApp.RuntimeValues->Screen.PlatformDetail.hWnd, moduleInterface.ModuleTitle);
+		char	windowTitle[512]	= {};
+		sprintf_s(windowTitle, "%s v%u.%u", moduleInterface.ModuleTitle, moduleInterface.VersionMajor(), moduleInterface.VersionMinor());
+		SetWindowText(instanceApp.RuntimeValues->Screen.PlatformDetail.hWnd, windowTitle);
 		int32_t											errSetup						= moduleInterface.Setup(); 
 		if(0 > errSetup) { 
 			error_printf(errorFormat2, errSetup, "appSetup()" ); 
@@ -339,7 +341,9 @@ int32_t										update							(::SApplication & instanceApp, bool exitRequested)
 			}
 			else {	// Reinitialize the selector window which was probably closed before starting the new app.
 				::nwol::initASCIIScreen(instanceApp.GUI.TargetSizeASCII.x, instanceApp.GUI.TargetSizeASCII.y);
-				SetWindowText(instanceApp.RuntimeValues->Screen.PlatformDetail.hWnd, appTitle());
+				char	windowTitle[512]	= {};
+				sprintf_s(windowTitle, "%s v%u.%u", appTitle(), (appVersion() & 0xF0) >> 4, appVersion() & 0x0F);
+				SetWindowText(instanceApp.RuntimeValues->Screen.PlatformDetail.hWnd, windowTitle);
 				refreshModules(instanceApp);
 				info_printf("Client application instance deleted successfully."); 
 			}

@@ -251,10 +251,12 @@ int32_t														setupScreen								(::SRuntimeState& instanceApp)							{
 	bool_t															bClassRegistered						= (RegisterClassExA(&instanceApp.RuntimeValues.PlatformDetail.MainWindowClass) != 0) ? true : false;
 	reterr_error_if(!bClassRegistered, "Failed to register WNDCLASS \"%s\".", windowClass.lpszClassName);
 
+	char	windowTitle[512]	= {};
+	sprintf_s(windowTitle, "%s v%u.%u", instanceApp.Interface.ModuleTitle, instanceApp.Interface.VersionMajor(), instanceApp.Interface.VersionMinor());
 	HWND															newWindow								= CreateWindowExA
 		(	0L
 		,	"nwor_screen"
-		,	instanceApp.Interface.ModuleTitle
+		,	windowTitle
 		,	dwStyle
 		,	instanceApp.RuntimeValues.Screen.Metrics.Position.x
 		,	instanceApp.RuntimeValues.Screen.Metrics.Position.y
