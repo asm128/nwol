@@ -201,6 +201,9 @@
     <ClInclude Include="gcore_ref_globals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="nwol_screen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="label.cpp">
@@ -238,6 +241,9 @@
     </ClCompile>
     <ClCompile Include="runtime_module.cpp">
       <Filter>runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="nwol_screen.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -211,6 +211,7 @@
     <ClInclude Include="nwol_io.h" />
     <ClInclude Include="nwol_math.h" />
     <ClInclude Include="nwol_mutex.h" />
+    <ClInclude Include="nwol_screen.h" />
     <ClInclude Include="nwol_string.h" />
     <ClInclude Include="nwol_value.h" />
     <ClInclude Include="platform_globals.h" />
@@ -237,6 +238,7 @@
     <ClCompile Include="label.cpp" />
     <ClCompile Include="label_manager.cpp" />
     <ClCompile Include="log.cpp" />
+    <ClCompile Include="nwol_screen.cpp" />
     <ClCompile Include="runtime_module.cpp" />
     <ClCompile Include="storage.cpp" />
     <ClCompile Include="timer.cpp" />

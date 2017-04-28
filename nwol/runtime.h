@@ -1,5 +1,6 @@
 #include "nwol_array.h"
 #include "nwol_error.h"
+#include "nwol_screen.h"
 
 #if defined(__WINDOWS__)
 #include <Windows.h>
@@ -123,6 +124,7 @@ namespace nwol
 		HINSTANCE											hPrevInstance						= NULL;
 		LPSTR												lpCmdLine							= NULL;
 		int													nShowCmd							= 0;
+
 		// We need to add the window management in this abstraction level because in some systems we can't control the creation of the window and 
 		// we require to mimic that situation from the beginning in order to keep platform compatibility.
 		WNDCLASSEX											MainWindowClass						= {};
@@ -137,6 +139,7 @@ namespace nwol
 		const char_t*										CommandLineArgList[64]				= {};
 		const char_t										* FileNameApplication				= nullptr;
 		const char_t										* FileNameRuntime					= nullptr;
+		::nwol::SScreen										Screen								= {};
 		::nwol::array_pod<::nwol::SModuleInterface>			Modules								= {};
 
 		// Returns -1 on error or the index of the loaded module.

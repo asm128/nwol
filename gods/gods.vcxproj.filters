@@ -90,7 +90,7 @@
     <ClInclude Include="gref_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="nwol_screen.h">
+    <ClInclude Include="gscreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -119,7 +119,7 @@
     <ClCompile Include="graph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="nwol_screen.cpp">
+    <ClCompile Include="gscreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
