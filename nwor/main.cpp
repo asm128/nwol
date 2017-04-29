@@ -28,7 +28,7 @@ struct SRuntimeState {
 
 ::SRuntimeState												* g_RuntimeState						= nullptr;
 
-void														loopThreadRender						(SRuntimeState& stateRuntime)																	{
+void														renderLoop						(SRuntimeState& stateRuntime)																	{
 	info_printf("Beginning render loop.");
 	static const char												* errorFormat1							= "Dynamically loaded function is null, maybe due to a buffer overrun which erased the pointers: %s.";
 	static const char												* errorFormat2							= "Module function failed with code 0x%x: %s.";
@@ -53,7 +53,7 @@ void														loopThreadRender						(SRuntimeState& stateRuntime)											
 	info_printf("Render loop ended. Last error code: 0x%x.", (uint32_t)lastError);
 }
 
-void														runRender								(void* pStateRuntime)																						{
+void														renderThread							(void* pStateRuntime)																						{
 	if(0 == pStateRuntime) {
 		error_printf("Runtime state pointer is null. Thread function exiting...");
 		return;
@@ -63,7 +63,7 @@ void														runRender								(void* pStateRuntime)																						{
 
 	::SRuntimeState													& stateRuntime							= *(::SRuntimeState*)pStateRuntime;
 	INTERLOCKED_INCREMENT	(stateRuntime.RenderThreadUsers);
-	loopThreadRender		(stateRuntime);
+	renderLoop				(stateRuntime);
 	INTERLOCKED_DECREMENT	(stateRuntime.RenderThreadUsers);
 
 	info_printf("Render loop exited.");
@@ -71,7 +71,7 @@ void														runRender								(void* pStateRuntime)																						{
 
 int32_t														launchRenderThread						(::SRuntimeState& runtimeState)																				{
 #if defined(__WINDOWS__)
-	_beginthread(runRender, 0, &runtimeState);
+	_beginthread(renderThread, 0, &runtimeState);
 #else
 #error "Not implemented."
 #endif
@@ -129,7 +129,7 @@ int32_t														mainLoop								(SRuntimeState & runtimeState, ::nwol::SMod
 		}
 		
 		::nwol::RUNTIME_CALLBACK_ID										callbackPointersErased			= containerForCallbacks.TestForNullPointerFunctions();
-		static	const char*												errorFormat1					= "Dynamically loaded function is null, maybe due to a buffer overrun which erased the pointers: %s.";
+		static constexpr	const char									errorFormat1[]					= "Dynamically loaded function is null, maybe due to a buffer overrun which erased the pointers: %s.";
 		if(callbackPointersErased) { 
 			printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
 			errLoop														= -1;
@@ -153,24 +153,27 @@ int32_t														mainLoop								(SRuntimeState & runtimeState, ::nwol::SMod
 }
 
 int32_t														loadPlatformValues				(::nwol::SRuntimeValues& runtimeValues, const char* filenameApplication, char** args, uint32_t _argCount)	{
-	runtimeValues.CommandLine									= args[0];
+	if(args) {
+		runtimeValues.CommandLine									= args[0];
 
-	int32_t															filenameStart					= (int32_t)strlen(runtimeValues.CommandLine)-1;
+		int32_t															filenameStart					= (int32_t)strlen(runtimeValues.CommandLine)-1;
 
-	do --filenameStart;
-	while(filenameStart >= 0 && runtimeValues.CommandLine[filenameStart] != '\\' && runtimeValues.CommandLine[filenameStart] != '/');
+		do --filenameStart;
+		while(filenameStart >= 0 && runtimeValues.CommandLine[filenameStart] != '\\' && runtimeValues.CommandLine[filenameStart] != '/');
 
-	++filenameStart;	// we need to skip the bar character or fix the invalid index if no bar character found.
+		++filenameStart;	// we need to skip the bar character or fix the invalid index if no bar character found.
 
-	runtimeValues.FileNameRuntime								= &runtimeValues.CommandLine[filenameStart];
+		runtimeValues.FileNameRuntime								= &runtimeValues.CommandLine[filenameStart];
 
-	runtimeValues.CommandLineArgCount							= _argCount-1;
-	runtimeValues.CommandLineArgCount							= (runtimeValues.CommandLineArgCount >= ::nwol::size(runtimeValues.CommandLineArgList)) ? ::nwol::size(runtimeValues.CommandLineArgList) : runtimeValues.CommandLineArgCount;
-	for(uint32_t iArg = 0, argCount = runtimeValues.CommandLineArgCount; iArg<argCount; ++iArg)
-		runtimeValues.CommandLineArgList[iArg]						= args[iArg+1];
+		runtimeValues.CommandLineArgCount							= _argCount-1;
+		runtimeValues.CommandLineArgCount							= (runtimeValues.CommandLineArgCount >= ::nwol::size(runtimeValues.CommandLineArgList)) ? ::nwol::size(runtimeValues.CommandLineArgList) : runtimeValues.CommandLineArgCount;
+		for(uint32_t iArg = 0, argCount = runtimeValues.CommandLineArgCount; iArg<argCount; ++iArg)
+			runtimeValues.CommandLineArgList[iArg]						= args[iArg+1];
 
-	runtimeValues.FileNameApplication							= runtimeValues.CommandLineArgCount ? runtimeValues.CommandLineArgList[0] : filenameApplication;
-
+		runtimeValues.FileNameApplication							= runtimeValues.CommandLineArgCount ? runtimeValues.CommandLineArgList[0] : filenameApplication;
+	} 
+	else {
+	}
 	return 0;
 }
 
@@ -387,16 +390,18 @@ void										app_dummy						()																											{}
 void										ANativeActivity_onCreate		(ANativeActivity* activity, void* savedState, size_t savedStateSize)										{
     info_printf("Entering: %s", __FUNCTION__);
 	app_dummy();	
-	::nwol::SRuntimeValues							runtimeValues					= {};
+	::SRuntimeState									runtimeState					= {};	
+
+	::nwol::SRuntimeValues							& runtimeValues					= runtimeState.RuntimeValues;
 	runtimeValues.PlatformDetail.activity		= activity;
 	runtimeValues.PlatformDetail.savedState		= savedState;
 	runtimeValues.PlatformDetail.savedStateSize	= savedStateSize;
-
 	activity->instance							= &runtimeValues;
+	g_RuntimeState								= &runtimeState;
 
 	static const char								defaultModuleName[]				= "modules/nwor_selector." DYNAMIC_LIBRARY_EXTENSION;
 	loadPlatformValues(runtimeValues, defaultModuleName, 0, 0);
-	rtMain(runtimeValues);
+	rtMain(runtimeState);
     info_printf("Exiting function normally: %s", __FUNCTION__);
 }
 #else
@@ -404,10 +409,11 @@ int											main							(int argc, char** argv)																						{
 	::SRuntimeState									runtimeState					= {};	
 
 	::nwol::SRuntimeValues							& runtimeValues					= runtimeState.RuntimeValues;
+	g_RuntimeState								= &runtimeState;
+
 	static const char								defaultModuleName[]				= "modules/nwor_selector." DYNAMIC_LIBRARY_EXTENSION;
 	if( 0 > loadPlatformValues(runtimeValues, defaultModuleName, argv, argc) )
 		return -1;
-	g_RuntimeState								= &runtimeState;
 	return rtMain(runtimeState);
 }
 #	if defined (__WINDOWS__)
@@ -427,11 +433,10 @@ int WINAPI									WinMain
 	runtimeValues.PlatformDetail.hPrevInstance	=  hPrevInstance	;
 	runtimeValues.PlatformDetail.lpCmdLine		=  lpCmdLine		;
 	runtimeValues.PlatformDetail.nShowCmd		=  nShowCmd			;
-
 	g_RuntimeState								= &runtimeState;
 
 	static const char								defaultModuleName[]				= "modules/nwor_selector." DYNAMIC_LIBRARY_EXTENSION;
-	if(0 > loadPlatformValues(runtimeValues, defaultModuleName, __argv, __argc) )
+	if(0 > loadPlatformValues(runtimeValues, defaultModuleName, __argv, __argc))
 		return EXIT_FAILURE;
 
 	if(0 > rtMain(runtimeState))

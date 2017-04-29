@@ -40,6 +40,7 @@ namespace nwol
 	struct SGUIControl				{				
 					::nwol::glabel											Text				= {"GUI Control", (uint32_t)-1}									;
 					::nwol::SRectangle2D<int32_t>							AreaASCII			= {{1, 1}, {11, 1}}												;
+					::nwol::SRectangle2D<int32_t>							AreaBitmap			= {{1, 1}, {11, 1}}												;
 					STextColor32											TextColors32		= {0xFFFFFFFF, 0xFF000000}										;
 					SControlTextColorASCII									TextColorsASCII		= {{COLOR_BLUE, COLOR_DARKGREY}, {COLOR_YELLOW, COLOR_BLUE}}	;
 					::nwol::ALIGN_SCREEN									AlignArea			= ::nwol::SCREEN_BOTTOM_RIGHT									;
@@ -50,6 +51,7 @@ namespace nwol
 	struct SGUIControlTable			{				
 					::nwol::array_pod<::nwol::SRectangle2D<int32_t>	>		AreasRealigned		;
 					::nwol::array_pod<::nwol::SRectangle2D<int32_t>	>		AreasASCII			;
+					::nwol::array_pod<::nwol::SRectangle2D<int32_t>	>		AreasBitmap			;
 					::nwol::array_pod<::nwol::ALIGN_SCREEN			>		AlignArea			;
 					::nwol::array_pod<::nwol::ALIGN_SCREEN			>		AlignText			;
 					::nwol::array_pod<SControlTextColorASCII		>		TextColorsASCII		;
@@ -85,7 +87,7 @@ namespace nwol
 	};
 
 	struct SGUI {				
-					::nwol::SCoord2<uint32_t>								TargetSize32		;
+					::nwol::SCoord2<uint32_t>								TargetSizeBitmap	;
 					::nwol::SCoord2<uint32_t>								TargetSizeASCII		;
 					::nwol::SCoord2<int32_t>								MousePosition		;
 
@@ -97,6 +99,7 @@ namespace nwol
 	::nwol::error_t											updateGUI			(::nwol::SGUI& guiSystem, const ::nwol::SInput		& inputSystem	);
 	::nwol::error_t											renderGUIASCII		(char* bbText, uint16_t* bbColor, const ::nwol::SGUI& guiSystem		);
 	::nwol::error_t											renderGUIASCII		(::nwol::SASCIITarget& target	, const ::nwol::SGUI& guiSystem		);
+	::nwol::error_t											renderGUIBitmap		(uint32_t* bitmap, uint32_t width, uint32_t height, const ::nwol::SGUI& guiSystem);
 	
 
 }//namespace

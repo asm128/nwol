@@ -370,13 +370,13 @@ namespace nwol
 	template <typename _tBase>	inline constexpr SCoord2<_tBase>			coord2D_rotate			(const	SCoord2<_tBase>& coord, double theta)						noexcept	{ return coord2D_rotate(coord, ::nwol::getSinCos(theta)); }
 
 	//------------------------------------------------------------------------------------------------------------
-	template <typename _tBase>
-				SRectangle2D<_tBase>&										realignRectangle		
-					(	int32_t						targetWidth
-					,	int32_t						targetHeight
-					,	const SRectangle2D<_tBase>&	rectangle
-					,	SRectangle2D<_tBase>&		targetRectangle
-					,	ALIGN_SCREEN				align
+	template <typename _tCoord>
+				SRectangle2D<_tCoord>&										realignRectangle		
+					(	int32_t							targetWidth
+					,	int32_t							targetHeight
+					,	const SRectangle2D<_tCoord>		& rectangle
+					,	SRectangle2D<_tCoord>			& targetRectangle
+					,	ALIGN_SCREEN					align
 					)																																					noexcept	{
 		targetRectangle															= rectangle;
  			 if(bit_true(align, SCREEN_CENTER	))	{ targetRectangle.Offset.x		= (targetWidth >>1)-(rectangle.Size.x>>1)+rectangle.Offset.x;	}

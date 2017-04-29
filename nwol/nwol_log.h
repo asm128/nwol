@@ -8,11 +8,6 @@
 #include <android\log.h>
 #endif
 
-#if defined (__WINDOWS__)
-#include <windows.h>
-#include <string>
-#endif
-
 #include <malloc.h>
 
 #ifndef __LOG_H__9284087409823740923864192736__
@@ -196,9 +191,6 @@ namespace nwol
 #define retnul_error_if_errored( errorCode, format, ...)		retval_error_if( 0, errorCode, format, __VA_ARGS__)
 #define reterr_error_if_errored( errorCode, format, ...)		retval_error_if(-1, errorCode, format, __VA_ARGS__)
 
-#if defined (__WINDOWS__)
-	std::string		getWindowsErrorAsString		(DWORD lastError);
-#endif
 } // namespace
 
 #endif //__LOG_H__9284087409823740923864192736__

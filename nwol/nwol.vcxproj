@@ -238,6 +238,7 @@
     <ClCompile Include="label.cpp" />
     <ClCompile Include="label_manager.cpp" />
     <ClCompile Include="log.cpp" />
+    <ClCompile Include="nwol_error.cpp" />
     <ClCompile Include="nwol_screen.cpp" />
     <ClCompile Include="runtime_module.cpp" />
     <ClCompile Include="storage.cpp" />

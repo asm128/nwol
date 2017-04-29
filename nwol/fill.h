@@ -68,7 +68,7 @@ namespace nwol
 				target[linearIndex]										= color;
 			}
 	}
-	template <typename _tCell>					void		fillRectangle			(_tCell* target, int32_t targetWidth, int32_t targetHeight, int32_t targetPitch, _tCell color, const ::nwol::SRectangle2D<int32_t>& rect)	{
+	template <typename _tCell, typename _tCoord>	void		fillRectangle			(_tCell* target, int32_t targetWidth, int32_t targetHeight, int32_t targetPitch, _tCell color, const ::nwol::SRectangle2D<_tCoord>& rect)	{
 		const int32_t												ystart					= ::nwol::max(0, nwol::min(targetHeight	, rect.Offset.y				));
 		const int32_t												xstart					= ::nwol::max(0, nwol::min(targetWidth	, rect.Offset.x				));
 		const int32_t												ystop					= ::nwol::max(0, nwol::min(targetHeight	, rect.Offset.y+rect.Size.y	));
@@ -80,8 +80,8 @@ namespace nwol
 				target[linearIndex]										= color;
 			}
 	}
-	template <typename _tCell>	
-	static inline								void		fillRectangle			(_tCell* target, int32_t targetWidth, int32_t targetHeight, int32_t targetPitch, _tCell color, const ::nwol::SRectangle2D<int32_t>& rect, ::nwol::ALIGN_SCREEN align)	{
+	template <typename _tCell, typename _tCoord>	
+	static inline								void		fillRectangle			(_tCell* target, int32_t targetWidth, int32_t targetHeight, int32_t targetPitch, _tCell color, const ::nwol::SRectangle2D<_tCoord>& rect, ::nwol::ALIGN_SCREEN align)	{
 		if(align == (::nwol::SCREEN_tValueOP_LEFT))
 			fillRectangle(target, targetWidth, targetHeight, targetPitch, color, rect);
 		else {
@@ -90,8 +90,8 @@ namespace nwol
 			fillRectangle(target, targetWidth, targetHeight, targetPitch, color, rectAligned);
 		}
 	}
-	template <typename _tCell>	static inline	void		fillRectangle			(_tCell* target, int32_t targetWidth, int32_t targetHeight, _tCell color, const ::nwol::SRectangle2D<int32_t>& rect)								{ fillRectangle(target, targetWidth, targetHeight, targetWidth, color, rect);			}
-	template <typename _tCell>	static inline	void		fillRectangle			(_tCell* target, int32_t targetWidth, int32_t targetHeight, _tCell color, const ::nwol::SRectangle2D<int32_t>& rect, ::nwol::ALIGN_SCREEN align)	{ fillRectangle(target, targetWidth, targetHeight, targetWidth, color, rect, align);	}
+	template <typename _tCell, typename _tCoord>	static inline	void		fillRectangle			(_tCell* target, int32_t targetWidth, int32_t targetHeight, _tCell color, const ::nwol::SRectangle2D<_tCoord>& rect)								{ fillRectangle(target, targetWidth, targetHeight, targetWidth, color, rect);			}
+	template <typename _tCell, typename _tCoord>	static inline	void		fillRectangle			(_tCell* target, int32_t targetWidth, int32_t targetHeight, _tCell color, const ::nwol::SRectangle2D<_tCoord>& rect, ::nwol::ALIGN_SCREEN align)	{ fillRectangle(target, targetWidth, targetHeight, targetWidth, color, rect, align);	}
 }
 
 #endif // __FILL_H__9283492364__

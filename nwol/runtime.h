@@ -3,7 +3,7 @@
 #include "nwol_screen.h"
 
 #if defined(__WINDOWS__)
-#include <Windows.h>
+
 #elif defined(__ANDROID__)
 #include <android/native_activity.h>
 #include <jni.h>

@@ -29,8 +29,8 @@
 	return 0;
 }
 
-template<typename _tChar>
-void						drawText			(_tChar* target, int32_t targetWidth, int32_t targetHeight, const char* text, int32_t textLen, const ::nwol::SRectangle2D<int32_t>& rectangle, nwol::ALIGN_SCREEN alignText, bool bWordWrap)
+template<typename _tChar, typename _tCoord>
+void						drawText			(_tChar* target, int32_t targetWidth, int32_t targetHeight, const char* text, int32_t textLen, const ::nwol::SRectangle2D<_tCoord>& rectangle, nwol::ALIGN_SCREEN alignText, bool bWordWrap)
 {
 	int32_t							ystart				= ::nwol::max(0, ::nwol::min(targetHeight	, rectangle.Offset.y					));
 	int32_t							xstart				= ::nwol::max(0, ::nwol::min(targetWidth	, rectangle.Offset.x					));
@@ -115,8 +115,8 @@ void						drawText			(_tChar* target, int32_t targetWidth, int32_t targetHeight,
 			::nwol::bit_clear(controlFlags, ::nwol::CONTROL_FLAG_EXECUTE);
 
 		//--------------------
-		if( ::nwol::in_range(mouseX, controlArea.Offset.x, controlArea.Offset.x+controlArea.Size.x) 
-		 &&	::nwol::in_range(mouseY, controlArea.Offset.y, controlArea.Offset.y+controlArea.Size.y)
+		if( ::nwol::in_range(mouseX, controlArea.Offset.x, controlArea.Offset.x + controlArea.Size.x) 
+		 &&	::nwol::in_range(mouseY, controlArea.Offset.y, controlArea.Offset.y + controlArea.Size.y)
 		)
 		{
 			if(::nwol::bit_true(controlFlags, ::nwol::CONTROL_FLAG_MOUSE_OVER)) {
@@ -144,6 +144,11 @@ void						drawText			(_tChar* target, int32_t targetWidth, int32_t targetHeight,
 		}
 	}
 	return 0;
+}
+
+
+int32_t						nwol::renderGUIASCII	(::nwol::SASCIITarget& targetAscii, const ::nwol::SGUI& guiSystem) {
+	return renderGUIASCII(targetAscii.Text.begin(), targetAscii.Attributes.begin(), guiSystem);
 }
 
 int32_t						nwol::renderGUIASCII	(char* bbText, uint16_t* bbColor, const ::nwol::SGUI& guiSystem) {
@@ -174,8 +179,8 @@ int32_t						nwol::renderGUIASCII	(char* bbText, uint16_t* bbColor, const ::nwol
 	}
 
 	// Draw mouse cursor
-	if( ::nwol::in_range(mousePos.y, 0, (int32_t)maxSize.y) 
-	 && ::nwol::in_range(mousePos.x, 0, (int32_t)maxSize.x) 
+	if( ::nwol::in_range((int32_t)mousePos.y, 0, (int32_t)maxSize.y) 
+	 && ::nwol::in_range((int32_t)mousePos.x, 0, (int32_t)maxSize.x) 
 	)
 	{
 		int32_t								linearIndex			= mousePos.y * maxSize.x + mousePos.x;
@@ -184,6 +189,12 @@ int32_t						nwol::renderGUIASCII	(char* bbText, uint16_t* bbColor, const ::nwol
 	return 0;
 }
 
-int32_t						nwol::renderGUIASCII	(::nwol::SASCIITarget& targetAscii, const ::nwol::SGUI& guiSystem) {
-	return renderGUIASCII(targetAscii.Text.begin(), targetAscii.Attributes.begin(), guiSystem);
+::nwol::error_t											renderGUIBitmap		(uint32_t* bitmap, uint32_t width, uint32_t height, const ::nwol::SGUI& guiSystem) {
+	reterr_error_if(0 == bitmap, "Invalid target memory for rendering gui (nullptr).");
+	reterr_error_if(0 == width , "Invalid target width for rendering gui (nullptr).");
+	reterr_error_if(0 == height, "Invalid target height for rendering gui (nullptr).");
+	for(uint32_t iControl = 0, controlCount = guiSystem.Controls.ControlFlags.size(); iControl < controlCount; ++iControl) {
+		
+	}
+	return 0;
 }
