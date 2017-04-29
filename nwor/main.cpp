@@ -164,16 +164,19 @@ int32_t														loadPlatformValues				(::nwol::SRuntimeValues& runtimeValue
 		++filenameStart;	// we need to skip the bar character or fix the invalid index if no bar character found.
 
 		runtimeValues.FileNameRuntime								= &runtimeValues.CommandLine[filenameStart];
-
 		runtimeValues.CommandLineArgCount							= _argCount-1;
 		runtimeValues.CommandLineArgCount							= (runtimeValues.CommandLineArgCount >= ::nwol::size(runtimeValues.CommandLineArgList)) ? ::nwol::size(runtimeValues.CommandLineArgList) : runtimeValues.CommandLineArgCount;
 		for(uint32_t iArg = 0, argCount = runtimeValues.CommandLineArgCount; iArg<argCount; ++iArg)
 			runtimeValues.CommandLineArgList[iArg]						= args[iArg+1];
-
-		runtimeValues.FileNameApplication							= runtimeValues.CommandLineArgCount ? runtimeValues.CommandLineArgList[0] : filenameApplication;
 	} 
 	else {
+		runtimeValues.FileNameRuntime								= 0;
+		runtimeValues.CommandLineArgCount							= 0;
+		runtimeValues.CommandLine									= 0;
+		memset(runtimeValues.CommandLineArgList, 0, sizeof(const char_t*)*::nwol::size(runtimeValues.CommandLineArgList));
 	}
+
+	runtimeValues.FileNameApplication							= runtimeValues.CommandLineArgCount ? runtimeValues.CommandLineArgList[0] : filenameApplication;
 	return 0;
 }
 
