@@ -5,13 +5,10 @@
 
 struct SApplicationDetail {	
 #if defined(__WINDOWS__)
-	// We need to add the window management in this abstraction level because in some systems we can't control the creation of the window and 
-	// we require to mimic that situation from the beginning in order to keep platform compatibility.
 	WNDCLASSEX											WindowClass						= {};
 	DWORD												WindowStyle						= WS_OVERLAPPED | WS_THICKFRAME | WS_BORDER | WS_MAXIMIZEBOX | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX;
 #endif
 };
-
 
 struct SApplication : public ::nwol::SApplicationBase {
 	::SApplicationDetail		PlatformDetail			= {};

@@ -12,6 +12,137 @@
 
 namespace nwol
 {
+	struct SRendererDetail {
+#if defined(__WINDOWS__)	
+		
+#endif
+	};
+
+#pragma pack(push, 1)
+	struct SAlpha {
+		bool				EnableTest			: 1;
+		bool				EnableBlend			: 1;
+		uint8_t				BlendValue			;
+		uint32_t			ColorRef			; 
+		// BLENDFACTOR               
+		// SRCBLENDALPHA             
+		// DESTBLENDALPHA            
+		// BLENDOPALPHA              
+		// ALPHAFUNC                 
+	};
+
+	struct SFog {
+		bool				Enable				: 1;
+		bool				Color				: 1;       
+		bool				TableMode			: 1;       
+		bool				Start				: 1;       
+		bool				End					: 1;       
+		bool				RangeFogEnable		: 1;       
+		uint8_t				Density				;
+		uint8_t				VertexMode			;
+	};
+
+	struct SStencil {
+		bool				Enable				: 1;
+		bool				Fail				: 1;
+		bool				ZFail				: 1;
+		bool				Pass				: 1;
+		bool				Func				: 1;
+		uint8_t				Ref					;
+		uint8_t				Mask				;
+		uint8_t				WriteMask			;
+	};
+
+	struct SRaster {
+		uint8_t				ZEnable				: 1;			
+		uint8_t				ScissorTestEnable   : 1;      
+		uint8_t				ZWriteEnable		: 1;          
+		uint8_t				FillMode			: 2;          
+		uint8_t				CullMode			: 2;          
+		uint8_t				ZFunc				: 4;          
+	};
+#pragma pack(pop)
+
+	struct SRenderer {
+		SFog				FogState			= {};
+		SAlpha				AlphaState			= {};
+		SStencil			Stencil				= {};
+		SRaster				Raster				= {};
+		// SHADEMODE                 
+		// LASTPIXEL                 
+		// SRCBLEND                  
+		// DESTBLEND                 
+		// DITHERENABLE              
+		// TEXTUREFACTOR             
+		// WRAP0                     
+		// WRAP1                     
+		// WRAP2                     
+		// WRAP3                     
+		// WRAP4                     
+		// WRAP5                     
+		// WRAP6                     
+		// WRAP7                     
+		// CLIPPING                  
+		// LIGHTING                  
+		// AMBIENT                   
+		// COLORVERTEX               
+		// LOCALVIEWER               
+		// NORMALIZENORMALS          
+		// DIFFUSEMATERIALSOURCE     
+		// SPECULARMATERIALSOURCE    
+		// AMBIENTMATERIALSOURCE     
+		// EMISSIVEMATERIALSOURCE    
+		// VERTEXBLEND               
+		// CLIPPLANEENABLE           
+		// POINTSIZE                 
+		// POINTSIZE_MIN             
+		// POINTSPRITEENABLE         
+		// POINTSCALEENABLE          
+		// POINTSCALE_A              
+		// POINTSCALE_B              
+		// POINTSCALE_C              
+		// MULTISAMPLEANTIALIAS      
+		// MULTISAMPLEMASK           
+		// PATCHEDGESTYLE            
+		// DEBUGMONITORTOKEN         
+		// POINTSIZE_MAX             
+		// INDEXEDVERTEXBLENDENABLE  
+		// COLORWRITEENABLE          
+		// TWEENFACTOR               
+		// BLENDOP                   
+		// POSITIONDEGREE            
+		// NORMALDEGREE              
+		// SLOPESCALEDEPTHBIAS       
+		// ANTIALIASEDLINEENABLE     
+		// MINTESSELLATIONLEVEL      
+		// MAXTESSELLATIONLEVEL      
+		// ADAPTIVETESS_X            
+		// ADAPTIVETESS_Y            
+		// ADAPTIVETESS_Z            
+		// ADAPTIVETESS_W            
+		// ENABLEADAPTIVETESSELLATION
+		// TWOSIDEDSTENCILMODE       
+		// CCW_STENCILFAIL           
+		// CCW_STENCILZFAIL          
+		// CCW_STENCILPASS           
+		// CCW_STENCILFUNC           
+		// COLORWRITEENABLE1         
+		// COLORWRITEENABLE2         
+		// COLORWRITEENABLE3         
+		// SRGBWRITEENABLE           
+		// DEPTHBIAS                 
+		// WRAP8                     
+		// WRAP9                     
+		// WRAP10                    
+		// WRAP11                    
+		// WRAP12                    
+		// WRAP13                    
+		// WRAP14                    
+		// WRAP15                    
+		// SEPARATEALPHABLENDENABLE  
+	};
+
+
 	GDEFINE_ENUM_TYPE	(NETWORK_STATE, uint8_t);
 	GDEFINE_ENUM_VALUE	(NETWORK_STATE, NONE	, 0);
 	GDEFINE_ENUM_VALUE	(NETWORK_STATE, ENABLED	, 1);
@@ -34,6 +165,7 @@ namespace nwol
 		NWOM(::nwol, SRuntimeValues*			,	RuntimeValues			, ::nwol::GDATA_TYPE_POINTER	, "Runtime values"				, "Stores runtime states and loaded modules."					)	= 0;
 		NWOM(::nwol, SInput						,	Input					, ::nwol::GDATA_TYPE_OBJ		, "Input subsystem"				, "Holds information of user input events and states."			)	= {};
 		NWOM(::nwol, SGUI						,	GUI						, ::nwol::GDATA_TYPE_OBJ		, "Graphical user interface"	, "GUI control information is stored and drawn by this object."	)	= {{640, 480}, {132, 60},};
+		NWOM(::nwol, SRenderer					,	Renderer				, ::nwol::GDATA_TYPE_OBJ		, "Render device"				, "Used to render graphics to the backbuffer."					)	= {};
 		NWOM(::nwol, SApplicationNetworkClient	,	NetworkClient			, ::nwol::GDATA_TYPE_OBJ		, "Network client"				, "Holds client connection state and server information."		)	= {};	// 
 		NWOM_REGISTRY
 			(	NWOM_NAME(RuntimeValues		)

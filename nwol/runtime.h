@@ -153,7 +153,6 @@ namespace nwol
 			reterr_error_if_errored(errMy, "Module not loaded: %s.", moduleName); 
 			return Modules.push_back(moduleInstance); 
 		}
-
 	};	// struct
 }	// namespace
 

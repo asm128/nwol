@@ -300,83 +300,83 @@ int32_t														shutdownScreen							(::SRuntimeState& instanceApp)							{
 	return 0;
 }
 
-int											rtMain							(::SRuntimeState& runtimeState)	{
+int															rtMain									(::SRuntimeState& runtimeState)	{
 #if defined(__WINDOWS__) && defined(NWOL_DEBUG_ENABLED)
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_DELAY_FREE_MEM_DF );	// Enable run-time memory check for debug builds.
 	//_CrtSetBreakAlloc( 322 );
 #endif	
 
-	::nwol::SModuleInterface						preContainerForCallbacks		= {};
-	preContainerForCallbacks.RuntimeValues			= &runtimeState.RuntimeValues;
-	::nwol::error_t									errMy							= ::nwol::loadModule(preContainerForCallbacks, runtimeState.RuntimeValues.FileNameApplication);
+	::nwol::SModuleInterface										preContainerForCallbacks				= {};
+	preContainerForCallbacks.RuntimeValues						= &runtimeState.RuntimeValues;
+	::nwol::error_t													errMy									= ::nwol::loadModule(preContainerForCallbacks, runtimeState.RuntimeValues.FileNameApplication);
 	reterr_error_if_errored(errMy, "Failed to load module %s.", runtimeState.RuntimeValues.FileNameApplication);
 	
-	::nwol::SModuleInterface						& containerForCallbacks			= runtimeState.Interface	= preContainerForCallbacks;
+	::nwol::SModuleInterface										& containerForCallbacks					= runtimeState.Interface	= preContainerForCallbacks;
 
 	if(0 > setupScreen(runtimeState) ) {
 		error_printf("Failed to create main window");
 		return EXIT_FAILURE;
 	}
 
-	static const char								* errorFormat1					= "Dynamically loaded function is null, maybe due to a buffer overrun which erased the pointers: %s.";
-	static const char								* errorFormat2					= "Module function failed with code 0x%x: %s.";
-	int32_t											errCreate						= containerForCallbacks.Create(); 
+	static const char												* errorFormat1							= "Dynamically loaded function is null, maybe due to a buffer overrun which erased the pointers: %s.";
+	static const char												* errorFormat2							= "Module function failed with code 0x%x: %s.";
+	int32_t															errCreate								= containerForCallbacks.Create(); 
 	if(0 > errCreate) { 
-		runtimeState.Quit							= true; 
+		runtimeState.Quit											= true; 
 		error_printf(errorFormat2, errCreate, "appCreate()"); 
 	} 
 	else {
-		::nwol::RUNTIME_CALLBACK_ID						callbackPointersErased			= containerForCallbacks.TestForNullPointerFunctions();
+		::nwol::RUNTIME_CALLBACK_ID										callbackPointersErased					= containerForCallbacks.TestForNullPointerFunctions();
 		if(callbackPointersErased) { 
 			printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
-			runtimeState.Quit							= true; 
+			runtimeState.Quit											= true; 
 		}
 		else {
-			int32_t											errSetup					= containerForCallbacks.Setup(); 
+			int32_t															errSetup								= containerForCallbacks.Setup(); 
 			if(0 > errSetup) { 
-				runtimeState.Quit							= true; 
+				runtimeState.Quit											= true; 
 				error_printf(errorFormat2, errSetup, "appSetup()" ); 
 			} 
 			else {
-				callbackPointersErased						= containerForCallbacks.TestForNullPointerFunctions();
+				callbackPointersErased										= containerForCallbacks.TestForNullPointerFunctions();
 				if(callbackPointersErased) { 
 					printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
-					runtimeState.Quit							= true; 
+					runtimeState.Quit											= true; 
 				}
 				else {
 					INTERLOCKED_INCREMENT(runtimeState.RenderThreadUsers);
 
-					::nwol::error_t									errLoop						= mainLoop(runtimeState, containerForCallbacks);
+					::nwol::error_t													errLoop									= mainLoop(runtimeState, containerForCallbacks);
 					always_printf("Main loop exited with code %u.", (uint32_t)errLoop); 
 
 					while(INTERLOCKED_COMPARE_EXCHANGE(runtimeState.RenderThreadUsers, 0, 1))
 						::std::this_thread::sleep_for(::std::chrono::milliseconds(1));;
-
- 					::nwol::error_t									errCleanup					= containerForCallbacks.Cleanup(); 
+						
+ 					::nwol::error_t													errCleanup								= containerForCallbacks.Cleanup(); 
 					if(0 > errCleanup) { 
-						runtimeState.Quit							= true; 
+						runtimeState.Quit											= true; 
 						error_printf(errorFormat2, errCleanup, "appCleanup()"); 
 					} 
 					else {
-						callbackPointersErased						= containerForCallbacks.TestForNullPointerFunctions();
+						callbackPointersErased										= containerForCallbacks.TestForNullPointerFunctions();
 						if(callbackPointersErased) { 
 							printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
-							runtimeState.Quit							= true; 
+							runtimeState.Quit											= true; 
 						}
 					}
 				}
 			}
 		}
 
-		::nwol::error_t									errDelete						= containerForCallbacks.Delete(); 
+		::nwol::error_t													errDelete								= containerForCallbacks.Delete(); 
 		if(0 > errDelete) { 
 			error_printf(errorFormat2, errDelete, "appDelete()"); 
 		}
 
-		callbackPointersErased						= containerForCallbacks.TestForNullPointerFunctions();
+		callbackPointersErased										= containerForCallbacks.TestForNullPointerFunctions();
 		if(callbackPointersErased) { 
 			printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
-			runtimeState.Quit							= true; 
+			runtimeState.Quit											= true; 
 		}
 	}
 
@@ -389,39 +389,39 @@ int											rtMain							(::SRuntimeState& runtimeState)	{
 
 #if defined(__ANDROID__)
 // Android entry point. A note on app_dummy(): This is required as the compiler may otherwise remove the main entry point of the application
-void										app_dummy						()																											{}
-void										ANativeActivity_onCreate		(ANativeActivity* activity, void* savedState, size_t savedStateSize)										{
+void														app_dummy						()																											{}
+void														ANativeActivity_onCreate		(ANativeActivity* activity, void* savedState, size_t savedStateSize)										{
     info_printf("Entering: %s", __FUNCTION__);
 	app_dummy();	
-	::SRuntimeState									runtimeState					= {};	
+	::SRuntimeState													runtimeState					= {};	
 
-	::nwol::SRuntimeValues							& runtimeValues					= runtimeState.RuntimeValues;
-	runtimeValues.PlatformDetail.activity		= activity;
-	runtimeValues.PlatformDetail.savedState		= savedState;
-	runtimeValues.PlatformDetail.savedStateSize	= savedStateSize;
-	activity->instance							= &runtimeValues;
-	g_RuntimeState								= &runtimeState;
+	::nwol::SRuntimeValues											& runtimeValues					= runtimeState.RuntimeValues;
+	runtimeValues.PlatformDetail.activity						= activity;
+	runtimeValues.PlatformDetail.savedState						= savedState;
+	runtimeValues.PlatformDetail.savedStateSize					= savedStateSize;
+	activity->instance											= &runtimeValues;
+	g_RuntimeState												= &runtimeState;
 
-	static const char								defaultModuleName[]				= "modules/nwor_selector." DYNAMIC_LIBRARY_EXTENSION;
+	static const char												defaultModuleName[]				= "modules/nwor_selector." DYNAMIC_LIBRARY_EXTENSION;
 	loadPlatformValues(runtimeValues, defaultModuleName, 0, 0);
 	rtMain(runtimeState);
     info_printf("Exiting function normally: %s", __FUNCTION__);
 }
 #else
-int											main							(int argc, char** argv)																						{ 
-	::SRuntimeState									runtimeState					= {};	
+int															main							(int argc, char** argv)																						{ 
+	::SRuntimeState													runtimeState					= {};	
 
-	::nwol::SRuntimeValues							& runtimeValues					= runtimeState.RuntimeValues;
-	g_RuntimeState								= &runtimeState;
+	::nwol::SRuntimeValues											& runtimeValues					= runtimeState.RuntimeValues;
+	g_RuntimeState												= &runtimeState;
 
-	static const char								defaultModuleName[]				= "modules/nwor_selector." DYNAMIC_LIBRARY_EXTENSION;
+	static const char												defaultModuleName[]				= "modules/nwor_selector." DYNAMIC_LIBRARY_EXTENSION;
 	if( 0 > loadPlatformValues(runtimeValues, defaultModuleName, argv, argc) )
 		return -1;
 	return rtMain(runtimeState);
 }
 #	if defined (__WINDOWS__)
 
-int WINAPI									WinMain 
+int WINAPI													WinMain 
 	(    _In_		HINSTANCE	hInstance		
 	,    _In_opt_	HINSTANCE	hPrevInstance	
 	,    _In_		LPSTR		lpCmdLine		
@@ -429,16 +429,16 @@ int WINAPI									WinMain
 	)
 {
 	SetConsoleTitle("No Workflow Overhead Runtime");
-	::SRuntimeState									runtimeState					= {};	
+	::SRuntimeState													runtimeState					= {};	
 
-	::nwol::SRuntimeValues							& runtimeValues					= runtimeState.RuntimeValues;
-	runtimeValues.PlatformDetail.hInstance		=  hInstance		;
-	runtimeValues.PlatformDetail.hPrevInstance	=  hPrevInstance	;
-	runtimeValues.PlatformDetail.lpCmdLine		=  lpCmdLine		;
-	runtimeValues.PlatformDetail.nShowCmd		=  nShowCmd			;
-	g_RuntimeState								= &runtimeState;
+	::nwol::SRuntimeValues											& runtimeValues					= runtimeState.RuntimeValues;
+	runtimeValues.PlatformDetail.hInstance						=  hInstance		;
+	runtimeValues.PlatformDetail.hPrevInstance					=  hPrevInstance	;
+	runtimeValues.PlatformDetail.lpCmdLine						=  lpCmdLine		;
+	runtimeValues.PlatformDetail.nShowCmd						=  nShowCmd			;
+	g_RuntimeState												= &runtimeState;
 
-	static const char								defaultModuleName[]				= "modules/nwor_selector." DYNAMIC_LIBRARY_EXTENSION;
+	static const char												defaultModuleName[]				= "modules/nwor_selector." DYNAMIC_LIBRARY_EXTENSION;
 	if(0 > loadPlatformValues(runtimeValues, defaultModuleName, __argv, __argc))
 		return EXIT_FAILURE;
 
