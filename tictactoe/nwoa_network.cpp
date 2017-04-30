@@ -1,33 +1,26 @@
-// The following code should be moved to a network client system that receives messages which should be pushed into a queue for the application to process on update()
 #include "nwoa.h"
 
-#include <thread>		
+#include <thread>
 
 #if defined (__WINDOWS__)
 #include <process.h>	// This is a Windows SDK header used for _beginthread().
 #endif
 
-::nwol::error_t								queryGameState							()												{
-	//::nwol::error_t									
-	//result				= ::nwol::sendUserCommand			();
-	//result				= ::nwol::receiveUserCommand		();
-	return 0;
-}
-
-// Loops sending and updating messages from/to the queues.
 int											runCommunications						(::nwol::SApplicationNetworkClient& appNetwork)	{
 	::nwol::SClientConnection						& instanceClient						= appNetwork.Connection;
 
-	::nwol::error_t									
-	result					= ::nwol::initClientConnection		(instanceClient);	reterr_error_if_errored(result, "%s", "Failed to initialize client connection.");
-	result					= ::nwol::connect					(instanceClient);	reterr_error_if_errored(result, "%s", "Failed to connect.");
+	::nwol::error_t
+	result										= ::nwol::initClientConnection	(instanceClient);	reterr_error_if_errored(result, "%s", "Failed to initialize client connection.");
+	result										= ::nwol::connect				(instanceClient);	reterr_error_if_errored(result, "%s", "Failed to connect.");
 
 	while gbit_true(appNetwork.State, ::nwol::NETWORK_STATE_ENABLED) {
-		if(false == ::nwol::ping(instanceClient.pClient, instanceClient.pServer))	{	// Ping before anything else to make sure everything is more or less in order.
+		// Ping before anything else to make sure everything is more or less in order.
+		if(false == ::nwol::ping(instanceClient.pClient, instanceClient.pServer))	{
 			error_printf("%s", "Ping timeout.");
 			result										= -1;
 			break;
 		}
+
 		// get server time
 		uint64_t										current_time;
 		if errored(result = ::nwol::serverTime(instanceClient, current_time))		{
@@ -35,35 +28,36 @@ int											runCommunications						(::nwol::SApplicationNetworkClient& appNetw
 			result										= -1;
 			break;
 		}
-
+		
 		{	// here we update the game instance with the data received from the server.
 			::nwol::CLock									thelock									(appNetwork.ServerTimeMutex);
 			appNetwork.ServerTime						= current_time;
 			info_printf("%s", "Client instance updated successfully.");
 		}
 
-		if gbit_false(appNetwork.State, ::nwol::NETWORK_STATE_ENABLED)	// Disconnect if the network was disabled.
+		// Disconnect if the network was disabled.
+		if gbit_false(appNetwork.State, ::nwol::NETWORK_STATE_ENABLED)
 			break;
 
 		::std::this_thread::sleep_for(::std::chrono::milliseconds(1000));
 	}
 
-	::nwol::requestDisconnect(instanceClient);	// Finished communication loop. Request disconnect for the server to close the connection properly.
+	::nwol::requestDisconnect(instanceClient);
 
-	gbit_clear(appNetwork.State, ::nwol::NETWORK_STATE_RUNNING);	// Clear flags to let others know that the loop ended.
+	gbit_clear(appNetwork.State, ::nwol::NETWORK_STATE_RUNNING);
 
-	::nwol::disconnectClient(instanceClient);	// Close the connection client-side.
+	::nwol::disconnectClient(instanceClient);
 
 	return result;
 }
 
-// Proxy function to match the signature required by Windows' _beginthread().
-void										runCommunications						(void* pInstanceAppNetwork)					{
+void										runCommunications						(void* pInstanceApp)						{
 	info_printf("Communications loop initializing.");
-	if(0 == pInstanceAppNetwork)
+	if(0 == pInstanceApp)
 		return;
 
-	::nwol::SApplicationNetworkClient				& instanceAppNetwork					= *(::nwol::SApplicationNetworkClient*)pInstanceAppNetwork;
+	::SApplication									& instanceApp							= *(::SApplication*)pInstanceApp;
+	::nwol::SApplicationNetworkClient				& instanceAppNetwork					= instanceApp.NetworkClient;
 
 	const ::nwol::error_t							errMyComm								= ::runCommunications(instanceAppNetwork);
 
@@ -73,14 +67,14 @@ void										runCommunications						(void* pInstanceAppNetwork)					{
 
 ::nwol::error_t								networkEnable							(::SApplication& instanceApp)				{
 	::nwol::error_t									errMy									= ::nwol::initNetwork();
-	reterr_error_if_errored(errMy, "Failed to initialize network. Error code: 0x%X.", (uint32_t)errMy);
+	reterr_error_if_errored(errMy, "Failed to initialize network.");
 
 	info_printf("%s", "Network successfully initialized.");
 
 	::nwol::SApplicationNetworkClient				& instanceAppNetwork					= instanceApp.NetworkClient;
 	gbit_set(instanceAppNetwork.State, ::nwol::NETWORK_STATE_ENABLED);
 	gbit_set(instanceAppNetwork.State, ::nwol::NETWORK_STATE_RUNNING);
-	_beginthread(::runCommunications, 0, &instanceAppNetwork);
+	_beginthread(::runCommunications, 0, &instanceApp);
 	::std::this_thread::sleep_for(::std::chrono::milliseconds(1000));
 
 	info_printf("%s", "Communications thread started.");
@@ -90,11 +84,12 @@ void										runCommunications						(void* pInstanceAppNetwork)					{
 ::nwol::error_t								networkDisable							(::SApplication& instanceApp)				{
 	::nwol::SApplicationNetworkClient				& instanceAppNetwork					= instanceApp.NetworkClient;
 	gbit_clear(instanceAppNetwork.State, ::nwol::NETWORK_STATE_ENABLED);
-	::nwol::disconnectClient(instanceAppNetwork.Connection);
+	//::nwol::disconnectClient(instanceAppNetwork.Connection);
 	
 	while gbit_true(instanceAppNetwork.State, ::nwol::NETWORK_STATE_RUNNING)
 		::std::this_thread::sleep_for(::std::chrono::milliseconds(1000));
 
+	::std::this_thread::sleep_for(::std::chrono::milliseconds(1000));
 	::nwol::shutdownNetwork();
 
 	return 0;
