@@ -49,15 +49,15 @@ namespace nwol
 	};																				   
 
 	struct SGUIControlTable			{				
-					::nwol::array_pod<::nwol::SRectangle2D<int32_t>	>		AreasRealigned		;
-					::nwol::array_pod<::nwol::SRectangle2D<int32_t>	>		AreasASCII			;
-					::nwol::array_pod<::nwol::SRectangle2D<int32_t>	>		AreasBitmap			;
-					::nwol::array_pod<::nwol::ALIGN_SCREEN			>		AlignArea			;
-					::nwol::array_pod<::nwol::ALIGN_SCREEN			>		AlignText			;
-					::nwol::array_pod<SControlTextColorASCII		>		TextColorsASCII		;
-					::nwol::array_pod<STextColor32					>		TextColors32		;
-					::nwol::array_pod<CONTROL_FLAG					>		ControlFlags		;
-					::nwol::array_obj<::nwol::glabel				>		Text				;
+					::nwol::array_pod<::nwol::SRectangle2D<int32_t>		>		AreasRealigned		;
+					::nwol::array_pod<::nwol::SRectangle2D<int32_t>		>		AreasASCII			;
+					::nwol::array_pod<::nwol::SRectangle2D<int32_t>		>		AreasBitmap			;
+					::nwol::array_pod<::nwol::ALIGN_SCREEN				>		AlignArea			;
+					::nwol::array_pod<::nwol::ALIGN_SCREEN				>		AlignText			;
+					::nwol::array_pod<::nwol::SControlTextColorASCII	>		TextColorsASCII		;
+					::nwol::array_pod<::nwol::STextColor32				>		TextColors32		;
+					::nwol::array_pod<::nwol::CONTROL_FLAG				>		ControlFlags		;
+					::nwol::array_obj<::nwol::glabel					>		Text				;
 
 					void													Clear				()						{
 						::nwol::clear

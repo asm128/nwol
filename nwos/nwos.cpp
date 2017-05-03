@@ -27,7 +27,7 @@ bool										bListenFailure					= false;
 	::nwol::SGUI									& guiSystem						= instanceApp.GUI;
 	
 	::nwol::initASCIIScreen		(guiSystem.TargetSizeASCII.x, guiSystem.TargetSizeASCII.y);
-	::nwol::setASCIIScreenTitle	(appTitle());
+	::nwol::setASCIIScreenTitle	(nwol_moduleTitle());
 
 	guiSystem.TargetSizeASCII.x					= nwol::getASCIIBackBufferWidth		();
 	guiSystem.TargetSizeASCII.y					= nwol::getASCIIBackBufferHeight	();

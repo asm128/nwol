@@ -169,7 +169,7 @@ int32_t										setup							(::SApplication& instanceApp)																						
 	instanceApp.GUI.Controls.Clear();
 
 	::nwol::initASCIIScreen(instanceApp.GUI.TargetSizeASCII.x, instanceApp.GUI.TargetSizeASCII.y);
-	::nwol::setASCIIScreenTitle(appTitle());
+	::nwol::setASCIIScreenTitle(nwol_moduleTitle());
 
 	::nwol::SGUI									& guiSystem						= instanceApp.GUI;
 
@@ -234,7 +234,7 @@ int32_t										loadSelection					(::SApplication& instanceApp)																
  	::nwol::SModuleInterface						& moduleInterface				= instanceApp.ApplicationModulesHandle[instanceApp.ApplicationModuleSelected];
 	::nwol::error_t									retVal							= 0;
 	int32_t											errCreate						= moduleInterface.Create();
-	reterr_error_if(errored(errCreate), errorFormat2, errCreate, "appCreate()"); 
+	reterr_error_if(errored(errCreate), errorFormat2, errCreate, "moduleCreate()"); 
 	
 	::nwol::RUNTIME_CALLBACK_ID						callbackPointersErased			= moduleInterface.TestForNullPointerFunctions();
 	if(callbackPointersErased) { 
@@ -248,7 +248,7 @@ int32_t										loadSelection					(::SApplication& instanceApp)																
 		SetWindowText(instanceApp.RuntimeValues->Screen.PlatformDetail.hWnd, windowTitle);
 		int32_t											errSetup						= moduleInterface.Setup(); 
 		if(0 > errSetup) { 
-			error_printf(errorFormat2, errSetup, "appSetup()" ); 
+			error_printf(errorFormat2, errSetup, "moduleSetup()" ); 
 			retVal										= -1;
 			moduleInterface.Cleanup();
 			::nwol::initASCIIScreen();
@@ -273,7 +273,7 @@ int32_t										renderSelection					(const ::SApplication & instanceApp)							
 	int32_t											errVal							= 0;
  	const ::nwol::SModuleInterface					& moduleInterface				= instanceApp.ApplicationModulesHandle[instanceApp.ApplicationModuleSelected];
 	int32_t											errRender						= moduleInterface.Render(); 
-	reterr_error_if(errored(errRender), errorFormat2, errRender, "appRender()");	
+	reterr_error_if(errored(errRender), errorFormat2, errRender, "moduleRender()");	
 
 	::nwol::RUNTIME_CALLBACK_ID						callbackPointersErased				= moduleInterface.TestForNullPointerFunctions();
 	if(callbackPointersErased) { 
@@ -318,7 +318,7 @@ int32_t										update							(::SApplication & instanceApp, bool exitRequested)
 				continue;
 			::nwol::error_t								errCleanup							= moduleSelected->Cleanup(); 
 			if(0 > errCleanup) { 
-				error_printf(errorFormat2, errCleanup, "appCleanup()"); 
+				error_printf(errorFormat2, errCleanup, "moduleCleanup()"); 
 			} 
 
 			callbackPointersErased					= moduleSelected->TestForNullPointerFunctions();
@@ -332,7 +332,7 @@ int32_t										update							(::SApplication & instanceApp, bool exitRequested)
 				
 			::nwol::error_t								errDelete							= moduleSelected->Delete(); 
 			if(0 > errDelete) { 
-				error_printf(errorFormat2, errDelete, "appDelete()"); 
+				error_printf(errorFormat2, errDelete, "moduleDelete()"); 
 			}
 			callbackPointersErased					= moduleSelected->TestForNullPointerFunctions();
 			if(callbackPointersErased) { 
@@ -342,7 +342,7 @@ int32_t										update							(::SApplication & instanceApp, bool exitRequested)
 			else {	// Reinitialize the selector window which was probably closed before starting the new app.
 				::nwol::initASCIIScreen(instanceApp.GUI.TargetSizeASCII.x, instanceApp.GUI.TargetSizeASCII.y);
 				char	windowTitle[512]	= {};
-				sprintf_s(windowTitle, "%s v%u.%u", appTitle(), (appVersion() & 0xF0) >> 4, appVersion() & 0x0F);
+				sprintf_s(windowTitle, "%s v%u.%u", nwol_moduleTitle(), (nwol_moduleVersion() & 0xF0) >> 4, nwol_moduleVersion() & 0x0F);
 				SetWindowText(instanceApp.RuntimeValues->Screen.PlatformDetail.hWnd, windowTitle);
 				refreshModules(instanceApp);
 				info_printf("Client application instance deleted successfully."); 

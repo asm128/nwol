@@ -73,7 +73,7 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
 	int32_t											screenWidth							= guiSystem.TargetSizeASCII.x;
 	int32_t											screenHeight						= guiSystem.TargetSizeASCII.y;
 	::nwol::initASCIIScreen(screenWidth, screenHeight);
-	::nwol::setASCIIScreenTitle(appTitle());
+	::nwol::setASCIIScreenTitle(nwol_moduleTitle());
 
 	::nwol::error_t									
 	errMy										= ::networkEnable	(instanceApp); reterr_error_if_errored(errMy, "Failed to enable network."			);

@@ -16,38 +16,40 @@ struct SWindowClassRegistrator {
 };
 
 ::nwol::error_t						nwol::SScreenManager::CreateScreen			(const SScreenMetrics& desiredMetrics, id_t& screenIndex)		{
-	SScreen										newScreen									;
-	WNDCLASSEX									windowClass									;
-	windowClass.cbSize						= sizeof(WNDCLASSEX);
-	windowClass.style						= NULL											; // CS_HREDRAW | CS_VREDRAW;	;
-	windowClass.lpfnWndProc					= mainWndProc									;
-	windowClass.cbClsExtra					= 0												;
-	windowClass.cbWndExtra					= 0												;
-	windowClass.hInstance					= RuntimeValues->PlatformDetail.hInstance		;
-	windowClass.hIcon						= LoadIcon(0, IDI_APPLICATION)					;
-	windowClass.hCursor						= LoadCursor(0, IDC_ARROW)						;
-	windowClass.hbrBackground				= CreateSolidBrush(GetSysColor(COLOR_3DFACE))	;
-	windowClass.lpszMenuName				= 0												;
-	windowClass.lpszClassName				= "nwol_system"									;
-	windowClass.hIconSm						= LoadIcon(0, IDI_APPLICATION)					;
-	//ATOM										result						= RegisterClassEx(&windowClass);
-	static	const SWindowClassRegistrator		classRegistration(windowClass);
+	{
+		WNDCLASSEX									windowClass									;
+		windowClass.cbSize						= sizeof(WNDCLASSEX);
+		windowClass.style						= NULL											; // CS_HREDRAW | CS_VREDRAW;	;
+		windowClass.lpfnWndProc					= mainWndProc									;
+		windowClass.cbClsExtra					= 0												;
+		windowClass.cbWndExtra					= 0												;
+		windowClass.hInstance					= RuntimeValues->PlatformDetail.hInstance		;
+		windowClass.hIcon						= LoadIcon(0, IDI_APPLICATION)					;
+		windowClass.hCursor						= LoadCursor(0, IDC_ARROW)						;
+		windowClass.hbrBackground				= CreateSolidBrush(GetSysColor(COLOR_3DFACE))	;
+		windowClass.lpszMenuName				= 0												;
+		windowClass.lpszClassName				= "nwol_screen"									;
+		windowClass.hIconSm						= LoadIcon(0, IDI_APPLICATION)					;
+		PlatformDetail.WindowClass				= windowClass;
+	}
+	static	const SWindowClassRegistrator		classRegistration(PlatformDetail.WindowClass);
 	if(0 == classRegistration.RegistrationError) {
 		const DWORD									error						= GetLastError();
-		const std::string							errorText					= ::nwol::getWindowsErrorAsString(error);
+		const ::std::string							errorText					= ::nwol::getWindowsErrorAsString(error);
 		error_printf("Cannot register window class: (0x%X) \"%s\"", (uint32_t)error, errorText.c_str());
 		return -1;
 	}
 
 	const DWORD									dwStyle						= WS_OVERLAPPED | WS_THICKFRAME | WS_BORDER | WS_MAXIMIZEBOX | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX;
-	const HWND									hWnd						= CreateWindowEx(0, windowClass.lpszClassName, "Unnamed", dwStyle
+	const HWND									hWnd						= CreateWindowEx(0, PlatformDetail.WindowClass.lpszClassName, "Unnamed", dwStyle
 		, desiredMetrics.Position.x
 		, desiredMetrics.Position.y
 		, desiredMetrics.Size.x
 		, desiredMetrics.Size.y
-		, 0, 0, windowClass.hInstance, 0
+		, 0, 0, PlatformDetail.WindowClass.hInstance, 0
 		);
 	
+	::nwol::SScreen								newScreen;
 	newScreen.PlatformDetail.hWnd			= hWnd;
 	newScreen.PlatformDetail.pWindowClass	= &classRegistration.WindowClass;
 

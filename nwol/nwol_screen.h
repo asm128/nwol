@@ -31,9 +31,9 @@ namespace nwol
 	};
 
 	struct SScreen {
-		SScreenMetrics										Metrics						= {{10, 10}, {320, 240}};
-		SScreenDetail										PlatformDetail				= {};
-		SScreenState										State						= {};
+		::nwol::SScreenMetrics								Metrics						= {{10, 10}, {320, 240}};
+		::nwol::SScreenDetail								PlatformDetail				= {};
+		::nwol::SScreenState								State						= {};
 
 #if defined(__WINDOWS__)
 		LRESULT												WndProc						(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

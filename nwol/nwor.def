@@ -1,11 +1,11 @@
 LIBRARY
 
 EXPORTS
-	appTitle
-	appVersion
-	appCreate
-	appDelete
-	appSetup
-	appUpdate
-	appRender
-	appCleanup
+	nwol_moduleTitle
+	nwol_moduleVersion
+	nwol_moduleCreate
+	nwol_moduleDelete
+	nwol_moduleSetup
+	nwol_moduleUpdate
+	nwol_moduleRender
+	nwol_moduleCleanup
