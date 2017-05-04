@@ -201,9 +201,9 @@ namespace nwol
 	static					const ::nwol::gsyslabel		EnumName##_STR					= #EnumName;																										\
 	static constexpr		const EnumName				EnumName##_INVALID				= (EnumName)~(EnumName)0;												\
 	static					const EnumName				__sei_##EnumName##_INVALID		= (EnumName)::nwol::genum_definition<EnumName>::init(EnumName##_STR);												\
-	static inline			EnumName					operator &						(EnumName  a, EnumName b)					noexcept	{ return (EnumName)		(a & (IntType)b);				}	\
-	static inline			EnumName					operator ~						(EnumName  a)								noexcept	{ return (EnumName)		(~(IntType)a);					}	\
-	static inline			EnumName					operator ^						(EnumName  a, EnumName b)					noexcept	{ return (EnumName)		(a ^ (IntType)b);				}	\
+	static inline constexpr	EnumName					operator &						(EnumName  a, EnumName b)					noexcept	{ return (EnumName)		(a & (IntType)b);				}	\
+	static inline constexpr	EnumName					operator ~						(EnumName  a)								noexcept	{ return (EnumName)		(~(IntType)a);					}	\
+	static inline constexpr	EnumName					operator ^						(EnumName  a, EnumName b)					noexcept	{ return (EnumName)		(a ^ (IntType)b);				}	\
 	static inline			EnumName&					operator |=						(EnumName &a, EnumName b)					noexcept	{ return (EnumName&)	( ((IntType&)a) |= (IntType)b); }	\
 	static inline			EnumName&					operator &=						(EnumName &a, EnumName b)					noexcept	{ return (EnumName&)	( ((IntType&)a) &= (IntType)b); }	\
 	static inline			EnumName&					operator ^=						(EnumName &a, EnumName b)					noexcept	{ return (EnumName&)	( ((IntType&)a) ^= (IntType)b); }	\

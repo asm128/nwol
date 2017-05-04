@@ -25,27 +25,27 @@ namespace nwol
 
 	//--------------------------------------------------------- PODs
 	struct SControlTextColorASCII	{
-					STextColorASCII											Color				;
-					STextColorASCII											ColorPressed		;
+					::nwol::STextColorASCII										Color				;
+					::nwol::STextColorASCII										ColorPressed		;
 
-		inline		operator												uint16_t			()	const	{ return Color;										}	// This operator clamps the structure on purpose.
+		inline		operator													uint16_t			()	const	{ return Color;										}	// This operator clamps the structure on purpose.
 	};
 
 	struct STextColor32				{
-					uint32_t												Foreground			;
-					uint32_t												Background			;
+					uint32_t													Foreground			;
+					uint32_t													Background			;
 	};
 
 	//--------------------------------------------------------- Objects
 	struct SGUIControl				{				
-					::nwol::glabel											Text				= {"GUI Control", (uint32_t)-1}									;
-					::nwol::SRectangle2D<int32_t>							AreaASCII			= {{1, 1}, {11, 1}}												;
-					::nwol::SRectangle2D<int32_t>							AreaBitmap			= {{1, 1}, {11, 1}}												;
-					STextColor32											TextColors32		= {0xFFFFFFFF, 0xFF000000}										;
-					SControlTextColorASCII									TextColorsASCII		= {{COLOR_BLUE, COLOR_DARKGREY}, {COLOR_YELLOW, COLOR_BLUE}}	;
-					::nwol::ALIGN_SCREEN									AlignArea			= ::nwol::SCREEN_BOTTOM_RIGHT									;
-					::nwol::ALIGN_SCREEN									AlignText			= ::nwol::SCREEN_TOP_LEFT										;
-					CONTROL_FLAG											ControlFlags		= ::nwol::CONTROL_FLAG_NONE										;
+					::nwol::glabel												Text				= {"GUI Control", (uint32_t)-1}									;
+					::nwol::SRectangle2D<int32_t>								AreaASCII			= {{1, 1}, {11, 1}}												;
+					::nwol::SRectangle2D<int32_t>								AreaBitmap			= {{1, 1}, {11, 1}}												;
+					::nwol::STextColor32										TextColors32		= {0xFFFFFFFF, 0xFF000000}										;
+					::nwol::SControlTextColorASCII								TextColorsASCII		= {{COLOR_BLUE, COLOR_DARKGREY}, {COLOR_YELLOW, COLOR_BLUE}}	;
+					::nwol::ALIGN_SCREEN										AlignArea			= ::nwol::SCREEN_BOTTOM_RIGHT									;
+					::nwol::ALIGN_SCREEN										AlignText			= ::nwol::SCREEN_TOP_LEFT										;
+					::nwol::CONTROL_FLAG										ControlFlags		= ::nwol::CONTROL_FLAG_NONE										;
 	};																				   
 
 	struct SGUIControlTable			{				
@@ -59,7 +59,7 @@ namespace nwol
 					::nwol::array_pod<::nwol::CONTROL_FLAG				>		ControlFlags		;
 					::nwol::array_obj<::nwol::glabel					>		Text				;
 
-					void													Clear				()						{
+					void														Clear				()						{
 						::nwol::clear
 							(	AreasRealigned		
 							,	AreasASCII				
@@ -71,7 +71,7 @@ namespace nwol
 							,	Text				
 							);
 					}
-					void													Resize				(uint32_t newSize)		{
+					void														Resize				(uint32_t newSize)		{
 						::nwol::resize
 							(	newSize
 							,	AreasRealigned		
@@ -87,11 +87,10 @@ namespace nwol
 	};
 
 	struct SGUI {				
-					::nwol::SCoord2<uint32_t>								TargetSizeBitmap	;
-					::nwol::SCoord2<uint32_t>								TargetSizeASCII		;
-					::nwol::SCoord2<int32_t>								MousePosition		;
-
-					SGUIControlTable										Controls			;
+					::nwol::SCoord2<uint32_t>									TargetSizeBitmap	;
+					::nwol::SCoord2<uint32_t>									TargetSizeASCII		;
+					::nwol::SCoord2<int32_t>									MousePosition		;
+					::nwol::SGUIControlTable									Controls			;
 	};
 #pragma pack(pop)
 
