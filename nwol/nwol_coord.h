@@ -304,22 +304,22 @@ namespace nwol
 		} //
 	}; // struct SQuaternion
 
-	// Geometric figures.
-	template<typename _tBase> struct	SLine2D			{	SCoord2<_tBase> A, B;							/**/ inline constexpr bool operator !=(const	SLine2D			<_tBase>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SLine2D			<_tBase>& other) const noexcept { return A			== other.A			&& B			== other.B;								} };
-	template<typename _tBase> struct	SLine3D			{	SCoord3<_tBase> A, B;							/**/ inline constexpr bool operator !=(const	SLine3D			<_tBase>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SLine3D			<_tBase>& other) const noexcept { return A			== other.A			&& B			== other.B;								} };
-	template<typename _tBase> struct	STriangle2D		{	SCoord2<_tBase> A, B, C;						/**/ inline constexpr bool operator !=(const	STriangle2D		<_tBase>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	STriangle2D		<_tBase>& other) const noexcept { return A			== other.A			&& B			== other.B			&& C == other.C;	} };
-	template<typename _tBase> struct	STriangle3D		{	SCoord3<_tBase> A, B, C;						/**/ inline constexpr bool operator !=(const	STriangle3D		<_tBase>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	STriangle3D		<_tBase>& other) const noexcept { return A			== other.A			&& B			== other.B			&& C == other.C;	} };
-	template<typename _tBase> struct	SRectangle2D	{	SCoord2<_tBase> Offset, Size;					/**/ inline constexpr bool operator !=(const	SRectangle2D	<_tBase>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SRectangle2D	<_tBase>& other) const noexcept { return Offset		== other.Offset		&& Size			== other.Size;							} };
-	template<typename _tBase> struct	SRectangle3D	{	SCoord3<_tBase> Offset, Size;					/**/ inline constexpr bool operator !=(const	SRectangle3D	<_tBase>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SRectangle3D	<_tBase>& other) const noexcept { return Offset		== other.Offset		&& Size			== other.Size;							} };
-	template<typename _tBase> struct	SCircle2D		{	double Radius;		SCoord2<_tBase> Center;		/**/ inline constexpr bool operator !=(const	SCircle2D		<_tBase>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SCircle2D		<_tBase>& other) const noexcept { return Center		== other.Center		&& Radius		== other.Radius;						} };
-	template<typename _tBase> struct	SSphere2D		{	double Radius;		SCoord2<_tBase> Center;		/**/ inline constexpr bool operator !=(const	SSphere2D		<_tBase>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SSphere2D		<_tBase>& other) const noexcept { return Center		== other.Center		&& Radius		== other.Radius;						} };
-	template<typename _tBase> struct	SCircle3D		{	double Radius;		SCoord3<_tBase> Center;		/**/ inline constexpr bool operator !=(const	SCircle3D		<_tBase>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SCircle3D		<_tBase>& other) const noexcept { return Center		== other.Center		&& Radius		== other.Radius;						} };
-	template<typename _tBase> struct	SSphere3D		{	double Radius;		SCoord3<_tBase> Center;		/**/ inline constexpr bool operator !=(const	SSphere3D		<_tBase>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SSphere3D		<_tBase>& other) const noexcept { return Center		== other.Center		&& Radius		== other.Radius;						} };
-	template<typename _tBase> struct	SRay2D			{	SCoord2<_tBase> Origin, Direction;				/**/ inline constexpr bool operator !=(const	SRay2D			<_tBase>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SRay2D			<_tBase>& other) const noexcept { return Origin		== other.Origin		&& Direction	== other.Direction;						} };
-	template<typename _tBase> struct	SRay3D			{	SCoord3<_tBase> Origin, Direction;				/**/ inline constexpr bool operator !=(const	SRay3D			<_tBase>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SRay3D			<_tBase>& other) const noexcept { return Origin		== other.Origin		&& Direction	== other.Direction;						} };
-	template<typename _tBase> struct	SPlane2D		{	double Distance;	SCoord2<_tBase> Direction;	/**/ inline constexpr bool operator !=(const	SPlane2D		<_tBase>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SPlane2D		<_tBase>& other) const noexcept { return Direction	== other.Direction	&& Distance		== other.Distance;						} };
-	template<typename _tBase> struct	SPlane3D		{	double Distance;	SCoord3<_tBase> Direction;	/**/ inline constexpr bool operator !=(const	SPlane3D		<_tBase>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SPlane3D		<_tBase>& other) const noexcept { return Direction	== other.Direction	&& Distance		== other.Distance;						} };
-	template<typename _tBase> struct	SRange			{	_tBase Offset, Count;							/**/ inline constexpr bool operator !=(const	SRange			<_tBase>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SRange			<_tBase>& other) const noexcept { return Offset		== other.Offset		&& Count		== other.Count;							} };
+	// Geometric figures and other coord-related POD structs.
+	template<typename _tCoord> struct	SRange			{	_tCoord Offset, Count;							/**/ inline constexpr bool operator !=(const	SRange			<_tCoord>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SRange			<_tCoord>	& other) const noexcept { return Offset		== other.Offset		&& Count		== other.Count;							} };
+	template<typename _tCoord> struct	SLine2D			{	SCoord2<_tCoord> A, B;							/**/ inline constexpr bool operator !=(const	SLine2D			<_tCoord>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SLine2D			<_tCoord>	& other) const noexcept { return A			== other.A			&& B			== other.B;								} };
+	template<typename _tCoord> struct	SLine3D			{	SCoord3<_tCoord> A, B;							/**/ inline constexpr bool operator !=(const	SLine3D			<_tCoord>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SLine3D			<_tCoord>	& other) const noexcept { return A			== other.A			&& B			== other.B;								} };
+	template<typename _tCoord> struct	STriangle2D		{	SCoord2<_tCoord> A, B, C;						/**/ inline constexpr bool operator !=(const	STriangle2D		<_tCoord>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	STriangle2D		<_tCoord>	& other) const noexcept { return A			== other.A			&& B			== other.B			&& C == other.C;	} };
+	template<typename _tCoord> struct	STriangle3D		{	SCoord3<_tCoord> A, B, C;						/**/ inline constexpr bool operator !=(const	STriangle3D		<_tCoord>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	STriangle3D		<_tCoord>	& other) const noexcept { return A			== other.A			&& B			== other.B			&& C == other.C;	} };
+	template<typename _tCoord> struct	SRectangle2D	{	SCoord2<_tCoord> Offset, Size;					/**/ inline constexpr bool operator !=(const	SRectangle2D	<_tCoord>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SRectangle2D	<_tCoord>	& other) const noexcept { return Offset		== other.Offset		&& Size			== other.Size;							} };
+	template<typename _tCoord> struct	SRectangle3D	{	SCoord3<_tCoord> Offset, Size;					/**/ inline constexpr bool operator !=(const	SRectangle3D	<_tCoord>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SRectangle3D	<_tCoord>	& other) const noexcept { return Offset		== other.Offset		&& Size			== other.Size;							} };
+	template<typename _tCoord> struct	SCircle2D		{	double Radius;		SCoord2<_tCoord> Center;	/**/ inline constexpr bool operator !=(const	SCircle2D		<_tCoord>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SCircle2D		<_tCoord>	& other) const noexcept { return Center		== other.Center		&& Radius		== other.Radius;						} };
+	template<typename _tCoord> struct	SSphere2D		{	double Radius;		SCoord2<_tCoord> Center;	/**/ inline constexpr bool operator !=(const	SSphere2D		<_tCoord>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SSphere2D		<_tCoord>	& other) const noexcept { return Center		== other.Center		&& Radius		== other.Radius;						} };
+	template<typename _tCoord> struct	SCircle3D		{	double Radius;		SCoord3<_tCoord> Center;	/**/ inline constexpr bool operator !=(const	SCircle3D		<_tCoord>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SCircle3D		<_tCoord>	& other) const noexcept { return Center		== other.Center		&& Radius		== other.Radius;						} };
+	template<typename _tCoord> struct	SSphere3D		{	double Radius;		SCoord3<_tCoord> Center;	/**/ inline constexpr bool operator !=(const	SSphere3D		<_tCoord>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SSphere3D		<_tCoord>	& other) const noexcept { return Center		== other.Center		&& Radius		== other.Radius;						} };
+	template<typename _tCoord> struct	SRay2D			{	SCoord2<_tCoord> Origin, Direction;				/**/ inline constexpr bool operator !=(const	SRay2D			<_tCoord>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SRay2D			<_tCoord>	& other) const noexcept { return Origin		== other.Origin		&& Direction	== other.Direction;						} };
+	template<typename _tCoord> struct	SRay3D			{	SCoord3<_tCoord> Origin, Direction;				/**/ inline constexpr bool operator !=(const	SRay3D			<_tCoord>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SRay3D			<_tCoord>	& other) const noexcept { return Origin		== other.Origin		&& Direction	== other.Direction;						} };
+	template<typename _tCoord> struct	SPlane2D		{	double Distance;	SCoord2<_tCoord> Direction;	/**/ inline constexpr bool operator !=(const	SPlane2D		<_tCoord>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SPlane2D		<_tCoord>	& other) const noexcept { return Direction	== other.Direction	&& Distance		== other.Distance;						} };
+	template<typename _tCoord> struct	SPlane3D		{	double Distance;	SCoord3<_tCoord> Direction;	/**/ inline constexpr bool operator !=(const	SPlane3D		<_tCoord>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SPlane3D		<_tCoord>	& other) const noexcept { return Direction	== other.Direction	&& Distance		== other.Distance;						} };
 
 	enum AXIS_3D : uint8_t
 		{	XPOSITIVE				= 0x1
@@ -353,21 +353,21 @@ namespace nwol
 #pragma pack(pop)
 
 
-	template <typename _tBase>
-				void														coord2D_rotateInPlace	(SCoord2<_tBase>& coord, const SPairSinCos& pairSinCos)				noexcept	{
+	template <typename _tCoord>
+				void														coord2D_rotateInPlace	(SCoord2<_tCoord>& coord, const SPairSinCos& pairSinCos)				noexcept	{
 		const double																px						= coord.x * pairSinCos.Cos - coord.y * pairSinCos.Sin; 
-		coord.y																	= (_tBase)(coord.x * pairSinCos.Sin + coord.y * pairSinCos.Cos);
-		coord.x																	= (_tBase)px;
+		coord.y																	= (_tCoord)(coord.x * pairSinCos.Sin + coord.y * pairSinCos.Cos);
+		coord.x																	= (_tCoord)px;
 		return coord;
 	}
 
-	template <typename _tBase>
-	constexpr	SCoord2<_tBase>												coord2D_rotate			(const SCoord2<_tBase>& coord, const SPairSinCos& pairSinCos)		noexcept	{
-		return {(_tBase)(coord.x * pairSinCos.Cos - coord.y * pairSinCos.Sin), (_tBase)(coord.x * pairSinCos.Sin + coord.y * pairSinCos.Cos)};
+	template <typename _tCoord>
+	constexpr	SCoord2<_tCoord>												coord2D_rotate			(const SCoord2<_tCoord>& coord, const SPairSinCos& pairSinCos)		noexcept	{
+		return {(_tCoord)(coord.x * pairSinCos.Cos - coord.y * pairSinCos.Sin), (_tCoord)(coord.x * pairSinCos.Sin + coord.y * pairSinCos.Cos)};
 	}
 
-	template <typename _tBase>	inline void									coord2D_rotateInPlace	(		SCoord2<_tBase>& coord, double theta)						noexcept	{ coord2D_rotateInPlace(coord, ::nwol::getSinCos(theta)); }
-	template <typename _tBase>	inline constexpr SCoord2<_tBase>			coord2D_rotate			(const	SCoord2<_tBase>& coord, double theta)						noexcept	{ return coord2D_rotate(coord, ::nwol::getSinCos(theta)); }
+	template <typename _tCoord>	inline void									coord2D_rotateInPlace	(		SCoord2<_tCoord>& coord, double theta)						noexcept	{ coord2D_rotateInPlace(coord, ::nwol::getSinCos(theta)); }
+	template <typename _tCoord>	inline SCoord2<_tCoord>						coord2D_rotate			(const	SCoord2<_tCoord>& coord, double theta)						noexcept	{ return coord2D_rotate(coord, ::nwol::getSinCos(theta)); }
 
 	//------------------------------------------------------------------------------------------------------------
 	template <typename _tCoord>
@@ -379,11 +379,11 @@ namespace nwol
 					,	ALIGN_SCREEN					align
 					)																																					noexcept	{
 		targetRectangle															= rectangle;
- 			 if(bit_true(align, SCREEN_CENTER	))	{ targetRectangle.Offset.x		= (targetWidth >>1)-(rectangle.Size.x>>1)+rectangle.Offset.x;	}
-		else if(bit_true(align, SCREEN_RIGHT	))	{ targetRectangle.Offset.x		= targetWidth  - rectangle.Offset.x - rectangle.Size.x;			}
+ 			 if gbit_true(align, SCREEN_CENTER	)	{ targetRectangle.Offset.x		= (targetWidth	>> 1) - (rectangle.Size.x >> 1) + rectangle.Offset.x;	}
+		else if gbit_true(align, SCREEN_RIGHT	)	{ targetRectangle.Offset.x		= targetWidth  - rectangle.Offset.x - rectangle.Size.x;					}
 
-			 if(bit_true(align, SCREEN_VCENTER	))	{ targetRectangle.Offset.y		= (targetHeight>>1)-(rectangle.Size.y>>1)+rectangle.Offset.y;	}
-		else if(bit_true(align, SCREEN_BOTTOM	))	{ targetRectangle.Offset.y		= targetHeight - rectangle.Offset.y - rectangle.Size.y;			}
+			 if gbit_true(align, SCREEN_VCENTER	)	{ targetRectangle.Offset.y		= (targetHeight >> 1) - (rectangle.Size.y >> 1) + rectangle.Offset.y;	}
+		else if gbit_true(align, SCREEN_BOTTOM	)	{ targetRectangle.Offset.y		= targetHeight - rectangle.Offset.y - rectangle.Size.y;					}
 		return targetRectangle;
 	}
 

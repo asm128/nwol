@@ -1,15 +1,14 @@
 #include "gui.h"
 #include "fill.h"
 
-::nwol::error_t				nwol::createControl(::nwol::SGUI& guiSystem, const ::nwol::SGUIControl& definition)
-{
+::nwol::error_t				nwol::createControl(::nwol::SGUI& guiSystem, const ::nwol::SGUIControl& definition)				{
 	::nwol::SRectangle2D<int32_t>		areaRealigned;
 	::nwol::realignRectangle(guiSystem.TargetSizeASCII.x, guiSystem.TargetSizeASCII.y, definition.AreaASCII, areaRealigned, definition.AlignArea);
 
 	::nwol::SGUIControlTable			& controls		= guiSystem.Controls;
-	int32_t								oldSize			= controls.AreasRealigned.size();
+	int32_t								oldSize			= controls.AreasRealignedASCII.size();
 	int32_t								resultCheck	[]	= 
-		{	controls.AreasRealigned			.push_back(areaRealigned				)
+		{	controls.AreasRealignedASCII	.push_back(areaRealigned				)
 		,	controls.AreasASCII				.push_back(definition.AreaASCII			)
 		,	controls.AlignArea				.push_back(definition.AlignArea			)
 		,	controls.AlignText				.push_back(definition.AlignText			)
@@ -100,14 +99,13 @@ void						drawText			(_tChar* target, int32_t targetWidth, int32_t targetHeight,
 	}
 }
 
-::nwol::error_t				nwol::updateGUI			(::nwol::SGUI& GUISystem, const ::nwol::SInput& inputSystem)
-{ 
+::nwol::error_t				nwol::updateGUI			(::nwol::SGUI& GUISystem, const ::nwol::SInput& inputSystem)			{ 
 	int32_t								mouseX				= GUISystem.MousePosition.x = inputSystem.MouseX;
 	int32_t								mouseY				= GUISystem.MousePosition.y = inputSystem.MouseY;
 	::nwol::SGUIControlTable			& controls			= GUISystem.Controls;
 	for(uint32_t iControl=0; iControl < controls.AreasASCII.size(); ++iControl)
 	{
-		::nwol::SRectangle2D<int32_t>		& controlArea		= controls.AreasRealigned[iControl];
+		::nwol::SRectangle2D<int32_t>		& controlArea		= controls.AreasRealignedASCII[iControl];
 		::nwol::CONTROL_FLAG				& controlFlags		= controls.ControlFlags[iControl];
 		
 		// EXECUTE only lasts one tick.
@@ -121,17 +119,16 @@ void						drawText			(_tChar* target, int32_t targetWidth, int32_t targetHeight,
 		{
 			if(::nwol::bit_true(controlFlags, ::nwol::CONTROL_FLAG_MOUSE_OVER)) {
 				if(inputSystem.ButtonDown(0) && ::nwol::bit_false(controlFlags, ::nwol::CONTROL_FLAG_PRESSED)) 
-					::nwol::bit_set(controlFlags, ::nwol::CONTROL_FLAG_PRESSED);
+					::nwol::bit_set		(controlFlags, ::nwol::CONTROL_FLAG_PRESSED);
 				else if(inputSystem.ButtonUp(0) && ::nwol::bit_true(controlFlags, ::nwol::CONTROL_FLAG_PRESSED)) {
-					::nwol::bit_set(controlFlags, ::nwol::CONTROL_FLAG_EXECUTE);
-					::nwol::bit_clear(controlFlags, ::nwol::CONTROL_FLAG_PRESSED);
+					::nwol::bit_set		(controlFlags, ::nwol::CONTROL_FLAG_EXECUTE);
+					::nwol::bit_clear	(controlFlags, ::nwol::CONTROL_FLAG_PRESSED);
 				}
 			}
 			else {
-				::nwol::bit_set(controlFlags, ::nwol::CONTROL_FLAG_MOUSE_OVER);
-				::nwol::bit_set(controlFlags, ::nwol::CONTROL_FLAG_COLOR_INVERT);
+				::nwol::bit_set		(controlFlags, ::nwol::CONTROL_FLAG_MOUSE_OVER);
+				::nwol::bit_set		(controlFlags, ::nwol::CONTROL_FLAG_COLOR_INVERT);
 			}
-
 		}
 		else {
 			if(::nwol::bit_true(controlFlags, ::nwol::CONTROL_FLAG_MOUSE_OVER))
@@ -146,20 +143,16 @@ void						drawText			(_tChar* target, int32_t targetWidth, int32_t targetHeight,
 	return 0;
 }
 
-
-int32_t						nwol::renderGUIASCII	(::nwol::SASCIITarget& targetAscii, const ::nwol::SGUI& guiSystem) {
-	return renderGUIASCII(targetAscii.Text.begin(), targetAscii.Attributes.begin(), guiSystem);
-}
-
-int32_t						nwol::renderGUIASCII	(char* bbText, uint16_t* bbColor, const ::nwol::SGUI& guiSystem) {
+int32_t						nwol::renderGUIASCII	(::nwol::SASCIITarget& targetAscii	, const ::nwol::SGUI& guiSystem)	{ return renderGUIASCII(targetAscii.Text.begin(), targetAscii.Attributes.begin(), guiSystem); }
+int32_t						nwol::renderGUIASCII	(char* bbText, uint16_t* bbColor	, const ::nwol::SGUI& guiSystem)	{
 	const ::nwol::SCoord2<uint32_t>		& maxSize			= guiSystem.TargetSizeASCII;
 	const ::nwol::SCoord2<int32_t>		& mousePos			= guiSystem.MousePosition;
 	const ::nwol::SGUIControlTable		& controls			= guiSystem.Controls;
 
 	// Draw rectangles
 	for(uint32_t iRect=0; iRect < controls.AreasASCII.size(); ++iRect) {
-		const ::nwol::SRectangle2D<int32_t>	& rectangle			= controls.AreasRealigned	[iRect];
-		::nwol::SControlTextColorASCII		textColor			= controls.TextColorsASCII	[iRect];
+		const ::nwol::SRectangle2D<int32_t>	& rectangle			= controls.AreasRealignedASCII	[iRect];
+		::nwol::SControlTextColorASCII		textColor			= controls.TextColorsASCII		[iRect];
 		if(::nwol::bit_true(controls.ControlFlags[iRect], ::nwol::CONTROL_FLAG_COLOR_INVERT)) {
 			uint8_t								color				= ::nwol::bit_true(controls.ControlFlags[iRect], ::nwol::CONTROL_FLAG_PRESSED) ? textColor.ColorPressed.Background : textColor.Color.Background;
 			textColor.Color.Background		= ::nwol::bit_true(controls.ControlFlags[iRect], ::nwol::CONTROL_FLAG_PRESSED) ? textColor.ColorPressed.Foreground : textColor.Color.Foreground;
@@ -170,10 +163,10 @@ int32_t						nwol::renderGUIASCII	(char* bbText, uint16_t* bbColor, const ::nwol
 
 	// Draw text
 	for(uint32_t iRect=0; iRect < controls.Text.size(); ++iRect) {
-		const ::nwol::glabel				& label				= controls.Text				[iRect];
-		const ::nwol::SRectangle2D<int32_t>	& rectangle			= controls.AreasRealigned	[iRect];
-		const ::nwol::ALIGN_SCREEN			alignControl		= controls.AlignArea		[iRect];
-		const ::nwol::ALIGN_SCREEN			alignText			= controls.AlignText		[iRect];
+		const ::nwol::glabel				& label				= controls.Text					[iRect];
+		const ::nwol::SRectangle2D<int32_t>	& rectangle			= controls.AreasRealignedASCII	[iRect];
+		const ::nwol::ALIGN_SCREEN			alignControl		= controls.AlignArea			[iRect];
+		const ::nwol::ALIGN_SCREEN			alignText			= controls.AlignText			[iRect];
 
 		drawText(bbText, maxSize.x, maxSize.y, label.c_str(), label.size(), rectangle, alignText, false);
 	}
@@ -194,7 +187,7 @@ int32_t						nwol::renderGUIASCII	(char* bbText, uint16_t* bbColor, const ::nwol
 	reterr_error_if(0 == width , "Invalid target width for rendering gui (nullptr).");
 	reterr_error_if(0 == height, "Invalid target height for rendering gui (nullptr).");
 	for(uint32_t iControl = 0, controlCount = guiSystem.Controls.ControlFlags.size(); iControl < controlCount; ++iControl) {
-		
+			
 	}
 	return 0;
 }
