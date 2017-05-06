@@ -22,7 +22,7 @@
 #define __GDEFINE_POD_FUNCTIONS_BUT_CREATEDATA_AND_INITTYPE(baseType)					\
 	static ::nwol::gref_manager_pod<GREF(baseType)>	__g_##baseType##Manager(grelease);	\
 	static ::nwol::gref_serializer_pod<GREF(baseType)>	__g_##baseType##Serializer;		\
-	__GDEFINE_COMMON_REF_FUNCTIONS(baseType);											\
+	__GDEFINE_RELEASE(baseType);														\
 	__GDEFINE_COPY_REF_FUNCTIONS(baseType);												\
 	__GDEFINE_FILEMEM_SERIALIZATION_FUNCTIONS(baseType);								\
 	__GDEFINE_FILEMEM_STREAMING_FUNCTIONS(baseType);
@@ -65,7 +65,7 @@
 #define GDEFINE_NCO_FUNCTIONS_NONS(baseType)																						\
 	static	::nwol::gref_manager_nco<GREF(baseType)>	__g_##baseType##Manager(grelease);											\
 	/*static ::nwol::gref_manager_nco<GREF(baseType)>	__g_##baseType##Manager(::nwol::_nwol_internal_release<GREF(baseType)>);*/	\
-	__GDEFINE_COMMON_REF_FUNCTIONS(baseType);																						\
+	__GDEFINE_RELEASE(baseType);																						\
 	__GDEFINE_ALLOC(baseType)
 
 #define GDEFINE_NCO_CUSTOMCLEANUP_CUSTOMPAGE(NameSpace, baseType)	\
@@ -105,7 +105,7 @@
 //-------------------------------------------------------------// GDEFINE_OBJ() //------------------------------------------------------------------------// 
 #define GDEFINE_OBJ_FUNCTIONS_NONS(baseType)											\
 	static ::nwol::gref_manager_obj<GREF(baseType)>	__g_##baseType##Manager(grelease);	\
-	__GDEFINE_COMMON_REF_FUNCTIONS(baseType)											\
+	__GDEFINE_RELEASE(baseType)															\
 	__GDEFINE_COPY_REF_FUNCTIONS(baseType);												\
 	__GDEFINE_CREATEOBJECT(baseType);													\
 	__GDEFINE_ALLOC(baseType);

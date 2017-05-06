@@ -15,13 +15,8 @@
 #	define DELETE_SHARED_SECTION(Name)								(0)
 
 #elif (defined( _WIN64 ) || defined( WIN64 ) || defined( _WIN32 ) || defined( WIN32 ))  
-
 #	define WIN32_LEAN_AND_MEAN
 #	include <Windows.h>
-#	if defined( CreateFont )
-#		undef CreateFont
-#	endif
-
 #	if (defined( _WIN64 ) || defined( WIN64 )) 
 #		define INTERLOCKED_INCREMENT(nCount)							( InterlockedIncrement64		( &nCount ) )
 #		define INTERLOCKED_DECREMENT(nCount)							( InterlockedDecrement64		( &nCount ) )

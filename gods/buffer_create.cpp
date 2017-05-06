@@ -130,7 +130,7 @@ namespace nwol
 			ENTER_CRITICAL_SECTION(cs);
 			SBufferManagerStorage				* pStorage					= getStorage(typeInfo);
 			if( 0 == pStorage ) {
-				galloc( &newBuffer );
+				::nwol::galloc( &newBuffer );
 				if( 0 == newBuffer ) {
 					error_printf("Cannot create new buffer. Out of memory?");
 					errMy							= -1;
@@ -157,7 +157,7 @@ namespace nwol
 					pBuffer->Usage					= Usage;
 				}
 				else {
-					galloc( &newBuffer );
+					::nwol::galloc( &newBuffer );
 					if( 0 == newBuffer ) {
 						error_printf("Cannot create new buffer. Out of memory?");
 						errMy							= -1;
@@ -180,12 +180,12 @@ namespace nwol
 		}
 
 		void							shutdown					() {
-			for( uint32_t iBigEndian	=0; iBigEndian		< 2		; ++iBigEndian		)
-			for( uint32_t iNorm			=0; iNorm			< 2		; ++iNorm			)
-			for( uint32_t iFloat		=0; iFloat			< 2		; ++iFloat			)
-			for( uint32_t iSigned		=0; iSigned			< 2		; ++iSigned			)
-			for( uint32_t iElementBytes	=0; iElementBytes	< 16	; ++iElementBytes	)
-			for( uint32_t iTotalBytes	=0; iTotalBytes		< 1024	; ++iTotalBytes		) {
+			for( uint32_t iBigEndian	= 0; iBigEndian		< 2		; ++iBigEndian		)
+			for( uint32_t iNorm			= 0; iNorm			< 2		; ++iNorm			)
+			for( uint32_t iFloat		= 0; iFloat			< 2		; ++iFloat			)
+			for( uint32_t iSigned		= 0; iSigned		< 2		; ++iSigned			)
+			for( uint32_t iElementBytes	= 0; iElementBytes	< 16	; ++iElementBytes	)
+			for( uint32_t iTotalBytes	= 0; iTotalBytes	< 1024	; ++iTotalBytes		) {
 				SBufferManagerStorage				* pStorage					= Storage[iBigEndian][iNorm][iFloat][iSigned][iElementBytes][iTotalBytes];
 				if( pStorage )
 					pStorage->clear();
@@ -297,7 +297,7 @@ void ::nwol::nwol_shutdown() { ::nwol::__g_BufferManager.shutdown(); }
 
 void* nwol::allocSBufferBlock(uint32_t sizeInBytes)
 {
-//#if defined(NWOL_DEBUG_ENABLED)
+#if defined(NWOL_DEBUG_ENABLED)
 	char* pBlock = (char*)malloc(sizeInBytes+sizeof(NWOL_DEBUG_CHECK_TYPE)*2+BASETYPE_ALIGN);
 
 	// Handle errors outside this function.
@@ -315,19 +315,19 @@ void* nwol::allocSBufferBlock(uint32_t sizeInBytes)
 	NWOL_DEBUG_CHECK_TYPE* pPostCheck	= (NWOL_DEBUG_CHECK_TYPE*)&pBlock[sizeInBytes+calc_align_address(BASETYPE_ALIGN, pBlock)];
 	pPostCheck[0]	= BINFIBO;
 	return pBlock;
-//#else
-//	return malloc(sizeInBytes+BASETYPE_ALIGN);
-//#endif
+#else
+	return malloc(sizeInBytes+BASETYPE_ALIGN);
+#endif
 }
 
 void nwol::freeSBufferBlock(SBuffer* pBuffer)
 {
-//#if defined(NWOL_DEBUG_ENABLED)
+#if defined(NWOL_DEBUG_ENABLED)
 	checkBlockBoundaries(pBuffer);
 	free(pBuffer->__pBlock - sizeof(NWOL_DEBUG_CHECK_TYPE));
-//#else
-//	free(pBuffer->__pBlock);
-//#endif
+#else
+	free(pBuffer->__pBlock);
+#endif
 }
 
 void nwol::checkBlockBoundaries(SBuffer* pBuffer)

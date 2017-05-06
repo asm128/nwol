@@ -33,14 +33,14 @@ void										nwol::printErasedModuleInterfacePointers		(::nwol::RUNTIME_CALLBAC
 #	define LOAD_FUNCTION_ADDRESS						dlsym
 #endif
 
-	containerForCallbacks.FunctionTitle				= (NWOL_RT_CALLBACK_moduleTitle	) LOAD_FUNCTION_ADDRESS( containerForCallbacks.ModuleLibrary, "moduleTitle"	);
-	containerForCallbacks.FunctionVersion			= (NWOL_RT_CALLBACK_moduleVersion	) LOAD_FUNCTION_ADDRESS( containerForCallbacks.ModuleLibrary, "moduleVersion"	);
-	containerForCallbacks.FunctionCreate			= (NWOL_RT_CALLBACK_moduleCreate	) LOAD_FUNCTION_ADDRESS( containerForCallbacks.ModuleLibrary, "moduleCreate"	);
-	containerForCallbacks.FunctionDelete			= (NWOL_RT_CALLBACK_moduleDelete	) LOAD_FUNCTION_ADDRESS( containerForCallbacks.ModuleLibrary, "moduleDelete"	);
-	containerForCallbacks.FunctionSetup				= (NWOL_RT_CALLBACK_moduleSetup	) LOAD_FUNCTION_ADDRESS( containerForCallbacks.ModuleLibrary, "moduleSetup"	);
-	containerForCallbacks.FunctionCleanup			= (NWOL_RT_CALLBACK_moduleCleanup	) LOAD_FUNCTION_ADDRESS( containerForCallbacks.ModuleLibrary, "moduleCleanup"	);
-	containerForCallbacks.FunctionRender			= (NWOL_RT_CALLBACK_moduleRender	) LOAD_FUNCTION_ADDRESS( containerForCallbacks.ModuleLibrary, "moduleRender"	);
-	containerForCallbacks.FunctionUpdate			= (NWOL_RT_CALLBACK_moduleUpdate	) LOAD_FUNCTION_ADDRESS( containerForCallbacks.ModuleLibrary, "moduleUpdate"	);
+	containerForCallbacks.FunctionTitle				= (NWOL_RT_CALLBACK_moduleTitle		) LOAD_FUNCTION_ADDRESS( containerForCallbacks.ModuleLibrary, "nwol_moduleTitle"	);
+	containerForCallbacks.FunctionVersion			= (NWOL_RT_CALLBACK_moduleVersion	) LOAD_FUNCTION_ADDRESS( containerForCallbacks.ModuleLibrary, "nwol_moduleVersion"	);
+	containerForCallbacks.FunctionCreate			= (NWOL_RT_CALLBACK_moduleCreate	) LOAD_FUNCTION_ADDRESS( containerForCallbacks.ModuleLibrary, "nwol_moduleCreate"	);
+	containerForCallbacks.FunctionDelete			= (NWOL_RT_CALLBACK_moduleDelete	) LOAD_FUNCTION_ADDRESS( containerForCallbacks.ModuleLibrary, "nwol_moduleDelete"	);
+	containerForCallbacks.FunctionSetup				= (NWOL_RT_CALLBACK_moduleSetup		) LOAD_FUNCTION_ADDRESS( containerForCallbacks.ModuleLibrary, "nwol_moduleSetup"	);
+	containerForCallbacks.FunctionCleanup			= (NWOL_RT_CALLBACK_moduleCleanup	) LOAD_FUNCTION_ADDRESS( containerForCallbacks.ModuleLibrary, "nwol_moduleCleanup"	);
+	containerForCallbacks.FunctionRender			= (NWOL_RT_CALLBACK_moduleRender	) LOAD_FUNCTION_ADDRESS( containerForCallbacks.ModuleLibrary, "nwol_moduleRender"	);
+	containerForCallbacks.FunctionUpdate			= (NWOL_RT_CALLBACK_moduleUpdate	) LOAD_FUNCTION_ADDRESS( containerForCallbacks.ModuleLibrary, "nwol_moduleUpdate"	);
 
 	::nwol::RUNTIME_CALLBACK_ID							callbackPointersErased						= containerForCallbacks.TestForNullPointerFunctions();
 	if(callbackPointersErased) { 

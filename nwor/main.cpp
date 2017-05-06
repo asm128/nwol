@@ -214,6 +214,7 @@ LRESULT	WINAPI												mainWndProc								(HWND hWnd, UINT uMsg, WPARAM wPara
 }
 
 int32_t														setupScreen								(::nwol::SRuntimeValues& runtimeValues, const char_t* windowTitle)							{ 
+#if defined(__WINDOWS__)
 	WNDCLASSEX														windowClass								= {};
 	windowClass.cbSize											= sizeof(WNDCLASSEX);
 	windowClass.style											= NULL; // CS_HREDRAW | CS_VREDRAW;
@@ -249,6 +250,9 @@ int32_t														setupScreen								(::nwol::SRuntimeValues& runtimeValues, 
 	runtimeValues.Screen.PlatformDetail	.hWnd					= newWindow;
 	runtimeValues.PlatformDetail		.MainWindowStyle		= dwStyle;
 	ShowWindow(newWindow, SW_SHOW);
+#else
+#	error "Not implemented"
+#endif
 	return 0;
 }
 
@@ -453,7 +457,6 @@ int WINAPI													WinMain
 {
 	SetConsoleTitle("No Workflow Overhead Runtime");
 	::SRuntimeState													runtimeState					= {};	
-
 	::nwol::SRuntimeValues											& runtimeValues					= runtimeState.RuntimeValues;
 	runtimeValues.PlatformDetail.hInstance						=  hInstance		;
 	runtimeValues.PlatformDetail.hPrevInstance					=  hPrevInstance	;
