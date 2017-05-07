@@ -59,12 +59,12 @@ namespace nwol
 #define NWOL_ERROR_SEVERITY_ERROR		"4"	
 #define NWOL_ERROR_SEVERITY_FATAL		"5"	// Red Alert.
 
-#define nwol_printf(severity, text, format, ...)																													\
-	{																																								\
-		static constexpr const char				infoFormat		[]								= ":" severity ":[" __FILE__ ":%i]{" __FUNCTION__ "}:" text ":";	\
-		static char								infoPrefix		[::nwol::size(infoFormat)+8]	= {};																\
-		static const int						lengthPrefix									= sprintf_s(infoPrefix, infoFormat, __LINE__);						\
-		::nwol::__nwol_printf(infoPrefix, lengthPrefix, format, __VA_ARGS__);																						\
+#define nwol_printf(severity, text, format, ...)																															\
+	{																																										\
+		static constexpr const char						infoFormat		[]								= ":" severity ":[" __FILE__ ":%i]|{" __FUNCTION__ "}:" text ":";	\
+		static char										infoPrefix		[::nwol::size(infoFormat)+8]	= {};																\
+		static const int								lengthPrefix									= sprintf_s(infoPrefix, infoFormat, __LINE__);						\
+		::nwol::__nwol_printf(infoPrefix, lengthPrefix, format, __VA_ARGS__);																								\
 	}
 	
 #define nwol_wprintf nwol_printf
@@ -124,26 +124,6 @@ namespace nwol
 #	endif
 #else
 #	define data_printf( ... ) do {} while(false)
-#endif
-
-#ifdef RENDER_PRINTF_ENABLED
-#	if defined( __ANDROID__ )
-#		define render_printf( ... )					__android_log_print(ANDROID_LOG_DEBUG, __FILE__ ":", __VA_ARGS__  )
-#	else
-#		define render_printf( format, ... )			nwol_printf(NWOL_ERROR_SEVERITY_REALTIME, "render", format, __VA_ARGS__ )
-#	endif
-#else
-#	define render_printf( ... ) do {} while(false)
-#endif
-
-#ifdef SOUND_PRINTF_ENABLED
-#	if defined( __ANDROID__ )
-#		define sound_printf( ... )					__android_log_print(ANDROID_LOG_DEBUG, __FILE__ ":", __VA_ARGS__  )
-#	else
-#		define sound_printf( format, ... )			nwol_printf(NWOL_ERROR_SEVERITY_DEBUG, "sound", format, __VA_ARGS__ )
-#	endif
-#else
-#	define sound_printf( ... ) do {} while(false)
 #endif
 
 #ifdef VERBOSE_PRINTF_ENABLED

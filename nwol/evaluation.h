@@ -3,9 +3,9 @@
 
 namespace nwol
 {
-	template <typename _tValue> static inline constexpr		const _tValue&	min			(const _tValue& a, const _tValue& b)										noexcept	{ return (a < b) ? a : b; }
-	template <typename _tValue> static inline constexpr		const _tValue&	max			(const _tValue& a, const _tValue& b)										noexcept	{ return (a > b) ? a : b; }
-	template <typename _tValue> static inline constexpr		bool			in_range	(const _tValue& value, const _tValue& rangeStart, const _tValue& rangeStop)	noexcept	{ return (value >= rangeStart && value < rangeStop); }
+	template <typename _tValue> static inline constexpr		const _tValue&	min			(const _tValue& a, const _tValue& b)													noexcept	{ return (a < b) ? a : b;								}
+	template <typename _tValue> static inline constexpr		const _tValue&	max			(const _tValue& a, const _tValue& b)													noexcept	{ return (a > b) ? a : b;								}
+	template <typename _tValue> static inline constexpr		bool			in_range	(const _tValue& value, const _tValue& rangeStart, const _tValue& rangeStop)				noexcept	{ return (value >= rangeStart) && (value < rangeStop);	}
 } // namespace
 
 #define true_if(expression)			((expression) ? true:false)		// returns true	 if the parameter evaluates to true
