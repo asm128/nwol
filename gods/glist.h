@@ -101,7 +101,7 @@ namespace nwol
 			for (uint32_t iLocal = 0; iLocal < this->Count; iLocal++) {
 				if (this->begin()[iLocal]) {
 					lstPacked.begin()[iPacked]							= ::nwol::acquire(this->Data[iLocal]);
-					iPacked++;
+					++iPacked;
 				}
 			}
 
@@ -133,7 +133,7 @@ namespace nwol
 			else {
 				_tRef													* newElement			= 0;
 				if (out_pElement)
-					newElement = ::nwol::acquire(((_tRef**)this->m_BufferData->pByteArray)[this->Count - 1]);
+					newElement											= ::nwol::acquire(((_tRef**)this->m_BufferData->pByteArray)[this->Count - 1]);
 
 				::nwol::error_t											errMy					= this->resize(this->Count - 1);
 				if (-1 == errMy) {

@@ -11,8 +11,8 @@ struct SWindowClassRegistrator {
 	WNDCLASSEX							WindowClass								= {};
 	ATOM								RegistrationError						= 0;
 
-										SWindowClassRegistrator					(WNDCLASSEX windowClass)	: WindowClass(windowClass), RegistrationError(RegisterClassEx(&WindowClass)) {}		
 										~SWindowClassRegistrator				()							{ UnregisterClass(WindowClass.lpszClassName, WindowClass.hInstance); }
+										SWindowClassRegistrator					(WNDCLASSEX windowClass)	: WindowClass(windowClass), RegistrationError(RegisterClassEx(&WindowClass)) {}		
 };
 
 ::nwol::error_t						nwol::SScreenManager::CreateScreen			(const SScreenMetrics& desiredMetrics, id_t& screenIndex)		{

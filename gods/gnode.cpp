@@ -1,12 +1,10 @@
 #include "gnode.h"
 
-#include "graph.h"
-
 						::nwol::gnode::gnode					(CGraph* _pGraph, const ::nwol::glabel& name)
-	: pGraph(_pGraph)
-	, Id(-1)
+	: pGraph		(_pGraph)
+	, Id			(-1)
 #if defined(NWOL_DEBUG_ENABLED)
-	, DebugLabel(name)
+	, DebugLabel	(name)
 #endif
 {
 		 throw_if(0 == _pGraph, "", "Failed to initialize node! Graph pointer is NULL. Node name: '%s'.", name.begin())

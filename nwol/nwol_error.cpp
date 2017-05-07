@@ -13,7 +13,7 @@
 	const size_t									size											= FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, (DWORD)lastError, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
 
 	if(nullptr != messageBuffer) {
-		const std::string								message											(messageBuffer, size >= 2 ? size-2 : size);
+		const ::std::string								message											(messageBuffer, size >= 2 ? size-2 : size);
 		LocalFree(messageBuffer); 
 		return message;
 	}
