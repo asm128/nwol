@@ -168,15 +168,15 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
 	tickDelay									+= 2;	// Always decrease AI delay
 
 	sizeof(::SApplication);
-	sizeof(ttt::TicTacToe);
-	sizeof(ttt::CellCoord);
-	sizeof(ttt::CellPick);
+	sizeof(::ttt::TicTacToe);
+	sizeof(::ttt::CellCoord);
+	sizeof(::ttt::CellPick);
     verbose_printf("%s", "Exit.");
 	return 0; 
 }
 
 template<uint32_t _screenWidth, uint32_t _screenHeight>
-				void						bltASCIIScreen					(const ttt::ScreenASCII<_screenWidth, _screenHeight>& source, ::nwol::SASCIITarget& target)		noexcept	{
+				void						bltASCIIScreen					(const ::ttt::ScreenASCII<_screenWidth, _screenHeight>& source, ::nwol::SASCIITarget& target)		noexcept	{
 	for(uint32_t y = 0, yMax = ::nwol::min(_screenHeight, target.Height()); y < yMax; ++y)
 		for(uint32_t x = 0, xMax = ::nwol::min(_screenWidth, target.Width()); x < xMax; ++x)
 			target.Text[y][x]							= source.Cells[y][x];
@@ -184,9 +184,9 @@ template<uint32_t _screenWidth, uint32_t _screenHeight>
 
 				int32_t						render							(::SApplication& instanceApp)																				{
     verbose_printf("%s", "Enter.");
-	static constexpr const uint32_t					screenWidth						= ttt::TicTacToe::SCREEN_WIDTH + 1;
-	static constexpr const uint32_t					screenHeight					= ttt::TicTacToe::SCREEN_HEIGHT;
-	ttt::ScreenASCII<screenWidth, screenHeight>		targetScreenTTT					= {};
+	static constexpr const uint32_t					screenWidth						= ::ttt::TicTacToe::SCREEN_WIDTH + 1;
+	static constexpr const uint32_t					screenHeight					= ::ttt::TicTacToe::SCREEN_HEIGHT;
+	::ttt::ScreenASCII<screenWidth, screenHeight>		targetScreenTTT					= {};
 
 	const ::ttt::TicTacToe							& game							= instanceApp.Game;
 	const ::ttt::TicTacToeBoard32					& gameBoard						= game.Board;
@@ -203,7 +203,7 @@ template<uint32_t _screenWidth, uint32_t _screenHeight>
 	::nwol::SASCIITarget							actualScreen					= {};
 	::nwol::error_t									errMy							= ::nwol::getASCIIBackBuffer(actualScreen);	
 	reterr_error_if_errored(errMy, "%s", "Failed to get ASCII target!");
-	bltASCIIScreen(targetScreenTTT, actualScreen);
+	::bltASCIIScreen(targetScreenTTT, actualScreen);
 
 	::nwol::renderGUIASCII(actualScreen, instanceApp.GUI);
 

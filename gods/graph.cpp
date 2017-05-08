@@ -7,7 +7,7 @@ GDEFINE_OBJ(nwol, CGraphNode)
 
 ::nwol::error_t			nwol::CGraph::CreateNode				(::nwol::id_t* index, const ::nwol::glabel& nodeLabel)			{
 	GPtrObj(CGraphNode)						newNode						= CGraphNode();
-	int32_t								newIndex						= (int32_t)NodeInstances.size();
+	int32_t									newIndex					= (int32_t)NodeInstances.size();
 	reterr_error_if(newIndex != NodeInstances.push_back(newNode), "Failed to push node instance. Out of memory?");
 	if(newIndex != NodeLabels.push_back(nodeLabel)) {
 		error_printf("Failed to push node label. Out of memory?");
