@@ -1,9 +1,9 @@
-/// File:GCore_macros.h
+/// File:gref.h
 ///
 /// Contains macros for declaring the core functions and structures of the system.
 ///
 /// This file is part of the Game Object Data System.
-/// 2012-2013 (c) Pablo Ariel Zorrilla Cepeda
+/// 2012-2017 (c) Pablo Ariel Zorrilla Cepeda
 ///
 #include "gcore_ref.h"
 #include "gref_manager.h"
@@ -30,14 +30,14 @@
 
 #define __GDECLARE_POD_MEMORY_FUNCTIONS(baseType)																	\
 	__GDECLARE_COMMON_COPIABLE_FUNCTIONS(baseType);																	\
-	static inline	int32_t		gcompare	(GREF(baseType)* in_A, GREF(baseType)* in_B)	{ 						\
-		if (0 == in_A && 0 == in_B)																					\
-			return 0;																								\
-		else if (0 == in_A || 0 == in_B)																			\
-			return 0x7FFFFFFF;																						\
-																													\
-		return ::nwol::podcmp(in_A->Instance, in_B->Instance);														\
-	}
+	//static inline	int32_t		gcompare	(GREF(baseType)* in_A, GREF(baseType)* in_B)	{ 						\
+	//	if (0 == in_A && 0 == in_B)																					\
+	//		return 0;																								\
+	//	else if (0 == in_A || 0 == in_B)																			\
+	//		return 0x7FFFFFFF;																						\
+	//																												\
+	//	return ::nwol::podcmp(in_A->Instance, in_B->Instance);														\
+	//}
 
 // This macro is used to declare read/write functions of the structure data (serialization)
 #define __GDECLARE_POD_SERIALIZATION_FUNCTIONS(baseType)																									\
@@ -125,5 +125,15 @@ namespace nwol
 		for(uint32_t i = 0, count = *instanceCount; i < count; ++i)			
 			::nwol::release(&instanceRefs[i]);							
 	}
+
+	template<typename _tRef>	static inline	int32_t			compare			(const _tRef* in_A, const _tRef* in_B)							{
+		if (0 == in_A && 0 == in_B)																									
+			return 0;																												
+		else if (0 == in_A || 0 == in_B)																							
+			return 0x7FFFFFFF;																										
+																																	
+		return ::nwol::podcmp(in_A->Instance, in_B->Instance);																		
+	}
+
 } // namespace
 #endif // GREF_H_2398429385492835498234
