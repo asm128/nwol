@@ -65,14 +65,16 @@ namespace nwol
 
 	static	const char	formatModuleFunctionPtrNull[] = "Function pointer for %s() in module %s is null.";
 	struct SModuleInterface {
-		NWOL_RT_CALLBACK_moduleTitle							FunctionTitle				= 0;
-		NWOL_RT_CALLBACK_moduleVersion							FunctionVersion				= 0;
-		NWOL_RT_CALLBACK_moduleCreate							FunctionCreate				= 0;
-		NWOL_RT_CALLBACK_moduleDelete							FunctionDelete				= 0;
-		NWOL_RT_CALLBACK_moduleSetup 							FunctionSetup				= 0;
-		NWOL_RT_CALLBACK_moduleCleanup							FunctionCleanup				= 0;
-		NWOL_RT_CALLBACK_moduleRender							FunctionRender				= 0;
-		NWOL_RT_CALLBACK_moduleUpdate							FunctionUpdate				= 0;
+		void												* ModuleLibrary				= 0;	/// pointer to dll
+
+		NWOL_RT_CALLBACK_moduleTitle						FunctionTitle				= 0;
+		NWOL_RT_CALLBACK_moduleVersion						FunctionVersion				= 0;
+		NWOL_RT_CALLBACK_moduleCreate						FunctionCreate				= 0;
+		NWOL_RT_CALLBACK_moduleDelete						FunctionDelete				= 0;
+		NWOL_RT_CALLBACK_moduleSetup 						FunctionSetup				= 0;
+		NWOL_RT_CALLBACK_moduleCleanup						FunctionCleanup				= 0;
+		NWOL_RT_CALLBACK_moduleRender						FunctionRender				= 0;
+		NWOL_RT_CALLBACK_moduleUpdate						FunctionUpdate				= 0;
 
 		const char_t										* ModuleFile				= 0;
 		const char_t										* ModuleTitle				= 0;
@@ -80,8 +82,6 @@ namespace nwol
 		void												* ClientInstance			= 0;
 															  
 		::nwol::SRuntimeValues								* RuntimeValues				= 0;
-
-		void												* ModuleLibrary				= 0;	/// pointer to dll
 
 		const char_t*										Title						()						const				{ retval_error_if(nullptr	,							0 == FunctionTitle		, formatModuleFunctionPtrNull, "moduleTitle"	, ModuleTitle ? ModuleTitle : ModuleFile); return FunctionTitle		();									}
 		uint8_t												Version						()						const				{ retval_error_if(0xFF		,							0 == FunctionVersion	, formatModuleFunctionPtrNull, "moduleVersion"	, ModuleTitle ? ModuleTitle : ModuleFile); return FunctionVersion	();									}

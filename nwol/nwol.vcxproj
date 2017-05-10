@@ -204,6 +204,7 @@
     <ClInclude Include="nwol_memory.h" />
     <ClInclude Include="nwol_misc.h" />
     <ClInclude Include="multithread.h" />
+    <ClInclude Include="nwol_module.h" />
     <ClInclude Include="nwol_noise.h" />
     <ClInclude Include="nwol_bit.h" />
     <ClInclude Include="nwol_debug.h" />

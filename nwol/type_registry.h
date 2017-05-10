@@ -24,7 +24,7 @@ namespace nwol
 									
 		// This function takes an argument that informs of the padding size used by the system, which in general ranges from 4 to 32 in powers of 2.
 		template<typename _tBase>	
-								void													set								(uint32_t paddingBlockSize)				noexcept	{
+								void													set								(const uint32_t paddingBlockSize)		noexcept	{
 			Size																			= ::nwol::get_type_size				<_tBase>();
 			SizePadded																		= ::nwol::get_type_size_padded		<_tBase>(paddingBlockSize);
 			Align																			= ::nwol::get_type_align			<_tBase>();
@@ -102,10 +102,10 @@ namespace nwol
 		inline					operator												int32_t							()								const	noexcept	{ return Value; }
 
 																						SPODRecordInitializer
-			(	::nwol::STypeIdentifier		identifier		
-			,	const ::nwol::glabel&		display_name
-			,	const ::nwol::glabel&		description	
-			,	::nwol::GDATA_TYPE			data_type_id
+			(	const ::nwol::STypeIdentifier	& identifier		
+			,	const ::nwol::glabel			& display_name
+			,	const ::nwol::glabel			& description	
+			,	::nwol::GDATA_TYPE				data_type_id
 			) 
 		{
 			static	const int32_t																didntInitialize					= ::nwol::STypeRegistry::get().register_pod<_tBase>(identifier, display_name, description, data_type_id);																			
@@ -120,10 +120,10 @@ namespace nwol
 		inline					operator												int32_t							()								const	noexcept	{ return Value; }
 
 																						SOBJRecordInitializer
-			(	::nwol::STypeIdentifier		identifier		
-			,	const ::nwol::glabel&		display_name
-			,	const ::nwol::glabel&		description	
-			,	::nwol::GDATA_TYPE			data_type_id
+			(	const ::nwol::STypeIdentifier	& identifier		
+			,	const ::nwol::glabel			& display_name
+			,	const ::nwol::glabel			& description	
+			,	::nwol::GDATA_TYPE				data_type_id
 			) 
 		{
 			static	const int32_t																didntInitialize					= ::nwol::STypeRegistry::get().register_pod<_tBase>(identifier, display_name, description, data_type_id);																			
@@ -138,10 +138,28 @@ namespace nwol
 		inline					operator												int32_t							()								const	noexcept	{ return Value; }
 
 																						SNCORecordInitializer
-			(	::nwol::STypeIdentifier		identifier		
-			,	const ::nwol::glabel&		display_name
-			,	const ::nwol::glabel&		description	
-			,	::nwol::GDATA_TYPE			data_type_id
+			(	const ::nwol::STypeIdentifier	& identifier		
+			,	const ::nwol::glabel			& display_name
+			,	const ::nwol::glabel			& description	
+			,	::nwol::GDATA_TYPE				data_type_id
+			) 
+		{
+			static	const int32_t																didntInitialize					= ::nwol::STypeRegistry::get().register_pod<_tBase>(identifier, display_name, description, data_type_id);																			
+			Value																			= didntInitialize;
+		}
+	};	// struct
+
+	template<typename _tBase>
+	struct SMODRecordInitializer {
+								int32_t													Value;
+
+		inline					operator												int32_t							()								const	noexcept	{ return Value; }
+
+																						SMODRecordInitializer
+			(	const ::nwol::STypeIdentifier	& identifier		
+			,	const ::nwol::glabel			& display_name
+			,	const ::nwol::glabel			& description	
+			,	::nwol::GDATA_TYPE				data_type_id
 			) 
 		{
 			static	const int32_t																didntInitialize					= ::nwol::STypeRegistry::get().register_pod<_tBase>(identifier, display_name, description, data_type_id);																			
@@ -153,6 +171,7 @@ namespace nwol
 #define NWOL_REGISTER_POD(_nameSpace, _baseType, _displayName, _descriptionText)									NWOL_REGISTER_TYPE (::nwol::SPODRecordInitializer, ::nwol::GDATA_TYPE_POD, _nameSpace, _baseType, _displayName, _descriptionText)
 #define NWOL_REGISTER_OBJ(_nameSpace, _baseType, _displayName, _descriptionText)									NWOL_REGISTER_TYPE (::nwol::SOBJRecordInitializer, ::nwol::GDATA_TYPE_OBJ, _nameSpace, _baseType, _displayName, _descriptionText)
 #define NWOL_REGISTER_NCO(_nameSpace, _baseType, _displayName, _descriptionText)									NWOL_REGISTER_TYPE (::nwol::SNCORecordInitializer, ::nwol::GDATA_TYPE_NCO, _nameSpace, _baseType, _displayName, _descriptionText)
+#define NWOL_REGISTER_MOD(_nameSpace, _baseType, _displayName, _descriptionText)									NWOL_REGISTER_TYPE (::nwol::SMODRecordInitializer, ::nwol::GDATA_TYPE_MOD, _nameSpace, _baseType, _displayName, _descriptionText)
 } // namespace
 
 #endif // __TYPE_REGISTRY_H__92874982742__

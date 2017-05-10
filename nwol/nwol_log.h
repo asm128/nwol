@@ -142,7 +142,7 @@ namespace nwol
 #define debug_print( message )						info_printf		("%s", message)
 
 #if defined(__ANDROID__)
-#define throw_if(condition, exception, ...)			if(condition) { error_printf	(__VA_ARGS__); char* _tasdas = 0; *_tasdas = 123; }
+#define throw_if(condition, exception, ...)			if(condition) { error_printf	(__VA_ARGS__); uint64_t * _tasdas = 0; for(uint32_t i = 0; i < 0xFFFFFFFF; ++i) _tasdas[i] = 0xFFFFFFFF00000000ULL; }	// No throw so we just crash.
 #else
 #define throw_if(condition, exception, ...)			if(condition) { error_printf	(__VA_ARGS__); throw(exception); }
 #endif

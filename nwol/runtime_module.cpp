@@ -17,11 +17,22 @@ void										nwol::printErasedModuleInterfacePointers		(::nwol::RUNTIME_CALLBAC
 	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_UPDATE	))	error_printf(errorFormat, "moduleUpdate()"		);
 }
 
-::nwol::error_t								nwol::loadModule								(::nwol::SModuleInterface& containerForCallbacks, const char_t* moduleName)		{
+::nwol::error_t								nwol::unloadModule								(::nwol::SModuleInterface& containerForCallbacks)								{
+	retwarn_error_if(0 == containerForCallbacks.ModuleLibrary, "Invalid module handle! This could happen if the unloadModule() function was called twice for the same module.");
+	void												* moduleHandle								= containerForCallbacks.ModuleLibrary;
+	containerForCallbacks.ModuleLibrary				= 0;
+#if defined(__WINDOWS__)
+	FreeLibrary((HMODULE)moduleHandle);
+#else
+	dlclose(moduleHandle);
+#endif
+	return 0;
+}
 
+::nwol::error_t								nwol::loadModule								(::nwol::SModuleInterface& containerForCallbacks, const char_t* moduleName)		{
 #if defined(__WINDOWS__)
 	static	const char_t								* errorFormat0								= "Failed to load library: %s: 0x%X - \"%s\"";
-	std::string											errorString;
+	::std::string										errorString;
     DWORD												lastError;
 	reterr_error_if(nullptr == (containerForCallbacks.ModuleLibrary = LoadLibrary( moduleName )), errorFormat0, moduleName, (lastError = ::GetLastError()), (errorString = getWindowsErrorAsString(::GetLastError())).c_str()); 
 
@@ -53,17 +64,5 @@ void										nwol::printErasedModuleInterfacePointers		(::nwol::RUNTIME_CALLBAC
 	containerForCallbacks.ModuleFile				= ::nwol::glabel(moduleName, ~0U).c_str();
 	containerForCallbacks.ModuleTitle				= ::nwol::glabel(containerForCallbacks.FunctionTitle(), ~0U).c_str();
 
-	return 0;
-}
-
-::nwol::error_t								nwol::unloadModule								(::nwol::SModuleInterface& containerForCallbacks)								{
-	retwarn_error_if(0 == containerForCallbacks.ModuleLibrary, "Invalid module handle! This could happen if the unloadModule() function was called twice for the same module.");
-	void												* moduleHandle								= containerForCallbacks.ModuleLibrary;
-	containerForCallbacks.ModuleLibrary				= 0;
-#if defined(__WINDOWS__)
-	FreeLibrary((HMODULE)moduleHandle);
-#else
-	dlclose(moduleHandle);
-#endif
 	return 0;
 }

@@ -16,9 +16,9 @@ namespace ttt
 		,	CELL_VALUE_MASK		= 3
 		};	// enum
 
-	template<typename _numeric> 
+	template<typename _tNumeric> 
 	struct Coord2D {
-							_numeric									x, y;
+							_tNumeric									x, y;
 	};
 
 	typedef					Coord2D<uint32_t>							Coord2Du32;
@@ -83,16 +83,18 @@ namespace ttt
 							uint32_t									PlayerIndex						: 1;
 							uint32_t									Winner							: 2;
 							uint32_t									PlayerControls					: 2;
+							uint32_t									Padding							: 5;
+
 		//				
-		inline constexpr												TicTacToeBoard32				()																											noexcept	: Cells(0), MovesLeft(9), PlayerIndex(0), Winner(CELL_VALUE_EMPTY), PlayerControls(0x1)	{}
+		inline constexpr												TicTacToeBoard32				()																											noexcept	: Cells(0), MovesLeft(9), PlayerIndex(0), Winner(CELL_VALUE_EMPTY), PlayerControls(0x1), Padding(0)	{}
 		//
-		inline constexpr	CELL_VALUE									GetWinner						()																									const	noexcept	{ return (CELL_VALUE)Winner;															}
-		inline constexpr	PLAYER_CONTROL								GetPlayerControl				(const int playerIndex)																				const	noexcept	{ return (PLAYER_CONTROL)((PlayerControls & (1 << playerIndex)) >> playerIndex);		}
-		inline constexpr	PLAYER_CONTROL								GetPlayerControlCurrent			()																									const	noexcept	{ return GetPlayerControl(PlayerIndex);													}
-		inline constexpr	CELL_VALUE									GetCellValue					(const int row, const int column)																	const	noexcept	{ return GetCellValue	(column * 3 + row);												}
-		inline				void										SetCellValue					(const int row, const int column, const CELL_VALUE value)													noexcept	{ SetCellValue			(column * 3 + row, value);										}
-		inline constexpr	CELL_VALUE									GetCellValue					(const int index)																					const	noexcept	{ return (CELL_VALUE)((Cells & (CELL_VALUE_MASK << (index * 2))) >> index * 2);			}
-		inline				void										SetCellValue					(const int index, const CELL_VALUE value)																	noexcept	{ Cells = Cells | ((value & CELL_VALUE_MASK) << (index * 2));							}
+		inline constexpr	CELL_VALUE									GetWinner						()																									const	noexcept	{ return (CELL_VALUE)Winner;																		}
+		inline constexpr	PLAYER_CONTROL								GetPlayerControl				(const int playerIndex)																				const	noexcept	{ return (PLAYER_CONTROL)((PlayerControls & (1 << playerIndex)) >> playerIndex);					}
+		inline constexpr	PLAYER_CONTROL								GetPlayerControlCurrent			()																									const	noexcept	{ return GetPlayerControl(PlayerIndex);																}
+		inline constexpr	CELL_VALUE									GetCellValue					(const int row, const int column)																	const	noexcept	{ return GetCellValue	(column * 3 + row);															}
+		inline				void										SetCellValue					(const int row, const int column, const CELL_VALUE value)													noexcept	{ SetCellValue			(column * 3 + row, value);													}
+		inline constexpr	CELL_VALUE									GetCellValue					(const int index)																					const	noexcept	{ return (CELL_VALUE)((Cells & (CELL_VALUE_MASK << (index * 2))) >> index * 2);						}
+		inline				void										SetCellValue					(const int index, const CELL_VALUE value)																	noexcept	{ Cells = Cells | ((value & CELL_VALUE_MASK) << (index * 2));										}
 							TicTacToeBoard16							GetCells						(const CELL_VALUE value)																			const	noexcept	{
 			TicTacToeBoard16													result;
 			for(int y = 0; y < 3; ++y)
@@ -127,7 +129,6 @@ namespace ttt
 		inline				uint8_t										TurnChange						()																											noexcept	{ return (++Board.PlayerIndex) %= 2;	}
 		inline				void										Restart							()																											noexcept	{ 
 			const int															playerIndex						= Board.PlayerIndex;
-			Board.Winner													= CELL_VALUE_EMPTY;
 			Board															= {};
 			Board.PlayerIndex												= playerIndex;
 		}

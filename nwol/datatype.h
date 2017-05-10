@@ -524,6 +524,7 @@ namespace nwol
 	static constexpr		const SDataTypeID			GDATA_TYPE_POD					= GTYPEID_MAKE_NON_UNIFORM(0x0E);	// 
 	static constexpr		const SDataTypeID			GDATA_TYPE_OBJ					= GTYPEID_MAKE_NON_UNIFORM(0x0F);	// 
 	static constexpr		const SDataTypeID			GDATA_TYPE_NCO					= GTYPEID_MAKE_NON_UNIFORM(0x10);	// 
+	static constexpr		const SDataTypeID			GDATA_TYPE_MOD					= GTYPEID_MAKE_NON_UNIFORM(0x11);	// 
 	static constexpr		const SDataTypeID			GDATA_TYPE_POINTER				= GTYPEID_MAKE_NON_UNIFORM(sizeof(void*)*8);	// notice that this definition changes depending on the platform
 
 	// -- STL types
@@ -532,7 +533,7 @@ namespace nwol
 	static constexpr		const SDataTypeID			GDATA_TYPE_STLSTRING			= GTYPEID_MAKE_STL(0x03);	// aka GDATA_TYPE_INT1_15
 	
 	// -- Random bullshit that can cause a lot of problems such as security vulnerabilities, buffer overflows, hidden bugs, portability problems, increasing code size, etc.
-	static constexpr		const SDataTypeID			GDATA_TYPE_SIZE_T				= SDataTypeID(sizeof(size_t)*8, 1, false, sizeof(size_t) == 4 ? false : true);
+	static constexpr		const SDataTypeID			GDATA_TYPE_SIZE_T				= ::nwol::SDataTypeID(sizeof(size_t)*8, 1, false, sizeof(size_t) == 4 ? false : true);
 
 	//}; // GDATA_TYPE
 	// ------------------------------------------ Aliases

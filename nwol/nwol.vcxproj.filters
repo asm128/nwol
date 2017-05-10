@@ -204,6 +204,9 @@
     <ClInclude Include="nwol_screen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="nwol_module.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="label.cpp">
