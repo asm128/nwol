@@ -7,14 +7,14 @@
 #endif
 
 void										nwol::printErasedModuleInterfacePointers		(::nwol::RUNTIME_CALLBACK_ID erasedCallbacks, const char_t* errorFormat)		{
-	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_TITLE	))	error_printf(errorFormat, "moduleTitle()"		);
+	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_TITLE	))	error_printf(errorFormat, "moduleTitle()"	);
 	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_VERSION	))	error_printf(errorFormat, "moduleVersion()"	);
-	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_CREATE	))	error_printf(errorFormat, "moduleCreate()"		);
-	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_DELETE	))	error_printf(errorFormat, "moduleDelete()"		);
-	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_SETUP	))	error_printf(errorFormat, "moduleSetup()"		);
+	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_CREATE	))	error_printf(errorFormat, "moduleCreate()"	);
+	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_DELETE	))	error_printf(errorFormat, "moduleDelete()"	);
+	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_SETUP	))	error_printf(errorFormat, "moduleSetup()"	);
 	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_CLEANUP	))	error_printf(errorFormat, "moduleCleanup()"	);
-	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_RENDER	))	error_printf(errorFormat, "moduleRender()"		);
-	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_UPDATE	))	error_printf(errorFormat, "moduleUpdate()"		);
+	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_RENDER	))	error_printf(errorFormat, "moduleRender()"	);
+	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_UPDATE	))	error_printf(errorFormat, "moduleUpdate()"	);
 }
 
 ::nwol::error_t								nwol::unloadModule								(::nwol::SModuleInterface& containerForCallbacks)								{
@@ -34,7 +34,7 @@ void										nwol::printErasedModuleInterfacePointers		(::nwol::RUNTIME_CALLBAC
 	static	const char_t								* errorFormat0								= "Failed to load library: %s: 0x%X - \"%s\"";
 	::std::string										errorString;
     DWORD												lastError;
-	reterr_error_if(nullptr == (containerForCallbacks.ModuleLibrary = LoadLibrary( moduleName )), errorFormat0, moduleName, (lastError = ::GetLastError()), (errorString = getWindowsErrorAsString(::GetLastError())).c_str()); 
+	reterr_error_if(nullptr == (containerForCallbacks.ModuleLibrary = LoadLibrary( moduleName )), errorFormat0, moduleName, (lastError = ::GetLastError()), (errorString = ::nwol::getWindowsErrorAsString(::GetLastError())).c_str()); 
 
 #	define LOAD_FUNCTION_ADDRESS(hModule, lpProcName)	GetProcAddress((HMODULE)hModule, lpProcName)
 #else
@@ -55,9 +55,9 @@ void										nwol::printErasedModuleInterfacePointers		(::nwol::RUNTIME_CALLBAC
 
 	::nwol::RUNTIME_CALLBACK_ID							callbackPointersErased						= containerForCallbacks.TestForNullPointerFunctions();
 	if(callbackPointersErased) { 
-		unloadModule(containerForCallbacks);
+		::nwol::unloadModule(containerForCallbacks);
 		static	const char_t								* errorFormat1								= "Failed to get dynamically loaded function: %s.";
-		printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
+		::nwol::printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
 		return -1;
 	}
 

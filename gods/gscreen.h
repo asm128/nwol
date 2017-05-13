@@ -22,12 +22,11 @@ namespace nwol
 		::nwol::error_t										CreateScreen				(const SScreenMetrics & desiredMetrics, id_t& screenIndex);
 #if defined(__WINDOWS__)
 		LRESULT												WndProc						(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)			{
-			if(hWnd) {
-				for(uint32_t iWindow = 0, windowCount = Screens.size(); iWindow < windowCount; ++iWindow) {
-					::nwol::SScreen											& currentWindow				= Screens[iWindow];
-					if(currentWindow.PlatformDetail.hWnd == hWnd)
-						return currentWindow.WndProc(hWnd, uMsg, wParam, lParam);
-				}
+			retnul_error_if(0 == hWnd, "Invalid window handle!");
+			for(uint32_t iWindow = 0, windowCount = Screens.size(); iWindow < windowCount; ++iWindow) {
+				::nwol::SScreen											& currentWindow				= Screens[iWindow];
+				if(currentWindow.PlatformDetail.hWnd == hWnd)
+					return currentWindow.WndProc(hWnd, uMsg, wParam, lParam);
 			}
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 		}

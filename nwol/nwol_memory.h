@@ -26,7 +26,6 @@
 
 namespace nwol
 {
-
 #if defined(__WINDOWS__)
 	static inline void*																			nwol_malloc					(size_t size)										{ return _aligned_malloc(size, NWOL_MALLOC_CUSTOM_ALIGN);	}
 	static inline void																			nwol_free					(void* ptr)											{ _aligned_free(ptr);										}
@@ -56,11 +55,11 @@ namespace nwol
 
 	template <typename _tBase>	static inline constexpr		uint32_t							get_type_align_multiplier	()										noexcept	{
 		return (uint32_t) 
-			(	( 0 == (sizeof(_tBase) % 32)) ? sizeof(_tBase) / 32
-			:	( 0 == (sizeof(_tBase) % 16)) ? sizeof(_tBase) / 16
-			:	( 0 == (sizeof(_tBase) % 8))  ? sizeof(_tBase) / 8 
-			:	( 0 == (sizeof(_tBase) % 4))  ? sizeof(_tBase) / 4 
-			:	( 0 == (sizeof(_tBase) % 2))  ? sizeof(_tBase) / 2 
+			(	(0 == (sizeof(_tBase) % 32)) ? sizeof(_tBase) / 32
+			:	(0 == (sizeof(_tBase) % 16)) ? sizeof(_tBase) / 16
+			:	(0 == (sizeof(_tBase) %  8)) ? sizeof(_tBase) /  8
+			:	(0 == (sizeof(_tBase) %  4)) ? sizeof(_tBase) /  4
+			:	(0 == (sizeof(_tBase) %  2)) ? sizeof(_tBase) /  2
 			:	sizeof(_tBase) 
 			);
 	}

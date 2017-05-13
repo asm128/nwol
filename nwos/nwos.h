@@ -6,7 +6,7 @@
 #define __NWOA_H__983264902__
 
 struct SApplication	: public ::nwol::SApplicationBase {
-	NWOM(::nwol, CServer					,	NetworkServer			, ::nwol::GDATA_TYPE_OBJ		, "Network server"				, "Holds server connection state and client information."		)	= {};	// 
+	NWOM(::, SApplication, ::nwol, CServer,	NetworkServer, ::nwol::GDATA_TYPE_OBJ, "Network server", "Holds server connection state and client information.")	= {};	// 
 	NWOM_REGISTRY
 		(	NWOM_NAME(NetworkServer		)
 		);

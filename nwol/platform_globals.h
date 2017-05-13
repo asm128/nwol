@@ -1,6 +1,17 @@
 #ifndef __PLATFORM_GLOBALS_H__2983423__
 #define __PLATFORM_GLOBALS_H__2983423__
 
+#if (defined(DEBUG) || defined(_DEBUG)) && (!defined(NWOL_DISABLE_DEBUG)) && !defined(NWOL_DEBUG_ENABLED) 
+#	define NWOL_DEBUG_ENABLED
+#	if !defined(USE_DEBUG_BREAK_ON_ERROR_LOG)
+#		define USE_DEBUG_BREAK_ON_ERROR_LOG
+#	endif
+#endif	// _DEBUG
+
+#if (!defined(NWOL_MTSUPPORT)) && !defined(NWOL_DISABLE_MTSUPPORT)
+#	define NWOL_MTSUPPORT
+#endif
+
 #if (!defined(__ANDROID__)) && defined(ANDROID) 
 #	define __ANDROID__
 #elif (!defined(__LINUX__)) && defined(__linux__)
@@ -13,7 +24,7 @@
 #endif
 
 #ifdef __GNUC__
-#define UNUSED __attribute__((__unused__))
+#	define UNUSED __attribute__((__unused__))
 #elif defined(__WINDOWS__)
 #	ifdef _DEBUG
 #		define UNUSED 
@@ -21,7 +32,7 @@
 #		define UNUSED 
 #	endif
 #else
-#define UNUSED
+#	define UNUSED
 #endif
 
 #if defined(__WINDOWS__)
@@ -29,9 +40,17 @@
 #endif
 
 #if defined(__WINDOWS__)
-#define DYNAMIC_LIBRARY_EXTENSION "dll"
+#	define DYNAMIC_LIBRARY_EXTENSION "dll"
 #else
-#define DYNAMIC_LIBRARY_EXTENSION "os"
+#	define DYNAMIC_LIBRARY_EXTENSION "os"
+#endif
+
+#if defined(__WINDOWS__) && !defined(NOMINMAX)
+#	define NOMINMAX
+#endif 
+
+#if defined(__WINDOWS__) && !defined(WIN32_LEAN_AND_MEAN)
+#	define WIN32_LEAN_AND_MEAN
 #endif
 
 #endif // __PLATFORM_GLOBALS_H__2983423__

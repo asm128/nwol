@@ -1,3 +1,5 @@
+#include "platform_globals.h"
+
 #ifndef __EVALUATION_H__92364890278346982374__
 #define __EVALUATION_H__92364890278346982374__
 

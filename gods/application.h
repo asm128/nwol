@@ -149,10 +149,10 @@ namespace nwol
 	GDEFINE_ENUM_VALUE	(NETWORK_STATE, RUNNING	, 2);
 
 	struct SApplicationNetworkClient {
-		NWOM(::nwol, SClientConnection			,	Connection				, ::nwol::GDATA_TYPE_OBJ		, "Connection link"				, "Holds socket and connection information."					)	= {};
-		NWOM(::nwol, CMutex						,	ServerTimeMutex			, ::nwol::GDATA_TYPE_OBJ		, "Server time mutex"			, "Locks access to server time variable."						)	= {};
-		NWOM(, uint64_t							,	ServerTime				, ::nwol::GDATA_TYPE_UINT64		, "Server time"					, "Holds server time."											)	= 0;
-		NWOM(::nwol, NETWORK_STATE				,	State					, ::nwol::GDATA_TYPE_UINT8		, "Network state bitfield"		, "Holds netowrk and connection states."						)	= NETWORK_STATE_NONE;
+		NWOM(::nwol, SApplicationNetowrkClient, ::nwol, SClientConnection			,	Connection				, ::nwol::GDATA_TYPE_OBJ		, "Connection link"				, "Holds socket and connection information."					)	= {};
+		NWOM(::nwol, SApplicationNetowrkClient, ::nwol, CMutex						,	ServerTimeMutex			, ::nwol::GDATA_TYPE_OBJ		, "Server time mutex"			, "Locks access to server time variable."						)	= {};
+		NWOM(::nwol, SApplicationNetowrkClient, , uint64_t							,	ServerTime				, ::nwol::GDATA_TYPE_UINT64		, "Server time"					, "Holds server time."											)	= 0;
+		NWOM(::nwol, SApplicationNetowrkClient, ::nwol, NETWORK_STATE				,	State					, ::nwol::GDATA_TYPE_UINT8		, "Network state bitfield"		, "Holds netowrk and connection states."						)	= NETWORK_STATE_NONE;
 		NWOM_REGISTRY
 			(	NWOM_NAME(Connection		)
 			,	NWOM_NAME(ServerTimeMutex	)
@@ -162,11 +162,11 @@ namespace nwol
 	};	// struct
 
 	struct SApplicationBase {
-		NWOM(::nwol, SRuntimeValues*			,	RuntimeValues			, ::nwol::GDATA_TYPE_POINTER	, "Runtime values"				, "Stores runtime states and loaded modules."					)	= 0;
-		NWOM(::nwol, SInput						,	Input					, ::nwol::GDATA_TYPE_OBJ		, "Input subsystem"				, "Holds information of user input events and states."			)	= {};
-		NWOM(::nwol, SGUI						,	GUI						, ::nwol::GDATA_TYPE_OBJ		, "Graphical user interface"	, "GUI control information is stored and drawn by this object."	)	= {{640, 480}, {132, 60},};
-		NWOM(::nwol, SRenderer					,	Renderer				, ::nwol::GDATA_TYPE_OBJ		, "Render device"				, "Used to render graphics to the backbuffer."					)	= {};
-		NWOM(::nwol, SApplicationNetworkClient	,	NetworkClient			, ::nwol::GDATA_TYPE_OBJ		, "Network client"				, "Holds client connection state and server information."		)	= {};	// 
+		NWOM(::nwol, SApplicationBase, ::nwol, SRuntimeValues*				,	RuntimeValues			, ::nwol::GDATA_TYPE_POINTER	, "Runtime values"				, "Stores runtime states and loaded modules."							)	= 0;
+		NWOM(::nwol, SApplicationBase, ::nwol, SInput						,	Input					, ::nwol::GDATA_TYPE_OBJ		, "Input subsystem"				, "Holds information of user input events and states."					)	= {};
+		NWOM(::nwol, SApplicationBase, ::nwol, SGUI							,	GUI						, ::nwol::GDATA_TYPE_OBJ		, "Graphical user interface"	, "GUI control information is stored and drawn by this object."			)	= {{640, 480}, {132, 60},};
+		NWOM(::nwol, SApplicationBase, ::nwol, SRenderer					,	Renderer				, ::nwol::GDATA_TYPE_OBJ		, "Render device"				, "Used to render graphics to the backbuffer."							)	= {};
+		NWOM(::nwol, SApplicationBase, ::nwol, SApplicationNetworkClient	,	NetworkClient			, ::nwol::GDATA_TYPE_OBJ		, "Network client"				, "Holds client connection state and server information."				)	= {};	// 
 		NWOM_REGISTRY
 			(	NWOM_NAME(RuntimeValues		)
 			,	NWOM_NAME(Input				)

@@ -1,6 +1,6 @@
 #include "nwol_coord.h"
 #if defined(__WINDOWS__)
-#include <Windows.h>
+#	include <Windows.h>
 #endif
 
 #ifndef NWOL_WINDOW_H_9782365897236

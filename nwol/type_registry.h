@@ -32,7 +32,6 @@ namespace nwol
 		}
 	};	// struct
 
-
 	class STypeRegistry {
 		// Holds indices to name arrays.
 		struct STypeRecord {
@@ -53,15 +52,15 @@ namespace nwol
 								::nwol::array_pod<::nwol::GDATA_TYPE			>		DataTypeIds						= {};
 								::nwol::array_pod<::nwol::STypeMetrics			>		TypeMetrics						= {};
 	public:
-		static					STypeRegistry&											get								()										noexcept	{ static STypeRegistry			table;				return table					; }
-		static inline			const uint32_t											get_record_count				()										noexcept	{ static const STypeRegistry	instance = get();	return instance.Records.size()	; }
-		static inline			const ::nwol::array_pod<::nwol::STypeIdentifier	>&		get_identifiers					()										noexcept	{ static const STypeRegistry	instance = get();	return instance.Types			; }
-		static inline			const ::nwol::array_pod<::nwol::gsyslabel		>&		get_namespaces					()										noexcept	{ static const STypeRegistry	instance = get();	return instance.Namespaces		; }
-		static inline			const ::nwol::array_pod<::nwol::gsyslabel		>&		get_type_names					()										noexcept	{ static const STypeRegistry	instance = get();	return instance.TypeNames		; }
-		static inline			const ::nwol::array_pod<::nwol::glabel			>&		get_display_names				()										noexcept	{ static const STypeRegistry	instance = get();	return instance.DisplayNames	; }
-		static inline			const ::nwol::array_pod<::nwol::glabel			>&		get_descriptions				()										noexcept	{ static const STypeRegistry	instance = get();	return instance.Descriptions	; }
-		static inline			const ::nwol::array_pod<::nwol::GDATA_TYPE		>&		get_data_type_ids				()										noexcept	{ static const STypeRegistry	instance = get();	return instance.DataTypeIds		; }
-		static inline			const ::nwol::array_pod<::nwol::STypeMetrics	>&		get_type_metrics				()										noexcept	{ static const STypeRegistry	instance = get();	return instance.TypeMetrics		; }
+		static					STypeRegistry&											get								()										noexcept	{ static STypeRegistry			registryInstance;	return registryInstance			; }
+		static inline			const uint32_t											get_record_count				()										noexcept	{ static const STypeRegistry&	instance = get();	return instance.Records.size()	; }
+		static inline			const ::nwol::array_pod<::nwol::STypeIdentifier	>&		get_identifiers					()										noexcept	{ static const STypeRegistry&	instance = get();	return instance.Types			; }
+		static inline			const ::nwol::array_pod<::nwol::gsyslabel		>&		get_namespaces					()										noexcept	{ static const STypeRegistry&	instance = get();	return instance.Namespaces		; }
+		static inline			const ::nwol::array_pod<::nwol::gsyslabel		>&		get_type_names					()										noexcept	{ static const STypeRegistry&	instance = get();	return instance.TypeNames		; }
+		static inline			const ::nwol::array_pod<::nwol::glabel			>&		get_display_names				()										noexcept	{ static const STypeRegistry&	instance = get();	return instance.DisplayNames	; }
+		static inline			const ::nwol::array_pod<::nwol::glabel			>&		get_descriptions				()										noexcept	{ static const STypeRegistry&	instance = get();	return instance.Descriptions	; }
+		static inline			const ::nwol::array_pod<::nwol::GDATA_TYPE		>&		get_data_type_ids				()										noexcept	{ static const STypeRegistry&	instance = get();	return instance.DataTypeIds		; }
+		static inline			const ::nwol::array_pod<::nwol::STypeMetrics	>&		get_type_metrics				()										noexcept	{ static const STypeRegistry&	instance = get();	return instance.TypeMetrics		; }
 
 		template<typename _tBase>
 								::nwol::error_t											register_pod

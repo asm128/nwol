@@ -81,8 +81,8 @@ namespace nwol
 		inline constexpr	uint32_t					ElementBytes	()						const	{ return ( SizeInBits / 8 + one_if( SizeInBits % 8 ) ); }
 		inline constexpr	uint32_t					TotalBytes		()						const	{ return ElementPad ? ElementBytes() * ElementCount : SizeInBits * ElementCount / 8 + one_if( SizeInBits * ElementCount % 8 ); }
 
-		inline constexpr	bool						IsSTL			()						const	{ return (1 == SizeInBits) && (IsSigned == true) && (IsFloat == true ) && (IsNorm == true ) && (IsBigEndian == false); }
-		inline constexpr	bool						IsNonUniform	()						const	{ return (1 == SizeInBits) && (IsSigned == true) && (IsFloat == false) && (IsNorm == false) && (IsBigEndian == false); }
+		inline constexpr	bool						IsSTL			()						const	{ return (1 == SizeInBits) && IsSigned && IsFloat				&& IsNorm				&& (IsBigEndian == false); }
+		inline constexpr	bool						IsNonUniform	()						const	{ return (1 == SizeInBits) && IsSigned && (IsFloat == false)	&& (IsNorm == false)	&& (IsBigEndian == false); }
 		inline constexpr	bool						IsUniform		()						const	{ return !IsNonUniform(); }
 
 		inline constexpr								SDataTypeID		( GDATA_TYPE typeId )
@@ -524,7 +524,8 @@ namespace nwol
 	static constexpr		const SDataTypeID			GDATA_TYPE_POD					= GTYPEID_MAKE_NON_UNIFORM(0x0E);	// 
 	static constexpr		const SDataTypeID			GDATA_TYPE_OBJ					= GTYPEID_MAKE_NON_UNIFORM(0x0F);	// 
 	static constexpr		const SDataTypeID			GDATA_TYPE_NCO					= GTYPEID_MAKE_NON_UNIFORM(0x10);	// 
-	static constexpr		const SDataTypeID			GDATA_TYPE_MOD					= GTYPEID_MAKE_NON_UNIFORM(0x11);	// 
+	static constexpr		const SDataTypeID			GDATA_TYPE_MOD					= GTYPEID_MAKE_NON_UNIFORM(0x11);	//
+	static constexpr		const SDataTypeID			GDATA_TYPE_FUN					= GTYPEID_MAKE_NON_UNIFORM(0x12);	//
 	static constexpr		const SDataTypeID			GDATA_TYPE_POINTER				= GTYPEID_MAKE_NON_UNIFORM(sizeof(void*)*8);	// notice that this definition changes depending on the platform
 
 	// -- STL types

@@ -69,6 +69,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\$(Platform).$(Configuration)\modules\</OutDir>
     <IntDir>..\..\obj\$(Platform).$(Configuration)\$(ProjectName)\</IntDir>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -91,7 +92,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>NWOL_MTSUPPORT; NOMINMAX; USE_DEBUG_BREAK_ON_ERROR_LOG;  NWOL_DEBUG_ENABLED; WIN32; _DEBUG; _WINDOWS; _USRDLL;NWOS_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX; WIN32; _DEBUG; _WINDOWS; _USRDLL;NWOS_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\nwol\nwol; ..\..\nwol\gods; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -111,7 +112,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>NWOL_MTSUPPORT; NOMINMAX; USE_DEBUG_BREAK_ON_ERROR_LOG;  NWOL_DEBUG_ENABLED; _DEBUG; _WINDOWS; _USRDLL;NWOS_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX; _DEBUG; _WINDOWS; _USRDLL;NWOS_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\nwol\nwol; ..\..\nwol\gods; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -133,7 +134,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NWOL_MTSUPPORT; NOMINMAX; USE_DEBUG_BREAK_ON_ERROR_LOG;   WIN32; NDEBUG; _WINDOWS; _USRDLL;NWOS_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;    WIN32; NDEBUG; _WINDOWS; _USRDLL;NWOS_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\nwol\nwol; ..\..\nwol\gods; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -157,7 +158,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NWOL_MTSUPPORT; NOMINMAX; USE_DEBUG_BREAK_ON_ERROR_LOG;   NDEBUG; _WINDOWS; _USRDLL;NWOS_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;    NDEBUG; _WINDOWS; _USRDLL;NWOS_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\nwol\nwol; ..\..\nwol\gods; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
