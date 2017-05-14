@@ -62,8 +62,8 @@ namespace nwol
 		typedef std::atomic<size_t> refcount_t;
 #endif
 		typedef const char*			cue_t;	// Special thanks to Kragen Javier Sitaker for this cue_t idea.
-		typedef uint64_t			uid_t;
-		typedef int32_t				id_t;
+		typedef ::uint64_t			uid_t;
+		typedef ::int32_t			id_t;
 
 } // namespace
 
