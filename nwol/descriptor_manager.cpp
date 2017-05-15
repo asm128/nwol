@@ -2,10 +2,6 @@
 
 #include <stdio.h>
 
-#if defined(WIN32) || defined(_WIN32)
-#include <crtdbg.h>
-#endif
-
 ::nwol::CDescriptorManager*	nwol::getDescriptorManager				()	{	
 	return &::nwol::CDescriptorManager::get();	
 }
