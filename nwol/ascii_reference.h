@@ -75,14 +75,14 @@ namespace klib
 	#define WALL_CONNECTION_VERTICAL_LEFT		2
 
 	struct SASCIIWallConnection {
-		bool								Bottom				;
-		bool								Top					;
-		bool								Left				;
-		bool								Right				;
-		bool								ReinforcedBottom	;
-		bool								ReinforcedTop		;
-		bool								ReinforcedLeft		;
-		bool								ReinforcedRight		;
+		bool								Bottom				: 1;
+		bool								Top					: 1;
+		bool								Left				: 1;
+		bool								Right				: 1;
+		bool								ReinforcedBottom	: 1;
+		bool								ReinforcedTop		: 1;
+		bool								ReinforcedLeft		: 1;
+		bool								ReinforcedRight		: 1;
 	};
 
 	static char	resolveASCIIConnectionCross				( bool bIsReinforced, const SASCIIWallConnection& connection) { char result; if(bIsReinforced) { result = ascii_wall_double[WALL_CONNECTION_CROSS			]; } else {	result = ascii_wall_single[WALL_CONNECTION_CROSS			]; } return result; }
@@ -106,9 +106,9 @@ namespace klib
 
 		bool									bIsReinforced			= propGrid[z][x].Modifier > 0;
 
-		if(x-1 >= 0		&& propGrid[z][x-1].Definition != -1 && definitionsStageProp[propGrid[z][x-1].Definition].Name == labelWall) {	connection.Left		= true;	if(propGrid[z][x-1].Modifier > 0) connection.ReinforcedLeft		= true; }
+		if(x-1 >= 0			&& propGrid[z][x-1].Definition != -1 && definitionsStageProp[propGrid[z][x-1].Definition].Name == labelWall) {	connection.Left		= true;	if(propGrid[z][x-1].Modifier > 0) connection.ReinforcedLeft		= true; }
 		if(x+1 < _sizeWidth	&& propGrid[z][x+1].Definition != -1 && definitionsStageProp[propGrid[z][x+1].Definition].Name == labelWall) {	connection.Right	= true;	if(propGrid[z][x+1].Modifier > 0) connection.ReinforcedRight	= true; }
-		if(z-1 >= 0		&& propGrid[z-1][x].Definition != -1 && definitionsStageProp[propGrid[z-1][x].Definition].Name == labelWall) {	connection.Top		= true;	if(propGrid[z-1][x].Modifier > 0) connection.ReinforcedTop		= true; }
+		if(z-1 >= 0			&& propGrid[z-1][x].Definition != -1 && definitionsStageProp[propGrid[z-1][x].Definition].Name == labelWall) {	connection.Top		= true;	if(propGrid[z-1][x].Modifier > 0) connection.ReinforcedTop		= true; }
 		if(z+1 < _sizeDepth	&& propGrid[z+1][x].Definition != -1 && definitionsStageProp[propGrid[z+1][x].Definition].Name == labelWall) {	connection.Bottom	= true;	if(propGrid[z+1][x].Modifier > 0) connection.ReinforcedBottom	= true; }
 		
 			 if(connection.Bottom	&& connection.Top		&& connection.Left && connection.Right	) { result = resolveASCIIConnectionCross			(bIsReinforced, connection); }
