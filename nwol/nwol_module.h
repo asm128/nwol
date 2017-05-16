@@ -86,7 +86,7 @@ namespace nwol {
 	extern "C"	::nwol::error_t		 _stdcall		functionName									(__VA_ARGS__);		\
 	typedef		::nwol::error_t		(_stdcall		* NWOL_MODULE_FUNCTION_NAME(functionName))		(__VA_ARGS__);		\
 
-#define NWOM_PFUNC(functionName)	NWOM(, NWOL_MODULE_FUNCTION_NAME(functionName), functionName, ::nwol::GDATA_TYPE_FUN, #functionName, "Function")	= nullptr
+#define NWOM_PFUNC(structName, functionName)	NWOM(,structName, , NWOL_MODULE_FUNCTION_NAME(functionName), functionName, ::nwol::GDATA_TYPE_FUN, #functionName, "Function")	= nullptr
 
 #if defined(__WINDOWS__)
 #	define NWOL_MODULE_API_EXPORT __declspec(dllexport)
