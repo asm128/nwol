@@ -17,11 +17,19 @@ namespace nwol
 		inline constexpr	TCoord2		operator-				(const TCoord2& other)										const	noexcept	{ return {x - other.x, y - other.y};									}
 		inline constexpr	TCoord2		operator*				(double scalar)												const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar)};					}
 		inline constexpr	TCoord2		operator/				(double scalar)												const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar)};					}
+		inline constexpr	TCoord2		operator*				(int64_t scalar)											const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar)};					}
+		inline constexpr	TCoord2		operator/				(int64_t scalar)											const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar)};					}
+		inline constexpr	TCoord2		operator*				(uint64_t scalar)											const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar)};					}
+		inline constexpr	TCoord2		operator/				(uint64_t scalar)											const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar)};					}
 		//
-		inline				TCoord2&	operator+=				(const TCoord2& other)												noexcept	{ x += other.x; y += other.y; return *this;								}
-		inline				TCoord2&	operator-=				(const TCoord2& other)												noexcept	{ x -= other.x; y -= other.y; return *this;								}
-		inline				TCoord2&	operator*=				(double scalar)														noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar); return *this;		}
-		inline				TCoord2&	operator/=				(double scalar)																	{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); return *this;		}
+		inline				TCoord2&	operator+=				(const TCoord2& other)												noexcept	{ x += other.x; y += other.y;							return *this;	}
+		inline				TCoord2&	operator-=				(const TCoord2& other)												noexcept	{ x -= other.x; y -= other.y;							return *this;	}
+		inline				TCoord2&	operator*=				(double scalar)														noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar);	return *this;	}
+		inline				TCoord2&	operator/=				(double scalar)																	{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar);	return *this;	}
+		inline				TCoord2&	operator*=				(int64_t scalar)													noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar);	return *this;	}
+		inline				TCoord2&	operator/=				(int64_t scalar)																{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar);	return *this;	}
+		inline				TCoord2&	operator*=				(uint64_t scalar)													noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar);	return *this;	}
+		inline				TCoord2&	operator/=				(uint64_t scalar)																{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar);	return *this;	}
 		//
 		inline constexpr	bool		operator==				(const TCoord2& other)										const	noexcept	{ return x == other.x && y == other.y;									}
 		inline constexpr	bool		operator!=				(const TCoord2& other)										const	noexcept	{ return !operator==(other);											}
@@ -30,7 +38,7 @@ namespace nwol
 		template<typename _t>
 		constexpr inline	SCoord2<_t>	Cast					()															const	noexcept	{ return {(_t)x, (_t)y};												}
 		inline				TCoord2&	Normalize				()																	noexcept	{ return *this /= sqlen_safe(LengthSquared());							}
-		inline constexpr	double		Dot						(const TCoord2& other)										const	noexcept	{ return x*other.x + y*other.y;											}
+		inline constexpr	double		Dot						(const TCoord2& other)										const	noexcept	{ return x * other.x + y * other.y;										}
 		inline constexpr	_tBase		LengthSquared			()															const	noexcept	{ return x * x + y * y;													}
 		inline constexpr	double		Length					()															const				{ return sqrt(LengthSquared());											}
 		inline constexpr	double		AngleWith				(const TCoord2& other)										const				{ return acos( (*this) * other / (this->Length() * other.Length()) );	}
@@ -59,11 +67,19 @@ namespace nwol
 		constexpr			TCoord3		operator-				(const TCoord3& other)										const	noexcept	{ return {x - other.x, y - other.y, z - other.z};												}
 		constexpr			TCoord3		operator*				(double scalar)												const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar), (_tBase)(z * scalar)};					}
 		constexpr			TCoord3		operator/				(double scalar)												const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar), (_tBase)(z / scalar)};					}
+		constexpr			TCoord3		operator*				(int64_t scalar)											const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar), (_tBase)(z * scalar)};					}
+		constexpr			TCoord3		operator/				(int64_t scalar)											const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar), (_tBase)(z / scalar)};					}
+		constexpr			TCoord3		operator*				(uint64_t scalar)											const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar), (_tBase)(z * scalar)};					}
+		constexpr			TCoord3		operator/				(uint64_t scalar)											const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar), (_tBase)(z / scalar)};					}
 		//
 							TCoord3&	operator+=				(const TCoord3& other)												noexcept	{ x += other.x; y += other.y; z += other.z; return *this;										}
 							TCoord3&	operator-=				(const TCoord3& other)												noexcept	{ x -= other.x; y -= other.y; z -= other.z; return *this;										}
 							TCoord3&	operator*=				(double scalar)														noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar); z = (_tBase)(z * scalar); return *this;	}
 							TCoord3&	operator/=				(double scalar)																	{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); z = (_tBase)(z / scalar); return *this;	}
+							TCoord3&	operator*=				(int64_t scalar)													noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar); z = (_tBase)(z * scalar); return *this;	}
+							TCoord3&	operator/=				(int64_t scalar)																{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); z = (_tBase)(z / scalar); return *this;	}
+							TCoord3&	operator*=				(uint64_t scalar)													noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar); z = (_tBase)(z * scalar); return *this;	}
+							TCoord3&	operator/=				(uint64_t scalar)																{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); z = (_tBase)(z / scalar); return *this;	}
 		//
 		constexpr inline	bool		operator==				(const TCoord3& other)										const	noexcept	{ return x == other.x && y == other.y && z == other.z;											}
 		constexpr inline	bool		operator!=				(const TCoord3& other)										const	noexcept	{ return !operator==(other);																	}
@@ -127,11 +143,19 @@ namespace nwol
 		constexpr			TCoord4		operator -				(const TCoord4& other)										const	noexcept	{ return { x - other.x, y - other.y, z - other.z, w - other.w }; }
 		constexpr			TCoord4		operator *				(double scalar)												const	noexcept	{ return { (_tBase)(x * scalar), (_tBase)(y * scalar), (_tBase)(z * scalar), (_tBase)(w * scalar) }; }
 		constexpr			TCoord4		operator /				(double scalar)												const				{ return { (_tBase)(x / scalar), (_tBase)(y / scalar), (_tBase)(z / scalar), (_tBase)(w / scalar) }; }
+		constexpr			TCoord4		operator *				(int64_t scalar)											const	noexcept	{ return { (_tBase)(x * scalar), (_tBase)(y * scalar), (_tBase)(z * scalar), (_tBase)(w * scalar) }; }
+		constexpr			TCoord4		operator /				(int64_t scalar)											const				{ return { (_tBase)(x / scalar), (_tBase)(y / scalar), (_tBase)(z / scalar), (_tBase)(w / scalar) }; }
+		constexpr			TCoord4		operator *				(uint64_t scalar)											const	noexcept	{ return { (_tBase)(x * scalar), (_tBase)(y * scalar), (_tBase)(z * scalar), (_tBase)(w * scalar) }; }
+		constexpr			TCoord4		operator /				(uint64_t scalar)											const				{ return { (_tBase)(x / scalar), (_tBase)(y / scalar), (_tBase)(z / scalar), (_tBase)(w / scalar) }; }
 		//										 
 							TCoord4&	operator +=				(const TCoord4& other)												noexcept	{ x += other.x; y += other.y; z += other.z; w += other.w; return *this; }
 							TCoord4&	operator -=				(const TCoord4& other)												noexcept	{ x -= other.x; y -= other.y; z -= other.z; w -= other.w; return *this; }
 							TCoord4&	operator *=				(double scalar)														noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar); z = (_tBase)(z * scalar); w = (_tBase)(w * scalar); return *this; }
 							TCoord4&	operator /=				(double scalar)																	{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); z = (_tBase)(z / scalar); w = (_tBase)(w / scalar); return *this; }
+							TCoord4&	operator *=				(int64_t scalar)													noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar); z = (_tBase)(z * scalar); w = (_tBase)(w * scalar); return *this; }
+							TCoord4&	operator /=				(int64_t scalar)																{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); z = (_tBase)(z / scalar); w = (_tBase)(w / scalar); return *this; }
+							TCoord4&	operator *=				(uint64_t scalar)													noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar); z = (_tBase)(z * scalar); w = (_tBase)(w * scalar); return *this; }
+							TCoord4&	operator /=				(uint64_t scalar)																{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); z = (_tBase)(z / scalar); w = (_tBase)(w / scalar); return *this; }
 		//										 
 		constexpr			bool		operator ==				(const TCoord4& other)										const	noexcept	{ return x == other.x && y == other.y && z == other.z && w == other.w; }
 		constexpr inline	bool		operator !=				(const TCoord4& other)										const	noexcept	{ return !operator==(other); }
@@ -167,6 +191,7 @@ namespace nwol
 		constexpr			TQuat		operator -				(const TQuat& other)										const	noexcept	{ return { x - other.x, y - other.y, z - other.z, w - other.w }; }
 		constexpr			TQuat		operator *				(double scalar)												const	noexcept	{ return { (_tBase)(x * scalar), (_tBase)(y * scalar), (_tBase)(z * scalar), (_tBase)(w * scalar) }; }
 		constexpr			TQuat		operator /				(double scalar)												const				{ return { (_tBase)(x / scalar), (_tBase)(y / scalar), (_tBase)(z / scalar), (_tBase)(w / scalar) }; }
+
 							TQuat		operator *				(const TQuat& q)											const				{
 								TQuat			r;
 								r.x			= w*q.x + x*q.w + y*q.z - z*q.y;
