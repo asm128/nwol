@@ -2,6 +2,7 @@
 #include "nwol_memory.h"
 #include "evaluation.h"
 
+#include "nwol_safe.h"
 #include <memory.h>
 
 #ifndef __ARRAY_H__652434654236655143465__

@@ -13,10 +13,6 @@
 #define BASETYPE_ALIGN						sizeof(void*)
 #endif
 
-#define safe_free(p)						if(p) { free				(p); p=0; }
-#define safe_nwol_free(p)					if(p) { ::nwol::nwol_free	(p); p=0; }
-#define safe_delete(p)						if(p) { delete				(p); p=0; }
-
 #define calc_align_address(align, address)	((align-((align-1) & (uintptr_t)address)) & (align-1))
 #define calc_align_address_4( address)		calc_align_address( 4, address)	// (0x04-(0x03 & (uintptr_t)address) & 0x03)
 #define calc_align_address_8( address)		calc_align_address( 8, address)	// (0x08-(0x07 & (uintptr_t)address) & 0x07)

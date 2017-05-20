@@ -212,6 +212,7 @@
     <ClInclude Include="nwol_io.h" />
     <ClInclude Include="nwol_math.h" />
     <ClInclude Include="nwol_mutex.h" />
+    <ClInclude Include="nwol_safe.h" />
     <ClInclude Include="nwol_screen.h" />
     <ClInclude Include="nwol_string.h" />
     <ClInclude Include="nwol_value.h" />

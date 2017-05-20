@@ -3,6 +3,7 @@
 #include "platform_globals.h"
 #include "nwol_memory.h"
 #include "nwol_io.h"
+#include "nwol_safe.h"
 
 #include <stdlib.h>
 #include <string.h>
