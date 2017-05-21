@@ -22,7 +22,7 @@
     <ProjectGuid>{9C1B696C-B7F9-4B8A-BC74-FF5B96251341}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>nwor</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -67,26 +67,26 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\..\$(Platform).$(Configuration)\</OutDir>
-    <IntDir>..\..\obj\$(Platform).$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>$(ProjectDir)..\..\$(Platform).$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\..\obj\$(Platform).$(Configuration)\$(ProjectName)\</IntDir>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\..\$(Platform).$(Configuration)\</OutDir>
-    <IntDir>..\..\obj\$(Platform).$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>$(ProjectDir)..\..\$(Platform).$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\..\obj\$(Platform).$(Configuration)\$(ProjectName)\</IntDir>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\$(Platform).$(Configuration)\</OutDir>
-    <IntDir>..\..\obj\$(Platform).$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>$(ProjectDir)..\..\$(Platform).$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\..\obj\$(Platform).$(Configuration)\$(ProjectName)\</IntDir>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\$(Platform).$(Configuration)\</OutDir>
-    <IntDir>..\..\obj\$(Platform).$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>$(ProjectDir)..\..\$(Platform).$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\..\obj\$(Platform).$(Configuration)\$(ProjectName)\</IntDir>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

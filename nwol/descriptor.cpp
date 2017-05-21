@@ -3,26 +3,21 @@
 #include "descriptor_manager.h"
 #include "stype.h"
 
-			nwol::gdescriptor::gdescriptor		(const ::nwol::GDATA_TYPE* descriptor, uint32_t size)
-	: DescriptorManager(getDescriptorManager())
-{
+
+nwol::gdescriptor::gdescriptor		(const ::nwol::GDATA_TYPE* descriptor, uint32_t size)	: DescriptorManager(getDescriptorManager())	{
 	if( DescriptorManager->AddDescriptor(descriptor, size, *this) ) {
 		error_printf("Failed to store descriptor!");
 	}
 }
 
-bool		nwol::gdescriptor::operator	==		(const gdescriptor& other)								const	noexcept	{ 
-	if( Data == other.Data )
-		return true;
-	else if(DescriptorManager == other.DescriptorManager)
-		return false;
-	else if(Count != other.Count)
-		return false;
-	else
-		return 0 == memcmp(Data, other.Data, Count*sizeof(::nwol::GDATA_TYPE));
+bool		nwol::gdescriptor::operator	==		(const gdescriptor& other)								const	noexcept							{ 
+		 if(Data				== other.Data				)	return true;
+	else if(DescriptorManager	== other.DescriptorManager	)	return false;
+	else if(Count				!= other.Count				)	return false;
+	else														return 0 == memcmp(Data, other.Data, Count*sizeof(::nwol::GDATA_TYPE));
 }
 
-uint32_t	nwol::gdescriptor::save				(char* out_pMemoryBuffer)								const				{
+uint32_t	nwol::gdescriptor::save				(char* out_pMemoryBuffer)								const										{
 	uint32_t						totalBytes			= 0;
 	sint32							descriptorSize		= (int32_t)size();
 	totalBytes					+= descriptorSize.write(out_pMemoryBuffer);
@@ -33,7 +28,7 @@ uint32_t	nwol::gdescriptor::save				(char* out_pMemoryBuffer)								const				{
 	return totalBytes			+= descriptorSize;
 }
 
-uint32_t	nwol::gdescriptor::load				(const char* in_pMemoryBuffer)												{
+uint32_t	nwol::gdescriptor::load				(const char* in_pMemoryBuffer)																		{
 	uint32_t						totalBytes			= 0;
 	sint32							descriptorSize		= 0;
 	totalBytes					+= descriptorSize.read(in_pMemoryBuffer);

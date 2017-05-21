@@ -6,7 +6,7 @@
 #include <dlfcn.h>
 #endif
 
-void										nwol::printErasedModuleInterfacePointers		(::nwol::RUNTIME_CALLBACK_ID erasedCallbacks, const char_t* errorFormat)		{
+void											nwol::printErasedModuleInterfacePointers		(::nwol::RUNTIME_CALLBACK_ID erasedCallbacks, const char_t* errorFormat)		{
 	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_TITLE	))	error_printf(errorFormat, "moduleTitle()"	);
 	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_VERSION	))	error_printf(errorFormat, "moduleVersion()"	);
 	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_CREATE	))	error_printf(errorFormat, "moduleCreate()"	);
@@ -17,7 +17,7 @@ void										nwol::printErasedModuleInterfacePointers		(::nwol::RUNTIME_CALLBAC
 	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_UPDATE	))	error_printf(errorFormat, "moduleUpdate()"	);
 }
 
-::nwol::error_t								nwol::unloadModule								(::nwol::SModuleInterface& containerForCallbacks)								{
+::nwol::error_t									nwol::unloadModule								(::nwol::SModuleInterface& containerForCallbacks)								{
 	retwarn_error_if(0 == containerForCallbacks.ModuleLibrary, "Invalid module handle! This could happen if the unloadModule() function was called twice for the same module.");
 	void												* moduleHandle								= containerForCallbacks.ModuleLibrary;
 	containerForCallbacks.ModuleLibrary				= 0;
@@ -29,7 +29,7 @@ void										nwol::printErasedModuleInterfacePointers		(::nwol::RUNTIME_CALLBAC
 	return 0;
 }
 
-::nwol::error_t								nwol::loadModule								(::nwol::SModuleInterface& containerForCallbacks, const char_t* moduleName)		{
+::nwol::error_t									nwol::loadModule								(::nwol::SModuleInterface& containerForCallbacks, const char_t* moduleName)		{
 #if defined(__WINDOWS__)
 	static	const char_t								* errorFormat0								= "Failed to load library: %s: 0x%X - \"%s\"";
 	::std::string										errorString;
@@ -43,7 +43,6 @@ void										nwol::printErasedModuleInterfacePointers		(::nwol::RUNTIME_CALLBAC
 
 #	define LOAD_FUNCTION_ADDRESS						dlsym
 #endif
-
 	containerForCallbacks.FunctionTitle				= (NWOL_RT_CALLBACK_moduleTitle		) LOAD_FUNCTION_ADDRESS( containerForCallbacks.ModuleLibrary, "nwol_moduleTitle"	);
 	containerForCallbacks.FunctionVersion			= (NWOL_RT_CALLBACK_moduleVersion	) LOAD_FUNCTION_ADDRESS( containerForCallbacks.ModuleLibrary, "nwol_moduleVersion"	);
 	containerForCallbacks.FunctionCreate			= (NWOL_RT_CALLBACK_moduleCreate	) LOAD_FUNCTION_ADDRESS( containerForCallbacks.ModuleLibrary, "nwol_moduleCreate"	);
@@ -60,9 +59,7 @@ void										nwol::printErasedModuleInterfacePointers		(::nwol::RUNTIME_CALLBAC
 		::nwol::printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
 		return -1;
 	}
-
 	containerForCallbacks.ModuleFile				= ::nwol::glabel(moduleName, ~0U).c_str();
 	containerForCallbacks.ModuleTitle				= ::nwol::glabel(containerForCallbacks.FunctionTitle(), ~0U).c_str();
-
 	return 0;
 }

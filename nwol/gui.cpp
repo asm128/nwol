@@ -103,8 +103,7 @@ void						drawText			(_tChar* target, int32_t targetWidth, int32_t targetHeight,
 	int32_t								mouseX				= GUISystem.MousePosition.x = inputSystem.MouseX;
 	int32_t								mouseY				= GUISystem.MousePosition.y = inputSystem.MouseY;
 	::nwol::SGUIControlTable			& controls			= GUISystem.Controls;
-	for(uint32_t iControl=0; iControl < controls.AreasASCII.size(); ++iControl)
-	{
+	for(uint32_t iControl=0; iControl < controls.AreasASCII.size(); ++iControl) {
 		::nwol::SRectangle2D<int32_t>		& controlArea		= controls.AreasRealignedASCII[iControl];
 		::nwol::CONTROL_FLAG				& controlFlags		= controls.ControlFlags[iControl];
 		
@@ -174,8 +173,7 @@ int32_t						nwol::renderGUIASCII	(char* bbText, uint16_t* bbColor	, const ::nwo
 	// Draw mouse cursor
 	if( ::nwol::in_range((int32_t)mousePos.y, 0, (int32_t)maxSize.y) 
 	 && ::nwol::in_range((int32_t)mousePos.x, 0, (int32_t)maxSize.x) 
-	)
-	{
+	 ) {
 		int32_t								linearIndex			= mousePos.y * maxSize.x + mousePos.x;
 		bbColor[linearIndex]			= invert_color_ascii(bbColor[linearIndex]);
 	}

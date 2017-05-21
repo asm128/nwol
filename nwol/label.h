@@ -9,11 +9,10 @@
 namespace nwol
 {
 
-	class CLabelManager;
-	struct glabel_statics;
+	class	CLabelManager;
+	struct	glabel_statics;
 #pragma pack(push, 1)
-	class glabel : public array_view<const char>
-	{
+	class glabel : public array_view<const char> {
 	protected:
 		CLabelManager											* LabelManager																	= nullptr;
 	public:

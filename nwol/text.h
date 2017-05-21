@@ -53,8 +53,7 @@ namespace nwol
 	template <size_t _Size> 	bool	getMessageSlow			(char (&message)[_Size], const char* textToPrint, uint32_t sizeToPrint, double lastFrameSeconds, double limit = 0.025f)														{
 		static	float							nextTick				= 0.0f;
 		static	uint32_t						tickCount				= 0;
-
-		uint32_t								mesLen					= (int32_t)strlen(message);
+				uint32_t						mesLen					= (int32_t)strlen(message);
 		if(0 == mesLen)
 			return true;
 
@@ -62,9 +61,7 @@ namespace nwol
 			resetCursorString(message);
 			mesLen								= (uint32_t)strlen(message);
 		}
-
 		mesLen								= ((mesLen+1) > (_Size-1)) ? _Size-2 : mesLen;
-
 		nextTick							+= (float)lastFrameSeconds;
 		if(nextTick > limit) {
 			tickCount++;
@@ -78,7 +75,6 @@ namespace nwol
 			else if(0 == (tickCount % 20))
 				message[cursorIndex]				= (message[cursorIndex] == ' ') ? '_' : ' ';
 		}
-
 		return ( mesLen-1 == sizeToPrint );
 	}
 

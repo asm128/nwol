@@ -32,14 +32,10 @@
 }
 
 bool					nwol::glabel::operator	==		(const nwol::glabel& other)				const	noexcept										{ 
-	if( Data == other.Data )
-		return true;
-	else if(LabelManager == other.LabelManager)
-		return false;
-	else if(Count != other.Count)
-		return false;
-	else
-		return 0 == memcmp(Data, other.Data, Count);
+		 if(Data == other.Data					)	return true;
+	else if(LabelManager == other.LabelManager	)	return false;
+	else if(Count != other.Count				)	return false;
+	else											return 0 == memcmp(Data, other.Data, Count);
 
 };
 
