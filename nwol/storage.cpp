@@ -4,8 +4,7 @@
 #include <Windows.h>
 #endif
 
-int32_t										nwol::listFiles								(const char* directory, ::nwol::array_obj<::nwol::glabel>& fileNames)
-{
+int32_t										nwol::listFiles								(const char* directory, ::nwol::array_obj<::nwol::glabel>& fileNames)			{
  #if defined(__WINDOWS__)
     WIN32_FIND_DATA										fdFile;
     HANDLE												hFind									= NULL;
@@ -39,6 +38,5 @@ int32_t										nwol::listFiles								(const char* directory, ::nwol::array_ob
 
 	FindClose(hFind); //Always, Always, clean things up!
 #endif
-
     return 0;
 }

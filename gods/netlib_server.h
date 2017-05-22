@@ -10,8 +10,7 @@
 
 namespace nwol
 {
-	struct CClient
-	{
+	struct CClient {
 		int32_t								m_id										= -1;
 		::nwol::SConnectionEndpoint			* m_ClientListener							= 0;
 		::nwol::SConnectionEndpoint			* m_ClientTarget							= 0;
@@ -25,8 +24,7 @@ namespace nwol
 	};	// struct
 	GDECLARE_OBJ(CClient);
 
-	struct CServer
-	{
+	struct CServer {
 #if defined(__WINDOWS__)
 		::nwol::refcount_t					QueuedConnectionCount						= 0;
 #else

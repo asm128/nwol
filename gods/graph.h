@@ -61,7 +61,7 @@ namespace nwol
 								::nwol::error_t						GetAttributeType			(::nwol::id_t attributeId	, ::nwol::glabel& output)																{ SAttributeId attrId = attributeId; return Attributes[attrId.dir].GetTypeName		(attrId.pos, output);	}
 		
 		template<typename _tRef>
-					::nwol::error_t									GetAttribute				(::nwol::id_t nodeIndex, ::nwol::id_t attributeIndex, ::nwol::DATA_DIRECTION direction, ::nwol::gptr_nco<_tRef>& attributeStruct)										{
+								::nwol::error_t						GetAttribute				(::nwol::id_t nodeIndex, ::nwol::id_t attributeIndex, ::nwol::DATA_DIRECTION direction, ::nwol::gptr_nco<_tRef>& attributeStruct)										{
 			reterr_error_if(validateNodeIndex(nodeIndex), "invalid node index: '%u'", (uint32_t)nodeIndex);
 
 			CGraphNode														* pNode						= NodeInstances[nodeIndex];
@@ -71,7 +71,7 @@ namespace nwol
 		}
 
 		template<typename _tRef>
-					::nwol::error_t									PushAttribute				(::nwol::id_t nodeIndex, ::nwol::DATA_DIRECTION direction, ::nwol::gptr_nco<_tRef>& attributeStruct, ::nwol::id_t* _attributeIndex, const ::nwol::glabel& description)	{
+								::nwol::error_t						PushAttribute				(::nwol::id_t nodeIndex, ::nwol::DATA_DIRECTION direction, ::nwol::gptr_nco<_tRef>& attributeStruct, ::nwol::id_t* _attributeIndex, const ::nwol::glabel& description)	{
 			reterr_error_if(validateNodeIndex(nodeIndex), "invalid node index: '%u'", (uint32_t)nodeIndex);
 			reterr_error_if(0 == _attributeIndex, "%s", "Output attribute index pointer must be something other than null.");
 

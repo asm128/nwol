@@ -44,32 +44,28 @@ int32_t									nwol::CServer::Listen							()																			{
 	int														a1, a2, a3, a4, port_number;	// Components of address in xxx.xxx.xxx.xxx form
 	::nwol::getAddress( ServerConnection, &a1, &a2, &a3, &a4, &port_number );
 	info_printf("Server listening on %u.%u.%u.%u:%u"
-		,(uint32_t)a1
-		,(uint32_t)a2
-		,(uint32_t)a3
-		,(uint32_t)a4
-		,(uint32_t)ntohs((u_short)port_number)
+		, (uint32_t)a1
+		, (uint32_t)a2
+		, (uint32_t)a3
+		, (uint32_t)a4
+		, (uint32_t)ntohs((u_short)port_number)
 		);
-
-	// Information about the client
-	SConnectionEndpoint										* client							= nullptr;		
-
-	// Receive bytes from client
+	// -- Receive bytes from client
+	SConnectionEndpoint										* client							= nullptr;			// Information about the client
 	int32_t													bytes_received						= 0;
 	::nwol::NETLIB_COMMAND									command								= NETLIB_COMMAND_INVALID;
 	::nwol::error_t											errMy								= ::nwol::receiveFromConnection( ServerConnection, (ubyte_t*)&command, sizeof(NETLIB_COMMAND), &bytes_received, &client );
 	reterr_error_if(bytes_received < 0, "Could not receive datagram. 0x%x.", errMy);
 
 	errMy												= ::nwol::getAddress( client, &a1, &a2, &a3, &a4, &port_number );
-	info_printf("Received %u bytes from %u.%u.%u.%u:%u. Command: %s", bytes_received, 
-		(uint32_t)a1,
-		(uint32_t)a2,
-		(uint32_t)a3,
-		(uint32_t)a4,
-		(uint32_t)port_number,
-		::nwol::get_value_label(command).c_str()
-	);
-
+	info_printf("Received %u bytes from %u.%u.%u.%u:%u. Command: %s", bytes_received
+		, (uint32_t)a1
+		, (uint32_t)a2
+		, (uint32_t)a3
+		, (uint32_t)a4
+		, (uint32_t)port_number
+		, ::nwol::get_value_label(command).c_str()
+		);
 	int64_t													newIndex							= INTERLOCKED_INCREMENT(QueuedConnectionCount)-1;
 	if(bListening && command == ::nwol::NETLIB_COMMAND_CONNECT && newIndex < (int64_t)::nwol::size(QueuedConnectionList))
 		QueuedConnectionList[newIndex]						= client;
@@ -86,13 +82,10 @@ void									disconnectClient								(nwol::CClient* client)														{
 	::nwol::shutdownConnection(&client->m_ClientTarget);
 }
 
-int32_t									sendSystemCommand								(::nwol::CClient* pClient, const ::nwol::NETLIB_COMMAND& commandToSend)		{
-	return ::nwol::sendSystemCommand(pClient->m_ClientListener, pClient->m_ClientTarget, commandToSend);
-}
-
+int32_t									sendSystemCommand								(::nwol::CClient* pClient, const ::nwol::NETLIB_COMMAND& commandToSend)		{ return ::nwol::sendSystemCommand(pClient->m_ClientListener, pClient->m_ClientTarget, commandToSend);	}
 int32_t									processCommandInternal							(::nwol::CClient* client, ::nwol::NETLIB_COMMAND command)					{
 	info_printf("Processing system command: %s.", ::nwol::get_value_label(command).c_str());
-	
+
 	if (command == ::nwol::NETLIB_COMMAND_DISCONNECT)		{
 		debug_print("Disconnect requested by client.");
 		disconnectClient(client);
@@ -115,7 +108,6 @@ int32_t									processCommandInternal							(::nwol::CClient* client, ::nwol::N
 #else
 		strcpy(timestring, ctime(&curTimeWithUnreliableSize));
 #endif
-
 		int											port_number;			// Port number to use
 		int											a1, a2, a3, a4;			// Components of address in xxx.xxx.xxx.xxx form
 		errMy									= ::nwol::getAddress(client->m_ClientTarget, &a1, &a2, &a3, &a4, &port_number);
@@ -150,14 +142,12 @@ void									clientProc										(void *pvClient)															{
 			error_print("Failed to receive command from client.");
 			break;
 		}
-
 		if(0 > (errMy = processCommandInternal( pClient, command )))	{
 			error_printf("processCommandInternal failed for command: '%s' (0x%x)(%u).", ::nwol::get_value_label(command).c_str(), (uint32_t)command, (uint32_t)command);
 			break;
-		};
+		}
     }
-    // Repeat 
-    while ( pClient->m_ClientListener && pClient->m_ClientTarget );
+    while ( pClient->m_ClientListener && pClient->m_ClientTarget );	// Repeat 
 
 	::std::this_thread::sleep_for(::std::chrono::milliseconds(1000));
 	disconnectClient(pClient); // This used to cause a crash if the server is shutting down because of a thread race. 
@@ -217,7 +207,7 @@ int32_t									nwol::CServer::Accept							()																			{
 				error_printf("Failed to push client connection. Out of memory?");
 				disconnectClient(newClient.get_address());
 				return -1;
-			};
+			}
 		}
 	}
 #if defined(__WINDOWS__)

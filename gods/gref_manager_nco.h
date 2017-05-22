@@ -63,8 +63,7 @@ namespace nwol
 	{
 		typedef				typename _tRef::TBase				_tBase;
 	
-		struct SInstanceEntry
-		{
+		struct SInstanceEntry {
 																__GPRECHECK();
 							_tBase								ActualInstance;
 																__GPOSTCHECK();
@@ -77,8 +76,7 @@ namespace nwol
 				+	BASETYPE_ALIGN*BASETYPE_ALIGN // this last one may be redundant as it may be considered already by the one_if() evaluation
 				);
 		}
-
-		static bool												isBufferOverrunInstance					(const SInstanceEntry* p)								{																								
+		static				bool								isBufferOverrunInstance					(const SInstanceEntry* p)								{																								
 			bool													r											= false;																				
 			if (BINFIBO != p->NWOL_DEBUG_CHECK_NAME_PRE) {																							
 				error_printf("Memory was overwritten before the object data. Value: %u. Expected: %u.", (uint32_t)p->NWOL_DEBUG_CHECK_NAME_PRE, (uint32_t)BINFIBO);						
@@ -146,7 +144,6 @@ namespace nwol
 #else
 #endif
 			Instances												= &Instances[calc_align_address(BASETYPE_ALIGN, &Instances)]; // = &Instances[calc_align_address(BASETYPE_ALIGN, &Instances[sizeof(SInstanceEntry::NWOL_DEBUG_CHECK_NAME_PRE)])]; // align to 16 byte boundary (skip safety check)
-			
 			//for(uint32_t i=0, count = ::nwol::size(PageBytes)/8; i< count; ++i) {
 			//	((uint32_t*)Instances)[i] = ((i % 3) == 0) ? 0xFFFF00FF : (i % 2) ? 0xFF00FFFF : 0xFFFFFF00;
 			//}
@@ -179,7 +176,6 @@ namespace nwol
 				Unlock();
 			return newRef;
 		}
-
 		//	
 							_tRef*								getUnusedInstanceUnsafe					()														{
 			_tRef														* newRef								= 0;
@@ -192,7 +188,6 @@ namespace nwol
 			}
 			return newRef;
 		}
-
 		//
 							uint32_t							getAvailableInstanceCount				()														{	
 			uint32_t													r; 
@@ -508,7 +503,6 @@ namespace nwol
 			static gref_manager_nco<_tRef, _managerType> managerInstance;
 			return managerInstance;
 		}
-
 		inline constexpr													gref_manager_nco						(void(*_funcFreeR)(_tRef**))
 			: Globals
 				(	_tRef::get_type_name().begin()									// Cue
@@ -547,7 +541,6 @@ namespace nwol
 			else if (0 != Counters.FreedRefs) {																													
 				error_printf("Number of instances deleted but not created by this manager: %llu.", (uint64_t)Counters.FreedRefs - Counters.CreatedRefs);		
 			}
-
 			// Delete all pages on shutdown.
 			uint32_t																pageCount								= (uint32_t)lstReferencePages.size();
 			if (pageCount) {
@@ -561,14 +554,12 @@ namespace nwol
 			}
 			lstReferencePages.clear();
 		}
-
 		// Allocate a new reference.
 							void											allocRef								(_tRef** p1)										{
 			_tRef																	* oldObject								= (*p1);
 			(*p1)																= createRef_noinit();
 			::nwol::release(&oldObject);	// we do not use releaseRef() method because grelease acts as proxy for instances managed by other modules.
 		}
-
 		// Allocates a list of references at once.
 							void											allocRefs								(_tRef** lstRef, uint32_t nCount)					{
 			uint32_t																nRandAllocInstances						= nCount % PageSizeInInstances;	// These are the remaining instances that aren't enough to fill a page. 
@@ -581,7 +572,6 @@ namespace nwol
 			if( nFullPageCount )
 				allocRefFullPage(&lstRef[nRandAllocInstances], nFullPageCount);
 		}
-	
 		// Acquire a reference.
 							_tRef*											acquireRef								(_tRef* p)											{
 			if (p) {
@@ -603,7 +593,6 @@ namespace nwol
 			(*_p)																= 0;
 
 			CHECKBUFFEROVERRUNREF(p0);
-
 			switch (NWOL_INTERLOCKED_DECREMENT(p0->ReferenceCount)) {
 			default:
 				break;
@@ -620,7 +609,6 @@ namespace nwol
 				}
 				//if(_ManagerType != GREF_CATEGORY_POD)
 				//	p0->get()->~_tBase();
-
 				releaseReferenceToQuickAlloc(p0);
 			}
 			PLATFORM_CRT_CHECK_MEMORY();

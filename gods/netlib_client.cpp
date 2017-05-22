@@ -35,7 +35,6 @@ int32_t											nwol::disconnectClient						(::nwol::SClientConnection& client
 }
 
 #define MAX_SEND_SIZE 128
-
 int												nwol::connect								(::nwol::SClientConnection& conn)									{
 	info_printf("%s", "Sending connection request.");
 	static	const ::nwol::NETLIB_COMMAND				send_buffer								= ::nwol::NETLIB_COMMAND_CONNECT;

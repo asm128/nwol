@@ -22,7 +22,6 @@ namespace nwol
 
 		inline	::nwol::error_t					GetDescription			(::nwol::id_t index, ::nwol::glabel& ref)					const	{ reterr_error_if(validateIndex(index), "Invalid instance index: '%i'", index); ref = DataDescriptions[index];	return 0; }
 		inline	::nwol::error_t					GetTypeName				(::nwol::id_t index, ::nwol::glabel& ref)					const	{ reterr_error_if(validateIndex(index), "Invalid instance index: '%i'", index); ref = DataNames[index];			return 0; }
-
 		template <typename _tRef> 
 		inline	::nwol::error_t					SetReference			(::nwol::id_t index, ::nwol::gptr_nco<_tRef>& ref)					{
 			reterr_error_if(validateIndex(index), "Invalid instance index: '%i'", index);
@@ -33,7 +32,6 @@ namespace nwol
 			*reinterpret_cast<_tRef* const *>(&Data.begin()[index]) = ref.acquire();
 			return 0;
 		}
-
 		template <typename _tRef> 
 		inline	::nwol::error_t					AcquireReference		(::nwol::id_t index, ::nwol::gptr_nco<_tRef>& ref)			const	{
 			reterr_error_if(validateIndex(index), "Invalid instance index: '%i'", index);
@@ -43,7 +41,6 @@ namespace nwol
 			ref										= ::nwol::acquire(*reinterpret_cast<_tRef* const *>(&Data.begin()[index]));
 			return 0;
 		}
-
 		template <typename _tRef> 
 		inline	::nwol::error_t					PushReference			(const ::nwol::gptr_nco<_tRef>& ref, ::nwol::id_t* index, const ::nwol::glabel description = ::nwol::glabel::statics().empty)	{
 			uint32_t									newIndex				= DataNames.size();
@@ -56,7 +53,6 @@ namespace nwol
 
 			return 0;
 		}
-
 				uint32_t						Save					(char* out_pMemoryBuffer)									const;
 				uint32_t						Load					(const char* in_pMemoryBuffer);
 	};	// class

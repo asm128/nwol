@@ -32,13 +32,11 @@ namespace nwol
 			_set(instanceRef);
 			return *this;
 		}
-
 		virtual					gptr_nco&						operator =				(const gptr_nco<_tRef>& other)																	{
 			if(other.InstanceRef != InstanceRef)
 				_set(other.acquire());
 			return *this;
 		}
-
 		virtual					_tBase*							operator->				()																								{ return InstanceRef->get();									}
 		inline constexpr		const _tBase*					operator->				()																			const				{ return InstanceRef->get();									}
 								_tRef**							operator &				()																					noexcept	{ return &InstanceRef;											}
@@ -58,22 +56,18 @@ namespace nwol
 			if(instanceRef != InstanceRef)
 				_set(instanceRef ? instanceRef->acquire() : nullptr);	
 		}
-
 		// inline methods
 		inline					_tBase*							get_address				()																								{ return InstanceRef ? InstanceRef->get() : 0;		}
 		inline					const _tBase*					get_address				()																			const				{ return InstanceRef ? InstanceRef->get() : 0;		}
-
 		// inline constexpr		methods
 		inline constexpr		bool							valid					()																			const	noexcept	{ return 0 != InstanceRef;											}
 		inline constexpr		_tRef*							get_pointer				()																			const	noexcept	{ return InstanceRef;												}
 		inline constexpr		bool							am_I_owning				()																			const	noexcept	{ return InstanceRef == 0	|| InstanceRef->ReferenceCount == 1;	}
 		inline constexpr		bool							writable				()																			const	noexcept	{ return InstanceRef		&& InstanceRef->ReferenceCount == 1;	}
 		inline constexpr		_tRef*							acquire					()																			const	noexcept	{ return InstanceRef		 ? InstanceRef->acquire() : nullptr;	}
-
 		// static methods
 		static inline 			const ::nwol::gsyslabel&		get_type_name			()																								{ return _tRef::get_type_name();									}
 		static inline constexpr	uint32_t						get_type_size			()																					noexcept	{ return sizeof(_tBase);											}
-
 	protected:
 		// virtual protected
 		virtual					void							_set					(_tRef* const & instanceRef)																	{
@@ -88,8 +82,7 @@ namespace nwol
 #define GPtrObj(baseType)			::nwol::gptr_obj<GREF(baseType)>				
 #define GPObj(NameSpace, baseType)	::nwol::gptr_obj<NameSpace::GREF(baseType)>	
 	template <typename _tRef> 
-	class gptr_obj : public gptr_nco<_tRef>
-	{
+	class gptr_obj : public gptr_nco<_tRef> {
 		using					gptr_nco<_tRef>::				InstanceRef;
 	protected:
 		typedef					typename						_tRef::TBase			_tBase																							;
@@ -112,7 +105,6 @@ namespace nwol
 				_create();
 			return InstanceRef->get();
 		}
-
 		// Clone in-place
 		virtual					void							unbind					()																								{ clone(*this);											}
 		// For cloning in-place, use unbind()
@@ -133,8 +125,7 @@ namespace nwol
 #define GPtrPOD(baseType)			::nwol::gptr_pod<GREF(baseType)>				
 #define GPPOD(NameSpace, baseType)	::nwol::gptr_pod<NameSpace::GREF(baseType)>	
 	template <typename _tRef> 
-	class gptr_pod : public gptr_obj<_tRef>
-	{
+	class gptr_pod : public gptr_obj<_tRef> {
 		using					gptr_nco<_tRef>::				InstanceRef;
 	public:
 		typedef					typename						_tRef::TBase			_tBase																							;
@@ -163,7 +154,6 @@ namespace nwol
 				*out_nReadBytes										+= nReadBytes;
 			return 0;
 		}
-
 		virtual					::nwol::error_t					deserialize				(const char* in_fp, uint32_t* out_nReadBytes)													{
 			if (0 == in_fp)
 				return -1;
@@ -172,7 +162,6 @@ namespace nwol
 				*out_nReadBytes										+= nReadBytes;
 			return 0;
 		}
-
 		virtual					::nwol::error_t					write					(char* out_fp, uint32_t* out_nReadBytes, const _tBase* defaultData = 0)		const				{
 			if (0 == out_fp)
 				return -1;
@@ -184,7 +173,6 @@ namespace nwol
 				*out_nReadBytes											+= nWrittenBytes;
 			return 0;
 		}
-
 		virtual					::nwol::error_t					read					(const char* in_fp, uint32_t* out_nReadBytes)													{
 			if (0 == in_fp)
 				return -1;
@@ -211,8 +199,7 @@ namespace nwol
 #define GPtrPODX(baseType)			::nwol::gptr_podx<GREF(baseType)>				
 #define GPPODX(NameSpace, baseType)	::nwol::gptr_podx<NameSpace::GREF(baseType)>	
 
-	template<typename _tRef> class gptr_podx : public gptr_pod<_tRef>
-	{
+	template<typename _tRef> class gptr_podx : public gptr_pod<_tRef> {
 		using					gptr_nco<_tRef>::				InstanceRef																												;
 		using					gptr_nco<_tRef>::				valid																													;
 	protected:
@@ -226,13 +213,11 @@ namespace nwol
 			if (valid() && onCreate)
 				(*onCreate)(InstanceRef->get());
 		}
-
 		virtual					void							_set					(_tRef* const & CoreInstance)																	{
 			gptr_podx<_tRef>											old						(0, 0, onFree, m_History);	// call destroy handlers for history contents and release the instance.
 			m_History												= InstanceRef;
 			InstanceRef												= CoreInstance;
 		}
-
 	public:
 								gptr_pod<_tRef>					m_History																												= {};	// history doesn't call update handlers.
 								void							(*onCreate)				(_tBase* instance)																				= 0;
@@ -245,7 +230,6 @@ namespace nwol
 			if (valid() && onFree)
 				(*onFree)(InstanceRef->get());
 		}
-
 		inline constexpr 										gptr_podx				()																												= default;
 		inline													gptr_podx				(const gptr_nco<_tRef>& other)																					: gptr_podx()																{ InstanceRef = ::nwol::acquire(other.InstanceRef);	}
 		inline													gptr_podx				(const gptr_podx<_tRef>& other)																					: onCreate(other.onCreate), onUpdate(other.onUpdate), onFree(other.onFree)	{ InstanceRef = ::nwol::acquire(other.InstanceRef);	}
@@ -265,7 +249,6 @@ namespace nwol
 
 			return *this;
 		}
-
 		virtual					gptr_podx<_tRef>&				operator =				(const gptr_podx<_tRef>& other)																	{ return operator=((const gptr_pod<_tRef>&) other); }
 		virtual					gptr_podx<_tRef>&				operator =				(_tRef* instanceRef)																			{
 			if( (0 == compare_data(instanceRef)) && 0 == m_History.compare_data(instanceRef) ) {
@@ -277,14 +260,12 @@ namespace nwol
 				(*onUpdate)(InstanceRef->get());
 			return *this;
 		}
-		
 		// methods ---------------------------------------------------------------------------------------
 		virtual					void							free					()																								{
 			if (valid() && onFree)
 				(*onFree)(InstanceRef->get());
 			_set(0);
 		}
-
 		inline					void							onCreateHandler			(void(*handler)(_tBase*))															noexcept	{ onCreate	= handler;	}
 		inline					void							onUpdateHandler			(void(*handler)(_tBase*))															noexcept	{ onUpdate	= handler;	}
 		inline					void							onFreeHandler			(void(*handler)(_tBase*))															noexcept	{ onFree	= handler;	}
@@ -297,13 +278,11 @@ namespace nwol
 			if (valid() && onUpdate)
 				(*onUpdate)(InstanceRef->get());
 		}
-
 								void							free_history			()																								{
 			gptr_podx<_tRef>											old						(0, 0, onFree, m_History);	// call destroy handlers for history contents and release the instance.
 			m_History.free();
 		}
 	};
-
 }// namespace
 
 #endif // __GREF_PTR_H__23487928374923__

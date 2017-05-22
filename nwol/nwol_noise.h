@@ -51,7 +51,6 @@ namespace nwol
 			generator.Reset(seed);
 		return generator.Next();
 	}
-
 }
 
 #endif // __NOISE_H__92374092374021784309287349023874__

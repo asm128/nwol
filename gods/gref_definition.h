@@ -32,9 +32,9 @@
 		__GDEFINE_CREATEDATA(baseType);	
 
 #define GDEFINE_POD_COMMON(NameSpace, baseType)					\
-	namespace NameSpace{											\
-		void grelease(GREF(baseType)** _p);							\
-	}																\
+	namespace NameSpace{										\
+		void grelease(GREF(baseType)** _p);						\
+	}															\
 	__GCORE_REF_INIT_STATIC_MEMBERS(NameSpace, baseType)		\
 	namespace NameSpace{										\
 		__GDEFINE_POD_FUNCTIONS(baseType);						\

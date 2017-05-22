@@ -114,18 +114,15 @@ namespace nwol
 			((TFunctionRelease)pRef->Globals->_prelease)(&pRef);
 		}
 	}
-
 	template<typename _tRef>	static inline	void			set				(_tRef** out_Ref, _tRef* in_Ref)					{
 		_tRef															* old			= *out_Ref;																
 		*out_Ref													= ::nwol::acquire(in_Ref);															
 		::nwol::release(&old);																		
 	}																																	
-
 	template<typename _tRef>	static inline	void			release			(_tRef** instanceRefs, uint32_t* instanceCount)		{
 		for(uint32_t i = 0, count = *instanceCount; i < count; ++i)			
 			::nwol::release(&instanceRefs[i]);							
 	}
-
 	template<typename _tRef>	static inline	int32_t			compare			(const _tRef* in_A, const _tRef* in_B)				{
 		if (0 == in_A && 0 == in_B)																									
 			return 0;																												
@@ -134,6 +131,5 @@ namespace nwol
 																																	
 		return ::nwol::podcmp(in_A->Instance, in_B->Instance);																		
 	}
-
 } // namespace
 #endif // GREF_H_2398429385492835498234

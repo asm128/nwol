@@ -19,8 +19,9 @@ namespace nwol
 		virtual			::nwol::error_t						create					(_tRef** in_lstCoreInstances, uint32_t nInstanceCount)																		{
 			reterr_error_if(nInstanceCount && 0 == in_lstCoreInstances, "%s", "Cannot create list from a null address!");
 
-			if( this->m_BufferData.writable()
-				&& (this->Count >= nInstanceCount || this->m_BufferData->nSizeInBytes >= (nInstanceCount*m_DataBytes) ) )
+			 if( this->m_BufferData.writable()
+			 &&	(this->Count >= nInstanceCount || this->m_BufferData->nSizeInBytes >= (nInstanceCount*m_DataBytes)) 
+			 )
 			{
 				uint32_t												iCoreInstance;	
 				_tRef**													pRefArray				= (_tRef**)this->m_BufferData->pByteArray;
@@ -42,7 +43,6 @@ namespace nwol
 			}
 			return 0;
 		}
-
 		//
 		virtual			::nwol::error_t						create					(::nwol::gptr_nco<_tRef>* in_lstCoreInstances, uint32_t nInstanceCount)														{
 			if (nInstanceCount && 0 == in_lstCoreInstances) {
@@ -58,7 +58,6 @@ namespace nwol
 
 			return 0;
 		}
-
 		//
 		virtual			::nwol::error_t						resize					(uint32_t newSize)																											{
 			if (newSize == this->Count)
@@ -94,7 +93,7 @@ namespace nwol
 			}
 			return 0;
 		}
-
+		//
 		virtual			::nwol::error_t						pack					()																															{
 			glist_nco<_tRef, m_DataType, m_DataBytes>				lstPacked				(this->get_valid_element_count());
 			uint32_t												iPacked					= 0;
@@ -140,7 +139,6 @@ namespace nwol
 					error_printf("%s", "Failed to resize list!");
 					return -1;
 				}
-
 				if (out_pElement) {
 					oldElement											= *out_pElement;
 					*out_pElement										= newElement;

@@ -2,9 +2,9 @@
 #define __GREF_DEFINITION_COMMON_H_293874922__
 
 
-#define __GDEFINE_RELEASE(baseType)																																										\
-	void grelease( GREF(baseType)** refToRelease ) {																																									\
-		GREF(baseType)													* pRef		= *refToRelease;																													\
+#define __GDEFINE_RELEASE(baseType)																																														\
+	void														grelease					(GREF(baseType)** refToRelease) {																							\
+		GREF(baseType)													* pRef						= *refToRelease;																									\
 		*refToRelease												= 0;																																				\
 		if(pRef)  																																																		\
 			switch(pRef->Globals->ObjectCategory) {																																										\

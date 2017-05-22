@@ -39,7 +39,6 @@ namespace nwol
 				this->Data												= 0;
 			}
 		}
-
 	public:
 		// for some reason, clear() override is not being called properly on template destruction.
 																~glist_base				()															{ this->SetBufferData(0); }
@@ -53,12 +52,10 @@ namespace nwol
 			this->ReleaseRefList(oldBuffer);
 			//SetBufferData(l.m_BufferData);
 		}
-
 							_tBase*								operator[]				(uint32_t index)											{
 			retnul_error_if(index >= this->Count, "Index out of boundaries! Index: %u. List size: %u.", index, this->Count);
 			return this->Data[index] ? this->Data[index]->get() : 0;
 		}
-
 							const _tBase*						operator[]				(uint32_t index)							const			{
 			retnul_error_if(index >= this->Count, "Index out of boundaries! Index: %u. List size: %u.", index, this->Count);
 			return this->Data[index] ? this->Data[index]->get() : 0;
@@ -68,13 +65,12 @@ namespace nwol
 			this->SetBufferData(l.m_BufferData);
 			return *this;
 		}
-		
+
 						::nwol::error_t							release					(uint32_t nIndex)											{ set(0, nIndex); return 0; }
 						_tRef*									acquire					(uint32_t index)							const			{
 			retnul_error_if(index >= this->Count, "Index out of boundaries! Index: %u. List size: %u.", index, this->Count);
 			return ::nwol::acquire(this->Data[index]);
 		}
-
 		// Checks all elements for valid instances (non-null instance pointers)
 						uint32_t								get_valid_element_count	()											const			{
 			if(!m_BufferData)
@@ -87,7 +83,6 @@ namespace nwol
 
 			return nValidElementCount;
 		}
-
 						void									clear					()															{
 			if(m_BufferData.writable()) {
 				this->ReleaseRefList(m_BufferData);
@@ -98,7 +93,6 @@ namespace nwol
 				this->SetBufferData(0);
 			}
 		}
-
 						::nwol::error_t							release_all				()															{
 			GPNCO(::nwol, SBuffer) newListBuffer;
 			if(m_BufferData.writable()) {
@@ -116,10 +110,8 @@ namespace nwol
 			}
 			return 0;
 		}
-
 						::nwol::error_t							set						(_tRef* CoreInstance, uint32_t nIndex)						{
 			reterr_error_if (nIndex >= this->Count, "Invalid index! Index=%u.", nIndex);
-
 			if(m_BufferData.writable()) {
 				_tRef														* oldInstance			= ((_tRef**)m_BufferData->pByteArray)[nIndex];
 				if (oldInstance != CoreInstance) {

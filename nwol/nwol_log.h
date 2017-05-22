@@ -1,4 +1,3 @@
-#include "build_global.h"
 #include "nwol_size.h"
 #include "nwol_string.h"
 

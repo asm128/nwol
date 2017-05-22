@@ -6,7 +6,7 @@
 
 #include <stdio.h>
 
-int32_t									nwol::initNetwork					()																								{
+int32_t									nwol::initNetwork					()																															{
 #if defined(__WINDOWS__)
 	WSADATA											w								= {};	// Used to open Windows connection
 	reterr_error_if(WSAStartup(0x0101, &w) != 0, "Could not open Windows sockets: 0x%X", WSAGetLastError());		// Open windows connection
@@ -14,14 +14,14 @@ int32_t									nwol::initNetwork					()																								{
 	return 0;
 }
 
-int32_t									nwol::shutdownNetwork				()																								{
+int32_t									nwol::shutdownNetwork				()																															{
 #if defined(__WINDOWS__)
 	reterr_error_if(WSACleanup() != 0, "Could not shut down Windows sockets: 0x%X", WSAGetLastError());		// Open windows connection
 #endif
 	return 0;
 }
 
-void									initSockaddrStruct					( int a1, int a2, int a3, int a4, unsigned short port_number, ::sockaddr_in* out_sockaddr )		{
+void									initSockaddrStruct					( int a1, int a2, int a3, int a4, unsigned short port_number, ::sockaddr_in* out_sockaddr )									{
 	/* Clear out server struct */
 	memset(out_sockaddr, 0, sizeof(struct ::sockaddr_in));
 
@@ -44,8 +44,7 @@ void									initSockaddrStruct					( int a1, int a2, int a3, int a4, unsigned s
 #endif
 }
 
-int32_t									nwol::createConnection				( int32_t b1, int32_t b2, int32_t b3, int32_t b4, uint16_t port_number, ::nwol::SConnectionEndpoint** out_newClientInfo ) 
-{
+int32_t									nwol::createConnection				( int32_t b1, int32_t b2, int32_t b3, int32_t b4, uint16_t port_number, ::nwol::SConnectionEndpoint** out_newClientInfo )	{
 	::nwol::SConnectionEndpoint						* newClientInfo					= new ::nwol::SConnectionEndpoint()
 		,											* oldClientInfo					= 0
 		;
@@ -56,15 +55,13 @@ int32_t									nwol::createConnection				( int32_t b1, int32_t b2, int32_t b3, 
 	return 0;
 }
 
-int32_t									nwol::createConnection				( uint16_t port_number, ::nwol::SConnectionEndpoint** out_clientInfo ) 
-{
+int32_t									nwol::createConnection				( uint16_t port_number, ::nwol::SConnectionEndpoint** out_clientInfo )														{
 	char											host_name			[256]		= {};
 	::gethostname(host_name, sizeof(host_name));
 	return ::nwol::createConnectionByHostName( host_name, port_number, out_clientInfo );
 }
 
-int32_t									nwol::createConnectionByHostName	( char_t* host_name, uint16_t port_number, ::nwol::SConnectionEndpoint** out_clientInfo ) 
-{
+int32_t									nwol::createConnectionByHostName	( char_t* host_name, uint16_t port_number, ::nwol::SConnectionEndpoint** out_clientInfo )									{
 	int												b1 = 0, b2 = 0, b3 = 0, b4 = 0;							/* Client address components in xxx.xxx.xxx.xxx form */
 
 #if defined(__WINDOWS__)
@@ -76,14 +73,11 @@ int32_t									nwol::createConnectionByHostName	( char_t* host_name, uint16_t p
 	//--------------------------------
     // Setup the hints address info structure
     // which is passed to the getaddrinfo() function
-
 	::addrinfo										hints							= {};
     memset(&hints, 0, sizeof(hints));
     hints.ai_family								= AF_UNSPEC		;
     hints.ai_socktype							= SOCK_DGRAM	;
     hints.ai_protocol							= IPPROTO_UDP	;
-
-	
 
 	const ::addrinfo								* createdAddrInfo				= 0;
 	int32_t											sockErr							= ::getaddrinfo(host_name, portString, &hints, (::addrinfo**)&createdAddrInfo);
@@ -94,7 +88,6 @@ int32_t									nwol::createConnectionByHostName	( char_t* host_name, uint16_t p
 #if defined(NWOL_DEBUG_ENABLED)
 	int									iAddress						= 1;
 #endif
-
 	//sockaddr_in6 *sockaddr_ipv6;
 	for(const addrinfo* ptr = createdAddrInfo; ptr != NULL; ptr = ptr->ai_next)  {
 		info_printf("getaddrinfo response %d", iAddress++);
@@ -124,7 +117,6 @@ int32_t									nwol::createConnectionByHostName	( char_t* host_name, uint16_t p
 			b2											= sockaddr_ipv4->sin_addr.S_un.S_un_b.s_b2;
 			b3											= sockaddr_ipv4->sin_addr.S_un.S_un_b.s_b3;
 			b4											= sockaddr_ipv4->sin_addr.S_un.S_un_b.s_b4;
-
 			//printf("\tIPv4 address %s\n", inet_ntoa(sockaddr_ipv4->sin_addr) );
 			break;
 		case AF_INET6	:
@@ -157,7 +149,6 @@ int32_t									nwol::createConnectionByHostName	( char_t* host_name, uint16_t p
 			info_printf("Other %ld", ptr->ai_socktype);
 			break;
 		}
-
 		debug_print("Protocol: ");
 		switch (ptr->ai_protocol) {
 		case 0				:	debug_print("Unspecified"							);	break;
@@ -170,7 +161,6 @@ int32_t									nwol::createConnectionByHostName	( char_t* host_name, uint16_t p
 		info_printf("Length of this sockaddr: %d", (int32_t)ptr->ai_addrlen);
 		info_printf("Canonical name: %s", ptr->ai_canonname);
 	}
-
 	freeaddrinfo((::addrinfo*)createdAddrInfo);
 	return ::nwol::createConnection( b1, b2, b3, b4, port_number, out_clientInfo );
 #else
@@ -190,7 +180,6 @@ int32_t									nwol::initConnection				( ::nwol::SConnectionEndpoint* connectio
 	// Open a datagram socket
 	SOCKET											sd								= ::socket(AF_INET, SOCK_DGRAM, 0);
 	reterr_error_if(sd == INVALID_SOCKET, "%s", "Could not create socket.");
-
 	connection->sd								= sd;
 	return 0;
 }
@@ -209,7 +198,6 @@ int32_t									nwol::shutdownConnection			( ::nwol::SConnectionEndpoint** out_c
 #endif
 		clientToDelete->sd							= 0;
 	}
-
 	delete( clientToDelete );
 	return 0;
 }
@@ -218,7 +206,6 @@ int32_t									nwol::bindConnection				( ::nwol::SConnectionEndpoint* client )	
 	// Bind local address to socket
 	int												errMy							= ::bind(client->sd, (::sockaddr *)&client->sockaddr, (int)sizeof(::sockaddr_in));
 	reterr_error_if(errMy == -1, "Cannot bind address to socket.");
-
 	int												sockaddr_in_len					= (int)sizeof(::sockaddr_in);
 	::getsockname(client->sd, (::sockaddr*)&client->sockaddr, &sockaddr_in_len);
 	return 0;
@@ -245,24 +232,20 @@ int32_t									nwol::connectionAccept				( ::nwol::SConnectionEndpoint* conn, :
 		::nwol::shutdownConnection(&newConnection);
 		return -1;
 	}
-
 	*out_newConn = newConnection;
 	info_printf("Client connected.");
 	return 0;
 }
 
-int32_t									nwol::sendToConnection				( ::nwol::SConnectionEndpoint* connection, const ubyte_t* buffer, uint32_t bytesToSend, int32_t* _bytesSent, ::nwol::SConnectionEndpoint* targetConnection ) {
+int32_t									nwol::sendToConnection				( ::nwol::SConnectionEndpoint* connection, const ubyte_t* buffer, uint32_t bytesToSend, int32_t* _bytesSent, ::nwol::SConnectionEndpoint* targetConnection )	{
 	reterr_error_if(0 == connection, "Invalid argument: Connection endpoint is null.");	// Tranmsit data to get time
-
 	int32_t											bytesSent						= ::sendto(connection->sd, (const char_t*)buffer, bytesToSend, 0, (::sockaddr *)&targetConnection->sockaddr, (int)sizeof(::sockaddr_in));
 	reterr_error_if(bytesSent == -1, "Error transmitting data.");
-
 	*_bytesSent									= bytesSent;
 	return 0;
 }
 
-int32_t									nwol::receiveFromConnection			( ::nwol::SConnectionEndpoint* connection, ubyte_t* buffer, uint32_t bufLen, int32_t* _bytesReceived, ::nwol::SConnectionEndpoint** newConnection )
-{
+int32_t									nwol::receiveFromConnection			( ::nwol::SConnectionEndpoint* connection, ubyte_t* buffer, uint32_t bufLen, int32_t* _bytesReceived, ::nwol::SConnectionEndpoint** newConnection )				{
 	int32_t											server_length					= (int32_t)sizeof(::sockaddr_in);
 	int32_t											bytesReceived					= -1;
 	if( newConnection ) {
@@ -419,7 +402,6 @@ int32_t									nwol::sendUserCommand				(SConnectionEndpoint* pOrigin, ::nwol::
 		;
 	::nwol::getAddress( pTarget, &a1, &a2, &a3, &a4, &port_number );
 	info_printf("Sent user command of %u bytes to %u.%u.%u.%u:%u.", bufferSize, (uint32_t)a1, (uint32_t)a2, (uint32_t)a3, (uint32_t)a4, (uint32_t)port_number);
-
 	return 0;
 }
 
@@ -434,7 +416,6 @@ int32_t									nwol::receiveUserCommand			(::nwol::SConnectionEndpoint* pOrigin
 		requestOrResponse							= (commandUserReceive == ::nwol::NETLIB_COMMAND_USER_RESPONSE) ? ::nwol::USER_COMMAND_RESPONSE : ::nwol::USER_COMMAND_UNKNOWN;
 		reterr_error_if(requestOrResponse != USER_COMMAND_RESPONSE, "Command is not valid.");
 	}
-
 	int32_t											receivedBytes					= 0;
 	int32_t											userBytesToReceive				= 0;
 	errMy										= ::nwol::receiveFromConnection( pOrigin, (ubyte_t*)&userBytesToReceive, (uint32_t)sizeof(int32_t), &receivedBytes, &pTarget );

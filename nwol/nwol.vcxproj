@@ -182,7 +182,6 @@
     <ClInclude Include="array_view.h" />
     <ClInclude Include="ascii_screen.h" />
     <ClInclude Include="ascii_reference.h" />
-    <ClInclude Include="build_global.h" />
     <ClInclude Include="nwol_choice.h" />
     <ClInclude Include="ascii_color.h" />
     <ClInclude Include="nwol_coord.h" />

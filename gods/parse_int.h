@@ -4,7 +4,7 @@
 namespace nwol
 {
 	// supports up to base 36 by using the abecedary letters as symbols
-	::nwol::error_t					parseAbritraryBaseInteger				(uint32_t base, const char* sourceChars, int32_t iChar, int32_t maxChars, int* charsProcessed_, uint64_t* number_, ::nwol::gacstring& stepResult_ ) {
+	::nwol::error_t					parseAbritraryBaseInteger				(uint32_t base, const char* sourceChars, int32_t iChar, int32_t maxChars, int* charsProcessed_, uint64_t* number_, ::nwol::gacstring& stepResult_ )			{
 		uint32_t							totalCharsProcessed						= 0;
 		uint64_t							number									= 0;
 		static const char					symbolList []							= "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";

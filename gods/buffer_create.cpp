@@ -58,8 +58,7 @@ namespace nwol
 	};																																	
 
 
-	class __CBufferManager
-	{
+	class __CBufferManager {
 	public:
 										__CBufferManager			()										{ (void)INIT_CRITICAL_SECTION(cs); }
 										~__CBufferManager			()										{
@@ -295,8 +294,7 @@ namespace nwol
 void ::nwol::nwol_shutdown() { ::nwol::__g_BufferManager.shutdown(); }
 
 
-void* nwol::allocSBufferBlock(uint32_t sizeInBytes)
-{
+void* nwol::allocSBufferBlock(uint32_t sizeInBytes)		{
 #if defined(NWOL_DEBUG_ENABLED)
 	char* pBlock = (char*)malloc(sizeInBytes+sizeof(NWOL_DEBUG_CHECK_TYPE)*2+BASETYPE_ALIGN);
 
@@ -320,8 +318,7 @@ void* nwol::allocSBufferBlock(uint32_t sizeInBytes)
 #endif
 }
 
-void nwol::freeSBufferBlock(SBuffer* pBuffer)
-{
+void nwol::freeSBufferBlock(SBuffer* pBuffer)			{
 #if defined(NWOL_DEBUG_ENABLED)
 	checkBlockBoundaries(pBuffer);
 	free(pBuffer->__pBlock - sizeof(NWOL_DEBUG_CHECK_TYPE));
@@ -330,8 +327,7 @@ void nwol::freeSBufferBlock(SBuffer* pBuffer)
 #endif
 }
 
-void nwol::checkBlockBoundaries(SBuffer* pBuffer)
-{
+void nwol::checkBlockBoundaries(SBuffer* pBuffer)		{
 //#if defined(NWOL_DEBUG_ENABLED)
 	char* pBlock = pBuffer->__pBlock;
 	NWOL_DEBUG_CHECK_TYPE checkPre	= *(NWOL_DEBUG_CHECK_TYPE*)	(pBlock-sizeof(NWOL_DEBUG_CHECK_TYPE));
@@ -347,39 +343,25 @@ void nwol::checkBlockBoundaries(SBuffer* pBuffer)
 //#endif
 }
 
-nwol::error_t nwol::createBuffer(GDATA_TYPE DataFormat, GDATA_USAGE Usage, uint32_t nElementCount, nwol::GODS(SBuffer)* out_pBuffer)
-{
-	return ::nwol::createBuffer(DataFormat, Usage, nElementCount, nElementCount, 1, out_pBuffer);
-}
-
-nwol::error_t nwol::createBuffer(GDATA_TYPE DataFormat, GDATA_USAGE Usage, uint32_t nMinElementCount, uint32_t nColumnCount, ::nwol::GODS(SBuffer)* out_pBuffer)
-{
-	return ::nwol::createBuffer(DataFormat, Usage, nMinElementCount, nColumnCount, 1, out_pBuffer);
-}
-
-
-nwol::error_t nwol::createBuffer(GDATA_TYPE DataFormat, GDATA_USAGE Usage, uint32_t nElementCount, uint32_t nColumnCount, uint32_t nSliceCount, ::nwol::GODS(SBuffer)* out_pBuffer)
-{
+nwol::error_t			nwol::createBuffer(GDATA_TYPE DataFormat, GDATA_USAGE Usage, uint32_t nElementCount, uint32_t nColumnCount, uint32_t nSliceCount, ::nwol::GODS(SBuffer)* out_pBuffer)		{
 	if( Usage == GUSAGE_TEXT )
-		nElementCount += 1;
+		nElementCount					+= 1;
 
-	::nwol::error_t			errMy		= 0;
-	::nwol::GODS(SBuffer)	newBuffer	= 0;
+	::nwol::error_t						errMy					= 0;
+	::nwol::GODS(SBuffer)				newBuffer				= 0;
 
-	if( 0 != (errMy = __g_BufferManager.createBuffer(DataFormat, Usage, nElementCount, nColumnCount, nSliceCount, &newBuffer)) )
-	{
+	if( 0 != (errMy = __g_BufferManager.createBuffer(DataFormat, Usage, nElementCount, nColumnCount, nSliceCount, &newBuffer)) ) {
 		error_printf("Cannot create new SBuffer instance.");
-		errMy = -1;
+		errMy							= -1;
 	}
-	else if( newBuffer && (GUSAGE_TEXT == (newBuffer->get()->Usage = Usage)) )
-	{
-		uint32_t typeSize	= GTYPEID_TOTALBYTES(DataFormat);
-		SBuffer* buf		= newBuffer->get();
-		buf->nElementCount -= 1;
+	else if( newBuffer && (GUSAGE_TEXT == (newBuffer->get()->Usage = Usage)) ) {
+		uint32_t							typeSize				= GTYPEID_TOTALBYTES(DataFormat);
+		SBuffer								* buf					= newBuffer->get();
+		buf->nElementCount				-= 1;
 		memset( &((char*)buf->pByteArray)[buf->nElementCount*typeSize], 0, typeSize );
 	}
-	GPNCO(::nwol, SBuffer)	oldBuffer = *out_pBuffer;
-	*out_pBuffer = newBuffer;
+	GPNCO(::nwol, SBuffer)				oldBuffer				= *out_pBuffer;
+	*out_pBuffer					= newBuffer;
 	return errMy;
 }
 

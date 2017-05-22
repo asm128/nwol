@@ -48,9 +48,6 @@
     <ClInclude Include="nwol_io.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="build_global.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="unshrinkable_block_container.h">
       <Filter>Header Files</Filter>
     </ClInclude>

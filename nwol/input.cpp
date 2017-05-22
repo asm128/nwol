@@ -1,12 +1,11 @@
 #include "nwol_input.h"
 #include "nwol_error.h"
-
 #if defined(__WINDOWS__)
 #	include <Windows.h>
 #endif
 
 static constexpr const char						_pointer_error_string[]						= "Invalid handler pointer: null";
-#define check_pointer_error(_hdlr)	reterr_error_if(0 == _hdlr, "%s.", _pointer_error_string)
+#define check_pointer_error(_hdlr)				reterr_error_if(0 == _hdlr, "%s.", _pointer_error_string)
 
 ::nwol::error_t									nwol::registerHandler						(::nwol::SInput& input, IHandlerKeyboard	* handler)	{ check_pointer_error(handler);	int32_t pos = input.HandlersKeyboard	.find(handler); retwarn_warn_if(pos != -1, "Keyboard Handler already registered at index %u."	, pos); const uint32_t expectedIndex = input.HandlersKeyboard	.size(); reterr_error_if(expectedIndex != (uint32_t)input.HandlersKeyboard	.push_back(handler), "Failed to push pointer to input handler registry. Out of memory?"); return 0; }
 ::nwol::error_t									nwol::registerHandler						(::nwol::SInput& input, IHandlerMouse		* handler)	{ check_pointer_error(handler);	int32_t pos = input.HandlersMouse		.find(handler); retwarn_warn_if(pos != -1, "Mouse Handler already registered at index %u."		, pos); const uint32_t expectedIndex = input.HandlersMouse		.size(); reterr_error_if(expectedIndex != (uint32_t)input.HandlersMouse		.push_back(handler), "Failed to push pointer to input handler registry. Out of memory?"); return 0; }
@@ -114,9 +113,8 @@ void											nwol::pollInput								(SInput& input)							{
 	for(uint32_t i=0; i<keyCount; i++)
 		input.Keys[i]										= GetAsyncKeyState(i) ? 1 : 0;
 #else
-#error "Not implemented."
+#	error "Not implemented."
 #endif
-
 	memcpy(input.PreviousMouseButtons, input.MouseButtons, buttonCount);
 
 #if defined(__WINDOWS__)
@@ -147,9 +145,8 @@ void											nwol::pollInput								(SInput& input)							{
 		break;
 	}
 #else
-#error "Not implemented."
+#	error "Not implemented."
 #endif
-
 	handleInputChanges(input);
 }
 

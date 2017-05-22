@@ -1,24 +1,24 @@
 #include "gscreen.h"
 
 
-LRESULT	WINAPI											mainWndProc					(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)	{
+LRESULT	WINAPI								mainWndProc					(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)	{
 //	::nwol::SScreenManager										& windowManager				= ::nwol::SScreenManager::getInstance();
 //	return windowManager.WndProc(hWnd, uMsg, wParam, lParam);
 	return DefWindowProc( hWnd, uMsg, wParam, lParam );
 }
 
 struct SWindowClassRegistrator {
-	WNDCLASSEX							WindowClass								= {};
-	ATOM								RegistrationError						= 0;
+	WNDCLASSEX									WindowClass									= {};
+	ATOM										RegistrationError							= 0;
 
-										~SWindowClassRegistrator				()							{ UnregisterClass(WindowClass.lpszClassName, WindowClass.hInstance); }
-										SWindowClassRegistrator					(WNDCLASSEX windowClass)	: WindowClass(windowClass), RegistrationError(RegisterClassEx(&WindowClass)) {}		
+												~SWindowClassRegistrator					()							{ UnregisterClass(WindowClass.lpszClassName, WindowClass.hInstance); }
+												SWindowClassRegistrator						(WNDCLASSEX windowClass)	: WindowClass(windowClass), RegistrationError(RegisterClassEx(&WindowClass)) {}		
 };
 
-::nwol::error_t						nwol::SScreenManager::CreateScreen			(const SScreenMetrics& desiredMetrics, id_t& screenIndex)		{
+::nwol::error_t								nwol::SScreenManager::CreateScreen			(const SScreenMetrics& desiredMetrics, id_t& screenIndex)		{
 	{
 		WNDCLASSEX									windowClass									;
-		windowClass.cbSize						= sizeof(WNDCLASSEX);
+		windowClass.cbSize						= sizeof(WNDCLASSEX)							;
 		windowClass.style						= NULL											; // CS_HREDRAW | CS_VREDRAW;	;
 		windowClass.lpfnWndProc					= mainWndProc									;
 		windowClass.cbClsExtra					= 0												;

@@ -426,7 +426,6 @@ namespace nwol
 		//	return -1;
 		//}
 	}; // array_obj
-
 	// returns the index or -1 if not found.
 	template <typename _tValue>
 	inline				int32_t						find										(const _tValue* begin, const _tValue* end, const _tValue& valueToLookFor)				{
@@ -435,7 +434,6 @@ namespace nwol
 				return i;
 		return -1;
 	}
-
 	// returns the index or -1 if not found.
 	template <typename _tValue>
 	inline				int32_t						find										(const array_pod<_tValue>& valueContainer, const _tValue& valueToLookFor)				{

@@ -57,6 +57,5 @@ LRESULT								nwol::SScreen::WndProc						(HWND hWnd, UINT uMsg, WPARAM wParam,
 		State.Closed									= true;
 		return 0;
 	}
-
 	return DefWindowProc( hWnd, uMsg, wParam, lParam );
 }

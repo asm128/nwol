@@ -173,9 +173,6 @@ namespace klib
 
 	//static const char ascii_blah0[] = "'☺☻♥♦♣♠•◘○◙♂♀↨♫ ☼ ►◄↕ ‼ ¶ § ▬ ↨↑↓→←∟↔▲▼ !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ⌂ ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬ ½ ¼ ¡« » ░▒▓│┤╣║╗┐└┴┬├─┼╚╔╩╠═╬┘┌ █▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ ";
 //#pragma warning(default:4566)
-
-
-
 }
 
 #endif // __ASCII_REFERENCE_H__923640__

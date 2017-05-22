@@ -20,7 +20,6 @@ static struct SASCIIScreen {
 	int								BackBufferWidth						= DEFAULT_ASCII_SCREEN_WIDTH	;
 	int								BackBufferHeight					= DEFAULT_ASCII_SCREEN_HEIGHT	;
 	bool							bCreated							= false;
-
 	// platform
 #if defined(__WINDOWS__)
 	CONSOLE_SCREEN_BUFFER_INFOEX	InfoScreenBufferOriginal			= {};
@@ -94,7 +93,7 @@ void								nwol::setASCIIScreenTitle		(const char_t* title)													{
 	SetConsoleTitle(title);		
 #elif defined(__ANDROID__)
 #else
-#error "Not implemented."
+#	error "Not implemented."
 #endif
 }
 const char_t*						nwol::getASCIIFrontBuffer		()																		{ return __g_ASCIIScreen.ASCIIFrontBuffer;	}
@@ -155,7 +154,7 @@ void								nwol::clearASCIIBackBuffer		(int value, uint16_t colorValue)								
 		COORD										home						= { 0, 0 };
 #elif defined(__ANDROID__)
 #else
-#error "Not implemented."
+#	error "Not implemented."
 #endif 
 		__g_ASCIIScreen.ASCIIBackBuffer			= (char*)		::nwol::nwol_malloc( sizeof( char )*screenSize+1	);	// We're going to draw our map in this array. the assignment of empty brackets = {} initializes all chars in the array to 0
 		__g_ASCIIScreen.ColorBackBuffer			= (uint16_t*)	::nwol::nwol_malloc( sizeof( uint16_t )*screenSize	);	
@@ -173,17 +172,14 @@ void								createConsole				()																		{
 #if defined(__WINDOWS__)
 	AllocConsole();
 	AttachConsole(GetCurrentProcessId());
-
 	FILE									* stream					= 0;
 	freopen_s(&stream, "CONOUT$", "w+", stdout);
 	SetConsoleTitle("No Workflow Overhead Console");
-
 	SetConsoleCtrlHandler(HandlerRoutine, TRUE);
 #elif defined(__ANDROID__)
 #else
-#error "Not implemented."
+#	error "Not implemented."
 #endif
-
 	__g_ASCIIScreen.bCreated			= true;
 }
 
@@ -193,7 +189,6 @@ void								nwol::initASCIIScreen			(uint32_t width, uint32_t height)										{
 
 	__g_ASCIIScreen.BackBufferWidth 		= width;
 	__g_ASCIIScreen.BackBufferHeight		= height;
-
 #if defined(__WINDOWS__)
 	const HANDLE								hConsoleOut					= GetStdHandle( STD_OUTPUT_HANDLE );
 
@@ -257,6 +252,6 @@ void								nwol::initASCIIScreen			(uint32_t width, uint32_t height)										{
     SetConsoleMode(hConsoleIn, mode);
 #elif defined(__ANDROID__)
 #else
-#error "Not implemented."
+#	error "Not implemented."
 #endif 
 }
