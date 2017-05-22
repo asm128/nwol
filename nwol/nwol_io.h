@@ -1,4 +1,4 @@
-#include "platform_globals.h"
+#include "nwol_debug.h"
 #include <cstdio>
 
 #ifndef __NWOL_IO_H_56847984984__

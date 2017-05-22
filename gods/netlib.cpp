@@ -1,5 +1,5 @@
 #include "netlib_private.h"
-#include "platform_globals.h"
+#include "nwol_debug.h"
 
 #include "gbuffer.h"
 #include "nwol_misc.h"

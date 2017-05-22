@@ -1,4 +1,4 @@
-#include "platform_globals.h"
+#include "nwol_debug.h"
 
 #ifndef __TYPEINT_H__941234698724987234__
 #define __TYPEINT_H__941234698724987234__

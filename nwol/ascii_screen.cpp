@@ -1,6 +1,6 @@
 #include "ascii_screen.h"
 #include "ascii_color.h"
-#include "platform_globals.h"
+#include "nwol_debug.h"
 #include "nwol_memory.h"
 #include "nwol_io.h"
 #include "nwol_safe.h"

@@ -1,4 +1,5 @@
-#include "platform_globals.h"
+#include "nwol_debug.h"
+#include "nwol_debug.h"
 #include "typeint.h"
 
 #if defined (__WINDOWS__)

@@ -1,4 +1,4 @@
-#include "platform_globals.h"
+#include "nwol_debug.h"
 
 #ifndef __MULTITHREAD_H__098217309126309127836918723698127__
 #define __MULTITHREAD_H__098217309126309127836918723698127__

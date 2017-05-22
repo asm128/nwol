@@ -1,5 +1,5 @@
 #include "multithread.h"
-#include "platform_globals.h"
+#include "nwol_debug.h"
 
 #if defined(__ANDROID__) || defined(__LINUX__)
 #elif defined(__WINDOWS__)
