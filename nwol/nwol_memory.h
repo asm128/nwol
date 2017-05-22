@@ -37,7 +37,6 @@ namespace nwol
 	template<typename _tBase>	static inline constexpr		uint32_t							get_type_size_padded		(uint32_t paddingInBytes)							{ 
 		return (uint32_t) ( (sizeof(_tBase) / paddingInBytes) + one_if(sizeof(_tBase) % paddingInBytes) ) * paddingInBytes; 
 	}
-
 	template <typename _tBase>	static inline constexpr		uint32_t							get_type_align				()										noexcept	{
 		return (uint32_t)	
 			(	(0 == (sizeof(_tBase) % 32))	? 32	
@@ -48,7 +47,6 @@ namespace nwol
 			:	1
 			);
 	}
-
 	template <typename _tBase>	static inline constexpr		uint32_t							get_type_align_multiplier	()										noexcept	{
 		return (uint32_t) 
 			(	(0 == (sizeof(_tBase) % 32)) ? sizeof(_tBase) / 32
@@ -59,7 +57,6 @@ namespace nwol
 			:	sizeof(_tBase) 
 			);
 	}
-
 	template <typename _tBase>	static inline				int32_t								podcmp						(const _tBase* pA, const _tBase* pB)				{																		
 		if (0 == pA && 0 == pB)		
 			return 0;				
@@ -68,7 +65,6 @@ namespace nwol
 									
 		return memcmp(pA, pB, sizeof(_tBase));							
 	}
-
 	template <typename _tBase>								_tBase*								podcpy						(_tBase* dest, const _tBase* source)				{																		
 		static constexpr	const uint32_t																dataMultiplier				= (uint32_t)get_type_align_multiplier<_tBase>();
 		switch (get_type_align<_tBase>()) {
@@ -122,7 +118,6 @@ namespace nwol
 				memcpy(dest, source, sizeof(_tBase));
 			break;
 		}
-
 		return dest;
 	}
 }	// namespace
