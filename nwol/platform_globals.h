@@ -40,17 +40,15 @@
 #endif
 
 #if defined(__WINDOWS__)
+#	if !defined(NOMINMAX)
+#		define NOMINMAX
+#	endif 
+#	if !defined(WIN32_LEAN_AND_MEAN)
+#		define WIN32_LEAN_AND_MEAN
+#	endif
 #	define DYNAMIC_LIBRARY_EXTENSION "dll"
 #else
 #	define DYNAMIC_LIBRARY_EXTENSION "os"
-#endif
-
-#if defined(__WINDOWS__) && !defined(NOMINMAX)
-#	define NOMINMAX
-#endif 
-
-#if defined(__WINDOWS__) && !defined(WIN32_LEAN_AND_MEAN)
-#	define WIN32_LEAN_AND_MEAN
 #endif
 
 #endif // __PLATFORM_GLOBALS_H__2983423__

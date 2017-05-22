@@ -37,8 +37,8 @@ void										nwol::__internal_debug_print_file				(const char* chars, int nChar
 	static const int									errMt_0										= _snprintf_s
 		(	__debug_file_name, sizeof(__debug_file_name)
 		,	"log__%d__%d__%d__%d__%d__%d.txt\0"
-		,	__debug_tm.tm_year+1900
-		,	__debug_tm.tm_mon+1
+		,	__debug_tm.tm_year	+ 1900
+		,	__debug_tm.tm_mon	+ 1
 		,	__debug_tm.tm_mday
 		,	__debug_tm.tm_hour
 		,	__debug_tm.tm_min

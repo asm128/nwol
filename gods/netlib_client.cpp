@@ -7,7 +7,7 @@
 #include <cstring>
 #include <cstdlib>
 
-int32_t										nwol::initClientConnection					(::nwol::SClientConnection& conn)									{
+int32_t											nwol::initClientConnection					(::nwol::SClientConnection& conn)									{
 	::nwol::error_t	
 	errMy											= ::nwol::createConnection	(conn.l1, conn.l2, conn.l3, conn.l4, 0, &conn.pClient);						reterr_error_if_errored(errMy, "%s", "Error creating client connection.");
 	errMy											= ::nwol::initConnection	(conn.pClient);																reterr_error_if_errored(errMy, "%s", "Error initializing client connection.");
@@ -16,7 +16,7 @@ int32_t										nwol::initClientConnection					(::nwol::SClientConnection& conn
 	return 0;
 }
 
-int32_t										nwol::requestDisconnect						(::nwol::SClientConnection& conn)									{
+int32_t											nwol::requestDisconnect						(::nwol::SClientConnection& conn)									{
 	static const ::nwol::NETLIB_COMMAND					commandDisconnect						= ::nwol::NETLIB_COMMAND_DISCONNECT;
 	int32_t												bytesTransmitted						= -1;
 	::nwol::error_t										errMy									= ::nwol::sendToConnection( conn.pClient, (const ubyte_t*)&commandDisconnect, (uint32_t)sizeof(::nwol::NETLIB_COMMAND), &bytesTransmitted, conn.pServer );
@@ -26,7 +26,7 @@ int32_t										nwol::requestDisconnect						(::nwol::SClientConnection& conn)	
 	return 0;
 }
 
-int32_t										nwol::disconnectClient						(::nwol::SClientConnection& client)									{
+int32_t											nwol::disconnectClient						(::nwol::SClientConnection& client)									{
 	/* Get current time */
 	info_printf("%s", "Disconnecting client.");
 	::nwol::shutdownConnection(&client.pClient);
@@ -36,7 +36,7 @@ int32_t										nwol::disconnectClient						(::nwol::SClientConnection& client)
 
 #define MAX_SEND_SIZE 128
 
-int											nwol::connect								(::nwol::SClientConnection& conn)									{
+int												nwol::connect								(::nwol::SClientConnection& conn)									{
 	info_printf("%s", "Sending connection request.");
 	static	const ::nwol::NETLIB_COMMAND				send_buffer								= ::nwol::NETLIB_COMMAND_CONNECT;
 
@@ -65,7 +65,7 @@ int											nwol::connect								(::nwol::SClientConnection& conn)									{
 	return 0;
 }
 
-int											nwol::serverTime							(::nwol::SClientConnection& conn, uint64_t& current_time)			{
+int												nwol::serverTime							(::nwol::SClientConnection& conn, uint64_t& current_time)			{
 	// send our command
 	::nwol::error_t										errMy									= ::nwol::sendSystemCommand(conn.pClient, conn.pServer, ::nwol::NETLIB_COMMAND_TIME_GET);
 	reterr_error_if_errored(errMy, "%s", "Error transmitting data.");

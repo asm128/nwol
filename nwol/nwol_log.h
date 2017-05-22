@@ -1,8 +1,6 @@
 #include "build_global.h"
-#include "nwol_io.h"
 #include "nwol_size.h"
 #include "nwol_string.h"
-
 
 #if defined (__ANDROID__)
 #include <android\log.h>
@@ -70,9 +68,9 @@ namespace nwol
 #define nwol_wprintf nwol_printf
 
 #if defined( __ANDROID__ )
-#	define always_printf( ... )					__android_log_print( ANDROID_LOG_DEBUG, __FILE__ ":", __VA_ARGS__ )
+#	define always_printf( ... )						__android_log_print( ANDROID_LOG_DEBUG, __FILE__ ":", __VA_ARGS__ )
 #else
-#	define always_printf( format, ... )			nwol_printf(NWOL_ERROR_SEVERITY_DEBUG, "info", format, __VA_ARGS__)
+#	define always_printf( format, ... )				nwol_printf(NWOL_ERROR_SEVERITY_DEBUG, "info", format, __VA_ARGS__)
 #endif
 
 
@@ -170,6 +168,22 @@ namespace nwol
 #define retwarn_error_if_errored(errorCode, format, ...)		retval_error_if( 1, errorCode, format, __VA_ARGS__)
 #define retnul_error_if_errored( errorCode, format, ...)		retval_error_if( 0, errorCode, format, __VA_ARGS__)
 #define reterr_error_if_errored( errorCode, format, ...)		retval_error_if(-1, errorCode, format, __VA_ARGS__)
+
+#define rve_if	retval_error_if
+#define rvw_if	retval_warn_if
+#define rvi_if	retval_info_if
+
+#define ree_if	reterr_error_if
+#define rew_if	reterr_warn_if
+#define rei_if	reterr_info_if
+
+#define rne_if	retnul_error_if
+#define rnw_if	retnul_warn_if
+#define rni_if	retnul_info_if
+
+#define rwe_if	retwarn_error_if
+#define rww_if	retwarn_warn_if
+#define rwi_if	retwarn_info_if
 
 } // namespace
 

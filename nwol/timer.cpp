@@ -2,7 +2,9 @@
 #include <chrono>
 
 #if defined(__WINDOWS__)
-#include <windows.h>
+#	include <windows.h>
+#else
+#	include <chrono>
 #endif
 
 void										nwol::STimer::Reset								()									{

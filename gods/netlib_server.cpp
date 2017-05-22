@@ -162,7 +162,7 @@ void									clientProc										(void *pvClient)															{
 	::std::this_thread::sleep_for(::std::chrono::milliseconds(1000));
 	disconnectClient(pClient); // This used to cause a crash if the server is shutting down because of a thread race. 
 	// Shutting down the server already calls this function which invalidates the pointers causing a null pointer access.
-	// However, the sleep_for call prevents this thread to rush when the server is shutting down and in general allows the pointers to be invalidated on time
+	// However, the sleep_for call prevented this thread to rush when the server is shutting down and in general allows the pointers to be invalidated on time
 	// causing the second call to find detect these null pointers and exit gracefully without error.
 	// A better synchronization is desired but I don't think it's worth spending time on it until we find this crashing at least once. In practice it never did after the addition of the sleep_for().
 }
@@ -186,11 +186,11 @@ int32_t									nwol::CServer::Accept							()																			{
 	::nwol::getAddress( newClientListener, &a1, &a2, &a3, &a4, &local_port_number );
 	
 	GPtrObj(CClient)										newClient;
+	bool													bFound									= false
+		,													bFoundEmpty								= false
+		;
+	uint32_t												indexFound								= ~0U;
 	{
-		bool													bFound									= false
-			,													bFoundEmpty								= false
-			;
-		uint32_t												indexFound								= ~0U;
 		::nwol::CLock											lock									(ConnectionsMutex);
 		for(uint32_t iClient=0, clientCount = ClientConnections.size(); iClient<clientCount; ++iClient) {
 			GREF(CClient)											* refClient								= ClientConnections.begin()[iClient];
@@ -225,7 +225,6 @@ int32_t									nwol::CServer::Accept							()																			{
 #else
 #error "Not implemented."
 #endif
-
 	// Build listening port message
 	result												= ::sendSystemCommand(newClient.get_address(), NETLIB_COMMAND_PORT);
 	reterr_error_if_errored(result, "%s", "Failed to send port command to client.");

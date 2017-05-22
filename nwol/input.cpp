@@ -5,16 +5,16 @@
 #	include <Windows.h>
 #endif
 
-static constexpr const char								_pointer_error_string[]						= "Invalid handler pointer: null";
+static constexpr const char						_pointer_error_string[]						= "Invalid handler pointer: null";
 #define check_pointer_error(_hdlr)	reterr_error_if(0 == _hdlr, "%s.", _pointer_error_string)
 
-::nwol::error_t		nwol::registerHandler	(::nwol::SInput& input, IHandlerKeyboard	* handler)	{ check_pointer_error(handler);	int32_t pos = input.HandlersKeyboard	.find(handler); retwarn_warn_if(pos != -1, "Keyboard Handler already registered at index %u."	, pos); const uint32_t expectedIndex = input.HandlersKeyboard	.size(); reterr_error_if(expectedIndex != (uint32_t)input.HandlersKeyboard	.push_back(handler), "Failed to push pointer to input handler registry. Out of memory?"); return 0; }
-::nwol::error_t		nwol::registerHandler	(::nwol::SInput& input, IHandlerMouse		* handler)	{ check_pointer_error(handler);	int32_t pos = input.HandlersMouse		.find(handler); retwarn_warn_if(pos != -1, "Mouse Handler already registered at index %u."		, pos); const uint32_t expectedIndex = input.HandlersMouse		.size(); reterr_error_if(expectedIndex != (uint32_t)input.HandlersMouse		.push_back(handler), "Failed to push pointer to input handler registry. Out of memory?"); return 0; }
-																									 	
-::nwol::error_t		nwol::unregisterHandler	(::nwol::SInput& input, IHandlerKeyboard	* handler)	{ check_pointer_error(handler);	int32_t pos = input.HandlersKeyboard	.find(handler); retwarn_warn_if(pos == -1, "%s.", "Keyboard handler not registered"	); input.HandlersKeyboard	.remove_unordered(pos);	return 0; }
-::nwol::error_t		nwol::unregisterHandler	(::nwol::SInput& input, IHandlerMouse		* handler)	{ check_pointer_error(handler);	int32_t pos = input.HandlersMouse		.find(handler); retwarn_warn_if(pos == -1, "%s.", "Mouse handler not registered"	); input.HandlersMouse		.remove_unordered(pos);	return 0; }
+::nwol::error_t									nwol::registerHandler						(::nwol::SInput& input, IHandlerKeyboard	* handler)	{ check_pointer_error(handler);	int32_t pos = input.HandlersKeyboard	.find(handler); retwarn_warn_if(pos != -1, "Keyboard Handler already registered at index %u."	, pos); const uint32_t expectedIndex = input.HandlersKeyboard	.size(); reterr_error_if(expectedIndex != (uint32_t)input.HandlersKeyboard	.push_back(handler), "Failed to push pointer to input handler registry. Out of memory?"); return 0; }
+::nwol::error_t									nwol::registerHandler						(::nwol::SInput& input, IHandlerMouse		* handler)	{ check_pointer_error(handler);	int32_t pos = input.HandlersMouse		.find(handler); retwarn_warn_if(pos != -1, "Mouse Handler already registered at index %u."		, pos); const uint32_t expectedIndex = input.HandlersMouse		.size(); reterr_error_if(expectedIndex != (uint32_t)input.HandlersMouse		.push_back(handler), "Failed to push pointer to input handler registry. Out of memory?"); return 0; }
+																																					 	
+::nwol::error_t									nwol::unregisterHandler						(::nwol::SInput& input, IHandlerKeyboard	* handler)	{ check_pointer_error(handler);	int32_t pos = input.HandlersKeyboard	.find(handler); retwarn_warn_if(pos == -1, "%s.", "Keyboard handler not registered"	); input.HandlersKeyboard	.remove_unordered(pos);	return 0; }
+::nwol::error_t									nwol::unregisterHandler						(::nwol::SInput& input, IHandlerMouse		* handler)	{ check_pointer_error(handler);	int32_t pos = input.HandlersMouse		.find(handler); retwarn_warn_if(pos == -1, "%s.", "Mouse handler not registered"	); input.HandlersMouse		.remove_unordered(pos);	return 0; }
 
-void											handleKeyboardChanges						(const ::nwol::SInput& input)			{
+void											handleKeyboardChanges						(const ::nwol::SInput& input)							{
 	static constexpr	const uint32_t					keyCount									= ::nwol::SInput::KeyCount;
 						uint8_t							handleCountRequiredKeyUp					= 0;
 						uint8_t							handleCountRequiredKeyDown					= 0;
@@ -57,7 +57,7 @@ void											handleKeyboardChanges						(const ::nwol::SInput& input)			{
 	}
 }
 
-void											handleMouseChanges							(const ::nwol::SInput& input)			{
+void											handleMouseChanges							(const ::nwol::SInput& input)							{
 	static constexpr	const uint32_t					buttonCount									= ::nwol::SInput::ButtonCount;
 						uint8_t							handleCountRequiredButtonUp					= 0;
 						uint8_t							handleCountRequiredButtonDown				= 0;

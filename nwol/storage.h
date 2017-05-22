@@ -11,8 +11,7 @@ namespace nwol
 		::nwol::array_obj<::nwol::glabel>		Folders	;
 	};
 
-	int32_t									listFiles		(const char* directory, ::nwol::array_obj<::nwol::glabel>& fileNames);
-
+	int32_t									listFiles				(const char* directory, ::nwol::array_obj<::nwol::glabel>& fileNames);
 } // namespace
 
 #endif // __STORAGE_H__98234687__

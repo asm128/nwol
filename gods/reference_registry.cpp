@@ -4,7 +4,7 @@
 
 GDEFINE_OBJ(nwol, CReferenceContainer);
 
-uint32_t				nwol::CReferenceContainer::Save					( char* out_pMemoryBuffer )			const		{
+uint32_t										nwol::CReferenceContainer::Save					( char* out_pMemoryBuffer )			const		{
 	uint32_t											totalBytes				= 0;
 	::nwol::suint32										dataCount				= DataNames.size();
 
@@ -15,7 +15,7 @@ uint32_t				nwol::CReferenceContainer::Save					( char* out_pMemoryBuffer )			co
 	return totalBytes;
 }
 
-uint32_t				nwol::CReferenceContainer::Load					( const char* in_pMemoryBuffer )				{
+uint32_t										nwol::CReferenceContainer::Load					( const char* in_pMemoryBuffer )				{
 	uint32_t											totalBytes				= 0;
 	::nwol::suint32										dataCount				= 0;
 

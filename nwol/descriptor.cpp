@@ -3,8 +3,7 @@
 #include "descriptor_manager.h"
 #include "stype.h"
 
-
-nwol::gdescriptor::gdescriptor		(const ::nwol::GDATA_TYPE* descriptor, uint32_t size)	: DescriptorManager(getDescriptorManager())	{
+			nwol::gdescriptor::gdescriptor		(const ::nwol::GDATA_TYPE* descriptor, uint32_t size)	: DescriptorManager(getDescriptorManager())	{
 	if( DescriptorManager->AddDescriptor(descriptor, size, *this) ) {
 		error_printf("Failed to store descriptor!");
 	}

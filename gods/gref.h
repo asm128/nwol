@@ -66,8 +66,8 @@
 
 #define GDECLARE_POD(baseType, ...)	GDECLARE_POD_CUSTOMPAGE(baseType, __VA_ARGS__)
 
-#define NWOL_POD(nameSpace, baseType, displayName, descriptionText, ...)																													\
-	NWOL_REGISTER_POD(nameSpace, baseType, displayName, descriptionText);																													\
+#define NWOL_POD(nameSpace, baseType, displayName, descriptionText, ...)												\
+	NWOL_REGISTER_POD(nameSpace, baseType, displayName, descriptionText);												\
 	GDECLARE_REF(baseType, __VA_ARGS__);																				\
 	__GDECLARE_POD_FUNCTIONS(baseType);
 
@@ -126,7 +126,7 @@ namespace nwol
 			::nwol::release(&instanceRefs[i]);							
 	}
 
-	template<typename _tRef>	static inline	int32_t			compare			(const _tRef* in_A, const _tRef* in_B)							{
+	template<typename _tRef>	static inline	int32_t			compare			(const _tRef* in_A, const _tRef* in_B)				{
 		if (0 == in_A && 0 == in_B)																									
 			return 0;																												
 		else if (0 == in_A || 0 == in_B)																							

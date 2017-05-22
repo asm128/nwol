@@ -66,7 +66,6 @@ void							nwol::shutdownASCIIScreen			()																		{
 #else 
 #error "Not implemented."
 #endif
-
 	__g_ASCIIScreen.bCreated			= false;
 }
 
