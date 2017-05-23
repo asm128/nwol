@@ -23,14 +23,14 @@ namespace nwol
 #endif
 
 #if defined( USE_FILE_DEBUG_PRINTF ) && !defined( FORCE_STD_PRINTF_DEBUG )
-#define _nwol_internal_info_printf( chars, nCharCount ) ::nwol::__internal_debug_print_file( chars, nCharCount )
-#define _nwol_internal_debug_wprintf( chars, nCharCount )  OutputDebugStringW( chars )
+#define _nwol_internal_info_printf( chars, nCharCount )		::nwol::__internal_debug_print_file( chars, nCharCount )
+#define _nwol_internal_debug_wprintf( chars, nCharCount )	OutputDebugStringW( chars )
 #elif (defined(__WINDOWS__)) && !defined( FORCE_STD_PRINTF_DEBUG )
-#define _nwol_internal_info_printf( chars, nCharCount ) ::nwol::__internal_debug_print_debugger( chars )
-#define _nwol_internal_debug_wprintf( chars, nCharCount )  OutputDebugStringW( chars )
+#define _nwol_internal_info_printf( chars, nCharCount )		::nwol::__internal_debug_print_debugger( chars )
+#define _nwol_internal_debug_wprintf( chars, nCharCount )	OutputDebugStringW( chars )
 #else // I use this because I don't have the debugger attached during release build test. Anyway it should be replaced with a proper fprintf to an open log stream.
-#define _nwol_internal_info_printf( chars, nCharCount ) ::nwol::__internal_debug_print_console( chars )
-#define _nwol_internal_debug_wprintf( chars, nCharCount ) //wprintf( L"%s", chars )
+#define _nwol_internal_info_printf( chars, nCharCount )		::nwol::__internal_debug_print_console( chars )
+#define _nwol_internal_debug_wprintf( chars, nCharCount )	//wprintf( L"%s", chars )
 #endif
 
 	template<typename... TArgs>	void			__nwol_printf					(const char* prefix, int /*prefixSize*/, const wchar_t* format, const TArgs... args){
@@ -71,7 +71,6 @@ namespace nwol
 #else
 #	define always_printf( format, ... )				nwol_printf(NWOL_ERROR_SEVERITY_DEBUG, "info", format, __VA_ARGS__)
 #endif
-
 
 #ifdef DEBUG_PRINTF_ENABLED
 #	if defined( __ANDROID__ )

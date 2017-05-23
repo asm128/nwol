@@ -18,6 +18,8 @@ namespace nwol
 #endif
 } // namespace
 
-#define errored(errVal)		(::nwol::failed(errVal)) 
+#if !defined(errored)
+#	define errored(errVal)		(::nwol::failed(errVal)) 
+#endif
 
 #endif // __NWOL_ERROR_H__827394__
