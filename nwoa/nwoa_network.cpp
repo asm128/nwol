@@ -8,8 +8,8 @@ int											runCommunications						(::nwol::SApplicationNetworkClient& appNetw
 	::nwol::SClientConnection						& instanceClient						= appNetwork.Connection;
 
 	::nwol::error_t									result									= 0;
-	nwol_ecall(::nwol::initClientConnection	(instanceClient), "%s", "Failed to initialize client connection.");
-	nwol_ecall(::nwol::connect				(instanceClient), "%s", "Failed to connect.");
+	nwol_pecall(::nwol::initClientConnection	(instanceClient), "%s", "Failed to initialize client connection.");
+	nwol_pecall(::nwol::connect				(instanceClient), "%s", "Failed to connect.");
 
 	while gbit_true(appNetwork.State, ::nwol::NETWORK_STATE_ENABLED) {
 		// Ping before anything else to make sure everything is more or less in order.
@@ -50,7 +50,7 @@ void										runCommunications						(void* pInstanceApp)						{
 }
 
 ::nwol::error_t								networkEnable							(::SApplication& instanceApp)				{
-	nwol_ecall(::nwol::initNetwork(), "Failed to initialize network.");
+	nwol_pecall(::nwol::initNetwork(), "Failed to initialize network.");
 	info_printf("%s", "Network successfully initialized.");
 
 	::nwol::SApplicationNetworkClient				& instanceAppNetwork					= instanceApp.NetworkClient;

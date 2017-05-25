@@ -29,7 +29,7 @@ int32_t											nwol::listFiles								(const char* directory, ::nwol::array_o
 				//folder.Folders.push_back(sPath);
             }
             else { 
-				nwol_ecall(fileNames.push_back(sPath), "Failed to push path to output list");
+				nwol_pecall(fileNames.push_back(sPath), "Failed to push path to output list");
                 info_printf("File: %s.", sPath);
             }
         }

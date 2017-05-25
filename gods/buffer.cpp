@@ -132,8 +132,8 @@ void										nwol::cloneBuffer											(GODS(SBuffer)* ppdstData, const GREF(
 		;
 	bool												isText												= (LeftBuffer->Usage == GUSAGE_TEXT);
 
-	nwol_ecall(::nwol::createBuffer(in_instance->DataFormat, in_instance->Usage, leftCount , &LeftBuffer ), "%s", "createBuffer() FAILED! Out of memory?");
-	nwol_ecall(::nwol::createBuffer(in_instance->DataFormat, in_instance->Usage, rightCount, &RightBuffer), "%s", "createBuffer() FAILED! Out of memory?");
+	nwol_pecall(::nwol::createBuffer(in_instance->DataFormat, in_instance->Usage, leftCount , &LeftBuffer ), "%s", "createBuffer() FAILED! Out of memory?");
+	nwol_pecall(::nwol::createBuffer(in_instance->DataFormat, in_instance->Usage, rightCount, &RightBuffer), "%s", "createBuffer() FAILED! Out of memory?");
 	memcpy(LeftBuffer ->pByteArray, in_instance->pByteArray, typeSize * leftCount );
 	memcpy(RightBuffer->pByteArray, in_instance->pByteArray, typeSize * rightCount);
 	if (isText) {

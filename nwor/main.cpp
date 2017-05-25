@@ -88,7 +88,7 @@ int32_t														mainLoop								(SRuntimeState & runtimeState, ::nwol::SMod
 
 	RUNTIME_FLAG													executionState							= RUNTIME_FLAG_RUNNING | RUNTIME_FLAG_NOT_YET_REQUESTED;
 	
-	nwol_ecall(launchRenderThread(runtimeState), "Failed to start render thread.");
+	nwol_pecall(launchRenderThread(runtimeState), "Failed to start render thread.");
 
 	static constexpr	const char										errorFormat2[]						= "Module function failed with code 0x%x: %s.";
 	int32_t															errLoop									= 0;
@@ -286,7 +286,7 @@ int															rtMain									(::SRuntimeState& runtimeState)	{
 
 	::nwol::SModuleInterface										preContainerForCallbacks				= {};
 	preContainerForCallbacks.RuntimeValues						= &runtimeState.RuntimeValues;
-	nwol_ecall(::nwol::loadModule(preContainerForCallbacks, runtimeState.RuntimeValues.FileNameApplication), "Failed to load module %s.", runtimeState.RuntimeValues.FileNameApplication);
+	nwol_pecall(::nwol::loadModule(preContainerForCallbacks, runtimeState.RuntimeValues.FileNameApplication), "Failed to load module %s.", runtimeState.RuntimeValues.FileNameApplication);
 	
 	::nwol::SModuleInterface										& containerForCallbacks					= runtimeState.Interface	= preContainerForCallbacks;
 	char															windowTitle[512]						= {};
@@ -361,8 +361,8 @@ int															rtMain									(::SRuntimeState& runtimeState)	{
 			runtimeState.Quit											= true; 
 		}
 	}
-	nwol_ecall(::nwol::unloadModule(containerForCallbacks)	, "Error unloading main module.");
-	nwol_ecall(::shutdownScreen(runtimeState)				, "Failed to shut down main screen/window.");
+	nwol_pecall(::nwol::unloadModule(containerForCallbacks)	, "Error unloading main module.");
+	nwol_pecall(::shutdownScreen(runtimeState)				, "Failed to shut down main screen/window.");
 	return 0;
 }
 

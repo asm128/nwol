@@ -174,51 +174,37 @@ namespace nwol
 #define retwarn_info_if( condition, ...)						retval_info_if	( 1, condition, __VA_ARGS__)
 
 #if defined(__WINDOWS__)
-#	define nwol_ecall(nwo_call, ...)																																				\
-	{	if(::nwol::error_t errCall = nwo_call) { 																																	\
-			if(errCall < 0) {																																						\
-				nwol_printf(NWOL_ERROR_SEVERITY_ERROR, "error", "%s: 0x%X", #nwo_call, errCall);																					\
-				nwol_printf(NWOL_ERROR_SEVERITY_ERROR, "error", "Last windows error: 0x%X '%s'", ::GetLastError(), ::nwol::getWindowsErrorAsString(::GetLastError()).c_str());		\
-				error_printf(__VA_ARGS__); 																																			\
-				return -1; 																																							\
-			}																																										\
-	}	}
-
-#	define nwol_ewcall(nwo_call, ...)																																				\
-	{	if(::nwol::error_t errCall = nwo_call) { 																																	\
-			if(errCall < 0) {																																						\
-				nwol_printf(NWOL_ERROR_SEVERITY_ERROR, "error", "%s: 0x%X", #nwo_call, errCall);																					\
-				nwol_printf(NWOL_ERROR_SEVERITY_ERROR, "error", "Last windows error: 0x%X '%s'", ::GetLastError(), ::nwol::getWindowsErrorAsString(::GetLastError()).c_str());		\
-				error_printf(__VA_ARGS__); 																																			\
-				return -1; 																																							\
-			}																																										\
-			else {																																									\
-				nwol_printf(NWOL_ERROR_SEVERITY_WARNING, "warning", "Last windows error: 0x%X '%s'", ::GetLastError(), ::nwol::getWindowsErrorAsString(::GetLastError()).c_str());	\
-				warning_printf("%s: 0x%X", #nwo_call, errCall);																														\
-			}																																										\
-	}	}
+	#define error_last_system_error(sev, label)	nwol_printf(sev, label, "Last windows error: 0x%X '%s'", ::GetLastError(), ::nwol::getWindowsErrorAsString(::GetLastError()).c_str())
 #else
-#	define nwol_ecall(nwo_call, ...)																\
-	{	if(int32_t errCall = nwo_call) { 															\
-			if(errCall < 0) {																		\
-				nwol_printf(NWOL_ERROR_SEVERITY_ERROR, "error", "%s: 0x%X", #nwo_call, errCall);	\
-				error_printf(__VA_ARGS__); 															\
-				return -1; 																			\
-			}																						\
-	}	}
-
-#	define nwol_ewcall(nwo_call, ...)																\
-	{	if(::nwol::error_t errCall = nwo_call) { 													\
-			if(errCall < 0) {																		\
-				nwol_printf(NWOL_ERROR_SEVERITY_ERROR, "error", "%s: 0x%X", #nwo_call, errCall);	\
-				error_printf(__VA_ARGS__); 															\
-				return -1; 																			\
-			}																						\
-			else {																					\
-				warning_printf("%s: 0x%X", #nwo_call, errCall);										\
-			}																						\
-	}	}
+	#define error_last_system_error(sev, label)	
 #endif
+
+// Propagable error call.
+#define nwol_pecall(nwo_call, ...)																																				\
+{	if(::nwol::error_t errCall = nwo_call) { 																																	\
+		if(errCall < 0) {																																						\
+			nwol_printf(NWOL_ERROR_SEVERITY_ERROR, "error", "%s: 0x%X", #nwo_call, errCall);																					\
+			error_last_system_error(NWOL_ERROR_SEVERITY_ERROR, "error");																										\
+			error_printf(__VA_ARGS__); 																																			\
+			return -1; 																																							\
+		}																																										\
+}	}
+
+// Propagable error-warning call.
+#define nwol_pewcall(nwo_call, ...)																																				\
+{	if(::nwol::error_t errCall = nwo_call) { 																																	\
+		if(errCall < 0) {																																						\
+			nwol_printf(NWOL_ERROR_SEVERITY_ERROR, "error", "%s: 0x%X", #nwo_call, errCall);																					\
+			error_last_system_error(NWOL_ERROR_SEVERITY_ERROR, "error");																										\
+			error_printf(__VA_ARGS__); 																																			\
+			return -1; 																																							\
+		}																																										\
+		else {																																									\
+			error_last_system_error(NWOL_ERROR_SEVERITY_WARNING, "warning");																									\
+			warning_printf("%s: 0x%X", #nwo_call, errCall);																														\
+		}																																										\
+}	}
+
 
 #define rve_if	retval_error_if
 #define rvw_if	retval_warn_if

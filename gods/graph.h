@@ -76,7 +76,7 @@ namespace nwol
 			reterr_error_if(0 == _attributeIndex, "%s", "Output attribute index pointer must be something other than null.");
 
 			::nwol::id_t													attributePos				= -1;
-			nwol_ecall(Attributes[direction].PushReference(attributeStruct, &attributePos, description)
+			nwol_pecall(Attributes[direction].PushReference(attributeStruct, &attributePos, description)
 				,	"Failed to push attribute reference into attribute registry. Node index: '%u'. Attribute type: '%s'. Attribute description: '%s'."
 				,	(uint32_t)	nodeIndex
 				,	_tRef::get_type_name().begin()
@@ -86,7 +86,7 @@ namespace nwol
 			CGraphNode														* pNode						= NodeInstances[nodeIndex];
 			int32_t															newIndex					= pNode->Attributes[direction].size();
 			SAttributeId													newId						= {(const char)direction, (const uint32_t)attributePos};
-			nwol_ecall(pNode->Attributes[newId.dir].push_back(newId)
+			nwol_pecall(pNode->Attributes[newId.dir].push_back(newId)
 				,	"Failed to push attribute index into node. Node index: '%u'. AttributeId: '0x%X'. Attribute type: '%s'. Attribute description: '%s'."
 				,	(uint32_t)		nodeIndex
 				,	(::nwol::id_t)	newId
