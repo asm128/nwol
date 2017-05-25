@@ -30,6 +30,7 @@ struct SRuntimeState {
 
 void														renderLoop						(SRuntimeState& stateRuntime)																	{
 	info_printf("Beginning render loop.");
+
 	static const char												* errorFormat1							= "Dynamically loaded function is null, maybe due to a buffer overrun which erased the pointers: %s.";
 	static const char												* errorFormat2							= "Module function failed with code 0x%x: %s.";
 	::nwol::SModuleInterface										& containerForCallbacks					= stateRuntime.Interface;
@@ -54,11 +55,7 @@ void														renderLoop						(SRuntimeState& stateRuntime)																	
 }
 
 void														renderThread							(void* pStateRuntime)																						{
-	if(0 == pStateRuntime) {
-		error_printf("Runtime state pointer is null. Thread function exiting...");
-		return;
-	}
-
+	ret_error_if(0 == pStateRuntime, "Runtime state pointer is null. Thread function exiting...");
 	info_printf("Render thread started.");
 
 	::SRuntimeState													& stateRuntime							= *(::SRuntimeState*)pStateRuntime;
@@ -257,22 +254,24 @@ int32_t														setupScreen								(::nwol::SRuntimeValues& runtimeValues, 
 }
 
 int32_t														shutdownScreen							(::SRuntimeState& instanceApp)							{ 
-	::nwol::SScreenState											& screenState							= instanceApp.RuntimeValues.Screen.State;
-	::nwol::SScreenDetail											& screenDetail							= instanceApp.RuntimeValues.Screen.PlatformDetail;
+	::nwol::SRuntimeValues											& runtimeValues							= instanceApp.RuntimeValues;
+	::nwol::SScreenDetail											& screenDetail							= runtimeValues.Screen.PlatformDetail;
 	if( screenDetail.hWnd ) {
+		::nwol::SScreenState											& screenState							= runtimeValues.Screen.State;
 		HWND															oldWindow								= screenDetail.hWnd;
 		screenState.NoDraw											= true;
 		screenDetail.hWnd											= 0;
 		MSG																windowMessage;
-		info_printf( "Calling DestroyWindow()." );
+		info_printf("Calling DestroyWindow().");
 		DestroyWindow( oldWindow );
 		while(PeekMessageA(&windowMessage, oldWindow, 0, 0, PM_REMOVE)) {
 			TranslateMessage( &windowMessage );
 			DispatchMessageA( &windowMessage );
 		}
-		bool_t															bClassUnregistered						= (UnregisterClass(instanceApp.RuntimeValues.PlatformDetail.MainWindowClass.lpszClassName, instanceApp.RuntimeValues.PlatformDetail.MainWindowClass.hInstance) != 0) ? true : false;
+		WNDCLASSEX														& mainWindowClass						= runtimeValues.PlatformDetail.MainWindowClass;
+		bool_t															bClassUnregistered						= (UnregisterClass(mainWindowClass.lpszClassName, mainWindowClass.hInstance) != 0) ? true : false;
 		std::string														windowsError							= ::nwol::getWindowsErrorAsString(GetLastError());
-		reterr_error_if(!bClassUnregistered, "Failed to unregister WNDCLASS \"%s\". \"%s\"", instanceApp.RuntimeValues.PlatformDetail.MainWindowClass.lpszClassName, windowsError.c_str());
+		reterr_error_if(!bClassUnregistered, "Failed to unregister WNDCLASS \"%s\". \"%s\"", mainWindowClass.lpszClassName, windowsError.c_str());
 	}
 
 	return 0;
@@ -284,14 +283,15 @@ int															rtMain									(::SRuntimeState& runtimeState)	{
 	//_CrtSetBreakAlloc( 322 );
 #endif	
 
+	::nwol::SRuntimeValues											& runtimeValues							= runtimeState.RuntimeValues;
 	::nwol::SModuleInterface										preContainerForCallbacks				= {};
-	preContainerForCallbacks.RuntimeValues						= &runtimeState.RuntimeValues;
-	nwol_pecall(::nwol::loadModule(preContainerForCallbacks, runtimeState.RuntimeValues.FileNameApplication), "Failed to load module %s.", runtimeState.RuntimeValues.FileNameApplication);
+	preContainerForCallbacks.RuntimeValues						= &runtimeValues;
+	nwol_pecall(::nwol::loadModule(preContainerForCallbacks, runtimeValues.FileNameApplication), "Failed to load module %s.", runtimeValues.FileNameApplication);
 	
 	::nwol::SModuleInterface										& containerForCallbacks					= runtimeState.Interface	= preContainerForCallbacks;
 	char															windowTitle[512]						= {};
 	sprintf_s(windowTitle, "%s v%u.%u", containerForCallbacks.ModuleTitle, containerForCallbacks.VersionMajor(), containerForCallbacks.VersionMinor());
-	reterr_error_if(0 > ::setupScreen(runtimeState.RuntimeValues, windowTitle), "Failed to create main window.");
+	reterr_error_if(0 > ::setupScreen(runtimeValues, windowTitle), "Failed to create main window.");
 
 	static const char												* errorFormat1							= "Dynamically loaded function is null, maybe due to a buffer overrun which erased the pointers: %s.";
 	static const char												* errorFormat2							= "Module function failed with code 0x%x: %s.";
