@@ -69,50 +69,50 @@ namespace nwol
 		static constexpr	const uint32_t																dataMultiplier				= (uint32_t)get_type_align_multiplier<_tBase>();
 		switch (get_type_align<_tBase>()) {
 		case 32: 
-			{
-				const uint64_t																				* psrctmp					= (const uint64_t*)source;
-				uint64_t																					* pdsttmp					= (uint64_t*)dest;
-				for (uint32_t i = 0; i<dataMultiplier*4; i++)
-					if (pdsttmp[i] != psrctmp[i])
-						pdsttmp[i]  = psrctmp[i];
-			}
+		{
+			const uint64_t																					* psrctmp					= (const uint64_t*)source;
+			uint64_t																						* pdsttmp					= (uint64_t*)dest;
+			for (uint32_t i = 0; i<dataMultiplier*4; i++)
+				if (pdsttmp[i] != psrctmp[i])
+					pdsttmp[i]  = psrctmp[i];
 			break;
+		}
 		case 16:	
-			{
-				const uint64_t																				* psrctmp					= (const uint64_t*)source;
-				uint64_t																					* pdsttmp					= (uint64_t*)dest;
-				for (uint32_t i = 0; i<dataMultiplier*2; i++)
-					if (pdsttmp[i] != psrctmp[i])
-						pdsttmp[i]  = psrctmp[i];
-			}
+		{
+			const uint64_t																					* psrctmp					= (const uint64_t*)source;
+			uint64_t																						* pdsttmp					= (uint64_t*)dest;
+			for (uint32_t i = 0; i<dataMultiplier*2; i++)
+				if (pdsttmp[i] != psrctmp[i])
+					pdsttmp[i]  = psrctmp[i];
 			break;
+		}
 		case 8:
-			{
-				const uint64_t																				* psrctmp					= (const uint64_t*)source;
-				uint64_t																					* pdsttmp					= (uint64_t*)dest;
-				for (uint32_t i = 0; i<dataMultiplier; i++)
-					if (pdsttmp[i] != psrctmp[i])
-						pdsttmp[i]  = psrctmp[i];
-			}
+		{
+			const uint64_t																					* psrctmp					= (const uint64_t*)source;
+			uint64_t																						* pdsttmp					= (uint64_t*)dest;
+			for (uint32_t i = 0; i<dataMultiplier; i++)
+				if (pdsttmp[i] != psrctmp[i])
+					pdsttmp[i]  = psrctmp[i];
 			break;
+		}
 		case 4:
-			{
-				const uint32_t																				* psrctmp					= (const uint32_t*)source;
-				uint32_t																					* pdsttmp					= (uint32_t*)dest;
-				for (uint32_t i = 0; i<dataMultiplier; i++)
-					if (pdsttmp[i] != psrctmp[i])
-						pdsttmp[i]  = psrctmp[i];
-			}
+		{
+			const uint32_t																					* psrctmp					= (const uint32_t*)source;
+			uint32_t																						* pdsttmp					= (uint32_t*)dest;
+			for (uint32_t i = 0; i<dataMultiplier; i++)
+				if (pdsttmp[i] != psrctmp[i])
+					pdsttmp[i]  = psrctmp[i];
 			break;
+		}
 		case 2:
-			{
-				const uint16_t																				* psrctmp					= (const uint16_t*)source;
-				uint16_t																					* pdsttmp					= (uint16_t*)dest;
-				for (uint32_t i = 0; i<dataMultiplier; i++)
-					if (pdsttmp[i] != psrctmp[i])
-						pdsttmp[i]  = psrctmp[i];
-			}
+		{
+			const uint16_t																					* psrctmp					= (const uint16_t*)source;
+			uint16_t																						* pdsttmp					= (uint16_t*)dest;
+			for (uint32_t i = 0; i<dataMultiplier; i++)
+				if (pdsttmp[i] != psrctmp[i])
+					pdsttmp[i]  = psrctmp[i];
 			break;
+		}
 		default:
 			if( memcmp(dest, source, sizeof(_tBase)) )
 				memcpy(dest, source, sizeof(_tBase));

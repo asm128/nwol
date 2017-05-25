@@ -1,6 +1,6 @@
 #include "gnode.h"
 
-						::nwol::gnode::gnode					(CGraph* _pGraph, const ::nwol::glabel& name)
+									::nwol::gnode::gnode					(CGraph* _pGraph, const ::nwol::glabel& name)
 	: pGraph		(_pGraph)
 	, Id			(-1)
 #if defined(NWOL_DEBUG_ENABLED)
@@ -11,11 +11,11 @@
 	else throw_if(0 > _pGraph->CreateNode(&Id, name), "", "Failed to create node! Node name: '%s'."		, name.begin());
 }
 
-::nwol::error_t			nwol::gnode::getLabel					(::nwol::glabel& output)												const	{ 
+::nwol::error_t						nwol::gnode::getLabel					(::nwol::glabel& output)												const	{ 
 	reterr_error_if(0 == pGraph, "Uninitialized node."); 
 #if defined(NWOL_DEBUG_ENABLED)
-	::nwol::error_t							errMy						= pGraph->GetNodeLabel(Id, output);
-	::nwol::glabel							* _label					= const_cast<::nwol::glabel*>(&DebugLabel);
+	::nwol::error_t							errMy									= pGraph->GetNodeLabel(Id, output);
+	::nwol::glabel							* _label								= const_cast<::nwol::glabel*>(&DebugLabel);
 	*_label								= output;
 	return errMy;
 #else

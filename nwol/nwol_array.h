@@ -79,10 +79,11 @@ namespace nwol
 				const uint32_t										newSize										= other.Count;
 				const uint32_t										reserveSize									= calc_reserve_size(newSize);
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
-				throw_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tPOD)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
-				Data											= (_tPOD*)::nwol::nwol_malloc(mallocSize);
-				if(Data) {
-					throw_if(0 == other.Data, "", "%s", "other.Data is null!")
+				throw_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tPOD)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
+				else {
+					Data											= (_tPOD*)::nwol::nwol_malloc(mallocSize);
+						 throw_if(0 == Data			, "", "Failed to resize array. Requested size: %u. ", (uint32_t)newSize)
+					else throw_if(0 == other.Data	, "", "%s", "other.Data is null!")
 					else {
 						for(uint32_t i = 0, count = newSize; i<count; ++i)
 							Data[i]											= other[i];
@@ -90,10 +91,7 @@ namespace nwol
 						Count											= other.Count;
 					}
 				}
-				else {
-					error_printf("Failed to resize array. Requested size: %u. ", (uint32_t)newSize);
-				}	// if(Data)
-			}	// if(other.Count)
+			}
 		}
 		template <size_t _otherCount>
 														array_pod									(const _tPOD (&other)[_otherCount])														{
@@ -101,10 +99,11 @@ namespace nwol
 				const uint32_t										newSize										= other.Count;
 				const uint32_t										reserveSize									= calc_reserve_size(newSize);
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
-				throw_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tPOD)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
-				Data											= (_tPOD*)::nwol::nwol_malloc(mallocSize);
-				if(Data) {
-					throw_if(0 == other.Data, "", "%s", "other.Data is null!")
+				throw_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tPOD)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
+				else {
+					Data											= (_tPOD*)::nwol::nwol_malloc(mallocSize);
+						 throw_if(0 == Data			, "", "Failed to resize array. Requested size: %u. ", (uint32_t)newSize) 
+					else throw_if(0 == other.Data	, "", "%s", "other.Data is null!") 
 					else {
 						for(uint32_t i = 0, count = newSize; i<count; ++i)
 							Data[i]											= other[i];
@@ -112,15 +111,12 @@ namespace nwol
 						Count											= other.Count;
 					}
 				}
-				else {
-					error_printf("Failed to resize array. Requested size: %u. ", (uint32_t)newSize);
-				}	// if(Data)
-			}	// if(other.Count)
+			} // 
 		}
 							array_pod<_tPOD>&			operator =									(const array_pod<_tPOD>& other)															{
 			throw_if(resize(other.Count) != (int32_t)other.Count, "", "Failed to assign array.");
 			for(uint32_t iElement = 0; iElement < other.Count; ++iElement)
-				operator[](iElement)																		= other[iElement];
+				operator[](iElement)							= other[iElement];
 			return *this;
 		}
 		// This method doesn't call destructors of the contained PODs.
@@ -293,28 +289,27 @@ namespace nwol
 				uint32_t											newSize										= other.Count;
 				uint32_t											reserveSize									= calc_reserve_size(newSize);
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
-				throw_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tObj)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
-				_tObj												* newData									= (_tObj*)::nwol::nwol_malloc(mallocSize);
-				throw_if(0 == newData, "", "Failed to resize array. Requested size: %u. Current size: %u.", (uint32_t)newSize, (uint32_t)Size)
+				throw_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tObj)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
 				else {
-					if(other.Data)
-						for(uint32_t i=0; i<newSize; ++i)
-							new (&newData[i]) _tObj(other.Data[i]);
+					_tObj												* newData									= (_tObj*)::nwol::nwol_malloc(mallocSize);
+						 throw_if(0 == newData		, "", "Failed to resize array. Requested size: %u. Current size: %u.", (uint32_t)newSize, (uint32_t)Size)
+					else throw_if(0 == other.Data	, "", "%s", "other.Data is null!")
 					else {
-						error_printf("%s", "other.Data is null!");
-						for(uint32_t i=0; i<newSize; ++i)
-							new (&newData[i]) _tObj();
+						for(uint32_t i=0; i<newSize; ++i) 
+							new (&newData[i]) _tObj(other.Data[i]);
+						Data											= newData;
+						Size											= reserveSize;
+						Count											= other.Count;
 					}
-					Data											= newData;
-					Size											= reserveSize;
-					Count											= other.Count;
 				}
 			}
 		}
 		inline				array_obj<_tObj>&			operator =									(const array_obj<_tObj>& other)															{
-			throw_if(resize(other.Count) != (int32_t)other.Count, "", "Failed to resize array!");
-			for(uint32_t iElement=0; iElement < other.Count; ++iElement)
-				operator[](iElement)							= other[iElement];
+			throw_if(resize(other.Count) != (int32_t)other.Count, "", "Failed to resize array!")
+			else {
+				for(uint32_t iElement=0; iElement < other.Count; ++iElement)
+					operator[](iElement)							= other[iElement];
+			}
 			return *this;
 		}
 		inline				int32_t						clear										()																						{ 

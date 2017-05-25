@@ -20,7 +20,7 @@ namespace nwol
 			int32_t										remainingColumns		= (int32_t)width-offsetColumn;
 			if(remainingColumns <= 0)
 				return offsetColumn;
-			int32_t										maxPrintSize			= (valueCount < remainingColumns) ? valueCount : remainingColumns;
+			const int32_t								maxPrintSize			= (valueCount < remainingColumns) ? valueCount : remainingColumns;
 			memcpy(&rectangleTopLeft[linearCellOffset], values, maxPrintSize*sizeof(_tCell));
 			if(repeat > 0)
 				valueToRect( rectangleTopLeft, width, height, offsetLine, offsetColumn+valueCount, align, values, valueCount, --repeat );

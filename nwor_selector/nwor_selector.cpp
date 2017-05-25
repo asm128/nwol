@@ -19,16 +19,15 @@
 DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Application Selector", 0, 1);
 
 int32_t										cleanup							(::SApplication& instanceApp)																									{ 
-	for(uint32_t iModule = 0, moduleCount = instanceApp.ApplicationModulesHandle.size(); iModule < moduleCount; ++iModule)
-		::nwol::unloadModule(instanceApp.ApplicationModulesHandle[iModule]);
-
+	for(uint32_t iModule = 0, moduleCount = instanceApp.ApplicationModulesHandle.size(); iModule < moduleCount; ++iModule) {
+		error_if(::nwol::unloadModule(instanceApp.ApplicationModulesHandle[iModule]), "Failed to unload module. Maybe the module wasn't actually loaded?");
+	}
 	return 0; 
 }
 
 int32_t										loadValidModules				(const char* modulesPath, ::nwol::SRuntimeValues* runtimeValues, ::nwol::array_pod<::nwol::SModuleInterface>& loadedModules)	{
 	::nwol::array_obj<::nwol::glabel>			fileNames;
-	::nwol::error_t								errMy								= ::nwol::listFiles(modulesPath, fileNames);
-	reterr_error_if_errored(errMy, "Cannot load modules from path: %s.", modulesPath);
+	nwol_ecall(::nwol::listFiles(modulesPath, fileNames), "Cannot load modules from path: %s.", modulesPath);
 
 	char										fileExtensionToLookFor	[]			= "." DYNAMIC_LIBRARY_EXTENSION;
 	::nwol::array_obj<::nwol::glabel>			possibleModuleNames;
@@ -43,7 +42,7 @@ int32_t										loadValidModules				(const char* modulesPath, ::nwol::SRuntimeV
 
 			if(0 == strcmp(fileExtension, fileExtensionToLookFor)) {
 				info_printf("DLL found: %s.", moduleName.begin());
-				reterr_error_if(-1 == possibleModuleNames.push_back(moduleName), "Failed to push module name. Out of memory?");
+				nwol_ecall(possibleModuleNames.push_back(moduleName), "Failed to push module name. Out of memory?");
 			}
 		}
 	}
@@ -51,15 +50,14 @@ int32_t										loadValidModules				(const char* modulesPath, ::nwol::SRuntimeV
 	for(uint32_t iFile = 0, fileCount = possibleModuleNames.size(); iFile < fileCount; ++iFile) {
 		const ::nwol::glabel						& moduleName						= possibleModuleNames[iFile];
 		::nwol::SModuleInterface					loadedModule						= {};
-		loadedModule.RuntimeValues					= runtimeValues;
+		loadedModule.RuntimeValues				= runtimeValues;
 
 		int32_t										errorLoad							= ::nwol::loadModule(loadedModule, moduleName.begin());
 		if errored(errorLoad) {
 			warning_printf("Module is not a valid NWOR interface: %s.", moduleName.begin());
 			continue;
 		}
-
-		reterr_error_if(-1 == loadedModules.push_back(loadedModule), "Failed to push module to output list. Out of memory?");
+		nwol_ecall(loadedModules.push_back(loadedModule), "Failed to push module to output list. Out of memory?");
 		info_printf("Valid module found: %s.", moduleName.begin());
 	}
 
@@ -85,7 +83,6 @@ int32_t										listDLLFiles					(const char* modulesPath, ::nwol::array_obj<::
 	}
 	return 0;
 }
-
 
 int32_t										refreshModules					(::SApplication& instanceApp)																									{
 	info_printf("Refreshing modules...");
@@ -114,7 +111,7 @@ int32_t										refreshModules					(::SApplication& instanceApp)															
 			continue;
 		}
 			
-		const uint32_t									titleLen						= (uint32_t)strlen(loadedModule.ModuleTitle);
+		const uint32_t									titleLen						= loadedModule.ModuleTitle ? (uint32_t)strlen(loadedModule.ModuleTitle) : 0;
 		maxModuleNameLength							= (maxModuleNameLength	> moduleName.size())	? maxModuleNameLength	: moduleName.size();
 		maxModuleTitleLength						= (maxModuleTitleLength > titleLen)				? maxModuleTitleLength	: titleLen;
 		int32_t											moduleIndex						= loadedModules.push_back(loadedModule);
@@ -182,9 +179,8 @@ int32_t										setup							(::SApplication& instanceApp)																						
 	newControl.Text								= newControlLabel;
 
 	// Create exit button
-	::nwol::error_t									
-	errMy										= ::nwol::createControl(guiSystem, newControl);	reterr_error_if_errored(errMy, "%s.", "Failed to create control");
-	errMy										= ::refreshModules(instanceApp);				reterr_error_if_errored(errMy, "%s.", "Failed to refresh modules");
+	nwol_ecall(::nwol::createControl(guiSystem, newControl)	, "%s.", "Failed to create control");
+	nwol_ecall(::refreshModules(instanceApp)				, "%s.", "Failed to refresh modules");
 
 	instanceApp.SelectorState					= ::SELECTOR_STATE_MENU;
 	return 0; 
@@ -198,11 +194,8 @@ int32_t										updateSelectorApp				(::SApplication& instanceApp, bool exitReq
 	if(exitRequested)
 		return ::nwol::APPLICATION_STATE_EXIT;
 
-	::nwol::error_t									errMy;
-	::nwol::SInput									& inputSystem					= instanceApp.Input	; ::nwol::pollInput(inputSystem);				
-	::nwol::SGUI									& guiSystem						= instanceApp.GUI	; errMy = ::nwol::updateGUI(guiSystem, inputSystem);
-
-	retnul_error_if_errored(errMy, "%s", "updateGUI failed.");
+	::nwol::SInput									& inputSystem					= instanceApp.Input	; nwol_ecall(::nwol::pollInput(inputSystem)				, "%s", "Failed to update input states.");
+	::nwol::SGUI									& guiSystem						= instanceApp.GUI	; nwol_ecall(::nwol::updateGUI(guiSystem, inputSystem)	, "%s", "Failed to update gui states.");
 
 	::nwol::array_pod<::nwol::CONTROL_FLAG>			& controlFlags					= guiSystem.Controls.ControlFlags;
 	for(uint32_t iControl = 0, controlCount = controlFlags.size(); iControl < controlCount; ++iControl)
@@ -223,23 +216,21 @@ int32_t										updateSelectorApp				(::SApplication& instanceApp, bool exitReq
 				}
 			}
 		}
-
 	return 0;
 }
 
 static	const char	errorFormat1[] = "Dynamically loaded function is null, maybe due to a buffer overrun which erased the pointers: %s.";
-static	const char	errorFormat2[] = "Module function failed with code 0x%x: %s.";
+static	const char	errorFormat2[] = "Module function failed: %s.";
 
 int32_t										loadSelection					(::SApplication& instanceApp)																									{
  	::nwol::SModuleInterface						& moduleInterface				= instanceApp.ApplicationModulesHandle[instanceApp.ApplicationModuleSelected];
 	::nwol::error_t									retVal							= 0;
-	int32_t											errCreate						= moduleInterface.Create();
-	reterr_error_if(errored(errCreate), errorFormat2, errCreate, "moduleCreate()"); 
+	nwol_ecall(moduleInterface.Create(), errorFormat2, "moduleCreate()"); 
 	
 	::nwol::RUNTIME_CALLBACK_ID						callbackPointersErased			= moduleInterface.TestForNullPointerFunctions();
 	if(callbackPointersErased) { 
 		printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
-		retVal									= -1;
+		retVal										= -1;
 	}
 	else  {
 		::nwol::shutdownASCIIScreen();
@@ -248,7 +239,7 @@ int32_t										loadSelection					(::SApplication& instanceApp)																
 		SetWindowText(instanceApp.RuntimeValues->Screen.PlatformDetail.hWnd, windowTitle);
 		int32_t											errSetup						= moduleInterface.Setup(); 
 		if(0 > errSetup) { 
-			error_printf(errorFormat2, errSetup, "moduleSetup()" ); 
+			error_printf(errorFormat2, "moduleSetup()" ); 
 			retVal										= -1;
 			moduleInterface.Cleanup();
 			::nwol::initASCIIScreen();
@@ -272,8 +263,7 @@ int32_t										loadSelection					(::SApplication& instanceApp)																
 int32_t										renderSelection					(const ::SApplication & instanceApp)																						{
 	int32_t											errVal							= 0;
  	const ::nwol::SModuleInterface					& moduleInterface				= instanceApp.ApplicationModulesHandle[instanceApp.ApplicationModuleSelected];
-	int32_t											errRender						= moduleInterface.Render(); 
-	reterr_error_if(errored(errRender), errorFormat2, errRender, "moduleRender()");	
+	error_if(errored(errVal = moduleInterface.Render()), "Failed to call module function.");
 
 	::nwol::RUNTIME_CALLBACK_ID						callbackPointersErased				= moduleInterface.TestForNullPointerFunctions();
 	if(callbackPointersErased) { 
@@ -360,12 +350,10 @@ int32_t										renderSelectorApp				(const ::SApplication& instanceApp)							
 	::nwol::clearASCIIBackBuffer(' ', COLOR_WHITE);
 
 	::nwol::SASCIITarget							target;
-	::nwol::error_t									
-	errMy										= ::nwol::getASCIIBackBuffer(target);				reterr_error_if_errored(errMy, "%s", "Failed to get ASCII target!");
-	errMy										= ::nwol::renderGUIASCII(target, instanceApp.GUI);	reterr_error_if_errored(errMy, "%s", "renderGUIASCII() Failed!");
+	nwol_ecall(::nwol::getASCIIBackBuffer(target)				, "%s", "Failed to get ASCII target!");
+	nwol_ecall(::nwol::renderGUIASCII(target, instanceApp.GUI)	, "%s", "renderGUIASCII() Failed!");
 
 	::nwol::presentASCIIBackBuffer();
-	
 	return 0; 
 }
 
@@ -382,8 +370,6 @@ int32_t										render							(::SApplication& instanceApp)																					
 			error_printf("Unrecognized state: %u", (uint32_t)instanceApp.SelectorState);
 		}
 	}
-	// desync here
-	INTERLOCKED_DECREMENT(instanceApp.RenderSemaphore);
-
+	INTERLOCKED_DECREMENT(instanceApp.RenderSemaphore);	// desync here
 	return retVal;
 }

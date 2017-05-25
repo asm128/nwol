@@ -29,15 +29,13 @@ namespace nwol
 		// Report error before dereferencing invalid index.
 		inline				grid_view<_tValue>&			operator=		(const grid_view& other)								noexcept	= default;
 		inline				array_view<const _tValue>	operator[]		(uint32_t row)									const	noexcept	{ 
-			if(row >= Height) 
-				error_printf("%s: %u", "Invalid grid row", row); 
+			retval_error_if({}, row >= Height, "%s: %u", "Invalid grid row", row); 
 			return array_view<const _tValue>(&Data[row*Width], Width);
 		}
 
 		// Report error before dereferencing invalid index.
 		inline				array_view<_tValue>			operator[]		(uint32_t row)											noexcept	{ 
-			if(row >= Height) 
-				error_printf("%s: %u", "Invalid grid row", row); 
+			retval_error_if({}, row >= Height, "%s: %u", "Invalid grid row", row); 
 			return array_view<_tValue>(&Data[row*Width], Width);
 		}
 

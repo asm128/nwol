@@ -55,7 +55,7 @@ namespace nwol
 		,	INPUT_EVENT_GAMEPAD_BUTTON_UP		= 7
 		,	INPUT_EVENT_INVALID					= -1
 		};
-						void							pollInput				(SInput& input);
+						::nwol::error_t					pollInput				(SInput& input);
 
 						// registerHandler functions return 0 on success, 1 if the handler was already registered or -1 on fatal error (such as registering a null handler or being unable to register handler because of lack of available memory) .
 						::nwol::error_t					registerHandler			(SInput& input, IHandlerKeyboard	* handler);

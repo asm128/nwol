@@ -8,24 +8,16 @@ int											runCommunications						(::nwol::SApplicationNetworkClient& appNetw
 	::nwol::SClientConnection						& instanceClient						= appNetwork.Connection;
 
 	::nwol::error_t									result									= 0;
-	result										= ::nwol::initClientConnection	(instanceClient);	reterr_error_if_errored(result, "%s", "Failed to initialize client connection.");
-	result										= ::nwol::connect				(instanceClient);	reterr_error_if_errored(result, "%s", "Failed to connect.");
+	nwol_ecall(::nwol::initClientConnection	(instanceClient), "%s", "Failed to initialize client connection.");
+	nwol_ecall(::nwol::connect				(instanceClient), "%s", "Failed to connect.");
 
 	while gbit_true(appNetwork.State, ::nwol::NETWORK_STATE_ENABLED) {
 		// Ping before anything else to make sure everything is more or less in order.
-		if(false == ::nwol::ping(instanceClient.pClient, instanceClient.pServer))	{
-			error_printf("%s", "Ping timeout.");
-			result										= -1;
-			break;
-		}
+		break_error_if(result = ::nwol::ping(instanceClient.pClient, instanceClient.pServer) ? 0 : -1, "%s", "Ping timeout.");
 
 		// get server time
 		uint64_t										current_time;
-		if errored(result = ::nwol::serverTime(instanceClient, current_time))		{
-			error_printf("Failed to get server time. Error code: 0x%X.", (uint32_t)result);
-			result										= -1;
-			break;
-		}
+		break_error_if(errored(result = ::nwol::serverTime(instanceClient, current_time)), "Failed to get server time.");
 		
 		{	// here we update the game instance with the data received from the server.
 			::nwol::CLock									thelock									(appNetwork.ServerTimeMutex);
@@ -33,17 +25,12 @@ int											runCommunications						(::nwol::SApplicationNetworkClient& appNetw
 			info_printf("%s", "Client instance updated successfully.");
 		}
 
-		// Disconnect if the network was disabled.
-		if gbit_false(appNetwork.State, ::nwol::NETWORK_STATE_ENABLED)
-			break;
-
+		break_info_if(gbit_false(appNetwork.State, ::nwol::NETWORK_STATE_ENABLED), "Disconnect as the network was disabled.");
 		::std::this_thread::sleep_for(::std::chrono::milliseconds(1000));
 	}
 
 	::nwol::requestDisconnect(instanceClient);
-
 	gbit_clear(appNetwork.State, ::nwol::NETWORK_STATE_RUNNING);
-
 	::nwol::disconnectClient(instanceClient);
 
 	return result;
@@ -51,8 +38,7 @@ int											runCommunications						(::nwol::SApplicationNetworkClient& appNetw
 
 void										runCommunications						(void* pInstanceApp)						{
 	info_printf("Communications loop initializing.");
-	if(0 == pInstanceApp)
-		return;
+	ret_error_if(0 == pInstanceApp, "Invalid argument: SApplication* input parameter is null.")
 
 	::SApplication									& instanceApp							= *(::SApplication*)pInstanceApp;
 	::nwol::SApplicationNetworkClient				& instanceAppNetwork					= instanceApp.NetworkClient;
@@ -64,9 +50,7 @@ void										runCommunications						(void* pInstanceApp)						{
 }
 
 ::nwol::error_t								networkEnable							(::SApplication& instanceApp)				{
-	::nwol::error_t									errMy									= ::nwol::initNetwork();
-	reterr_error_if_errored(errMy, "Failed to initialize network.");
-
+	nwol_ecall(::nwol::initNetwork(), "Failed to initialize network.");
 	info_printf("%s", "Network successfully initialized.");
 
 	::nwol::SApplicationNetworkClient				& instanceAppNetwork					= instanceApp.NetworkClient;
@@ -89,6 +73,5 @@ void										runCommunications						(void* pInstanceApp)						{
 
 	::std::this_thread::sleep_for(::std::chrono::milliseconds(1000));
 	::nwol::shutdownNetwork();
-
 	return 0;
 }

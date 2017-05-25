@@ -7,14 +7,14 @@
 #endif
 
 void											nwol::printErasedModuleInterfacePointers		(::nwol::RUNTIME_CALLBACK_ID erasedCallbacks, const char_t* errorFormat)		{
-	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_TITLE	))	error_printf(errorFormat, "moduleTitle()"	);
-	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_VERSION	))	error_printf(errorFormat, "moduleVersion()"	);
-	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_CREATE	))	error_printf(errorFormat, "moduleCreate()"	);
-	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_DELETE	))	error_printf(errorFormat, "moduleDelete()"	);
-	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_SETUP	))	error_printf(errorFormat, "moduleSetup()"	);
-	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_CLEANUP	))	error_printf(errorFormat, "moduleCleanup()"	);
-	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_RENDER	))	error_printf(errorFormat, "moduleRender()"	);
-	if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_UPDATE	))	error_printf(errorFormat, "moduleUpdate()"	);
+	error_if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_TITLE		), errorFormat, "nwol_moduleTitle"		);
+	error_if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_VERSION	), errorFormat, "nwol_moduleVersion"	);
+	error_if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_CREATE		), errorFormat, "nwol_moduleCreate"		);
+	error_if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_DELETE		), errorFormat, "nwol_moduleDelete"		);
+	error_if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_SETUP		), errorFormat, "nwol_moduleSetup"		);
+	error_if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_CLEANUP	), errorFormat, "nwol_moduleCleanup"	);
+	error_if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_RENDER		), errorFormat, "nwol_moduleRender"		);
+	error_if(0 == (erasedCallbacks & ::nwol::RUNTIME_CALLBACK_ID_UPDATE		), errorFormat, "nwol_moduleUpdate"		);
 }
 
 ::nwol::error_t									nwol::unloadModule								(::nwol::SModuleInterface& containerForCallbacks)								{
@@ -55,7 +55,7 @@ void											nwol::printErasedModuleInterfacePointers		(::nwol::RUNTIME_CALLBA
 	::nwol::RUNTIME_CALLBACK_ID							callbackPointersErased						= containerForCallbacks.TestForNullPointerFunctions();
 	if(callbackPointersErased) { 
 		::nwol::unloadModule(containerForCallbacks);
-		static	const char_t								* errorFormat1								= "Failed to get dynamically loaded function: %s.";
+		static	const char_t								* errorFormat1								= "Failed to get dynamically loaded function: %s().";
 		::nwol::printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
 		return -1;
 	}

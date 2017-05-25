@@ -34,14 +34,14 @@ struct SWindowClassRegistrator {
 	}
 	static	const SWindowClassRegistrator		classRegistration(PlatformDetail.WindowClass);
 	if(0 == classRegistration.RegistrationError) {
-		const DWORD									error						= GetLastError();
-		const ::std::string							errorText					= ::nwol::getWindowsErrorAsString(error);
+		const DWORD									error											= GetLastError();
+		const ::std::string							errorText										= ::nwol::getWindowsErrorAsString(error);
 		error_printf("Cannot register window class: (0x%X) \"%s\"", (uint32_t)error, errorText.c_str());
 		return -1;
 	}
 
-	const DWORD									dwStyle						= WS_OVERLAPPED | WS_THICKFRAME | WS_BORDER | WS_MAXIMIZEBOX | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX;
-	const HWND									hWnd						= CreateWindowEx(0, PlatformDetail.WindowClass.lpszClassName, "Unnamed", dwStyle
+	const DWORD									dwStyle											= WS_OVERLAPPED | WS_THICKFRAME | WS_BORDER | WS_MAXIMIZEBOX | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX;
+	const HWND									hWnd											= CreateWindowEx(0, PlatformDetail.WindowClass.lpszClassName, "Unnamed", dwStyle
 		, desiredMetrics.Position.x
 		, desiredMetrics.Position.y
 		, desiredMetrics.Size.x

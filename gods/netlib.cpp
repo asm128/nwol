@@ -68,7 +68,7 @@ int32_t									nwol::createConnectionByHostName	( char_t* host_name, uint16_t p
 	::sockaddr										binaryAddress					= {AF_UNSPEC,};
 	::addrinfo										myAddrInfoHints					= { AI_CANONNAME, PF_INET, SOCK_DGRAM, IPPROTO_UDP, ::strlen(host_name), host_name, &binaryAddress };
 	
-	char_t											portString			[7]			= {};
+	char_t											portString			[8]			= {};
 	sprintf_s(portString, "%u", port_number);
 	//--------------------------------
     // Setup the hints address info structure
@@ -80,13 +80,11 @@ int32_t									nwol::createConnectionByHostName	( char_t* host_name, uint16_t p
     hints.ai_protocol							= IPPROTO_UDP	;
 
 	const ::addrinfo								* createdAddrInfo				= 0;
-	int32_t											sockErr							= ::getaddrinfo(host_name, portString, &hints, (::addrinfo**)&createdAddrInfo);
-	::nwol::error_t									errMy							= sockErr == -1;
-	reterr_error_if_errored(errMy, "gettaddrinfo failed! Return value: %i", sockErr);
+	nwol_ecall(::getaddrinfo(host_name, portString, &hints, (::addrinfo**)&createdAddrInfo), "gettaddrinfo failed for host_name: %s, port: %s", host_name, portString);
 
 	// Retrieve each address and print out the hex bytes
 #if defined(NWOL_DEBUG_ENABLED)
-	int									iAddress						= 1;
+	int												iAddress						= 1;
 #endif
 	//sockaddr_in6 *sockaddr_ipv6;
 	for(const addrinfo* ptr = createdAddrInfo; ptr != NULL; ptr = ptr->ai_next)  {
@@ -336,15 +334,12 @@ bool									nwol::ping							(::nwol::SConnectionEndpoint* pClient, ::nwol::SCo
 }
 
 int32_t									nwol::sendSystemCommand				(::nwol::SConnectionEndpoint* pOrigin, ::nwol::SConnectionEndpoint* pTarget, const ::nwol::NETLIB_COMMAND& commandToSend) {
-	// Pong client
 	int32_t											sentBytes						= 0;
-
 	::nwol::error_t									errMy							= sendToConnection(pOrigin, (const ubyte_t*)&commandToSend, (uint32_t)sizeof(::nwol::NETLIB_COMMAND), &sentBytes, pTarget);
 	if(errored(errMy) || sentBytes != (int32_t)sizeof(::nwol::NETLIB_COMMAND)) {
 		error_printf("Error sending system command to remote client. Command: %s.", ::nwol::get_value_label( commandToSend ).c_str());
 		return -1;
 	}
-
 	//
 	int32_t											port_number						= 0;
 	int32_t											a1								= 0
@@ -362,10 +357,10 @@ int32_t									nwol::receiveSystemCommand			(::nwol::SConnectionEndpoint* pLoca
 
 	commandReceived								= ::nwol::NETLIB_COMMAND_INVALID;
 	int32_t											bytes_received					= 0;
-	error_t											errMy							= ::nwol::receiveFromConnection( pLocal, (ubyte_t*)&commandReceived, sizeof(::nwol::NETLIB_COMMAND), &bytes_received, 0 );
-	reterr_error_if(errored(errMy) || bytes_received < 0, "Error receiving system command.");
-	reterr_error_if(0 == pRemote, "Client target with was null.");
+	nwol_ecall(::nwol::receiveFromConnection( pLocal, (ubyte_t*)&commandReceived, sizeof(::nwol::NETLIB_COMMAND), &bytes_received, 0 )	, "Error receiving system command.");
+	reterr_error_if(bytes_received < 0																									, "Error receiving system command.");
 
+	reterr_error_if(0 == pRemote, "Client target was null.");
 	int32_t											port_number						= 0;
 	int32_t											a1								= 0
 		,											a2								= 0
@@ -374,24 +369,22 @@ int32_t									nwol::receiveSystemCommand			(::nwol::SConnectionEndpoint* pLoca
 		;
 	::nwol::getAddress( pRemote, &a1, &a2, &a3, &a4, &port_number );
 	info_printf("Received sytem command from %u.%u.%u.%u:%u: %s.", (uint32_t)a1, (uint32_t)a2, (uint32_t)a3, (uint32_t)a4, (uint32_t)port_number, ::nwol::get_value_label( commandReceived ).c_str());
-
 	return 0;
 }
 
 int32_t									nwol::sendUserCommand				(SConnectionEndpoint* pOrigin, ::nwol::SConnectionEndpoint* pTarget, ::nwol::USER_COMMAND requestOrResponse, const ubyte_t* buffer, uint32_t bufferSize) {
 	// Send data back
 	const ::nwol::NETLIB_COMMAND					commandUserSend					= (requestOrResponse == ::nwol::USER_COMMAND_REQUEST) ? ::nwol::NETLIB_COMMAND_USER_REQUEST : ::nwol::NETLIB_COMMAND_USER_RESPONSE;
-	error_t											errMy							= ::nwol::sendSystemCommand(pOrigin, pTarget, commandUserSend);
-	reterr_error_if_errored(errMy, "Error sending system command.");
+	nwol_ecall(::nwol::sendSystemCommand(pOrigin, pTarget, commandUserSend), "Error sending system command.");
 
 	int32_t							
 	sentBytes									= 0;
-	errMy										= ::nwol::sendToConnection(pOrigin, (const ubyte_t*)&bufferSize, (uint32_t)sizeof(int32_t), &sentBytes, pTarget );
-	reterr_error_if(errored(errMy) || sentBytes != (int32_t)sizeof(int32_t)	, "Error sending user data.");
+	nwol_ecall(::nwol::sendToConnection(pOrigin, (const ubyte_t*)&bufferSize, (uint32_t)sizeof(int32_t), &sentBytes, pTarget )	, "Error sending user data.");
+	reterr_error_if(sentBytes != (int32_t)sizeof(int32_t)																		, "Error sending user data.");
 
 	sentBytes									= 0;
-	errMy										= ::nwol::sendToConnection(pOrigin, buffer, bufferSize, &sentBytes, pTarget);
-	reterr_error_if(errored(errMy) || sentBytes != (int32_t)bufferSize		, "Error sending user data.");
+	nwol_ecall(::nwol::sendToConnection(pOrigin, buffer, bufferSize, &sentBytes, pTarget)	, "Error sending user data.");
+	reterr_error_if(sentBytes != (int32_t)bufferSize										, "Error sending user data.");
 
 	// Display time
 	int32_t											port_number						= 0;
@@ -408,8 +401,7 @@ int32_t									nwol::sendUserCommand				(SConnectionEndpoint* pOrigin, ::nwol::
 int32_t									nwol::receiveUserCommand			(::nwol::SConnectionEndpoint* pOrigin, ::nwol::SConnectionEndpoint* pTarget, ::nwol::USER_COMMAND& requestOrResponse, ubyte_t* buffer, uint32_t bufferSize) {
 	// Send data back
 	::nwol::NETLIB_COMMAND							commandUserReceive				= ::nwol::NETLIB_COMMAND_INVALID;
-	error_t											errMy							= ::nwol::receiveSystemCommand(pOrigin, pTarget, commandUserReceive);
-	reterr_error_if_errored(errMy, "Error receiving system command.");
+	nwol_ecall(::nwol::receiveSystemCommand(pOrigin, pTarget, commandUserReceive), "Error receiving system command.");
 
 	requestOrResponse							= (commandUserReceive == ::nwol::NETLIB_COMMAND_USER_REQUEST) ? ::nwol::USER_COMMAND_REQUEST : ::nwol::USER_COMMAND_UNKNOWN;
 	if(requestOrResponse != USER_COMMAND_REQUEST) {
@@ -418,14 +410,14 @@ int32_t									nwol::receiveUserCommand			(::nwol::SConnectionEndpoint* pOrigin
 	}
 	int32_t											receivedBytes					= 0;
 	int32_t											userBytesToReceive				= 0;
-	errMy										= ::nwol::receiveFromConnection( pOrigin, (ubyte_t*)&userBytesToReceive, (uint32_t)sizeof(int32_t), &receivedBytes, &pTarget );
-	reterr_error_if(errored(errMy) || receivedBytes != (int32_t)sizeof(int32_t), "Error receiving user data.");
+	nwol_ecall(::nwol::receiveFromConnection( pOrigin, (ubyte_t*)&userBytesToReceive, (uint32_t)sizeof(int32_t), &receivedBytes, &pTarget )	, "Error receiving user data.");
+	reterr_error_if(receivedBytes != (int32_t)sizeof(int32_t)																				, "Error receiving user data.");
 
 	receivedBytes								= 0;
 	::nwol::gauchar									userBuffer						(userBytesToReceive);
 	reterr_error_if(userBuffer.size() != (uint32_t)userBytesToReceive, "Failed to allocate buffer for network message.");
-	errMy										= ::nwol::receiveFromConnection( pOrigin, userBuffer.begin(), userBytesToReceive, &receivedBytes, &pTarget );
-	reterr_error_if(errored(errMy) || receivedBytes != userBytesToReceive, "Error receiving user data.");
+	nwol_ecall(::nwol::receiveFromConnection( pOrigin, userBuffer.begin(), userBytesToReceive, &receivedBytes, &pTarget )	, "Error receiving user data.");
+	reterr_error_if(receivedBytes != userBytesToReceive																		, "Error receiving user data.");
 
 	for(uint32_t iByte=0, packetByteCount = ::nwol::max(bufferSize, userBuffer.size()); iByte < packetByteCount; ++iByte) 
 		buffer[iByte]								= userBuffer[iByte];
@@ -439,6 +431,5 @@ int32_t									nwol::receiveUserCommand			(::nwol::SConnectionEndpoint* pOrigin
 		;	
 	::nwol::getAddress( pTarget, &a1, &a2, &a3, &a4, &port_number );
 	info_printf("Sent user command of %u bytes to %u.%u.%u.%u:%u.", bufferSize, (uint32_t)a1, (uint32_t)a2, (uint32_t)a3, (uint32_t)a4, (uint32_t)port_number);
-
 	return 0;
 }

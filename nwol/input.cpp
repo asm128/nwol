@@ -15,42 +15,40 @@ static constexpr const char						_pointer_error_string[]						= "Invalid handler
 
 void											handleKeyboardChanges						(const ::nwol::SInput& input)							{
 	static constexpr	const uint32_t					keyCount									= ::nwol::SInput::KeyCount;
-						uint8_t							handleCountRequiredKeyUp					= 0;
-						uint8_t							handleCountRequiredKeyDown					= 0;
-						uint8_t							handleRequiredKeyUp			[keyCount]		= {};
-						uint8_t							handleRequiredKeyDown		[keyCount]		= {};
+						uint8_t							countRequiredKeysUp							= 0;
+						uint8_t							countRequiredKeysDown						= 0;
+						uint8_t							handleRequiredKeysUp		[keyCount]		= {};
+						uint8_t							handleRequiredKeysDown		[keyCount]		= {};
 
-	for(uint32_t iKey=0; iKey<keyCount; ++iKey)
+	for(uint32_t iKey = 0; iKey < keyCount; ++iKey)	// Store in separate arrays the keys that need to be handled by OnKeyUp() and OnKeyDown(). 
 		if( input.Keys[iKey] != input.PreviousKeys[iKey] ) {
 			if(input.Keys[iKey] == 0)
-				handleRequiredKeyUp		[handleCountRequiredKeyUp++]	= iKey & 0xFF;
+				handleRequiredKeysUp	[countRequiredKeysUp	++] = iKey & 0xFF;
 			else																
-				handleRequiredKeyDown	[handleCountRequiredKeyDown++]	= iKey & 0xFF;
+				handleRequiredKeysDown	[countRequiredKeysDown	++] = iKey & 0xFF;
 		}
 
-	for(uint32_t iKeyIndex=0; iKeyIndex<handleCountRequiredKeyUp; ++iKeyIndex) {
+	for(uint32_t iKeyIndex = 0; iKeyIndex < countRequiredKeysUp; ++iKeyIndex) {
 #if defined(__WINDOWS__)
-		Beep(220+handleRequiredKeyUp[iKeyIndex], 35);
+		Beep(220+handleRequiredKeysUp[iKeyIndex], 35);
 #endif
 		for(uint32_t iHandler=0, handlerCount = input.HandlersKeyboard.size(); iHandler<handlerCount; ++iHandler)
-			if(0 != input.HandlersKeyboard[iHandler])
-				input.HandlersKeyboard[iHandler]->OnKeyUp(handleRequiredKeyUp[iKeyIndex]);
+			if( input.HandlersKeyboard[iHandler] )
+				input.HandlersKeyboard[iHandler]->OnKeyUp(handleRequiredKeysUp[iKeyIndex]);
 			else {
-				error_printf("A null pointer to a handler keyboard was added to the keyboar registry");
-				continue;
+				error_printf("A null pointer was added to the keyboard handler registry");
 			}
 	}
 
-	for(uint32_t iKeyIndex=0; iKeyIndex<handleCountRequiredKeyDown; ++iKeyIndex) {
+	for(uint32_t iKeyIndex = 0; iKeyIndex < countRequiredKeysDown; ++iKeyIndex) {
 #if defined(__WINDOWS__)
-		Beep(440+handleRequiredKeyUp[iKeyIndex], 35);
+		Beep(440+handleRequiredKeysUp[iKeyIndex], 35);
 #endif
-		for(uint32_t iHandler=0, handlerCount = input.HandlersKeyboard.size(); iHandler<handlerCount; ++iHandler) {
-			if(0 != input.HandlersKeyboard[iHandler])
-				input.HandlersKeyboard[iHandler]->OnKeyDown(handleRequiredKeyDown[iKeyIndex]);
+		for(uint32_t iHandler = 0, handlerCount = input.HandlersKeyboard.size(); iHandler < handlerCount; ++iHandler) {
+			if( input.HandlersKeyboard[iHandler] )
+				input.HandlersKeyboard[iHandler]->OnKeyDown(handleRequiredKeysDown[iKeyIndex]);
 			else {
-				error_printf("A null pointer to a handler keyboard was added to the keyboar registry");
-				continue;
+				error_printf("A null pointer was added to the keyboard handler registry");
 			}
 		}
 	}
@@ -58,53 +56,51 @@ void											handleKeyboardChanges						(const ::nwol::SInput& input)							{
 
 void											handleMouseChanges							(const ::nwol::SInput& input)							{
 	static constexpr	const uint32_t					buttonCount									= ::nwol::SInput::ButtonCount;
-						uint8_t							handleCountRequiredButtonUp					= 0;
-						uint8_t							handleCountRequiredButtonDown				= 0;
+						uint8_t							countRequiredButtonUp						= 0;
+						uint8_t							countRequiredButtonDown						= 0;
 						uint8_t							handleRequiredButtonUp		[buttonCount]	= {};
 						uint8_t							handleRequiredButtonDown	[buttonCount]	= {};
 
-	for(uint32_t iKey=0; iKey<buttonCount; ++iKey)
+	for(uint32_t iKey = 0; iKey < buttonCount; ++iKey)	// Store in separate arrays the keys that need to be handled by OnKeyUp() and OnKeyDown(). 
 		if( input.MouseButtons[iKey] != input.MouseButtons[iKey] ) {
 			if(input.Keys[iKey] == 0)
-				handleRequiredButtonUp		[handleCountRequiredButtonUp	++]	= iKey & 0xFF;
+				handleRequiredButtonUp		[countRequiredButtonUp		++]	= iKey & 0xFF;
 			else																
-				handleRequiredButtonDown	[handleCountRequiredButtonDown	++]	= iKey & 0xFF;
+				handleRequiredButtonDown	[countRequiredButtonDown	++]	= iKey & 0xFF;
 		}
 
-	for(uint32_t iKeyIndex=0; iKeyIndex<handleCountRequiredButtonUp; ++iKeyIndex) {
+	for(uint32_t iKeyIndex = 0; iKeyIndex < countRequiredButtonUp; ++iKeyIndex) {
 #if defined(__WINDOWS__)
 		Beep(220+handleRequiredButtonUp[iKeyIndex], 35);
 #endif
 		for(uint32_t iHandler=0, handlerCount = input.HandlersKeyboard.size(); iHandler<handlerCount; ++iHandler)
-			if(0 != input.HandlersKeyboard[iHandler])
+			if( input.HandlersKeyboard[iHandler] )
 				input.HandlersKeyboard[iHandler]->OnKeyUp(handleRequiredButtonUp[iKeyIndex]);
 			else {
 				error_printf("A null pointer to a handler keyboard was added to the keyboar registry");
-				continue;
 			}
 	}
 
-	for(uint32_t iKeyIndex=0; iKeyIndex<handleCountRequiredButtonDown; ++iKeyIndex) {
+	for(uint32_t iKeyIndex = 0; iKeyIndex < countRequiredButtonDown; ++iKeyIndex) {
 #if defined(__WINDOWS__)
 		Beep(440+handleRequiredButtonDown[iKeyIndex], 35);
 #endif
 		for(uint32_t iHandler=0, handlerCount = input.HandlersKeyboard.size(); iHandler<handlerCount; ++iHandler)
-			if(0 != input.HandlersKeyboard[iHandler])
+			if( input.HandlersKeyboard[iHandler] )
 				input.HandlersKeyboard[iHandler]->OnKeyDown(handleRequiredButtonDown[iKeyIndex]);
 			else {
 				error_printf("A null pointer to a handler keyboard was added to the keyboar registry");
-				continue;
 			}
 	}
 	//------------------------------------------------
 }
 
 void											handleInputChanges							(const ::nwol::SInput& input)			{
-	handleKeyboardChanges	(input);
-	handleMouseChanges		(input);
+	::handleKeyboardChanges	(input);
+	::handleMouseChanges		(input);
 }
 
-void											nwol::pollInput								(SInput& input)							{
+::nwol::error_t										nwol::pollInput								(SInput& input)							{
 	static constexpr	const uint32_t						keyCount								= ::nwol::SInput::KeyCount;
 	static constexpr	const uint32_t						buttonCount								= ::nwol::SInput::ButtonCount;
 
@@ -125,7 +121,7 @@ void											nwol::pollInput								(SInput& input)							{
 
 	GetNumberOfConsoleInputEvents (handleIn, &eventCount);
 	if( 0 == eventCount )
-		return;
+		return 0;
 
 	ReadConsoleInput(handleIn, &recordIn, 1, &NumRead);
 
@@ -147,6 +143,7 @@ void											nwol::pollInput								(SInput& input)							{
 #else
 #	error "Not implemented."
 #endif
-	handleInputChanges(input);
+	::handleInputChanges(input);
+	return 0;
 }
 

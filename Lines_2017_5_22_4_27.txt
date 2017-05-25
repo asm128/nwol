@@ -1,0 +1,1362 @@
+File name: android_gods.cpp
+File folder: D:\Jeez\nwol\android_gods
+File creation date: Wed Mar  8 01:43:36 2017
+File modification date: Wed Mar  8 01:43:36 2017
+File code lines: 9
+File directive lines: 1
+File comment lines: 1
+File blank lines: 4
+File bytes: 361
+
+File name: android_nwol.cpp
+File folder: D:\Jeez\nwol\android_nwol
+File creation date: Mon Mar  6 05:09:04 2017
+File modification date: Mon Mar  6 05:09:03 2017
+File code lines: 9
+File directive lines: 1
+File comment lines: 1
+File blank lines: 4
+File bytes: 361
+
+File name: vulkanandroid.cpp
+File folder: D:\Jeez\nwol\android_nwol
+File creation date: Fri Mar 10 00:44:14 2017
+File modification date: Fri Mar 10 00:45:46 2017
+File code lines: 217
+File directive lines: 5
+File comment lines: 7
+File blank lines: 15
+File bytes: 22285
+
+File name: vulkanandroid.h
+File folder: D:\Jeez\nwol\android_nwol
+File creation date: Fri Mar 10 00:44:14 2017
+File modification date: Sun Mar 12 13:00:56 2017
+File code lines: 106
+File directive lines: 14
+File comment lines: 6
+File blank lines: 11
+File bytes: 7837
+
+File name: glue.c
+File folder: D:\Jeez\nwol\android_nwor\glue
+File creation date: Wed Apr 26 06:02:26 2017
+File modification date: Wed Apr 26 06:02:26 2017
+File code lines: 260
+File directive lines: 15
+File comment lines: 9
+File blank lines: 92
+File bytes: 14269
+
+File name: glue.h
+File folder: D:\Jeez\nwol\android_nwor\glue
+File creation date: Wed Apr 26 06:02:26 2017
+File modification date: Wed Apr 26 06:02:26 2017
+File code lines: 61
+File directive lines: 13
+File comment lines: 31
+File blank lines: 33
+File bytes: 10546
+
+File name: jni_stuff.cpp
+File folder: D:\Jeez\nwol\android_nwor\jni
+File creation date: Mon Mar  6 09:04:13 2017
+File modification date: Wed Mar 22 20:58:40 2017
+File code lines: 147
+File directive lines: 10
+File comment lines: 37
+File blank lines: 66
+File bytes: 9446
+
+File name: application.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Fri Feb 17 07:17:28 2017
+File modification date: Sat May 13 10:30:01 2017
+File code lines: 67
+File directive lines: 16
+File comment lines: 81
+File blank lines: 27
+File bytes: 5129
+
+File name: buffer.cpp
+File folder: D:\Jeez\nwol\gods
+File creation date: Wed Apr 26 06:02:28 2017
+File modification date: Mon May 22 02:07:03 2017
+File code lines: 250
+File directive lines: 3
+File comment lines: 6
+File blank lines: 79
+File bytes: 13727
+
+File name: buffer.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Wed Apr 26 06:02:28 2017
+File modification date: Mon May 22 03:06:03 2017
+File code lines: 29
+File directive lines: 8
+File comment lines: 4
+File blank lines: 13
+File bytes: 2522
+
+File name: buffer_create.cpp
+File folder: D:\Jeez\nwol\gods
+File creation date: Sat Jan 21 19:53:06 2017
+File modification date: Mon May 22 03:15:35 2017
+File code lines: 263
+File directive lines: 17
+File comment lines: 12
+File blank lines: 99
+File bytes: 13058
+
+File name: gbuffer.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Wed Apr 26 06:02:28 2017
+File modification date: Wed Apr 26 06:02:28 2017
+File code lines: 313
+File directive lines: 5
+File comment lines: 17
+File blank lines: 150
+File bytes: 17764
+
+File name: glist.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Wed Apr 26 06:02:28 2017
+File modification date: Mon May 22 02:56:57 2017
+File code lines: 260
+File directive lines: 11
+File comment lines: 6
+File blank lines: 115
+File bytes: 16591
+
+File name: glist_base.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Wed Apr 26 06:02:28 2017
+File modification date: Mon May 22 02:57:37 2017
+File code lines: 87
+File directive lines: 5
+File comment lines: 11
+File blank lines: 35
+File bytes: 5103
+
+File name: gnode.cpp
+File folder: D:\Jeez\nwol\gods
+File creation date: Wed Apr 26 06:02:28 2017
+File modification date: Mon May  8 00:38:24 2017
+File code lines: 16
+File directive lines: 6
+File comment lines: 0
+File blank lines: 6
+File bytes: 1859
+
+File name: gnode.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Wed Apr 26 06:02:28 2017
+File modification date: Mon May  8 00:38:24 2017
+File code lines: 21
+File directive lines: 6
+File comment lines: 1
+File blank lines: 8
+File bytes: 3236
+
+File name: gnode_constants.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Wed Apr 26 06:02:28 2017
+File modification date: Wed Apr 26 06:02:28 2017
+File code lines: 4
+File directive lines: 4
+File comment lines: 1
+File blank lines: 4
+File bytes: 320
+
+File name: graph.cpp
+File folder: D:\Jeez\nwol\gods
+File creation date: Wed Apr 26 06:02:28 2017
+File modification date: Mon May  8 00:38:24 2017
+File code lines: 50
+File directive lines: 3
+File comment lines: 4
+File blank lines: 19
+File bytes: 2599
+
+File name: graph.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Wed Apr 26 06:02:28 2017
+File modification date: Mon May 22 02:58:08 2017
+File code lines: 73
+File directive lines: 8
+File comment lines: 2
+File blank lines: 28
+File bytes: 5554
+
+File name: gref.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Mon Jan 23 16:45:50 2017
+File modification date: Mon May 22 02:58:26 2017
+File code lines: 65
+File directive lines: 23
+File comment lines: 17
+File blank lines: 30
+File bytes: 6760
+
+File name: gref_definition.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Wed Apr 26 06:02:28 2017
+File modification date: Mon May 22 02:58:39 2017
+File code lines: 84
+File directive lines: 36
+File comment lines: 14
+File blank lines: 41
+File bytes: 7199
+
+File name: gref_definition_common.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Sat Jan 21 19:53:07 2017
+File modification date: Mon May 22 02:59:12 2017
+File code lines: 14
+File directive lines: 16
+File comment lines: 1
+File blank lines: 10
+File bytes: 2667
+
+File name: gref_manager.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Tue Apr 18 08:27:48 2017
+File modification date: Tue Apr 18 09:07:13 2017
+File code lines: 5
+File directive lines: 5
+File comment lines: 3
+File blank lines: 4
+File bytes: 927
+
+File name: gref_manager_nco.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Sat Jan 21 19:53:07 2017
+File modification date: Mon May 22 03:00:40 2017
+File code lines: 374
+File directive lines: 65
+File comment lines: 39
+File blank lines: 142
+File bytes: 24862
+
+File name: gref_manager_obj.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Sat Jan 21 19:53:07 2017
+File modification date: Tue Apr 18 18:47:28 2017
+File code lines: 43
+File directive lines: 6
+File comment lines: 2
+File blank lines: 17
+File bytes: 2566
+
+File name: gref_manager_pod.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Sat Jan 21 19:53:07 2017
+File modification date: Mon May 22 03:00:57 2017
+File code lines: 29
+File directive lines: 7
+File comment lines: 2
+File blank lines: 16
+File bytes: 1862
+
+File name: gref_ptr.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Mon Jan 23 16:45:50 2017
+File modification date: Mon May 22 03:02:02 2017
+File code lines: 197
+File directive lines: 15
+File comment lines: 30
+File blank lines: 46
+File bytes: 16185
+
+File name: gref_serializer_pod.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Wed Apr 26 06:02:28 2017
+File modification date: Wed Apr 26 06:02:28 2017
+File code lines: 362
+File directive lines: 43
+File comment lines: 18
+File blank lines: 94
+File bytes: 19158
+
+File name: gscreen.cpp
+File folder: D:\Jeez\nwol\gods
+File creation date: Thu Apr 27 23:48:49 2017
+File modification date: Mon May 22 03:14:29 2017
+File code lines: 42
+File directive lines: 1
+File comment lines: 2
+File blank lines: 15
+File bytes: 2709
+
+File name: gscreen.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Thu Apr 27 23:43:22 2017
+File modification date: Sat May 13 10:53:07 2017
+File code lines: 21
+File directive lines: 11
+File comment lines: 1
+File blank lines: 13
+File bytes: 1517
+
+File name: gstring.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Wed Apr 26 06:02:28 2017
+File modification date: Wed Apr 26 06:02:28 2017
+File code lines: 173
+File directive lines: 4
+File comment lines: 2
+File blank lines: 73
+File bytes: 10220
+
+File name: netlib.cpp
+File folder: D:\Jeez\nwol\gods
+File creation date: Wed Apr 26 06:02:28 2017
+File modification date: Mon May 22 03:43:28 2017
+File code lines: 298
+File directive lines: 30
+File comment lines: 20
+File blank lines: 96
+File bytes: 19436
+
+File name: netlib.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Wed Apr 26 06:02:28 2017
+File modification date: Wed Apr 26 06:02:28 2017
+File code lines: 26
+File directive lines: 4
+File comment lines: 1
+File blank lines: 15
+File bytes: 2193
+
+File name: netlib_client.cpp
+File folder: D:\Jeez\nwol\gods
+File creation date: Wed Apr 26 06:02:28 2017
+File modification date: Mon May 22 03:22:19 2017
+File code lines: 55
+File directive lines: 7
+File comment lines: 3
+File blank lines: 21
+File bytes: 4826
+
+File name: netlib_client.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Wed Apr 26 06:02:28 2017
+File modification date: Sun Apr 30 02:54:55 2017
+File code lines: 12
+File directive lines: 4
+File comment lines: 1
+File blank lines: 9
+File bytes: 919
+
+File name: netlib_private.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Wed Apr 26 06:02:28 2017
+File modification date: Wed Apr 26 06:02:28 2017
+File code lines: 18
+File directive lines: 20
+File comment lines: 1
+File blank lines: 9
+File bytes: 1558
+
+File name: netlib_server.cpp
+File folder: D:\Jeez\nwol\gods
+File creation date: Wed Apr 26 06:02:28 2017
+File modification date: Mon May 22 03:23:34 2017
+File code lines: 172
+File directive lines: 21
+File comment lines: 11
+File blank lines: 72
+File bytes: 10715
+
+File name: netlib_server.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Wed Apr 26 06:02:28 2017
+File modification date: Mon May 22 03:02:41 2017
+File code lines: 27
+File directive lines: 10
+File comment lines: 4
+File blank lines: 12
+File bytes: 1637
+
+File name: parse_int.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Wed Jan 18 18:49:21 2017
+File modification date: Mon May 22 03:02:50 2017
+File code lines: 26
+File directive lines: 2
+File comment lines: 1
+File blank lines: 11
+File bytes: 1255
+
+File name: reference_registry.cpp
+File folder: D:\Jeez\nwol\gods
+File creation date: Wed Apr 26 06:02:28 2017
+File modification date: Mon May 22 03:23:59 2017
+File code lines: 20
+File directive lines: 3
+File comment lines: 0
+File blank lines: 12
+File bytes: 1354
+
+File name: reference_registry.h
+File folder: D:\Jeez\nwol\gods
+File creation date: Wed Apr 26 06:02:28 2017
+File modification date: Mon May 22 03:03:15 2017
+File code lines: 41
+File directive lines: 4
+File comment lines: 2
+File blank lines: 15
+File bytes: 3046
+
+File name: nwoa.cpp
+File folder: D:\Jeez\nwol\nwoa
+File creation date: Mon Jan 23 16:45:51 2017
+File modification date: Tue May  2 02:41:24 2017
+File code lines: 78
+File directive lines: 10
+File comment lines: 0
+File blank lines: 45
+File bytes: 4413
+
+File name: nwoa.h
+File folder: D:\Jeez\nwol\nwoa
+File creation date: Mon Jan 23 16:45:51 2017
+File modification date: Tue May  2 06:13:24 2017
+File code lines: 13
+File directive lines: 6
+File comment lines: 0
+File blank lines: 11
+File bytes: 1079
+
+File name: nwoa_network.cpp
+File folder: D:\Jeez\nwol\nwoa
+File creation date: Mon Jan 23 16:45:51 2017
+File modification date: Tue Apr 25 03:01:41 2017
+File code lines: 53
+File directive lines: 3
+File comment lines: 5
+File blank lines: 33
+File bytes: 3334
+
+File name: FileEditor.h
+File folder: D:\Jeez\nwol\nwoe
+File creation date: Thu Apr 13 02:30:56 2017
+File modification date: Mon Apr 17 02:19:42 2017
+File code lines: 9
+File directive lines: 5
+File comment lines: 0
+File blank lines: 12
+File bytes: 481
+
+File name: nwoa.cpp
+File folder: D:\Jeez\nwol\nwoe
+File creation date: Thu Jan 19 02:03:00 2017
+File modification date: Tue May  2 02:41:24 2017
+File code lines: 75
+File directive lines: 10
+File comment lines: 0
+File blank lines: 43
+File bytes: 4033
+
+File name: nwoa.h
+File folder: D:\Jeez\nwol\nwoe
+File creation date: Thu Jan 19 02:03:00 2017
+File modification date: Thu Apr 13 02:32:48 2017
+File code lines: 8
+File directive lines: 5
+File comment lines: 0
+File blank lines: 9
+File bytes: 658
+
+File name: nwoa_network.cpp
+File folder: D:\Jeez\nwol\nwoe
+File creation date: Thu Jan 19 02:03:00 2017
+File modification date: Sun Apr 30 02:58:46 2017
+File code lines: 53
+File directive lines: 3
+File comment lines: 5
+File blank lines: 33
+File bytes: 3334
+
+File name: array_view.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Wed Apr 26 06:02:29 2017
+File code lines: 23
+File directive lines: 5
+File comment lines: 0
+File blank lines: 12
+File bytes: 1877
+
+File name: array_view_bit.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Mon Jan 16 19:08:45 2017
+File modification date: Tue Apr 18 08:07:23 2017
+File code lines: 27
+File directive lines: 6
+File comment lines: 0
+File blank lines: 14
+File bytes: 1461
+
+File name: ascii_color.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Wed Apr 26 06:02:29 2017
+File code lines: 5
+File directive lines: 37
+File comment lines: 2
+File blank lines: 12
+File bytes: 1571
+
+File name: ascii_reference.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Mon May 22 02:55:04 2017
+File code lines: 0
+File directive lines: 0
+File comment lines: 0
+File blank lines: 0
+File bytes: 0
+
+File name: ascii_screen.cpp
+File folder: D:\Jeez\nwol\nwol
+File creation date: Sat May 20 21:52:37 2017
+File modification date: Mon May 22 03:43:18 2017
+File code lines: 164
+File directive lines: 44
+File comment lines: 3
+File blank lines: 46
+File bytes: 9933
+
+File name: ascii_screen.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Wed Apr 26 06:02:29 2017
+File code lines: 16
+File directive lines: 6
+File comment lines: 2
+File blank lines: 13
+File bytes: 1160
+
+File name: ascii_target.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Wed Apr 26 06:02:29 2017
+File code lines: 6
+File directive lines: 4
+File comment lines: 2
+File blank lines: 5
+File bytes: 471
+
+File name: datatype.cpp
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Wed Apr 26 06:02:29 2017
+File code lines: 20
+File directive lines: 4
+File comment lines: 0
+File blank lines: 6
+File bytes: 1168
+
+File name: datatype.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed May 10 23:59:48 2017
+File modification date: Wed May 10 23:59:48 2017
+File code lines: 425
+File directive lines: 48
+File comment lines: 30
+File blank lines: 51
+File bytes: 43219
+
+File name: datausage.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Wed Apr 26 06:02:29 2017
+File code lines: 73
+File directive lines: 6
+File comment lines: 8
+File blank lines: 16
+File bytes: 7965
+
+File name: descriptor.cpp
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Mon May 22 02:19:01 2017
+File code lines: 29
+File directive lines: 3
+File comment lines: 0
+File blank lines: 15
+File bytes: 1699
+
+File name: descriptor.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Sat May 20 23:46:40 2017
+File code lines: 22
+File directive lines: 8
+File comment lines: 1
+File blank lines: 11
+File bytes: 1760
+
+File name: descriptor_manager.cpp
+File folder: D:\Jeez\nwol\nwol
+File creation date: Tue May 16 06:09:08 2017
+File modification date: Sat May 20 23:47:36 2017
+File code lines: 10
+File directive lines: 2
+File comment lines: 0
+File blank lines: 5
+File bytes: 870
+
+File name: descriptor_manager.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Sat May 20 23:49:19 2017
+File code lines: 9
+File directive lines: 6
+File comment lines: 1
+File blank lines: 7
+File bytes: 769
+
+File name: evaluation.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Mon May 22 03:43:36 2017
+File code lines: 4
+File directive lines: 13
+File comment lines: 1
+File blank lines: 7
+File bytes: 1592
+
+File name: fill.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Sun May  7 01:38:22 2017
+File code lines: 68
+File directive lines: 5
+File comment lines: 0
+File blank lines: 24
+File bytes: 6583
+
+File name: gcore_ref.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Mon Jan 23 16:45:51 2017
+File modification date: Tue Apr 18 08:03:12 2017
+File code lines: 45
+File directive lines: 16
+File comment lines: 6
+File blank lines: 22
+File bytes: 3638
+
+File name: gcore_ref_globals.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Sat Apr 15 18:03:44 2017
+File modification date: Sat Apr 15 18:13:53 2017
+File code lines: 45
+File directive lines: 27
+File comment lines: 2
+File blank lines: 13
+File bytes: 2685
+
+File name: grid.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Wed Apr 26 06:02:29 2017
+File code lines: 50
+File directive lines: 8
+File comment lines: 1
+File blank lines: 30
+File bytes: 4277
+
+File name: grid_view.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Wed Apr 26 06:02:29 2017
+File code lines: 32
+File directive lines: 6
+File comment lines: 3
+File blank lines: 17
+File bytes: 2473
+
+File name: gui.cpp
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Sat May 20 23:50:23 2017
+File code lines: 128
+File directive lines: 2
+File comment lines: 5
+File blank lines: 56
+File bytes: 8243
+
+File name: gui.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Sat Jan 21 19:33:09 2017
+File modification date: Thu May  4 03:55:45 2017
+File code lines: 72
+File directive lines: 10
+File comment lines: 5
+File blank lines: 24
+File bytes: 4059
+
+File name: input.cpp
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Mon May 22 03:25:34 2017
+File code lines: 90
+File directive lines: 22
+File comment lines: 3
+File blank lines: 37
+File bytes: 7025
+
+File name: label.cpp
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Sat May 20 23:48:19 2017
+File code lines: 52
+File directive lines: 5
+File comment lines: 9
+File blank lines: 32
+File bytes: 3094
+
+File name: label.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Sat May 20 23:49:37 2017
+File code lines: 51
+File directive lines: 8
+File comment lines: 8
+File blank lines: 21
+File bytes: 4158
+
+File name: label_manager.cpp
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Wed Apr 26 06:02:29 2017
+File code lines: 14
+File directive lines: 1
+File comment lines: 0
+File blank lines: 8
+File bytes: 869
+
+File name: label_manager.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Wed Apr 26 06:02:29 2017
+File code lines: 10
+File directive lines: 5
+File comment lines: 1
+File blank lines: 7
+File bytes: 768
+
+File name: log.cpp
+File folder: D:\Jeez\nwol\nwol
+File creation date: Sat May 20 21:52:37 2017
+File modification date: Sun May 21 19:37:42 2017
+File code lines: 29
+File directive lines: 23
+File comment lines: 1
+File blank lines: 11
+File bytes: 2178
+
+File name: member_registry.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed May 10 23:59:16 2017
+File modification date: Mon May 22 03:32:39 2017
+File code lines: 19
+File directive lines: 14
+File comment lines: 2
+File blank lines: 6
+File bytes: 4390
+
+File name: multithread.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Mon Jan 16 19:08:46 2017
+File modification date: Mon May 22 03:42:58 2017
+File code lines: 0
+File directive lines: 80
+File comment lines: 1
+File blank lines: 6
+File bytes: 4525
+
+File name: nwol_array.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Sat May 20 21:52:37 2017
+File modification date: Mon May 22 03:34:12 2017
+File code lines: 326
+File directive lines: 8
+File comment lines: 34
+File blank lines: 81
+File bytes: 20092
+
+File name: nwol_bit.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Mon Jan 16 19:08:47 2017
+File modification date: Tue Apr 18 08:00:40 2017
+File code lines: 6
+File directive lines: 9
+File comment lines: 0
+File blank lines: 7
+File bytes: 1851
+
+File name: nwol_bool.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Wed Apr 26 06:02:29 2017
+File code lines: 9
+File directive lines: 4
+File comment lines: 0
+File blank lines: 6
+File bytes: 791
+
+File name: nwol_choice.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Wed Apr 26 06:02:29 2017
+File code lines: 13
+File directive lines: 5
+File comment lines: 0
+File blank lines: 11
+File bytes: 676
+
+File name: nwol_color.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Sat May 13 10:54:28 2017
+File code lines: 111
+File directive lines: 6
+File comment lines: 7
+File blank lines: 18
+File bytes: 17640
+
+File name: nwol_coord.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Tue May 16 06:09:08 2017
+File modification date: Tue May 16 06:45:51 2017
+File code lines: 325
+File directive lines: 10
+File comment lines: 27
+File blank lines: 81
+File bytes: 30424
+
+File name: nwol_debug.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed May 10 23:59:16 2017
+File modification date: Wed May 10 23:59:16 2017
+File code lines: 0
+File directive lines: 26
+File comment lines: 3
+File blank lines: 3
+File bytes: 940
+
+File name: nwol_enum.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Thu May  4 03:41:18 2017
+File code lines: 153
+File directive lines: 12
+File comment lines: 6
+File blank lines: 55
+File bytes: 10067
+
+File name: nwol_error.cpp
+File folder: D:\Jeez\nwol\nwol
+File creation date: Sat Apr 29 12:28:49 2017
+File modification date: Mon May 22 03:24:32 2017
+File code lines: 16
+File directive lines: 4
+File comment lines: 56
+File blank lines: 22
+File bytes: 5698
+
+File name: nwol_error.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Mon May 22 03:43:06 2017
+File code lines: 4
+File directive lines: 12
+File comment lines: 1
+File blank lines: 6
+File bytes: 500
+
+File name: nwol_input.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Mon Jan 16 19:08:46 2017
+File modification date: Mon May 22 03:31:42 2017
+File code lines: 42
+File directive lines: 8
+File comment lines: 3
+File blank lines: 15
+File bytes: 2926
+
+File name: nwol_io.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Mon May 22 03:43:10 2017
+File code lines: 6
+File directive lines: 7
+File comment lines: 0
+File blank lines: 5
+File bytes: 455
+
+File name: nwol_log.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Mon Jan 16 19:08:46 2017
+File modification date: Mon May 22 03:35:36 2017
+File code lines: 21
+File directive lines: 127
+File comment lines: 4
+File blank lines: 37
+File bytes: 8375
+
+File name: nwol_math.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Mon Jan 23 16:45:51 2017
+File modification date: Sat Apr 15 05:00:13 2017
+File code lines: 21
+File directive lines: 6
+File comment lines: 2
+File blank lines: 13
+File bytes: 2334
+
+File name: nwol_matrix.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Wed Apr 26 06:02:29 2017
+File code lines: 544
+File directive lines: 7
+File comment lines: 54
+File blank lines: 187
+File bytes: 40808
+
+File name: nwol_memory.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Sat May 20 21:52:37 2017
+File modification date: Mon May 22 04:26:05 2017
+File code lines: 74
+File directive lines: 22
+File comment lines: 1
+File blank lines: 28
+File bytes: 4942
+
+File name: nwol_misc.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:29 2017
+File modification date: Wed Apr 26 06:02:29 2017
+File code lines: 15
+File directive lines: 6
+File comment lines: 3
+File blank lines: 11
+File bytes: 1664
+
+File name: nwol_module.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Tue May 16 06:09:08 2017
+File modification date: Tue May 16 06:45:51 2017
+File code lines: 39
+File directive lines: 39
+File comment lines: 2
+File blank lines: 26
+File bytes: 3993
+
+File name: nwol_mutex.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:30 2017
+File modification date: Mon May 22 03:43:12 2017
+File code lines: 18
+File directive lines: 14
+File comment lines: 1
+File blank lines: 10
+File bytes: 1039
+
+File name: nwol_noise.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed May 10 23:59:16 2017
+File modification date: Mon May 22 03:30:49 2017
+File code lines: 25
+File directive lines: 14
+File comment lines: 3
+File blank lines: 14
+File bytes: 2362
+
+File name: nwol_safe.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Sat May 20 21:52:37 2017
+File modification date: Sat May 20 22:01:01 2017
+File code lines: 0
+File directive lines: 9
+File comment lines: 0
+File blank lines: 3
+File bytes: 518
+
+File name: nwol_screen.cpp
+File folder: D:\Jeez\nwol\nwol
+File creation date: Fri Apr 28 00:02:53 2017
+File modification date: Mon May 22 03:24:29 2017
+File code lines: 50
+File directive lines: 2
+File comment lines: 1
+File blank lines: 8
+File bytes: 1930
+
+File name: nwol_screen.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Fri May 12 02:47:15 2017
+File modification date: Fri May 12 02:47:15 2017
+File code lines: 17
+File directive lines: 15
+File comment lines: 0
+File blank lines: 14
+File bytes: 969
+
+File name: nwol_size.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:30 2017
+File modification date: Wed Apr 26 06:02:30 2017
+File code lines: 5
+File directive lines: 4
+File comment lines: 1
+File blank lines: 4
+File bytes: 915
+
+File name: nwol_string.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:30 2017
+File modification date: Wed Apr 26 06:02:30 2017
+File code lines: 44
+File directive lines: 10
+File comment lines: 0
+File blank lines: 20
+File bytes: 2464
+
+File name: nwol_timer.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:30 2017
+File modification date: Wed Apr 26 06:02:30 2017
+File code lines: 35
+File directive lines: 6
+File comment lines: 14
+File blank lines: 22
+File bytes: 2396
+
+File name: nwol_value.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:30 2017
+File modification date: Mon May 22 01:50:49 2017
+File code lines: 37
+File directive lines: 4
+File comment lines: 0
+File blank lines: 18
+File bytes: 2989
+
+File name: nwor.def
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:30 2017
+File modification date: Tue May  2 02:41:24 2017
+File code lines: 10
+File directive lines: 0
+File comment lines: 0
+File blank lines: 1
+File bytes: 150
+
+File name: platform_globals.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed May 10 23:59:16 2017
+File modification date: Mon May 22 02:16:41 2017
+File code lines: 0
+File directive lines: 47
+File comment lines: 0
+File blank lines: 7
+File bytes: 1385
+
+File name: platform_handle_wrapper.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Sat May 20 22:00:22 2017
+File modification date: Sat May 20 22:00:22 2017
+File code lines: 11
+File directive lines: 3
+File comment lines: 2
+File blank lines: 7
+File bytes: 1010
+
+File name: runtime.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Sun Jan 22 17:38:04 2017
+File modification date: Sun May 21 00:40:26 2017
+File code lines: 103
+File directive lines: 15
+File comment lines: 11
+File blank lines: 31
+File bytes: 9066
+
+File name: runtime_impl.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:30 2017
+File modification date: Tue May  2 02:41:24 2017
+File code lines: 35
+File directive lines: 14
+File comment lines: 29
+File blank lines: 22
+File bytes: 6798
+
+File name: runtime_module.cpp
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed May 10 23:59:16 2017
+File modification date: Sun May 21 01:14:06 2017
+File code lines: 40
+File directive lines: 14
+File comment lines: 0
+File blank lines: 11
+File bytes: 4369
+
+File name: storage.cpp
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:30 2017
+File modification date: Mon May 22 03:24:21 2017
+File code lines: 20
+File directive lines: 6
+File comment lines: 1
+File blank lines: 15
+File bytes: 1290
+
+File name: storage.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:30 2017
+File modification date: Sun May 21 19:43:02 2017
+File code lines: 5
+File directive lines: 5
+File comment lines: 1
+File blank lines: 6
+File bytes: 374
+
+File name: struct_generator_pod.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Mon Jan 23 16:45:51 2017
+File modification date: Fri Mar  3 09:39:18 2017
+File code lines: 13
+File directive lines: 6
+File comment lines: 2
+File blank lines: 8
+File bytes: 685
+
+File name: stype.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:30 2017
+File modification date: Wed Apr 26 06:02:30 2017
+File code lines: 49
+File directive lines: 9
+File comment lines: 8
+File blank lines: 29
+File bytes: 5256
+
+File name: text.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:30 2017
+File modification date: Sun May 21 00:36:32 2017
+File code lines: 55
+File directive lines: 7
+File comment lines: 1
+File blank lines: 23
+File bytes: 4548
+
+File name: timer.cpp
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:30 2017
+File modification date: Mon May 22 01:53:33 2017
+File code lines: 26
+File directive lines: 15
+File comment lines: 0
+File blank lines: 9
+File bytes: 1844
+
+File name: typeint.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:30 2017
+File modification date: Mon May 22 03:43:16 2017
+File code lines: 38
+File directive lines: 30
+File comment lines: 1
+File blank lines: 7
+File bytes: 1955
+
+File name: type_identifier.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Thu Jan 19 07:01:53 2017
+File modification date: Fri Mar  3 09:41:34 2017
+File code lines: 7
+File directive lines: 4
+File comment lines: 2
+File blank lines: 8
+File bytes: 723
+
+File name: type_registry.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed May 10 23:59:16 2017
+File modification date: Sat May 13 11:00:56 2017
+File code lines: 110
+File directive lines: 11
+File comment lines: 10
+File blank lines: 45
+File bytes: 9544
+
+File name: unshrinkable_block_container.h
+File folder: D:\Jeez\nwol\nwol
+File creation date: Wed Apr 26 06:02:30 2017
+File modification date: Sun May 21 19:43:11 2017
+File code lines: 208
+File directive lines: 11
+File comment lines: 30
+File blank lines: 88
+File bytes: 13366
+
+File name: main.cpp
+File folder: D:\Jeez\nwol\nwor
+File creation date: Sat Jan 21 19:53:07 2017
+File modification date: Sat May  6 01:55:56 2017
+File code lines: 321
+File directive lines: 33
+File comment lines: 3
+File blank lines: 118
+File bytes: 18632
+
+File name: nwor_selector.cpp
+File folder: D:\Jeez\nwol\nwor_selector
+File creation date: Sun Jan 29 20:47:36 2017
+File modification date: Tue May  2 02:41:24 2017
+File code lines: 262
+File directive lines: 20
+File comment lines: 3
+File blank lines: 104
+File bytes: 16231
+
+File name: nwor_selector.h
+File folder: D:\Jeez\nwol\nwor_selector
+File creation date: Sun Jan 29 20:47:36 2017
+File modification date: Mon Apr 17 02:18:09 2017
+File code lines: 19
+File directive lines: 4
+File comment lines: 0
+File blank lines: 10
+File bytes: 1175
+
+File name: nwos.cpp
+File folder: D:\Jeez\nwol\nwos
+File creation date: Mon Jan 23 16:45:51 2017
+File modification date: Tue May  2 02:41:24 2017
+File code lines: 111
+File directive lines: 10
+File comment lines: 10
+File blank lines: 59
+File bytes: 5945
+
+File name: nwos.h
+File folder: D:\Jeez\nwol\nwos
+File creation date: Mon Jan 23 16:45:51 2017
+File modification date: Sat May 13 10:31:04 2017
+File code lines: 11
+File directive lines: 5
+File comment lines: 0
+File blank lines: 8
+File bytes: 951
+
+File name: nwoa.cpp
+File folder: D:\Jeez\nwol\quatris
+File creation date: Mon Jan 16 19:08:47 2017
+File modification date: Sun Mar 12 13:19:07 2017
+File code lines: 48
+File directive lines: 11
+File comment lines: 2
+File blank lines: 35
+File bytes: 2598
+
+File name: nwoa.h
+File folder: D:\Jeez\nwol\quatris
+File creation date: Mon Jan 16 19:08:47 2017
+File modification date: Fri Feb 17 09:51:36 2017
+File code lines: 9
+File directive lines: 5
+File comment lines: 0
+File blank lines: 9
+File bytes: 669
+
+File name: nwoa_network.cpp
+File folder: D:\Jeez\nwol\quatris
+File creation date: Sun Jan 29 20:47:35 2017
+File modification date: Wed Mar 22 18:49:29 2017
+File code lines: 53
+File directive lines: 3
+File comment lines: 4
+File blank lines: 33
+File bytes: 3232
+
+File name: quatris.h
+File folder: D:\Jeez\nwol\quatris
+File creation date: Mon Jan 16 19:08:47 2017
+File modification date: Fri Feb 17 19:07:57 2017
+File code lines: 77
+File directive lines: 7
+File comment lines: 69
+File blank lines: 36
+File bytes: 4961
+
+File name: nwoa.cpp
+File folder: D:\Jeez\nwol\tictactoe
+File creation date: Mon Jan 16 19:08:48 2017
+File modification date: Mon May  8 00:38:24 2017
+File code lines: 133
+File directive lines: 17
+File comment lines: 10
+File blank lines: 54
+File bytes: 8904
+
+File name: nwoa.h
+File folder: D:\Jeez\nwol\tictactoe
+File creation date: Tue Jan 10 19:24:15 2017
+File modification date: Tue Apr 18 04:16:34 2017
+File code lines: 10
+File directive lines: 5
+File comment lines: 0
+File blank lines: 9
+File bytes: 776
+
+File name: nwoa_network.cpp
+File folder: D:\Jeez\nwol\tictactoe
+File creation date: Sun Jan 22 17:38:02 2017
+File modification date: Sun Apr 30 03:05:05 2017
+File code lines: 53
+File directive lines: 5
+File comment lines: 5
+File blank lines: 33
+File bytes: 3394
+
+File name: TicTacToe.h
+File folder: D:\Jeez\nwol\tictactoe
+File creation date: Tue Jan 10 19:24:15 2017
+File modification date: Wed May 10 04:23:53 2017
+File code lines: 148
+File directive lines: 7
+File comment lines: 22
+File blank lines: 46
+File bytes: 11450
+
+
+----------------------------- Total Files: 134
+----------------------------- Total Lines: 16658
+
+Comments: 968
+Code: 10114
+Compiler directives: 1679
+Blanks: 3897
+Total bytes: 758989
+
+----------------------------- Stats: 
+
+Average lines per file: 124.31343283582089
+Average lines of comments per file: 7.223880597014926
+Average lines of code per file: 75.4776119402985
+Average lines of compiler directives per file: 12.529850746268657
+Average blank lines per file: 29.082089552238806
+
+Comments: 5.811021731300276%
+Code: 60.71557209749069%
+Compiler directives: 10.079241205426822%
+Blanks: 23.394164965782206%

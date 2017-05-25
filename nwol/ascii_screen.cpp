@@ -27,7 +27,7 @@ static struct SASCIIScreen {
 	CONSOLE_FONT_INFOEX				InfoFontOriginal					= {};
 	CONSOLE_FONT_INFOEX				InfoFontCurrent						= {};
 #endif
-									~SASCIIScreen						()														{
+									~SASCIIScreen						()																		{
 		if( bCreated )	
 			::nwol::shutdownASCIIScreen();
 		safe_nwol_free( ASCIIBackBuffer		);
@@ -35,10 +35,10 @@ static struct SASCIIScreen {
 		safe_nwol_free( ColorBackBuffer		);
 		safe_nwol_free( ColorFrontBuffer	);
 	}
-} __g_ASCIIScreen;	// struct
+}									__g_ASCIIScreen;	// Main instance (Windows applications seem to support only one console per process, as well as many custom smaller systems)
 
 #if defined(__WINDOWS__)
-BOOL WINAPI						HandlerRoutine					(_In_ DWORD dwCtrlType)											{
+BOOL WINAPI							HandlerRoutine						(_In_ DWORD dwCtrlType)													{
 	switch(dwCtrlType) {
 	case CTRL_C_EVENT:
 	case CTRL_CLOSE_EVENT:
@@ -49,7 +49,7 @@ BOOL WINAPI						HandlerRoutine					(_In_ DWORD dwCtrlType)											{
 }
 #endif
 
-void							nwol::shutdownASCIIScreen			()																		{
+void								nwol::shutdownASCIIScreen			()																		{
 	if(false == __g_ASCIIScreen.bCreated)
 		return; 
 
@@ -68,13 +68,13 @@ void							nwol::shutdownASCIIScreen			()																		{
 	__g_ASCIIScreen.bCreated			= false;
 }
 
-char*							nwol::getASCIIBackBuffer			()																		{
+char*								nwol::getASCIIBackBuffer			()																		{
 	if( 0 == __g_ASCIIScreen.ASCIIBackBuffer )
 		::nwol::clearASCIIBackBuffer(' ', COLOR_WHITE);
 	return __g_ASCIIScreen.ASCIIBackBuffer;
 }
 
-int32_t							nwol::getASCIIBackBuffer			(::nwol::SASCIITarget& target)											{
+int32_t								nwol::getASCIIBackBuffer			(::nwol::SASCIITarget& target)											{
 	if( 0 == __g_ASCIIScreen.ASCIIBackBuffer )
 		::nwol::clearASCIIBackBuffer(' ', COLOR_WHITE);
 	target.Text							= __g_ASCIIScreen.ASCIIBackBuffer ? ::nwol::grid_view<char_t	>(__g_ASCIIScreen.ASCIIBackBuffer, ::nwol::getASCIIBackBufferWidth(), getASCIIBackBufferHeight()) : ::nwol::grid_view<char_t	>{};
@@ -82,13 +82,13 @@ int32_t							nwol::getASCIIBackBuffer			(::nwol::SASCIITarget& target)									
 	return __g_ASCIIScreen.bCreated ? 0 : -1;
 }
 
-int32_t							nwol::getASCIIFrontBuffer			(::nwol::SASCIITarget& target)											{
+int32_t								nwol::getASCIIFrontBuffer			(::nwol::SASCIITarget& target)											{
 	target.Text							= __g_ASCIIScreen.ASCIIFrontBuffer ? ::nwol::grid_view<char_t	>(__g_ASCIIScreen.ASCIIFrontBuffer, ::nwol::getASCIIBackBufferWidth(), getASCIIBackBufferHeight()) : ::nwol::grid_view<char_t	>{};
 	target.Attributes					= __g_ASCIIScreen.ColorFrontBuffer ? ::nwol::grid_view<uint16_t	>(__g_ASCIIScreen.ColorFrontBuffer, ::nwol::getASCIIBackBufferWidth(), getASCIIBackBufferHeight()) : ::nwol::grid_view<uint16_t	>{};
 	return 0;
 }
 
-void								nwol::setASCIIScreenTitle		(const char_t* title)													{ 
+void									nwol::setASCIIScreenTitle		(const char_t* title)													{ 
 #if defined(__WINDOWS__)
 	SetConsoleTitle(title);		
 #elif defined(__ANDROID__)
@@ -96,13 +96,13 @@ void								nwol::setASCIIScreenTitle		(const char_t* title)													{
 #	error "Not implemented."
 #endif
 }
-const char_t*						nwol::getASCIIFrontBuffer		()																		{ return __g_ASCIIScreen.ASCIIFrontBuffer;	}
-uint16_t*							nwol::getASCIIColorBackBuffer	()																		{ return __g_ASCIIScreen.ColorBackBuffer;	}
-const uint16_t*						nwol::getASCIIColorFrontBuffer	()																		{ return __g_ASCIIScreen.ColorFrontBuffer;	}
-uint32_t							nwol::getASCIIBackBufferWidth	()																		{ return __g_ASCIIScreen.BackBufferWidth;	}
-uint32_t							nwol::getASCIIBackBufferHeight	()																		{ return __g_ASCIIScreen.BackBufferHeight;	}
+const char_t*							nwol::getASCIIFrontBuffer		()																		{ return __g_ASCIIScreen.ASCIIFrontBuffer;	}
+uint16_t*								nwol::getASCIIColorBackBuffer	()																		{ return __g_ASCIIScreen.ColorBackBuffer;	}
+const uint16_t*							nwol::getASCIIColorFrontBuffer	()																		{ return __g_ASCIIScreen.ColorFrontBuffer;	}
+uint32_t								nwol::getASCIIBackBufferWidth	()																		{ return __g_ASCIIScreen.BackBufferWidth;	}
+uint32_t								nwol::getASCIIBackBufferHeight	()																		{ return __g_ASCIIScreen.BackBufferHeight;	}
 
-void								nwol::swapASCIIBuffers			()																		{
+void									nwol::swapASCIIBuffers			()																		{
 	char										* bB						= __g_ASCIIScreen.ASCIIBackBuffer ;
 	__g_ASCIIScreen.ASCIIBackBuffer 		= __g_ASCIIScreen.ASCIIFrontBuffer;
 	__g_ASCIIScreen.ASCIIFrontBuffer		= bB;
@@ -112,12 +112,12 @@ void								nwol::swapASCIIBuffers			()																		{
 	__g_ASCIIScreen.ColorFrontBuffer		= cBB;
 }
 
-void								nwol::presentASCIIBackBuffer	()																		{
+void									nwol::presentASCIIBackBuffer	()																		{
 	swapASCIIBuffers();
 	presentASCIIFrontBuffer();
 }
 
-void								nwol::presentASCIIFrontBuffer	()																		{
+void									nwol::presentASCIIFrontBuffer	()																		{
 	int32_t										screenSize					= __g_ASCIIScreen.BackBufferWidth*__g_ASCIIScreen.BackBufferHeight;
 	screenSize = (screenSize > 4) ? screenSize : 4;
 #if defined(__WINDOWS__)
@@ -139,7 +139,7 @@ void								nwol::presentASCIIFrontBuffer	()																		{
 #endif
 }
 
-void								nwol::clearASCIIBackBuffer		(int value, uint16_t colorValue)										{
+void									nwol::clearASCIIBackBuffer		(char_t value, uint16_t colorValue)										{
 	int32_t										screenSize					= __g_ASCIIScreen.BackBufferWidth * __g_ASCIIScreen.BackBufferHeight;
 	screenSize								= (screenSize > 4) ? screenSize : 4;
 	if( 0 == __g_ASCIIScreen.ASCIIBackBuffer ) {
@@ -167,12 +167,12 @@ void								nwol::clearASCIIBackBuffer		(int value, uint16_t colorValue)								
 		for(int32_t i=0; i<screenSize; ++i)
 			__g_ASCIIScreen.ColorBackBuffer[i]		= colorValue;
 }
-
-void								createConsole				()																		{
+	
+void									createConsole				()																		{
 #if defined(__WINDOWS__)
 	AllocConsole();
 	AttachConsole(GetCurrentProcessId());
-	FILE									* stream					= 0;
+	FILE										* stream					= 0;
 	freopen_s(&stream, "CONOUT$", "w+", stdout);
 	SetConsoleTitle("No Workflow Overhead Console");
 	SetConsoleCtrlHandler(HandlerRoutine, TRUE);
@@ -180,10 +180,10 @@ void								createConsole				()																		{
 #else
 #	error "Not implemented."
 #endif
-	__g_ASCIIScreen.bCreated			= true;
+	__g_ASCIIScreen.bCreated				= true;
 }
 
-void								nwol::initASCIIScreen			(uint32_t width, uint32_t height)										{
+void									nwol::initASCIIScreen		(uint32_t width, uint32_t height)										{
 	if(false == __g_ASCIIScreen.bCreated)
 		createConsole();
 

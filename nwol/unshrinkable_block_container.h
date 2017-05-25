@@ -206,8 +206,9 @@ namespace nwol
 		::nwol::error_t									init						()																																	{
 			if( bInitialized )
 				return 0;
-			const int32_t										newItemIndex				= pushItemRange(0, 0, 0);						reterr_error_if_errored(newItemIndex, "%s", "Failed to allocate item array!");
-			TBlock												*firstBlock					= (TBlock*)::nwol::nwol_malloc(sizeof(TBlock));	reterr_error_if(0 == firstBlock, "%s", "Failed to allocate initial block! Out of memory?");
+			nwol_ecall(pushItemRange(0, 0, 0), "%s", "Failed to allocate item array!");
+			TBlock												*firstBlock					= (TBlock*)::nwol::nwol_malloc(sizeof(TBlock));	
+			reterr_error_if(0 == firstBlock, "%s", "Failed to allocate initial block! Out of memory?");
 			firstBlock->Data[0]								= (_tBase)0;
 			const int32_t										blockIndex					= this->BlockArray			.push_back(firstBlock);
 			const int32_t										blockSpaceIndex				= this->RemainingBlockSpace	.push_back(_BlockSize - 1);

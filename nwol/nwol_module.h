@@ -43,25 +43,24 @@ namespace nwol {
 		::std::string										errorString;
 		DWORD												lastError;
 		reterr_error_if(nullptr == (newModuleInstance.Handle = LoadLibrary( moduleName )), errorFormat0, moduleName, (lastError = ::GetLastError()), (errorString = getWindowsErrorAsString(::GetLastError())).c_str()); 
-
 #	define LOAD_FUNCTION_ADDRESS(hModule, lpProcName)	GetProcAddress((HMODULE)hModule, lpProcName)
 #else
 		static	const char_t								* errorFormat0									= "Failed to load library: %s.";
 		reterr_error_if(0 == (newModuleInstance.Handle = dlopen( moduleName, RTLD_NOW | RTLD_LOCAL )), errorFormat0, moduleName); 
-
 #	define LOAD_FUNCTION_ADDRESS							dlsym
 #endif		
-
 		const _tModule::TRegistry							& memberRegistry								= NWOM_GET_MEMBER_REGISTRY(_tModule); 
 		const ::nwol::array_view<const ::nwol::gsyslabel>	& memberNames									= memberRegistry.get_names(); 
+		const ::nwol::array_view<const ::nwol::GDATA_TYPE>	& memberTypeIds									= memberRegistry.get_data_type_ids(); 
 		uint64_t											myErr											= 0;
 		for(uint32_t iSymbol = 0, symbolCount = memberNames.size()-1; iSymbol < symbolCount; ++iSymbol) {
-			if(0 == ((&newModuleInstance.Handle)[iSymbol+1] = LOAD_FUNCTION_ADDRESS(newModuleInstance.Handle, memberNames[iSymbol].c_str()))) {
-				error_printf("Function address not found: \"%s\".", memberNames[iSymbol].c_str());
-				myErr											|= (1ULL << iSymbol);
+			if(memberTypeIds[iSymbol] == ::nwol::GDATA_TYPE_FUN) {
+				if(0 == ((&newModuleInstance.Handle)[iSymbol+1] = LOAD_FUNCTION_ADDRESS(newModuleInstance.Handle, memberNames[iSymbol].c_str()))) {
+					error_printf("Function address not found: \"%s\".", memberNames[iSymbol].c_str());
+					myErr											|= (1ULL << iSymbol);
+				}
 			}
 		}
-
 		if(myErr) {
 			error_printf("Failed to load module symbols for library: \"%s\".", moduleName);
 			::nwol::unloadModule(newModuleInstance);
@@ -70,7 +69,6 @@ namespace nwol {
 		else {
 			info_printf("Module loaded successfully: \"%s\".", moduleName);
 		}
-
 		moduleInstance									= newModuleInstance;
 		return 0;
 	}

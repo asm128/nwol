@@ -10,7 +10,7 @@ namespace nwol
 {
 	void			initASCIIScreen					(uint32_t width = DEFAULT_ASCII_SCREEN_WIDTH, uint32_t height = DEFAULT_ASCII_SCREEN_HEIGHT);
 	void			shutdownASCIIScreen				();
-	void			setASCIIScreenTitle				(const char* title);
+	void			setASCIIScreenTitle				(const char_t* title);
 
 	char*			getASCIIBackBuffer				();
 	const char*		getASCIIFrontBuffer				();
@@ -28,7 +28,7 @@ namespace nwol
 	//int32_t setASCIIBackBufferHeight( uint32_t backBufferHeight );
 
 	void			swapASCIIBuffers				();
-	void			clearASCIIBackBuffer			(int value, uint16_t colorValue=15);
+	void			clearASCIIBackBuffer			(char_t value, uint16_t colorValue=15);
 	void			presentASCIIFrontBuffer			();
 	void			presentASCIIBackBuffer			();
 

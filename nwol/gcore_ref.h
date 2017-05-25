@@ -30,7 +30,6 @@ namespace nwol
 				error_printf("Invalid reference count: %llu. Instance type: '%s'.", finalCount, get_type_name().begin());			
 				PLATFORM_CRT_BREAKPOINT();											
 			}			
-			
 			return this;	
 		}
 		inline						_tBase*									get							()							noexcept	{ return Instance;										}

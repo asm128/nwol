@@ -88,7 +88,7 @@ int32_t														mainLoop								(SRuntimeState & runtimeState, ::nwol::SMod
 
 	RUNTIME_FLAG													executionState							= RUNTIME_FLAG_RUNNING | RUNTIME_FLAG_NOT_YET_REQUESTED;
 	
-	reterr_error_if_errored(launchRenderThread(runtimeState), "Failed to start render thread.");
+	nwol_ecall(launchRenderThread(runtimeState), "Failed to start render thread.");
 
 	static constexpr	const char										errorFormat2[]						= "Module function failed with code 0x%x: %s.";
 	int32_t															errLoop									= 0;
@@ -135,7 +135,7 @@ int32_t														mainLoop								(SRuntimeState & runtimeState, ::nwol::SMod
 		::nwol::RUNTIME_CALLBACK_ID										callbackPointersErased					= containerForCallbacks.TestForNullPointerFunctions();
 		static constexpr	const char									errorFormat1[]							= "Dynamically loaded function is null, maybe due to a buffer overrun which erased the pointers: %s.";
 		if(callbackPointersErased) { 
-			printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
+			::nwol::printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
 			errLoop														= -1;
 			runtimeState.Quit											= true; 
 			break; 
@@ -286,13 +286,11 @@ int															rtMain									(::SRuntimeState& runtimeState)	{
 
 	::nwol::SModuleInterface										preContainerForCallbacks				= {};
 	preContainerForCallbacks.RuntimeValues						= &runtimeState.RuntimeValues;
-	::nwol::error_t													errMy									= ::nwol::loadModule(preContainerForCallbacks, runtimeState.RuntimeValues.FileNameApplication);
-	reterr_error_if_errored(errMy, "Failed to load module %s.", runtimeState.RuntimeValues.FileNameApplication);
+	nwol_ecall(::nwol::loadModule(preContainerForCallbacks, runtimeState.RuntimeValues.FileNameApplication), "Failed to load module %s.", runtimeState.RuntimeValues.FileNameApplication);
 	
 	::nwol::SModuleInterface										& containerForCallbacks					= runtimeState.Interface	= preContainerForCallbacks;
 	char															windowTitle[512]						= {};
 	sprintf_s(windowTitle, "%s v%u.%u", containerForCallbacks.ModuleTitle, containerForCallbacks.VersionMajor(), containerForCallbacks.VersionMinor());
-
 	reterr_error_if(0 > ::setupScreen(runtimeState.RuntimeValues, windowTitle), "Failed to create main window.");
 
 	static const char												* errorFormat1							= "Dynamically loaded function is null, maybe due to a buffer overrun which erased the pointers: %s.";
@@ -344,7 +342,6 @@ int															rtMain									(::SRuntimeState& runtimeState)	{
 				}
 			}
 		}
-
 #if defined(__WINDOWS__)
 		PostQuitMessage(0);
 		MSG																windowMessage							= {};
@@ -354,25 +351,18 @@ int															rtMain									(::SRuntimeState& runtimeState)	{
 				DispatchMessage	( &windowMessage );
 			}
 #endif
-
 		::nwol::error_t													errDelete								= containerForCallbacks.Delete(); 
 		if(0 > errDelete) { 
 			error_printf(errorFormat2, errDelete, "moduleDelete()"); 
 		}
-
 		callbackPointersErased										= containerForCallbacks.TestForNullPointerFunctions();
 		if(callbackPointersErased) { 
 			printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
 			runtimeState.Quit											= true; 
 		}
 	}
-
-
-
-	::nwol::unloadModule(containerForCallbacks);
-
-	::shutdownScreen(runtimeState);
-
+	nwol_ecall(::nwol::unloadModule(containerForCallbacks)	, "Error unloading main module.");
+	nwol_ecall(::shutdownScreen(runtimeState)				, "Failed to shut down main screen/window.");
 	return 0;
 }
 
@@ -422,13 +412,9 @@ void														ANativeActivity_onCreate		(ANativeActivity* activity, void* sa
 	g_RuntimeState												= &runtimeState;
 
 	static const char_t												defaultModuleName[]				= "modules/nwor_selector." DYNAMIC_LIBRARY_EXTENSION;
-	::nwol::error_t											
-	errMy														= ::loadPlatformValues(runtimeValues, defaultModuleName, 0, 0);		
-	error_if(errored(errMy), "%s() failed with code: 0x%X", "loadPlatformValues", errMy)
-	else {
-		errMy														= ::rtMain(runtimeState);												
-		error_if(errored(errMy), "%s() failed with code: 0x%X", "rtMain"				);  
-	}
+	::nwol::error_t													errMy							= 0;		
+		 error_if(errored(errMy = ::loadPlatformValues(runtimeValues, defaultModuleName, 0, 0)	), "%s() failed with code: 0x%X", "loadPlatformValues", errMy)
+	else error_if(errored(errMy = ::rtMain(runtimeState)										), "%s() failed with code: 0x%X", "rtMain");  
     info_printf("Exiting function normally: %s", __FUNCTION__);
 }
 #else
@@ -442,9 +428,9 @@ int															main							(int argc, char** argv)																						{
 	if( 0 > loadPlatformValues(runtimeValues, defaultModuleName, argv, argc) )
 		return -1;
 
-	::nwol::error_t											
-	errMy														= ::loadPlatformValues(runtimeValues, defaultModuleName, __argv, __argc);		retval_error_if_errored(1, errMy, "%s() failed.", "loadPlatformValues"	);  
-	errMy														= ::rtMain(runtimeState);														retval_error_if_errored(1, errMy, "%s() failed.", "rtMain"				);  
+	::nwol::error_t													errMy							= 0;
+	retval_error_if(EXIT_FAILURE, errored(errMy = ::loadPlatformValues(runtimeValues, defaultModuleName, __argv, __argc)	), "%s() failed.", "loadPlatformValues"	);  
+	retval_error_if(EXIT_FAILURE, errored(errMy = ::rtMain(runtimeState)													), "%s() failed.", "rtMain"				);  
 	return 0;
 }
 #	if defined (__WINDOWS__)
@@ -466,9 +452,9 @@ int WINAPI													WinMain
 	g_RuntimeState												= &runtimeState;
 
 	static const char_t												defaultModuleName[]				= "modules/nwor_selector." DYNAMIC_LIBRARY_EXTENSION;
-	::nwol::error_t											
-	errMy														= ::loadPlatformValues(runtimeValues, defaultModuleName, __argv, __argc);		retval_error_if_errored(EXIT_FAILURE, errMy, "%s() failed.", "loadPlatformValues"	);  
-	errMy														= ::rtMain(runtimeState);														retval_error_if_errored(EXIT_FAILURE, errMy, "%s() failed.", "rtMain"				);  
+	::nwol::error_t													errMy							= 0;
+	retval_error_if(EXIT_FAILURE, errored(errMy = ::loadPlatformValues(runtimeValues, defaultModuleName, __argv, __argc)	), "%s() failed.", "loadPlatformValues"	);  
+	retval_error_if(EXIT_FAILURE, errored(errMy = ::rtMain(runtimeState)													), "%s() failed.", "rtMain"				);  
 	return EXIT_SUCCESS;
 }
 #	endif

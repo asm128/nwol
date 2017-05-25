@@ -24,10 +24,9 @@ int32_t									nwol::CServer::InitServer						(int32_t port_number)												
 	::gethostname(HostName, sizeof(HostName));	// Get host name of this computer
 	QueuedConnectionCount								= 0;
 
-	::nwol::error_t											
-	errMy												= ::nwol::createConnectionByHostName( HostName, (uint16_t)port_number, &ServerConnection );	reterr_error_if_errored(errMy, "%s", "Failed to initialize connection."					);
-	errMy												= ::nwol::initConnection(ServerConnection);													reterr_error_if_errored(errMy, "Failed to initialize server socket. Shutdown: 0x%u."	, ShutdownServer());
-	errMy												= ::nwol::bindConnection(ServerConnection);													reterr_error_if_errored(errMy, "Failed to bind server socket. Shutdown: 0x%u."			, ShutdownServer());
+	nwol_ecall(::nwol::createConnectionByHostName( HostName, (uint16_t)port_number, &ServerConnection )	, "%s", "Failed to initialize connection."				);
+	nwol_ecall(::nwol::initConnection(ServerConnection)													, "Failed to initialize server socket. Shutdown: 0x%u."	, ShutdownServer());
+	nwol_ecall(::nwol::bindConnection(ServerConnection)													, "Failed to bind server socket. Shutdown: 0x%u."		, ShutdownServer());
 
 	bListening											= true;
 	return 0;
@@ -86,14 +85,16 @@ int32_t									sendSystemCommand								(::nwol::CClient* pClient, const ::nwol
 int32_t									processCommandInternal							(::nwol::CClient* client, ::nwol::NETLIB_COMMAND command)					{
 	info_printf("Processing system command: %s.", ::nwol::get_value_label(command).c_str());
 
-	if (command == ::nwol::NETLIB_COMMAND_DISCONNECT)		{
+//	char										receiveSmallBuf		[256]							= {};
+	if (command == ::nwol::NETLIB_COMMAND_DISCONNECT) {
 		debug_print("Disconnect requested by client.");
 		disconnectClient(client);
 	}
-	else if (command == ::nwol::NETLIB_COMMAND_PING)
-		sendSystemCommand(client, ::nwol::NETLIB_COMMAND_PONG);	// Pong client
-	else if (command == ::nwol::NETLIB_COMMAND_TIME_GET)	{
-		sendSystemCommand(client, ::nwol::NETLIB_COMMAND_TIME_SET);
+	else if (command == ::nwol::NETLIB_COMMAND_PING) {
+		nwol_ecall(::sendSystemCommand(client, ::nwol::NETLIB_COMMAND_PONG), "Failed to pong client.");	// Pong client
+	}
+	else if (command == ::nwol::NETLIB_COMMAND_TIME_GET) {
+		::sendSystemCommand(client, ::nwol::NETLIB_COMMAND_TIME_SET);
 
 		uint64_t									current_time									= time(0);
 		int32_t										sentBytes										= 0;
@@ -102,7 +103,7 @@ int32_t									processCommandInternal							(::nwol::CClient* client, ::nwol::N
 		reterr_error_if(0 > errMy || sentBytes != (int32_t)sizeof(current_time), "Failed to send time to client. 0x%x.", errMy);
 		// Display time
 		char										timestring		[256]							= {};
-		time_t										curTimeWithUnreliableSize						= current_time;
+		int64_t										curTimeWithUnreliableSize						= current_time;
 #if defined(__WINDOWS__)
 		ctime_s(timestring, sizeof(char)*256, &curTimeWithUnreliableSize);
 #else
@@ -123,10 +124,24 @@ int32_t									processCommandInternal							(::nwol::CClient* client, ::nwol::N
 	}
 	else if (command == ::nwol::NETLIB_COMMAND_USER_REQUEST)	{
 		char										buffer			[256]							= {};
-		return executeCommand(client, buffer);
+		int32_t										payloadSize										= 0;
+		int32_t										receivedBytes									= 0;
+		::std::vector<ubyte_t>						payloadBytes;
+		nwol_ecall(::nwol::receiveFromConnection(client->m_ClientListener, (ubyte_t*)&payloadSize, sizeof(int32_t), &receivedBytes, 0), "Failed to receive payload size from remote connection.");
+		switch(payloadSize) {
+		case 1	: { uint8_t  payloadValue = (uint8_t	)~0; nwol_ecall(::nwol::receiveFromConnection(client->m_ClientListener, (ubyte_t*)&payloadValue, sizeof(uint8_t  ), &receivedBytes, 0), "Failed to receive payload size from remote connection."); return executeCommand(client, (const char*)&payloadValue); } 
+		case 2	: { uint16_t payloadValue = (uint16_t	)~0; nwol_ecall(::nwol::receiveFromConnection(client->m_ClientListener, (ubyte_t*)&payloadValue, sizeof(uint16_t ), &receivedBytes, 0), "Failed to receive payload size from remote connection."); return executeCommand(client, (const char*)&payloadValue); } 
+		case 4	: { uint32_t payloadValue = (uint32_t	)~0; nwol_ecall(::nwol::receiveFromConnection(client->m_ClientListener, (ubyte_t*)&payloadValue, sizeof(uint32_t ), &receivedBytes, 0), "Failed to receive payload size from remote connection."); return executeCommand(client, (const char*)&payloadValue); } 
+		case 8	: { uint64_t payloadValue = (uint64_t	)~0; nwol_ecall(::nwol::receiveFromConnection(client->m_ClientListener, (ubyte_t*)&payloadValue, sizeof(uint64_t ), &receivedBytes, 0), "Failed to receive payload size from remote connection."); return executeCommand(client, (const char*)&payloadValue); } 
+		default	:
+			ree_if(payloadSize > 65535 || payloadSize <= 0, "Invalid payload size: %u", payloadSize);
+			payloadBytes.resize(payloadSize);
+			nwol_ecall(::nwol::receiveFromConnection(client->m_ClientListener, (ubyte_t*)&payloadBytes[0], payloadSize, &receivedBytes, 0), "Failed to receive payload size from remote connection.");
+			return executeCommand(client, buffer);
+		}
 	}
 	else
-		sendSystemCommand(client, ::nwol::NETLIB_COMMAND_INVALID);
+		nwol_ecall(sendSystemCommand(client, ::nwol::NETLIB_COMMAND_INVALID), "Failed to report invalid command to client.");
 	
 	return 0;
 }
@@ -153,7 +168,7 @@ void									clientProc										(void *pvClient)															{
 	disconnectClient(pClient); // This used to cause a crash if the server is shutting down because of a thread race. 
 	// Shutting down the server already calls this function which invalidates the pointers causing a null pointer access.
 	// However, the sleep_for call prevented this thread to rush when the server is shutting down and in general allows the pointers to be invalidated on time
-	// causing the second call to find detect these null pointers and exit gracefully without error.
+	// causing the second call to detect these null pointers and exit gracefully without error.
 	// A better synchronization is desired but I don't think it's worth spending time on it until we find this crashing at least once. In practice it never did after the addition of the sleep_for().
 }
 
@@ -169,10 +184,9 @@ int32_t									nwol::CServer::Accept							()																			{
 		;
 
 	::nwol::getAddress( ServerConnection, &a1, &a2, &a3, &a4, &local_port_number );
-	::nwol::error_t											
-	result												= ::nwol::createConnection(a1, a2, a3, a4, 0, &newClientListener);	reterr_error_if_errored(result, "%s", "Failed to create client listener.");
-	result												= ::nwol::initConnection(newClientListener);						reterr_error_if_errored(result, "%s", "Failed to initialize client listener connection.");
-	result												= ::nwol::bindConnection(newClientListener);						reterr_error_if_errored(result, "%s", "Failed to bind client listener connection.");
+	nwol_ecall(::nwol::createConnection(a1, a2, a3, a4, 0, &newClientListener)	, "%s", "Failed to create client listener.");
+	nwol_ecall(::nwol::initConnection(newClientListener)						, "%s", "Failed to initialize client listener connection.");
+	nwol_ecall(::nwol::bindConnection(newClientListener)						, "%s", "Failed to bind client listener connection.");
 	::nwol::getAddress( newClientListener, &a1, &a2, &a3, &a4, &local_port_number );
 	
 	GPtrObj(CClient)										newClient;
@@ -216,13 +230,11 @@ int32_t									nwol::CServer::Accept							()																			{
 #error "Not implemented."
 #endif
 	// Build listening port message
-	result												= ::sendSystemCommand(newClient.get_address(), NETLIB_COMMAND_PORT);
-	reterr_error_if_errored(result, "%s", "Failed to send port command to client.");
+	nwol_ecall(::sendSystemCommand(newClient.get_address(), NETLIB_COMMAND_PORT), "%s", "Failed to send port command to client.");
 
 	int32_t													sentBytes							= 0;
 	local_port_number									= htons((u_short)local_port_number);
-	result												= ::nwol::sendToConnection( newClientListener, (const ubyte_t*)&local_port_number, sizeof(int32_t), &sentBytes, targetConn );
-	reterr_error_if_errored(result, "Failed to send port number to client: %u", (uint32_t)local_port_number);
+	nwol_ecall(::nwol::sendToConnection( newClientListener, (const ubyte_t*)&local_port_number, sizeof(int32_t), &sentBytes, targetConn ), "Failed to send port number to client: %u", (uint32_t)local_port_number);
 	reterr_error_if(sentBytes != sizeof(int32_t), "%s", "Failed to send port command to client.");
 
 	// Display time

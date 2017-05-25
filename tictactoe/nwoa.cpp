@@ -24,8 +24,7 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
 	::nwol::SGUIControl								newControl;
 	newControl.AreaASCII						= {{1, 1}, {(int32_t)labelExit.size(), 1}}	;
 	newControl.Text								= labelExit									;
-	::nwol::error_t									errMy								= ::nwol::createControl(guiSystem, newControl);
-	reterr_error_if_errored(errMy, "%s: \"%s\".", "Failed to create control", labelExit.begin());
+	nwol_ecall(::nwol::createControl(guiSystem, newControl), "%s: \"%s\".", "Failed to create control", labelExit.begin());
 
 	// Create game board buttons: each board cell is a button.
 	newControl.AlignArea						= (::nwol::ALIGN_SCREEN)(::nwol::SCREEN_CENTER | ::nwol::SCREEN_VCENTER)		;
@@ -48,9 +47,7 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
 	newControl.AreaASCII						= {{0, 1}, {(int32_t)labelRestart.size(), 1}}							;
 	newControl.Text								= labelRestart															;
 
-	errMy										= ::nwol::createControl(guiSystem, newControl);
-	reterr_error_if_errored(errMy, "%s: \"%s\".", "Failed to create control", labelRestart.begin());
-
+	nwol_ecall(::nwol::createControl(guiSystem, newControl), "%s: \"%s\".", "Failed to create control", labelRestart.begin());
     info_printf("%s", "Done initializing GUI.");
 	return 0;
 }
@@ -60,7 +57,7 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
     info_printf("%s", "Cleaning up resources...");
 	::nwol::shutdownASCIIScreen();
 
-	::networkDisable(instanceApp);
+	nwol_ecall(::networkDisable(instanceApp), "Failed to disable network.");
 	info_printf("%s", "Done cleaning up resources.");
 	return 0; 
 }
@@ -75,11 +72,10 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
 	::nwol::initASCIIScreen(screenWidth, screenHeight);
 	::nwol::setASCIIScreenTitle(nwol_moduleTitle());
 
-	::nwol::error_t									
-	errMy										= ::networkEnable	(instanceApp); reterr_error_if_errored(errMy, "Failed to enable network."			);
-	//errMy										= ::setupDB			(instanceApp); reterr_error_if_errored(errMy, "%s", "Failed to set up database."	);
-	//errMy										= ::setupREST		(instanceApp); reterr_error_if_errored(errMy, "%s", "Failed to set up REST."		);
-	errMy										= ::setupGUI		(instanceApp); reterr_error_if_errored(errMy, "%s", "Failed to set up GUI."			);
+	nwol_ecall(::networkEnable	(instanceApp), "Failed to enable network."			);
+	//nwol_ecall(::setupDB		(instanceApp), "%s", "Failed to set up database."	);
+	//nwol_ecall(::setupREST	(instanceApp), "%s", "Failed to set up REST."		);
+	nwol_ecall(::setupGUI		(instanceApp), "%s", "Failed to set up GUI."			);
 
     info_printf("%s", "Done initializing application.");
 	return 0; 
@@ -201,14 +197,11 @@ template<uint32_t _screenWidth, uint32_t _screenHeight>
 	::nwol::clearASCIIBackBuffer(' ', COLOR_WHITE);
 
 	::nwol::SASCIITarget							actualScreen					= {};
-	::nwol::error_t									errMy							= ::nwol::getASCIIBackBuffer(actualScreen);	
-	reterr_error_if_errored(errMy, "%s", "Failed to get ASCII target!");
+	nwol_ecall(::nwol::getASCIIBackBuffer(actualScreen), "%s", "Failed to get ASCII target!");
 	::bltASCIIScreen(targetScreenTTT, actualScreen);
 
 	::nwol::renderGUIASCII(actualScreen, instanceApp.GUI);
-
 	::nwol::presentASCIIBackBuffer();
-	
-    verbose_printf("%s", "Exit.");
+	verbose_printf("%s", "Exit.");
 	return 0; 
 }

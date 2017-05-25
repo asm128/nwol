@@ -4,24 +4,24 @@
     <LocalDebuggerCommandArguments>modules\$(ProjectName).dll</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerWorkingDirectory>$(OutDir)..\</LocalDebuggerWorkingDirectory>
-    <LocalDebuggerCommand>$(ProjectDir)$(OutDir)..\nwor.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommand>$(OutDir)..\nwor.exe</LocalDebuggerCommand>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LocalDebuggerCommandArguments>modules\$(ProjectName).dll</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerWorkingDirectory>$(OutDir)..\</LocalDebuggerWorkingDirectory>
-    <LocalDebuggerCommand>$(ProjectDir)$(OutDir)..\nwor.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommand>$(OutDir)..\nwor.exe</LocalDebuggerCommand>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LocalDebuggerCommandArguments>modules\$(ProjectName).dll</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerWorkingDirectory>$(OutDir)..\</LocalDebuggerWorkingDirectory>
-    <LocalDebuggerCommand>$(ProjectDir)$(OutDir)..\nwor.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommand>$(OutDir)..\nwor.exe</LocalDebuggerCommand>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LocalDebuggerCommandArguments>modules\$(ProjectName).dll</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerWorkingDirectory>$(OutDir)..\</LocalDebuggerWorkingDirectory>
-    <LocalDebuggerCommand>$(ProjectDir)$(OutDir)..\nwor.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommand>$(OutDir)..\nwor.exe</LocalDebuggerCommand>
   </PropertyGroup>
 </Project>

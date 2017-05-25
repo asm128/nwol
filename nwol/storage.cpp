@@ -4,7 +4,7 @@
 #include <Windows.h>
 #endif
 
-int32_t										nwol::listFiles								(const char* directory, ::nwol::array_obj<::nwol::glabel>& fileNames)			{
+int32_t											nwol::listFiles								(const char* directory, ::nwol::array_obj<::nwol::glabel>& fileNames)			{
  #if defined(__WINDOWS__)
     WIN32_FIND_DATA										fdFile;
     HANDLE												hFind									= NULL;
@@ -29,7 +29,7 @@ int32_t										nwol::listFiles								(const char* directory, ::nwol::array_ob
 				//folder.Folders.push_back(sPath);
             }
             else { 
-				reterr_error_if(-1 == fileNames.push_back(sPath), "Failed to push path to output list");
+				nwol_ecall(fileNames.push_back(sPath), "Failed to push path to output list");
                 info_printf("File: %s.", sPath);
             }
         }

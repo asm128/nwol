@@ -14,7 +14,7 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(::SApplication, "No Workflow Overhead Applica
 int32_t														cleanup									(::SApplication& instanceApp)							{ 
 	::nwol::shutdownASCIIScreen();
 
-	reterr_error_if(errored(::networkDisable(instanceApp)), "Error when disabling network.");
+	nwol_ecall(::networkDisable(instanceApp), "Error when disabling network.");
 	::std::this_thread::sleep_for(::std::chrono::milliseconds(1000));
 	return 0; 
 }
@@ -61,9 +61,7 @@ int32_t														setupGUI								(::SApplication& instanceApp)							{
 
 	newControl.AreaASCII										= {1, 1, (int32_t)newControlLabel.size(), 1}	;
 	newControl.Text												= newControlLabel								;
-
-	::nwol::error_t													errMy									= ::nwol::createControl(guiSystem, newControl);
-	reterr_error_if_errored(errMy, "Failed to create control!");
+	nwol_ecall(::nwol::createControl(guiSystem, newControl), "Failed to create control!");
 
 	return 0;
 }
@@ -78,9 +76,8 @@ int32_t														setup									(::SApplication& instanceApp)							{
 
 	printTypeDebug();
 
-	::nwol::error_t													
-	errMy														= ::networkEnable	(instanceApp); reterr_error_if_errored(errMy, "Failed to enable network."	);
-	errMy														= ::setupGUI		(instanceApp); reterr_error_if_errored(errMy, "Failed to setup GUI."		);
+	nwol_ecall(::networkEnable	(instanceApp), "Failed to enable network."	);
+	nwol_ecall(::setupGUI		(instanceApp), "Failed to setup GUI."		);
 
 	return 0; 
 }
@@ -122,11 +119,8 @@ int32_t														render									(::SApplication& instanceApp)							{
 	::nwol::clearASCIIBackBuffer(' ', COLOR_WHITE);
 
 	::nwol::SASCIITarget											target;
-	::nwol::error_t													errMy									= ::nwol::getASCIIBackBuffer(target);
-	reterr_error_if_errored(errMy, "%s", "Failed to get ASCII target!");
-	
+	nwol_ecall(::nwol::getASCIIBackBuffer(target), "%s", "Failed to get ASCII target!");
 	::nwol::renderGUIASCII(target, instanceApp.GUI);
-
 	::nwol::presentASCIIBackBuffer();
 	
 	return 0; 

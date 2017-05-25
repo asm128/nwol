@@ -36,7 +36,17 @@
 #endif
 
 #if defined(__WINDOWS__)
-#	pragma warning(disable : 4592)	// We need this because of a bug in the compiler causing our static const variables to throw a warning as if its constructor was defined as constexpr.
+//#	pragma warning(disable : 4592)	// We needed this because of a bug in the compiler causing our static const variables to throw a warning as if its constructor was defined as constexpr.
+#	pragma warning(disable : 6326)	// Bogus potential comparison of a constant with another constant for static template functionality.
+#	pragma warning(disable : 4706)	// Enable assignment within conditional expression
+// GSL / Guide for Super Lammers
+#	pragma warning(disable : 26461)	// Enable not marking as const
+#	pragma warning(disable : 26481)	// Enable pointer arithmetic
+#	pragma warning(disable : 26482)	// Enable indexing arrays without constexpr x.X suck a dick souprot & sucker
+#	pragma warning(disable : 26485)	// Enable no pointer decay
+#	pragma warning(disable : 26493)	// Enable C-style casts
+#	pragma warning(disable : 26495)	// Not always initialize a member variable
+#	pragma warning(disable : 26496)	// Enable non-const for() boundaries
 #endif
 
 #if defined(__WINDOWS__)

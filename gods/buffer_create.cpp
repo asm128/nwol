@@ -192,7 +192,7 @@ namespace nwol
 		}
 	protected:
 		// IsBigEndian, IsNorm, IsFloat, IsSigned, SizeInBits/8,
-		SBufferManagerStorage			* Storage[2][2][2][2][16][1024];	// up to 128 bit of element size
+		SBufferManagerStorage													* Storage[2][2][2][2][16][1024]			= {};	// up to 128 bit of element size
 
 		struct SCounters {					
 #if defined(__WINDOWS__)
@@ -288,13 +288,13 @@ namespace nwol
 
 	};
 
-	static nwol::__CBufferManager __g_BufferManager;
+	static	nwol::__CBufferManager	__g_BufferManager;
 }	
 
-void ::nwol::nwol_shutdown() { ::nwol::__g_BufferManager.shutdown(); }
+void	nwol::nwol_shutdown		()							{ ::nwol::__g_BufferManager.shutdown(); }
 
 
-void* nwol::allocSBufferBlock(uint32_t sizeInBytes)		{
+void*						nwol::allocSBufferBlock		(uint32_t sizeInBytes)		{
 #if defined(NWOL_DEBUG_ENABLED)
 	char* pBlock = (char*)malloc(sizeInBytes+sizeof(NWOL_DEBUG_CHECK_TYPE)*2+BASETYPE_ALIGN);
 
@@ -318,7 +318,7 @@ void* nwol::allocSBufferBlock(uint32_t sizeInBytes)		{
 #endif
 }
 
-void nwol::freeSBufferBlock(SBuffer* pBuffer)			{
+void						nwol::freeSBufferBlock		(SBuffer* pBuffer)			{
 #if defined(NWOL_DEBUG_ENABLED)
 	checkBlockBoundaries(pBuffer);
 	free(pBuffer->__pBlock - sizeof(NWOL_DEBUG_CHECK_TYPE));
@@ -327,11 +327,11 @@ void nwol::freeSBufferBlock(SBuffer* pBuffer)			{
 #endif
 }
 
-void nwol::checkBlockBoundaries(SBuffer* pBuffer)		{
+void						nwol::checkBlockBoundaries	(SBuffer* pBuffer)			{
 //#if defined(NWOL_DEBUG_ENABLED)
-	char* pBlock = pBuffer->__pBlock;
-	NWOL_DEBUG_CHECK_TYPE checkPre	= *(NWOL_DEBUG_CHECK_TYPE*)	(pBlock-sizeof(NWOL_DEBUG_CHECK_TYPE));
-	NWOL_DEBUG_CHECK_TYPE checkPost	= *(NWOL_DEBUG_CHECK_TYPE*)	&pBlock[pBuffer->nSizeInBytes+calc_align_address(BASETYPE_ALIGN, pBlock)];
+	char							* pBlock					= pBuffer->__pBlock;
+	NWOL_DEBUG_CHECK_TYPE			checkPre					= *(NWOL_DEBUG_CHECK_TYPE*)	(pBlock-sizeof(NWOL_DEBUG_CHECK_TYPE));
+	NWOL_DEBUG_CHECK_TYPE			checkPost					= *(NWOL_DEBUG_CHECK_TYPE*)	&pBlock[pBuffer->nSizeInBytes+calc_align_address(BASETYPE_ALIGN, pBlock)];
 	if( checkPre != BINFIBO ) {
 		error_printf("Memory written before buffer writable block:<SBuffer*>=0x%p. Block address:0x%p. Check value: 0x%X. Current value: 0x%X.", pBuffer, pBlock, BINFIBO, checkPre);
 		_CrtDbgBreak();
@@ -343,7 +343,7 @@ void nwol::checkBlockBoundaries(SBuffer* pBuffer)		{
 //#endif
 }
 
-nwol::error_t			nwol::createBuffer(GDATA_TYPE DataFormat, GDATA_USAGE Usage, uint32_t nElementCount, uint32_t nColumnCount, uint32_t nSliceCount, ::nwol::GODS(SBuffer)* out_pBuffer)		{
+nwol::error_t				nwol::createBuffer			(GDATA_TYPE DataFormat, GDATA_USAGE Usage, uint32_t nElementCount, uint32_t nColumnCount, uint32_t nSliceCount, ::nwol::GODS(SBuffer)* out_pBuffer)		{
 	if( Usage == GUSAGE_TEXT )
 		nElementCount					+= 1;
 
@@ -371,7 +371,6 @@ void nwol::grelease( GODS(SBuffer)* pBufferData ) {
 
 	::nwol::GODS(SBuffer) oldBuffer = *pBufferData;
 	*pBufferData = 0;
-
 #if defined(NWOL_DEBUG_ENABLED)
 	SBuffer* pBufferInstance = oldBuffer->get();
 	if( pBufferInstance->pByteArray )

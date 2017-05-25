@@ -29,11 +29,10 @@ int32_t										nwol::gcompare											(const GREF(SBuffer)* BufferA, const G
 		return 0;
 	if (!BufferA || !BufferB)	// If one of the pointers is null, return not equal (as buffers are supposed to have always a size in bytes)
 		return -1;
-	int													check;
 	const ::nwol::SBuffer								* bA												= BufferA->get()
 		,												* bB												= BufferB->get()
 		;
-	check											= //memcmp( _startA, _startB, sizeof(Buffer)-sizeof( void* ) );	// compare everything from there except for the void*
+	int													check												= //memcmp( _startA, _startB, sizeof(Buffer)-sizeof( void* ) );	// compare everything from there except for the void*
 		  ((bA->DataFormat		== bB->DataFormat)
 		&& (bA->nElementCount	== bB->nElementCount)
 		&& (bA->nColumnCount	== bB->nColumnCount)
@@ -133,10 +132,8 @@ void										nwol::cloneBuffer											(GODS(SBuffer)* ppdstData, const GREF(
 		;
 	bool												isText												= (LeftBuffer->Usage == GUSAGE_TEXT);
 
-	error_t 
-	errMy											= ::nwol::createBuffer(in_instance->DataFormat, in_instance->Usage, leftCount , &LeftBuffer );	reterr_error_if_errored(errMy, "%s", "createBuffer() FAILED! Out of memory?");
-	errMy											= ::nwol::createBuffer(in_instance->DataFormat, in_instance->Usage, rightCount, &RightBuffer);	reterr_error_if_errored(errMy, "%s", "createBuffer() FAILED! Out of memory?");
-
+	nwol_ecall(::nwol::createBuffer(in_instance->DataFormat, in_instance->Usage, leftCount , &LeftBuffer ), "%s", "createBuffer() FAILED! Out of memory?");
+	nwol_ecall(::nwol::createBuffer(in_instance->DataFormat, in_instance->Usage, rightCount, &RightBuffer), "%s", "createBuffer() FAILED! Out of memory?");
 	memcpy(LeftBuffer ->pByteArray, in_instance->pByteArray, typeSize * leftCount );
 	memcpy(RightBuffer->pByteArray, in_instance->pByteArray, typeSize * rightCount);
 	if (isText) {
@@ -185,12 +182,12 @@ uint32_t									nwol::fileDeserializeData								(GODS(SBuffer)* out_Definition
 		GODS(SBuffer)										actualNewBuffer										= 0;
 		if (0 != (count1 = pNewData->nElementCount)) {
 			::nwol::error_t										errMy												= ::nwol::createBuffer(pNewData->DataFormat, pNewData->Usage, pNewData->nElementCount, &actualNewBuffer);
-			retval_error_if_errored(i, errMy, "%s", "createBuffer() FAILED!! Out of memory?");
+			retval_error_if(i, errored(errMy), "%s", "createBuffer() FAILED!! Out of memory?");
 			SBuffer												* actualInstance									= actualNewBuffer->get();
 			actualInstance->nColumnCount					= pNewData->nColumnCount;
 			size1											= GTYPEID_TOTALBYTES(actualInstance->DataFormat);
 			count1											= actualInstance->nElementCount;
-			if( fread(actualInstance->pByteArray, size1, count1, in_fp) != (size_t)count1) {
+			if(fread(actualInstance->pByteArray, size1, count1, in_fp) != (size_t)count1) {
 				error_printf("Error (2) loading byte array for buffer data at index #%u", i);
 				::nwol::release(&actualNewBuffer);
 				return i;
@@ -239,7 +236,7 @@ uint32_t									nwol::memDeserializeData								(GODS(SBuffer)* out_DefinitionL
 		GODS(SBuffer)										actualNewBuffer										= 0;
 		if (0 != pNewData->nElementCount) {
 			::nwol::error_t										errMy												= ::nwol::createBuffer(pNewData->DataFormat, pNewData->Usage, pNewData->nElementCount, pNewData->nColumnCount, pNewData->nSliceCount, &actualNewBuffer);
-			retval_error_if_errored(byteIndex, errMy, "%s", "createBuffer() FAILED!! Out of memory?");
+			retval_error_if(byteIndex, errored(errMy), "%s", "createBuffer() FAILED!! Out of memory?");
 			SBuffer												* actualInstance									= actualNewBuffer->get();
 			size1											= actualInstance->nElementCount*GTYPEID_TOTALBYTES(actualInstance->DataFormat);
 			memcpy( actualInstance->pByteArray, &((char*)in_pMemoryBuffer)[byteIndex], size1);
@@ -269,11 +266,10 @@ uint32_t									nwol::fileSerializeData									(GREF(SBuffer)* const* in_Defin
 	uint32_t											size1, count1, i
 		,												nSkipped											= 0
 		;
-	uint8_t												bSavedBuffer;
 	for (i = 0; i< nDefinitionCount; i++) {
 		GODS(SBuffer)										pDef												= in_DefinitionList[i];
 		// save a 32 bit boolean telling if the region is gonna be saved to the file (0 for a null region)
-		bSavedBuffer									= one_if(pDef);
+		uint8_t												bSavedBuffer										= one_if(pDef);
 		size1											= sizeof(bSavedBuffer);
 		rve_if(i, fwrite(&bSavedBuffer, size1, 1, out_fp) != 1, "Failed to write metadata to file. %i GODS(SBuffer) instances read from memory stream, %i skipped.", i - nSkipped, nSkipped);
 		if (0 == bSavedBuffer) {
@@ -293,7 +289,7 @@ uint32_t									nwol::fileSerializeData									(GREF(SBuffer)* const* in_Defin
 	return i;
 }
 
-uint32_t									nwol::memSerializeData									(GODS(SBuffer) const* in_DefinitionList, uint32_t nDefinitionCount, void* out_pMemoryBuffer) {
+uint32_t										nwol::memSerializeData									(GODS(SBuffer) const* in_DefinitionList, uint32_t nDefinitionCount, void* out_pMemoryBuffer) {
 	retnul_error_if(0 == nDefinitionCount || 0 == in_DefinitionList,	// 
 			"Invalid parameters calling memSaveBufferData():\n"
 			"GODS(SBuffer)*	: 0x%p\n"
@@ -305,13 +301,13 @@ uint32_t									nwol::memSerializeData									(GODS(SBuffer) const* in_Definit
 			);
 
 	uint32_t											size1, i
-		,												nSkipped											= 0
+		,												nSkipped												= 0
 		;
 	uint8_t												bSaved;
-	uint32_t											byteIndex											= 0;
+	uint32_t											byteIndex												= 0;
 
 	for (i = 0; i< nDefinitionCount; i++) {
-		GODS(SBuffer)										pDef												= in_DefinitionList[i];
+		GODS(SBuffer)										pDef													= in_DefinitionList[i];
 		// save a 32 bit boolean telling if the region is gonna be saved to the file (0 for a null region)
 		bSaved											= one_if(pDef);
 		if (out_pMemoryBuffer)
@@ -326,7 +322,7 @@ uint32_t									nwol::memSerializeData									(GODS(SBuffer) const* in_Definit
 			memcpy(&((char*)out_pMemoryBuffer)[byteIndex], pDef->get(), size1);
 		byteIndex										+= size1;
 
-		const ::nwol::SBuffer								* instanceToWrite									= pDef->get();
+		const ::nwol::SBuffer								* instanceToWrite										= pDef->get();
 		if (0 != (size1 = (instanceToWrite->nElementCount*GTYPEID_TOTALBYTES(instanceToWrite->DataFormat)))) {
 			if (out_pMemoryBuffer)
 				memcpy(&((char*)out_pMemoryBuffer)[byteIndex], instanceToWrite->pByteArray, size1);

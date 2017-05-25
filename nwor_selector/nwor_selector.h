@@ -13,17 +13,16 @@ GDEFINE_ENUM_VALUE(SELECTOR_STATE, CLOSING				, 5);
 
 struct SApplication : public ::nwol::SApplicationBase
 {
-	::nwol::refcount_t							RenderSemaphore				= 0;
-	::SELECTOR_STATE							SelectorState				= SELECTOR_STATE_START;
-	int32_t										ApplicationModuleSelected	= -1;
-	::nwol::array_pod<::nwol::glabel>			ApplicationModulesName		= {};
-	::nwol::array_pod<::nwol::SModuleInterface>	ApplicationModulesHandle	= {};
+	::nwol::refcount_t							RenderSemaphore					= 0;
+	::SELECTOR_STATE							SelectorState					= SELECTOR_STATE_START;
+	int32_t										ApplicationModuleSelected		= -1;
+	::nwol::array_pod<::nwol::glabel>			ApplicationModulesName			= {};
+	::nwol::array_pod<::nwol::SModuleInterface>	ApplicationModulesHandle		= {};
 
-	inline										SApplication				(::nwol::SRuntimeValues	* runtimeValues)	: SApplicationBase(runtimeValues)	{
-		GUI		= {{640, 480}, {132, 25},};
+	inline										SApplication					(::nwol::SRuntimeValues	* runtimeValues)	: SApplicationBase(runtimeValues)	{
+		GUI											= {{640, 480}, {132, 25},};
 	}
 };
-
 
 int32_t setup	(::SApplication & instanceApp);
 int32_t update	(::SApplication & instanceApp, bool exitRequested);

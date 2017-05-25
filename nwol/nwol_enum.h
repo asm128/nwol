@@ -221,6 +221,6 @@ namespace nwol
 #define GDEFINE_FLAG_VALUE GDEFINE_ENUM_VALUE
 #define GDEFINE_FLAG_VALUE_NOPREFIX GDEFINE_ENUM_VALUE_NOPREFIX
 
-#pragma warning(disable : 4063)
+#pragma warning(disable : 4063)	// On Windows, using enum types like we do cause the compiler to throw a warning when the warning level is set to 4
 
 #endif // __ENUM_H__982364987234987234__

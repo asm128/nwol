@@ -7,7 +7,7 @@
 #	include <chrono>
 #endif
 
-void										nwol::STimer::Reset								()									{
+void													nwol::STimer::Reset								()									{
 #if defined(__WINDOWS__)
 	QueryPerformanceFrequency( (LARGE_INTEGER*)&CountsPerSecond );
 #endif
@@ -26,22 +26,22 @@ void										nwol::STimer::Reset								()									{
 	FramesLastSecond										= 0;
 }
 
-void										nwol::STimer::Frame								()									{
+void													nwol::STimer::Frame								()									{
 #if defined(__WINDOWS__)
 	QueryPerformanceCounter( (LARGE_INTEGER*)&CurrentTimeStamp );
 #else
 	CurrentTimeStamp										= ::std::chrono::duration_cast<::std::chrono::microseconds>(::std::chrono::high_resolution_clock::now().time_since_epoch()).count();
 #endif
-	int64_t														timeDifference						= (CurrentTimeStamp - PrevTimeStamp);
+	int64_t														timeDifference									= (CurrentTimeStamp - PrevTimeStamp);
 	LastTimeMicroSeconds									= (int64_t)(timeDifference/CountsPerMicroSecond);
 	LastTimeSeconds											= timeDifference * SecondsPerCount;//LastTimeMicroSeconds*1000000;//(CurrentTimeStamp - PrevTimeStamp) * SecondsPerCount;
 	PrevTimeStamp											= CurrentTimeStamp;
 
-	FramesThisSecond++;
+	++FramesThisSecond;
 	FrameCounterSeconds										+= LastTimeSeconds;
 
-	int32_t														totalFrames							= int32_t(FramesThisSecond	/ FrameCounterSeconds);
-	int32_t														framesPerSecond						= int32_t(totalFrames		/ FrameCounterSeconds);
+	int32_t														totalFrames										= int32_t(FramesThisSecond	/ FrameCounterSeconds);
+	int32_t														framesPerSecond									= int32_t(totalFrames		/ FrameCounterSeconds);
 	while(FrameCounterSeconds >= 1.0) {
 		FramesLastSecond										= framesPerSecond;
 		FrameCounterSeconds										-= 1.0f;

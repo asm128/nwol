@@ -1,5 +1,4 @@
 #include "nwol_debug.h"
-#include "nwol_debug.h"
 #include "typeint.h"
 
 #if defined (__WINDOWS__)
@@ -14,10 +13,12 @@ namespace nwol
 	typedef				int32_t			error_t;
 	inline constexpr	bool			failed						(error_t errorCode)		noexcept	{ return 0 > errorCode; }
 #if defined (__WINDOWS__)
-						std::string		getWindowsErrorAsString		(uint64_t lastError);
+						std::string		getWindowsErrorAsString		(uint64_t lastError);		// Get the error message, if any.
 #endif
 } // namespace
 
-#define errored(errVal)		(::nwol::failed(errVal)) 
+#if !defined(errored)
+#	define errored(errVal)		(::nwol::failed(errVal)) 
+#endif
 
 #endif // __NWOL_ERROR_H__827394__

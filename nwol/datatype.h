@@ -546,7 +546,7 @@ namespace nwol
 	uint32_t	getStringFromDataType( GDATA_TYPE dataType, char* string );	
 
 #if defined(__WINDOWS__)
-#pragma warning(disable : 4063)	// On Windows, using enum types like we do cause the compiler to throw a warning when the warning level is set to 4
+#	pragma warning(disable : 4063)	// On Windows, using enum types like we do cause the compiler to throw a warning when the warning level is set to 4
 #endif
 
 } // namespace 

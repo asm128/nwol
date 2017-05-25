@@ -47,23 +47,23 @@ typedef				bool				bool_t;
 namespace nwol
 {
 #if defined(__ANDROID__) || defined(__LINUX__)
-		typedef int					refcount_t;
+	typedef int							refcount_t;
 #elif defined (__WINDOWS__)
 #	if defined(_WIN64) || defined(WIN64)
 #		define REFCOUNT_T __int64
-		typedef volatile __int64	refcount_t;
+	typedef volatile REFCOUNT_T			refcount_t;
 #	else
 #		define REFCOUNT_T long
-		typedef volatile long		refcount_t;
+	typedef volatile long				refcount_t;
 #	endif
 #else
-#		include <atomic>
-#		define REFCOUNT_T size_t
-		typedef std::atomic<size_t> refcount_t;
+#	include <atomic>
+#	define REFCOUNT_T size_t
+	typedef std::atomic<size_t>			refcount_t;
 #endif
-		typedef const char*			cue_t;	// Special thanks to Kragen Javier Sitaker for this cue_t idea.
-		typedef ::uint64_t			uid_t;
-		typedef ::int32_t			id_t;
+	typedef const char*					cue_t;	// Special thanks to Kragen Javier Sitaker for this cue_t idea.
+	typedef ::uint64_t					uid_t;
+	typedef ::int32_t					id_t;
 
 } // namespace
 

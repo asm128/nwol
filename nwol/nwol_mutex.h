@@ -15,17 +15,19 @@ namespace nwol
 	class CMutex {
 		//friend	class			CLock;
 		DECLARE_SHARED_SECTION	(CriticalSection);
+		inline 					CMutex			(CMutex& other			)	= delete;
+		inline	CMutex&			operator=		(CMutex& other			)	= delete;
 	public:
-								CMutex			()							{ (void)(INIT_SHARED_SECTION	(CriticalSection)); }
-								~CMutex			()							{ DELETE_SHARED_SECTION			(CriticalSection);	}
+		inline					CMutex			()							{ (void)(INIT_SHARED_SECTION	(CriticalSection)); }
+		inline					~CMutex			()							{ DELETE_SHARED_SECTION			(CriticalSection);	}
 #if defined(__WINDOWS__)
 		_Acquires_lock_(this->CriticalSection)
 #endif
-				void			Lock			()							{ ENTER_SHARED_SECTION			(CriticalSection);	}
+		inline	void			Lock			()							{ ENTER_SHARED_SECTION			(CriticalSection);	}
 #if defined(__WINDOWS__)
 		_Releases_lock_(this->CriticalSection)
 #endif
-				void			Unlock			()							{ LEAVE_SHARED_SECTION			(CriticalSection);	}
+		inline	void			Unlock			()							{ LEAVE_SHARED_SECTION			(CriticalSection);	}
 	};
 
 	class CLock {

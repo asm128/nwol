@@ -1,7 +1,7 @@
 #include "nwol_screen.h"
 #include "nwol_log.h"
 
-LRESULT								nwol::SScreen::WndProc						(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)	{
+LRESULT											nwol::SScreen::WndProc						(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)	{
 	sizeof(SScreenMetrics	);						
 	sizeof(SScreenDetail	);
 	sizeof(SScreenState		);
