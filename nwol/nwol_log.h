@@ -179,6 +179,7 @@ namespace nwol
 	#define error_last_system_error(sev, label)	
 #endif
 
+// Propagable retval_error call.
 #define nwol_rve_ecall(retVal, nwo_call, ...)																																	\
 {	if(::nwol::error_t errCall = nwo_call) { 																																	\
 		if(errCall < 0) {																																						\
@@ -189,7 +190,7 @@ namespace nwol
 		}																																										\
 }	}
 
-// Propagable error-warning call.
+// Propagable retval_error error-warning call.
 #define nwol_rve_ewcall(retVal, nwo_call, ...)																																	\
 {	if(::nwol::error_t errCall = nwo_call) { 																																	\
 		if(errCall < 0) {																																						\
@@ -204,7 +205,7 @@ namespace nwol
 		}																																										\
 }	}
 
-#define nwol_pecall(nwo_call, ...)				nwol_rve_ecall(-1, nwo_call, __VA_ARGS__)	// Propagable error call.
+#define nwol_pecall(nwo_call, ...)				nwol_rve_ecall (-1, nwo_call, __VA_ARGS__)	// Propagable error call.
 #define nwol_pewcall(nwo_call, ...)				nwol_rve_ewcall(-1, nwo_call, __VA_ARGS__)	// Propagable error-warning call.
 
 #define rve_if	retval_error_if

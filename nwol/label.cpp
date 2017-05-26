@@ -21,25 +21,21 @@
 //------------------------------------------------------------------- gsyslabel ---------------------------------------------------------------------------------------------------------
 									nwol::gsyslabel::gsyslabel		(const char* label, uint32_t size)																{
 	LabelManager							= getSystemLabelManager();
-	if( LabelManager->AddLabel(label, size, *this) ) {
-		error_printf("Failed to store label!");
-	}
+	error_if(errored(LabelManager->AddLabel(label, size, *this)), "Failed to store label!");
 }
 
 //------------------------------------------------------------------- glabel ---------------------------------------------------------------------------------------------------------
 									nwol::glabel::glabel			(const char* label, uint32_t size)							: LabelManager(getLabelManager())	{
-	if( LabelManager->AddLabel(label, size, *this) ) {
-		error_printf("Failed to store label!");
-	}
+	error_if(errored(LabelManager->AddLabel(label, size, *this)), "Failed to store label!");
 }
 
 bool								nwol::glabel::operator	==		(const nwol::glabel& other)				const	noexcept										{ 
-		 if(Data == other.Data					)	return true;
-	else if(LabelManager == other.LabelManager	)	return false;
-	else if(Count != other.Count				)	return false;
+		 if(Data			== other.Data			)	return true;
+	else if(LabelManager	== other.LabelManager	)	return false;
+	else if(Count			!= other.Count			)	return false;
 	else											return 0 == memcmp(Data, other.Data, Count);
 
-};
+}
 
 uint32_t							nwol::glabel::save				(char* out_pMemoryBuffer)				const													{
 	uint32_t								totalBytes						= 0;
