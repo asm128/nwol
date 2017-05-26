@@ -33,7 +33,7 @@ bool								nwol::glabel::operator	==		(const nwol::glabel& other)				const	noex
 		 if(Data			== other.Data			)	return true;
 	else if(LabelManager	== other.LabelManager	)	return false;
 	else if(Count			!= other.Count			)	return false;
-	else											return 0 == memcmp(Data, other.Data, Count);
+	else												return 0 == memcmp(Data, other.Data, Count);
 
 }
 
@@ -54,15 +54,16 @@ uint32_t							nwol::glabel::load				(const char* in_pMemoryBuffer)													
 	totalBytes							+= labelSize.read(in_pMemoryBuffer);
 	if(labelSize) {
 		char									* a								= (char*)::nwol::nwol_malloc(labelSize);
-		if(a) {
-			if(in_pMemoryBuffer)
+		throw_if(0 == a, "out_of_memory", "Failed to allocate memory for label of size %u.", (uint32_t)labelSize)
+		else {
+			if(in_pMemoryBuffer) {
 				memcpy(a, &in_pMemoryBuffer[totalBytes], labelSize*sizeof(char)); 
-
-			*this								= glabel(&a[0], labelSize);
+				*this								= glabel(&a[0], labelSize);
+			}
+			else 
+				*this								= {};
 			::nwol::nwol_free(a);
 		}
-		else
-			error_printf("Failed to allocate memory for label of size %u.", (uint32_t)labelSize);
 	}
 	return totalBytes					+= labelSize;
 }
@@ -82,10 +83,7 @@ uint32_t							nwol::glabel::load				(const char* in_pMemoryBuffer)													
 	if(labelSize) {
 		char*									a								= (char*)::nwol::nwol_malloc(labelSize);
 		reterr_error_if(0 == a, "Failed to allocate memory for label of size %u.", (uint32_t)labelSize);
-
-		if(labelSize != (int32_t)fread(a, sizeof(char), labelSize, in_pMemoryBuffer)) {
-			error_printf("%s", "Failed to read label from file!");
-		}
+		error_if(labelSize != (int32_t)fread(a, sizeof(char), labelSize, in_pMemoryBuffer), "%s", "Failed to read label from file!")
 		else
 			*this								= glabel(&a[0], labelSize);
 		::nwol::nwol_free(a);

@@ -180,7 +180,7 @@ int32_t						nwol::renderGUIASCII	(char* bbText, uint16_t* bbColor	, const ::nwo
 	return 0;
 }
 
-::nwol::error_t											renderGUIBitmap		(uint32_t* bitmap, uint32_t width, uint32_t height, const ::nwol::SGUI& guiSystem) {
+::nwol::error_t				nwol::renderGUIBitmap		(uint32_t* bitmap, uint32_t width, uint32_t height, const ::nwol::SGUI& guiSystem) {
 	reterr_error_if(0 == bitmap, "Invalid target memory for rendering gui (nullptr).");
 	reterr_error_if(0 == width , "Invalid target width for rendering gui (nullptr).");
 	reterr_error_if(0 == height, "Invalid target height for rendering gui (nullptr).");

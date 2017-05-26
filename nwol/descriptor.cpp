@@ -4,7 +4,7 @@
 #include "stype.h"
 
 							nwol::gdescriptor::gdescriptor			(const ::nwol::GDATA_TYPE* descriptor, uint32_t size)	: DescriptorManager(getDescriptorManager())	{
-	error_if(errored(DescriptorManager->AddDescriptor(descriptor, size, *this)), "Failed to store descriptor!");
+	throw_if(errored(DescriptorManager->AddDescriptor(descriptor, size, *this)), "unknown", "Failed to store descriptor! Descriptor size: %u", size);
 }
 
 bool						nwol::gdescriptor::operator	==			(const gdescriptor& other)								const	noexcept							{ 
@@ -31,13 +31,16 @@ uint32_t					nwol::gdescriptor::load					(const char* in_pMemoryBuffer)									
 	totalBytes					+= descriptorSize.read(in_pMemoryBuffer);
 	if(descriptorSize) {
 		::nwol::GDATA_TYPE				* a										= (::nwol::GDATA_TYPE*)::nwol::nwol_malloc(descriptorSize*sizeof(::nwol::GDATA_TYPE));
-
 		throw_if(0 == a, "out_of_memory", "Failed to allocate memory for descriptor of size %u.", (uint32_t)descriptorSize)
 		else {
-			if(in_pMemoryBuffer)
+			if(in_pMemoryBuffer) {
 				memcpy(a, &in_pMemoryBuffer[totalBytes], descriptorSize*sizeof(::nwol::GDATA_TYPE)); 
+				*this						= {a, descriptorSize};
+			}
+			else {
+				*this						= {};
+			}
 
-			*this						= gdescriptor(a, descriptorSize);
 			::nwol::nwol_free(a);
 		}
 	}
