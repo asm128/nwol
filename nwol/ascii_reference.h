@@ -134,9 +134,9 @@ namespace klib
 		,	char(0xFF & 0xAB)
 		};//'¼', '½'};
 
-	static const char ascii_water[] = {' ', (char)0xF7, '~' };//'≈', '~'};
-	static const char ascii_tones[] = {' ', (char)0xB0, (char)0xB1, (char)0xB2}; //" ░▒▓";
-	static const char ascii_arrow[] = {0, 0x11, 0x1F, 0x10, 0x1E}; //" ◄▲►▼";
+	static const char ascii_water[] = {' ', (char)0xF7, '~' };						//'≈', '~'};
+	static const char ascii_tones[] = {' ', (char)0xB0, (char)0xB1, (char)0xB2};	//" ░▒▓";
+	static const char ascii_arrow[] = {0, 0x11, 0x1F, 0x10, 0x1E};					//" ◄▲►▼";
 	//static const char ascii_arrw2[] = " ←↑→↓↕↔";
 
 	#define ARROW_LEFT		1
@@ -146,28 +146,28 @@ namespace klib
 	#define ARROW_UPDOWN	5
 	#define ARROW_LEFTRIGHT	6
 
-	static const char ascii_gender[] = {' ', 0x0C, 0x0B, (char)232};	// " ♀♂Φ";
+	static const char ascii_gender[] = {' ', 0x0C, 0x0B, (char)232};				// " ♀♂Φ";
 	#define FEMALE			1
 	#define MALE			2
 	#define HERMAPHRODITE	3
 
 	//static const char ascii_sound[] = "♫";
 
-	static const char ascii_cards[] = {' ', 0x03, 0x04, 0x05, 0x06};// " ♥♦♣♠";
+	static const char ascii_cards[] = {' ', 0x03, 0x04, 0x05, 0x06};				// " ♥♦♣♠";
 	#define DECK_HEARTS		1
 	#define DECK_DIAMONDS	2
 	#define DECK_CLUBS		3
 	#define DECK_SPADES		4
 
-	static const char ascii_face[] = {' ', 0x01, 0x02};//" ☺☻";
+	static const char ascii_face[] = {' ', 0x01, 0x02};								//" ☺☻";
 	#define FACE_BLACK	1
 	#define FACE_WHITE	2
 
-	static const char ascii_button[] = {' ', 0x09, 0x0A}; //" ○◙";
+	static const char ascii_button[] = {' ', 0x09, 0x0A};							//" ○◙";
 	#define BUTTON_OFF	1
 	#define BUTTON_ON	2
 
-	static const char ascii_buttn2[] = {' ', 0x07, 0x08}; //" •◘";
+	static const char ascii_buttn2[] = {' ', 0x07, 0x08};							//" •◘";
 	#define BUTTON_OFF	1
 	#define BUTTON_ON	2
 
