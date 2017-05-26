@@ -24,7 +24,6 @@
 			guiSystem.Controls.Resize(oldSize);
 			return -1;
 		}
-
 	return 0;
 }
 
@@ -65,7 +64,7 @@ void						drawText			(_tChar* target, int32_t targetWidth, int32_t targetHeight,
 			if(targetY >= ystop)
 				break;
 
-			textCursor++;
+			++textCursor;
 		}
 	}
 	else if(alignText == (::nwol::SCREEN_TOP_RIGHT) && bWordWrap == true) {
@@ -93,8 +92,7 @@ void						drawText			(_tChar* target, int32_t targetWidth, int32_t targetHeight,
 				}
 				++targetX;
 			}
-
-			textCursor++;
+			++textCursor;
 		}
 	}
 }
@@ -182,8 +180,8 @@ int32_t						nwol::renderGUIASCII	(char* bbText, uint16_t* bbColor	, const ::nwo
 
 ::nwol::error_t				nwol::renderGUIBitmap		(uint32_t* bitmap, uint32_t width, uint32_t height, const ::nwol::SGUI& guiSystem) {
 	reterr_error_if(0 == bitmap, "Invalid target memory for rendering gui (nullptr).");
-	reterr_error_if(0 == width , "Invalid target width for rendering gui (nullptr).");
-	reterr_error_if(0 == height, "Invalid target height for rendering gui (nullptr).");
+	reterr_error_if(0 == width , "Invalid target width for rendering gui (0).");
+	reterr_error_if(0 == height, "Invalid target height for rendering gui (0).");
 	for(uint32_t iControl = 0, controlCount = guiSystem.Controls.ControlFlags.size(); iControl < controlCount; ++iControl) {
 			
 	}
