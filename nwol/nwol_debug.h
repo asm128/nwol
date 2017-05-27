@@ -23,11 +23,11 @@
 #		define USE_DEBUG_BREAK_ON_ERROR_LOG
 #	endif
 #else
-#	define PLATFORM_CRT_BREAKPOINT()		do{}while(0)
-#	define PLATFORM_CRT_CHECK_MEMORY()		do{}while(0)
+#	define PLATFORM_CRT_BREAKPOINT()		do {} while(0)
+#	define PLATFORM_CRT_CHECK_MEMORY()		do {} while(0)
 #	define ERROR_PRINTF_ENABLED	
-#	define WARNING_PRINTF_ENABLED	
-//#	define DEBUG_PRINTF_ENABLED	
+//#	define WARNING_PRINTF_ENABLED	// Uncomment as needed
+//#	define DEBUG_PRINTF_ENABLED		// Uncomment as needed
 //#	define VERBOSE_PRINTF_ENABLED	// Uncomment as needed
 //#	define DATA_PRINTF_ENABLED		// Uncomment as needed
 #endif
