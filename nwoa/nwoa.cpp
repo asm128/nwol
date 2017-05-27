@@ -105,7 +105,7 @@ int32_t														update									(::SApplication& instanceApp, bool exitReque
 			info_printf("Execute control %u.", iControl);
 			switch(iControl) {
 			case 0	:	return ::nwol::APPLICATION_STATE_EXIT;					break;
-			default	:	warning_printf("Unhandled control id: %u", iControl);	break;
+			default	:	warning_printf("Unhandled control id: %u.", iControl);	break;
 			}
 		}
 	return 0; 

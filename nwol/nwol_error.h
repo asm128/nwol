@@ -16,7 +16,7 @@ namespace nwol
 							::std::string								getWindowsErrorAsString		(uint64_t lastError);		// Get the error message, if any.
 	static inline			::std::string								getOSErrorAsString			(uint64_t lastError)				{ return getWindowsErrorAsString(lastError);	}
 #else
-	static inline			::std::string								getOSErrorAsString			(uint64_t lastError)				{ return getWindowsErrorAsString(lastError);	}
+	static inline			::std::string								getOSErrorAsString			(uint64_t lastError)				{ return "";	}
 #endif
 
 } // namespace
