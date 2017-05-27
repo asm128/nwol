@@ -58,7 +58,6 @@ void										runCommunications						(void* pInstanceApp)						{
 	_beginthread(::runCommunications, 0, &instanceApp);
 	::std::this_thread::sleep_for(::std::chrono::milliseconds(1000));
 	info_printf("%s", "Communications thread started.");
-
 	return 0;
 }
 
