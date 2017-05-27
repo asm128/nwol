@@ -3,6 +3,7 @@
 
 #include "label_manager.h"
 #include "stype.h"
+#include "platform_handle_wrapper.h"
 
 #include <string>
 
@@ -30,7 +31,8 @@
 }
 
 bool								nwol::glabel::operator	==		(const nwol::glabel& other)				const	noexcept										{ 
-		 if(Data			== other.Data			)	return true;
+		 if(0 == Count && Count == other.Count		)	return true;	// Empty labels are always equal regardless the Data pointer
+	else if(Data			== other.Data			)	return true;
 	else if(LabelManager	== other.LabelManager	)	return false;
 	else if(Count			!= other.Count			)	return false;
 	else												return 0 == memcmp(Data, other.Data, Count);
@@ -53,16 +55,16 @@ uint32_t							nwol::glabel::load				(const char* in_pMemoryBuffer)													
 	sint32									labelSize						= 0;
 	totalBytes							+= labelSize.read(in_pMemoryBuffer);
 	if(labelSize) {
-		char									* a								= (char*)::nwol::nwol_malloc(labelSize);
+		::nwol::auto_nwol_free					a;
+		a.Handle							= (char*)::nwol::nwol_malloc(labelSize);
 		throw_if(0 == a, "out_of_memory", "Failed to allocate memory for label of size %u.", (uint32_t)labelSize)
 		else {
 			if(in_pMemoryBuffer) {
 				memcpy(a, &in_pMemoryBuffer[totalBytes], labelSize*sizeof(char)); 
-				*this								= glabel(&a[0], labelSize);
+				*this								= glabel((const char*)a.Handle, labelSize);
 			}
 			else 
 				*this								= {};
-			::nwol::nwol_free(a);
 		}
 	}
 	return totalBytes					+= labelSize;
@@ -81,12 +83,16 @@ uint32_t							nwol::glabel::load				(const char* in_pMemoryBuffer)													
 	sint32									labelSize						= sint32(0);
 	nwol_pecall(labelSize.read(in_pMemoryBuffer), "%s", "Failed to read label from file!");
 	if(labelSize) {
-		char*									a								= (char*)::nwol::nwol_malloc(labelSize);
+		::nwol::auto_nwol_free					a;
+		a.Handle							= (char*)::nwol::nwol_malloc(labelSize);
 		reterr_error_if(0 == a, "Failed to allocate memory for label of size %u.", (uint32_t)labelSize);
-		error_if(labelSize != (int32_t)fread(a, sizeof(char), labelSize, in_pMemoryBuffer), "%s", "Failed to read label from file!")
+		if(labelSize != (int32_t)fread(a, sizeof(char), labelSize, in_pMemoryBuffer), "%s", "Failed to read label from file!") {
+			error_printf("Failed to read from file label of size: %u bytes.", labelSize);
+			*this								= {};
+			return -1;
+		}
 		else
-			*this								= glabel(&a[0], labelSize);
-		::nwol::nwol_free(a);
+			*this								= glabel((const char*)a.Handle, labelSize);
 	}
 	return 0;
 }

@@ -97,16 +97,12 @@ namespace nwol
 
 void										serverListen					(::nwol::CServer* pServer)									{
 	while( !bListenFailure ) {
-		if( pServer->Listen() ) {
-			error_print("Failed to listen on server.");
-			bListenFailure																	= true;
-		}
-		else if( 0 > pServer->Accept() ) {
+		error_if(bListenFailure = errored(pServer->Listen()), "Failed to listen on server")
+		else if errored(pServer->Accept()) {
 			error_print("Failed to accept queued client or no client queued.");
 			::std::this_thread::sleep_for(::std::chrono::milliseconds(400));
 		}
 		::std::this_thread::sleep_for(std::chrono::milliseconds(100));
-		//WriteTitle( pServer->ClientConnections.size() );
 	}
 }
 
@@ -114,10 +110,9 @@ void										serverListen					( void* server )											{ serverListen((::nwol
 ::nwol::error_t								serverInit						(::SApplication& instanceApp) {
 	int												port_number;				// Port number to use
 	char											port_number_str	[]				= "45678";
-
 	reterr_error_if(sscanf_s(&port_number_str[0], "%u", &port_number) != 1, "%s.", "Invalid server port string.");	// Only run if port is provided
 
-	// Open windows connection 
+																													// Open windows connection 
 	nwol_pecall(::nwol::initNetwork()								, "%s", "Failed to initialize network."			);
 	nwol_pecall(instanceApp.NetworkServer.InitServer(port_number)	, "%s", "Failed to initialize connection server.");
 	_beginthread( serverListen, 0, &instanceApp.NetworkServer );	
@@ -136,29 +131,38 @@ void										serverListen					( void* server )											{ serverListen((::nwol
 	::nwol::getAddress( client->m_ClientTarget, &a1, &a2, &a3, &a4, &port_number );
 
 	if (strcmp(buffer, "GET PLAYER\r\n") == 0) {
-		if(::nwol::sendUserCommand(client->m_ClientListener, client->m_ClientTarget, ::nwol::USER_COMMAND_RESPONSE, (const uint8_t*)&current_time, (uint32_t)sizeof(current_time))) {
-			error_printf("Failed to send player data to %u.%u.%u.%u:%u.", 
-				(uint32_t)a1,
-				(uint32_t)a2,
-				(uint32_t)a3,
-				(uint32_t)a4,
-				(uint32_t)port_number
-			);
+		error_if(errored(::nwol::sendUserCommand(client->m_ClientListener, client->m_ClientTarget, ::nwol::USER_COMMAND_RESPONSE, (const uint8_t*)&current_time, (uint32_t)sizeof(current_time)))
+				, "Failed to send player data to %u.%u.%u.%u:%u."
+				, (uint32_t)a1
+				, (uint32_t)a2
+				, (uint32_t)a3
+				, (uint32_t)a4
+				, (uint32_t)port_number
+			)
+		else {
+			//info_printf("Sent player data (%s) to %u.%u.%u.%u:%u.", player.Name.c_str()
+			//	, (int)a1
+			//	, (int)a2
+			//	, (int)a3
+			//	, (int)a4
+			//	, (int)port_number
+			//	);
 		}
-		//info_printf("Sent player data (%s) to %u.%u.%u.%u:%u.", player.Name.c_str(), 
-		//	(int)a1,
-		//	(int)a2,
-		//	(int)a3,
-		//	(int)a4,
-		//	(int)port_number
-		//);
 	}
 	else {
 		const char										mypong	[]						= "INVALIDMSG\r\n";									// Get current time
 		uint32_t										bytesToSend						= ::nwol::size(mypong) * (uint32_t)sizeof(char_t);	// Send data back
 
-		if(::nwol::sendUserCommand(client->m_ClientListener, client->m_ClientTarget, ::nwol::USER_COMMAND_RESPONSE, (const uint8_t*)&mypong, bytesToSend)) {
-			error_printf("Failed to send player data to %u.%u.%u.%u:%u."
+		error_if(errored(::nwol::sendUserCommand(client->m_ClientListener, client->m_ClientTarget, ::nwol::USER_COMMAND_RESPONSE, (const uint8_t*)&mypong, bytesToSend))
+				, "Failed to send player data to %u.%u.%u.%u:%u."
+				,	(uint32_t)a1
+				,	(uint32_t)a2
+				,	(uint32_t)a3
+				,	(uint32_t)a4
+				,	(uint32_t)port_number
+				)
+		else {
+			info_printf("Sent invalid message response to %u.%u.%u.%u:%u."
 				,	(uint32_t)a1
 				,	(uint32_t)a2
 				,	(uint32_t)a3
@@ -166,13 +170,6 @@ void										serverListen					( void* server )											{ serverListen((::nwol
 				,	(uint32_t)port_number
 				);
 		}
-		info_printf("Sent invalid message response to %u.%u.%u.%u:%u."
-			,	(uint32_t)a1
-			,	(uint32_t)a2
-			,	(uint32_t)a3
-			,	(uint32_t)a4
-			,	(uint32_t)port_number
-			);
 	}
 
 	return 0;

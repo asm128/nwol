@@ -8,10 +8,9 @@
 
 namespace nwol
 {
-
 	class	CLabelManager;
-	struct	glabel_statics;
 #pragma pack(push, 1)
+	struct	glabel_statics;
 	class glabel : public array_view<const char> {
 	protected:
 		CLabelManager											* LabelManager																	= nullptr;
@@ -41,12 +40,9 @@ namespace nwol
 							::nwol::error_t						load					(FILE* in_pMemoryBuffer)								;
 	};
 
-	// This label type is used to store strings for RTTI strings and other low level text.
-	// It has been added to separate user strings from system strings for improving nwol::glabel creation speed.
-	// This is because when a new string is added to the pool, gunordered_string_set has to perform a search 
-	// in order to verify the existence of the string in the set.
-	// This way the strings are better organized for their given usage and prevents system strings from 
-	// slowing down user string creation.
+	// This label type is used to store strings for RTTI strings and other low level text. It has been added to separate user strings from system strings for improving nwol::glabel creation speed.
+	// This is because when a new string is added to the pool, gunordered_string_set has to perform a search in order to verify the existence of the string in the set.
+	// This way the strings are better organized for their given usage and prevents system strings from slowing down user string creation.
 	struct gsyslabel_statics;
 	class gsyslabel : public glabel {
 	public:
@@ -82,7 +78,6 @@ namespace nwol
 	inline		const ::nwol::glabel_statics	&	glabel::		statics					()													{ static const ::nwol::glabel_statics		init_statics; return init_statics;	}
 	inline		const ::nwol::gsyslabel_statics	&	gsyslabel::		statics					()													{ static const ::nwol::gsyslabel_statics	init_statics; return init_statics;	}
 #pragma pack(pop)
-
 };
 
 #endif // __LABEL_H_61596841996481968498__

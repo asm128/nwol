@@ -8,7 +8,8 @@
 }
 
 bool						nwol::gdescriptor::operator	==			(const gdescriptor& other)								const	noexcept							{ 
-		 if(Data				== other.Data				)	return true;
+		 if(0 == Count && Count == other.Count				)	return true;	// Empty labels are always equal regardless the Data pointer
+	else if(Data				== other.Data				)	return true;
 	else if(DescriptorManager	== other.DescriptorManager	)	return false;
 	else if(Count				!= other.Count				)	return false;
 	else														return 0 == memcmp(Data, other.Data, Count*sizeof(::nwol::GDATA_TYPE));
@@ -30,18 +31,17 @@ uint32_t					nwol::gdescriptor::load					(const char* in_pMemoryBuffer)									
 	sint32							descriptorSize							= 0;
 	totalBytes					+= descriptorSize.read(in_pMemoryBuffer);
 	if(descriptorSize) {
-		::nwol::GDATA_TYPE				* a										= (::nwol::GDATA_TYPE*)::nwol::nwol_malloc(descriptorSize*sizeof(::nwol::GDATA_TYPE));
+		::nwol::auto_nwol_free			a;
+		a.Handle					= ::nwol::nwol_malloc(descriptorSize*sizeof(::nwol::GDATA_TYPE));
 		throw_if(0 == a, "out_of_memory", "Failed to allocate memory for descriptor of size %u.", (uint32_t)descriptorSize)
 		else {
 			if(in_pMemoryBuffer) {
 				memcpy(a, &in_pMemoryBuffer[totalBytes], descriptorSize*sizeof(::nwol::GDATA_TYPE)); 
-				*this						= {a, descriptorSize};
+				*this						= {(const ::nwol::GDATA_TYPE*)a.Handle, descriptorSize};
 			}
 			else {
 				*this						= {};
 			}
-
-			::nwol::nwol_free(a);
 		}
 	}
 	return totalBytes			+= descriptorSize;

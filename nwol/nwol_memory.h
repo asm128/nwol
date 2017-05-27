@@ -1,5 +1,7 @@
 #include "evaluation.h"
 #include <malloc.h>
+#include "nwol_safe.h"
+#include "platform_handle_wrapper.h"
 
 #ifndef __MEMORY_H__92836409283642038462309846__
 #define __MEMORY_H__92836409283642038462309846__
@@ -29,6 +31,8 @@ namespace nwol
 	static inline void*																			nwol_malloc					(size_t size)										{ return ::memalign(NWOL_MALLOC_CUSTOM_ALIGN, size);		}
 	static inline void																			nwol_free					(void* ptr)											{ ::free(ptr);												}
 #endif
+
+	struct auto_nwol_free : public ::nwol::platform_handle_wrapper<void*, 0>					{ using TWrapper::platform_handle_wrapper; inline ~auto_nwol_free() { close(); } inline void close() { safe_nwol_free(Handle); } };
 
 #define GREF_PAGE_SIZE_MAX (4096)
 	template<typename _tBase>	static inline constexpr		uint32_t							get_page_size				()										noexcept	{ return (uint32_t)(sizeof(_tBase) <= GREF_PAGE_SIZE_MAX) ? GREF_PAGE_SIZE_MAX/sizeof(_tBase) : 1; };

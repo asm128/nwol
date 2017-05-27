@@ -26,15 +26,15 @@
 #define __GCORE_REF_INIT_DEBUG_MEMBERS(NameSpace, baseType)				
 #endif
 
-#	define __GCORE_REF_INIT_GCORE_REF_MEMBERS(NameSpace, baseType)		template<> const ::nwol::cue_t	NameSpace::GREF(baseType)::__kCue	= ::nwol::gsyslabel(#baseType).begin();
-#	define __GCORE_REF_INIT_GCORE_REF_MEMBERS_NONS(baseType)			template<> const ::nwol::cue_t	GREF(baseType)::__kCue				= ::nwol::gsyslabel(#baseType).begin();
+#define __GCORE_REF_INIT_GCORE_REF_MEMBERS(NameSpace, baseType)		template<> const ::nwol::cue_t	NameSpace::GREF(baseType)::__kCue	= ::nwol::gsyslabel(#baseType).begin();
+#define __GCORE_REF_INIT_GCORE_REF_MEMBERS_NONS(baseType)			template<> const ::nwol::cue_t	GREF(baseType)::__kCue				= ::nwol::gsyslabel(#baseType).begin();
 
-#define __GCORE_REF_INIT_STATIC_MEMBERS_NONS(baseType)	\
-	__GCORE_REF_INIT_DEBUG_MEMBERS_NONS(baseType);		\
+#define __GCORE_REF_INIT_STATIC_MEMBERS_NONS(baseType)			\
+	__GCORE_REF_INIT_DEBUG_MEMBERS_NONS(baseType);				\
 	__GCORE_REF_INIT_GCORE_REF_MEMBERS_NONS(baseType);												
 
-#define __GCORE_REF_INIT_STATIC_MEMBERS(NameSpace, baseType)																								\
-	__GCORE_REF_INIT_DEBUG_MEMBERS(NameSpace, baseType);																									\
+#define __GCORE_REF_INIT_STATIC_MEMBERS(NameSpace, baseType)	\
+	__GCORE_REF_INIT_DEBUG_MEMBERS(NameSpace, baseType);		\
 	__GCORE_REF_INIT_GCORE_REF_MEMBERS(NameSpace, baseType);										
 
 		

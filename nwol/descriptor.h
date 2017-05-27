@@ -12,7 +12,7 @@ namespace nwol
 	class CDescriptorManager;
 #pragma pack(push, 1)
 	class gdescriptor : public ::nwol::array_view<const ::nwol::GDATA_TYPE> {
-							CDescriptorManager*		DescriptorManager			= nullptr;
+							CDescriptorManager		* DescriptorManager			= nullptr;
 	public:
 		inline constexpr							gdescriptor					()																			= default;
 		inline constexpr							gdescriptor					(const gdescriptor& other)													= default;

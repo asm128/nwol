@@ -3,6 +3,7 @@
 #include "evaluation.h"
 
 #include "nwol_safe.h"
+
 #include <memory.h>
 
 #ifndef __ARRAY_H__652434654236655143465__
@@ -82,7 +83,7 @@ namespace nwol
 				throw_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tPOD)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
 				else {
 					Data											= (_tPOD*)::nwol::nwol_malloc(mallocSize);
-						 throw_if(0 == Data			, "", "Failed to resize array. Requested size: %u. ", (uint32_t)newSize)
+						 throw_if(0 == Data			, "", "Failed to allocate array. Requested size: %u. ", (uint32_t)newSize)
 					else throw_if(0 == other.Data	, "", "%s", "other.Data is null!")
 					else {
 						for(uint32_t i = 0, count = newSize; i<count; ++i)
@@ -102,7 +103,7 @@ namespace nwol
 				throw_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tPOD)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
 				else {
 					Data											= (_tPOD*)::nwol::nwol_malloc(mallocSize);
-						 throw_if(0 == Data			, "", "Failed to resize array. Requested size: %u. ", (uint32_t)newSize) 
+						 throw_if(0 == Data			, "", "Failed to allocate array. Requested size: %u. ", (uint32_t)newSize) 
 					else throw_if(0 == other.Data	, "", "%s", "other.Data is null!") 
 					else {
 						for(uint32_t i = 0, count = newSize; i<count; ++i)
@@ -126,8 +127,7 @@ namespace nwol
 		inline				int32_t						pop_back									(_tPOD* oldValue)																		{ 
 			reterr_error_if(0 == Count, "%s", "Cannot pop elements of an empty array."); 
 			--Count;
-			if(oldValue) 
-				podcpy(oldValue, Data[Count]); 
+			safe_podcpy(oldValue, &Data[Count]); 
 			return Count; 
 		}
 		// Returns the index of the pushed value or -1 on failure
@@ -183,7 +183,7 @@ namespace nwol
 					::nwol::nwol_free(oldData);
 			}
 			else
-				Count									= newSize;
+				Count											= newSize;
 
 			return (int32_t)Count;
 		}
@@ -321,8 +321,7 @@ namespace nwol
 		inline				int32_t						pop_back									(_tObj* oldValue)																		{ 
 			reterr_error_if(0 == Count, "%s", "Cannot pop elements from an empty array."); 
 			--Count;
-			if(oldValue) 
-				oldValue										= Data[Count]; 
+			safe_assign(oldValue, Data[Count]); 
 			Data[Count].~_tObj();
 			return Count; 
 		}

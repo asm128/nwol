@@ -59,7 +59,7 @@ namespace nwol
 					::nwol::array_pod<::nwol::STextColor32				>		TextColors32			;
 					::nwol::array_pod<::nwol::CONTROL_FLAG				>		ControlFlags			;
 					::nwol::array_obj<::nwol::glabel					>		Text					;
-
+					// -------------
 					void														Clear					()						{
 						::nwol::clear
 							(	AreasRealignedASCII		
@@ -94,18 +94,15 @@ namespace nwol
 					::nwol::SGUIControlTable									Controls				;
 	};
 #pragma pack(pop)
-
 	// Controls
-	::nwol::error_t											getControl			(::nwol::SGUI& guiSystem, ::nwol::SGUIControl		& definition	);
-	::nwol::error_t											createControl		(::nwol::SGUI& guiSystem, const ::nwol::SGUIControl	& definition	);
+	::nwol::error_t															getControl				(::nwol::SGUI& guiSystem, ::nwol::SGUIControl		& definition	);
+	::nwol::error_t															createControl			(::nwol::SGUI& guiSystem, const ::nwol::SGUIControl	& definition	);
 
 	// Update/Render
-	::nwol::error_t											updateGUI			(::nwol::SGUI& guiSystem, const ::nwol::SInput		& inputSystem	);
-	::nwol::error_t											renderGUIASCII		(char* bbText, uint16_t* bbColor, const ::nwol::SGUI& guiSystem		);
-	::nwol::error_t											renderGUIASCII		(::nwol::SASCIITarget& target	, const ::nwol::SGUI& guiSystem		);
-	::nwol::error_t											renderGUIBitmap		(uint32_t* bitmap, uint32_t width, uint32_t height, const ::nwol::SGUI& guiSystem);
-	
-
+	::nwol::error_t															updateGUI				(::nwol::SGUI& guiSystem, const ::nwol::SInput		& inputSystem	);
+	::nwol::error_t															renderGUIASCII			(char* bbText, uint16_t* bbColor, const ::nwol::SGUI& guiSystem		);
+	::nwol::error_t															renderGUIASCII			(::nwol::SASCIITarget& target	, const ::nwol::SGUI& guiSystem		);
+	::nwol::error_t															renderGUIBitmap			(uint32_t* bitmap, uint32_t width, uint32_t height, const ::nwol::SGUI& guiSystem);
 }//namespace
 
 #endif // __GUI_H__92834992384223849732__

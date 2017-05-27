@@ -2,8 +2,8 @@
 #include "buffer.h"
 //#include <mutex>
 
-#ifndef __GBASELIST_H
-#define __GBASELIST_H
+#ifndef GLIST_BASE_H_92837490827349823
+#define GLIST_BASE_H_92837490827349823
 
 namespace nwol
 {
@@ -66,13 +66,13 @@ namespace nwol
 			return *this;
 		}
 
-						::nwol::error_t							release					(uint32_t nIndex)											{ set(0, nIndex); return 0; }
-						_tRef*									acquire					(uint32_t index)							const			{
+							::nwol::error_t						release					(uint32_t nIndex)											{ set(0, nIndex); return 0; }
+							_tRef*								acquire					(uint32_t index)							const			{
 			retnul_error_if(index >= this->Count, "Index out of boundaries! Index: %u. List size: %u.", index, this->Count);
 			return ::nwol::acquire(this->Data[index]);
 		}
 		// Checks all elements for valid instances (non-null instance pointers)
-						uint32_t								get_valid_element_count	()											const			{
+							uint32_t							get_valid_element_count	()											const			{
 			if(!m_BufferData)
 				return 0;
 
@@ -83,7 +83,7 @@ namespace nwol
 
 			return nValidElementCount;
 		}
-						void									clear					()															{
+							void								clear					()															{
 			if(m_BufferData.writable()) {
 				this->ReleaseRefList(m_BufferData);
 				m_BufferData->nElementCount = this->Count				= 0;
@@ -93,7 +93,7 @@ namespace nwol
 				this->SetBufferData(0);
 			}
 		}
-						::nwol::error_t							release_all				()															{
+							::nwol::error_t						release_all				()															{
 			GPNCO(::nwol, SBuffer) newListBuffer;
 			if(m_BufferData.writable()) {
 				_tRef*														* lstRef				= this->begin();
@@ -110,7 +110,7 @@ namespace nwol
 			}
 			return 0;
 		}
-						::nwol::error_t							set						(_tRef* CoreInstance, uint32_t nIndex)						{
+							::nwol::error_t						set						(_tRef* CoreInstance, uint32_t nIndex)						{
 			reterr_error_if (nIndex >= this->Count, "Invalid index! Index=%u.", nIndex);
 			if(m_BufferData.writable()) {
 				_tRef														* oldInstance			= ((_tRef**)m_BufferData->pByteArray)[nIndex];
@@ -135,4 +135,4 @@ namespace nwol
 	};
 } // namespace
 
-#endif // __GBASELIST_H
+#endif // GLIST_BASE_H_92837490827349823

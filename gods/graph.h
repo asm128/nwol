@@ -19,19 +19,19 @@ namespace nwol
 	class CGraph {
 #pragma pack(push, 1)
 		struct SAttributeId {
-								uint32_t							dir	:  1;
-								uint32_t							pos	: 31;
+								uint32_t							dir							:  1;
+								uint32_t							pos							: 31;
 
 			inline constexpr										SAttributeId				()																										noexcept	: dir(1)							, pos(0x7FFFFFFFL)				{}
 			inline constexpr										SAttributeId				(const ::nwol::id_t nodeId)																				noexcept	: dir((nodeId & 0x80000000L)>>31)	, pos(nodeId &  0x7FFFFFFFL)	{}
 			inline constexpr										SAttributeId				(const char key, const uint32_t index)																	noexcept	: dir(key)							, pos(index)					{}
 
-			inline				operator							::nwol::id_t				()																								const				{ return (pos & 0x7FFFFFFFL) | (((uint32_t)dir)<<31);				}
+			inline constexpr	operator							::nwol::id_t				()																								const	noexcept	{ return (pos & 0x7FFFFFFFL) | (((uint32_t)dir)<<31);				}
 		};
 		struct SNodeRelationship {
-								::nwol::id_t						NodeA				: 8;
-								::nwol::id_t						NodeB				: 8;
-								NODE_RELATIONSHIP					NodeARelationship	: 8;
+								::nwol::id_t						NodeA						;
+								::nwol::id_t						NodeB						;
+								NODE_RELATIONSHIP					NodeARelationship			: 8;
 		};
 		struct SAttributeConnection {
 								SAttributeId						AttributeA;
@@ -42,8 +42,8 @@ namespace nwol
 		typedef	gbuffer<SAttributeConnection, GTYPEID_DATA_MAKE(SAttributeConnection)	, ::nwol::GUSAGE_INDEX>		TConnectionRegistry;
 
 								TParentshipRegistry					NodeParentshipRegistry;
-								TConnectionRegistry					AttributeBindings	[2];
-								CReferenceContainer					Attributes			[2];
+								TConnectionRegistry					AttributeBindings		[2];
+								CReferenceContainer					Attributes				[2];
 								GListObj(CGraphNode)				NodeInstances;
 								::nwol::array_obj<::nwol::glabel>	NodeLabels;
 
@@ -96,8 +96,9 @@ namespace nwol
 
 			if(_attributeIndex)
 				*_attributeIndex											= newIndex;
-			else
+			else {
 				warning_printf("%s", "No output ");
+			}
 			return newIndex;
 		}
 	};

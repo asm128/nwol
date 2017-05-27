@@ -59,7 +59,7 @@ void											nwol::printErasedModuleInterfacePointers		(::nwol::RUNTIME_CALLBA
 		::nwol::printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
 		return -1;
 	}
-	containerForCallbacks.ModuleFile				= ::nwol::glabel(moduleName, ~0U).c_str();
-	containerForCallbacks.ModuleTitle				= ::nwol::glabel(containerForCallbacks.FunctionTitle(), ~0U).c_str();
+	containerForCallbacks.ModuleFile				= ::nwol::glabel(moduleName, 1024U).c_str();
+	containerForCallbacks.ModuleTitle				= ::nwol::glabel(containerForCallbacks.FunctionTitle(), 1024U).c_str();
 	return 0;
 }

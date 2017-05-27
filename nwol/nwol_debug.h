@@ -17,16 +17,19 @@
 #	define ERROR_PRINTF_ENABLED	
 #	define WARNING_PRINTF_ENABLED	
 #	define DEBUG_PRINTF_ENABLED	
-#	define RENDER_PRINTF_ENABLED	
-#	define SOUND_PRINTF_ENABLED	
-//#	ifndef DISABLE_DEBUG_BREAK_ON_ERROR_LOG
-//#		define USE_DEBUG_BREAK_ON_ERROR_LOG
-//#	endif
+//#	define VERBOSE_PRINTF_ENABLED	// Uncomment as needed
+//#	define DATA_PRINTF_ENABLED		// Uncomment as needed
+#	ifndef DISABLE_DEBUG_BREAK_ON_ERROR_LOG
+#		define USE_DEBUG_BREAK_ON_ERROR_LOG
+#	endif
 #else
 #	define PLATFORM_CRT_BREAKPOINT()		do{}while(0)
 #	define PLATFORM_CRT_CHECK_MEMORY()		do{}while(0)
 #	define ERROR_PRINTF_ENABLED	
 #	define WARNING_PRINTF_ENABLED	
+//#	define DEBUG_PRINTF_ENABLED	
+//#	define VERBOSE_PRINTF_ENABLED	// Uncomment as needed
+//#	define DATA_PRINTF_ENABLED		// Uncomment as needed
 #endif
 
 #endif // __NWOL_DEBUG_H__97826389432__

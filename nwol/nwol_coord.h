@@ -91,18 +91,18 @@ namespace nwol
 		constexpr inline	_tBase		LengthSquared			()															const	noexcept	{ return x * x + y * y + z * z;																	}
 		constexpr inline	double		Length					()															const				{ return sqrt(LengthSquared());																	}
 		constexpr inline	double		AngleWith				(const TCoord3& other)										const				{ return acos( (*this).Dot(other) / (this->Length() * other.Length()) );						}
-							void		AddScaled				(const TCoord3& vectorToScaleAndAdd, double scale)								{
+							void		AddScaled				(const TCoord3& vectorToScaleAndAdd, double scale)					noexcept	{
 			x								+= (_tBase)(vectorToScaleAndAdd.x*scale);
 			y								+= (_tBase)(vectorToScaleAndAdd.y*scale);
 			z								+= (_tBase)(vectorToScaleAndAdd.z*scale);
 		}
-							void		SubstractScaled			(const TCoord3& vectorToScaleAndSubstract, double scale)						{
+							void		SubstractScaled			(const TCoord3& vectorToScaleAndSubstract, double scale)			noexcept	{
 			x								-= (_tBase)(vectorToScaleAndSubstract.x*scale);
 			y								-= (_tBase)(vectorToScaleAndSubstract.y*scale);
 			z								-= (_tBase)(vectorToScaleAndSubstract.z*scale);
 		}
-		constexpr			TCoord3		Cross					(const TCoord3& right)										const				{ return {y * right.z - z * right.y, z * right.x - x * right.z, x * right.y - y * right.x };	}
-							TCoord3&	Cross					(const TCoord3& vector1, const TCoord3& vector2)								{ 
+		constexpr			TCoord3		Cross					(const TCoord3& right)										const	noexcept	{ return {y * right.z - z * right.y, z * right.x - x * right.z, x * right.y - y * right.x };	}
+							TCoord3&	Cross					(const TCoord3& vector1, const TCoord3& vector2)					noexcept	{ 
 			x								= vector1.y * vector2.z - vector1.z * vector2.y;
 			y								= vector1.z * vector2.x - vector1.x * vector2.z;
 			z								= vector1.x * vector2.y - vector1.y * vector2.x;
@@ -169,7 +169,7 @@ namespace nwol
 		constexpr inline	_tBase		LengthSquared			()															const	noexcept	{ return x * x + y * y + z * z + w * w; }
 		constexpr inline	double		Length					()															const				{ return ::sqrt(LengthSquared()); }
 		constexpr inline	double		AngleWith				(const TCoord4& other)										const				{ return ::acos( (*this) * other / (this->Length() * other.Length()) ); }
-							void		AddScaled				(const TCoord4& vectorToScaleAndAdd, float scale)								{
+							void		AddScaled				(const TCoord4& vectorToScaleAndAdd, float scale)					noexcept	{
 			x								+= vectorToScaleAndAdd.x*scale;
 			y								+= vectorToScaleAndAdd.y*scale;
 			z								+= vectorToScaleAndAdd.z*scale;
@@ -192,7 +192,7 @@ namespace nwol
 		constexpr			TQuat		operator *				(double scalar)												const	noexcept	{ return { (_tBase)(x * scalar), (_tBase)(y * scalar), (_tBase)(z * scalar), (_tBase)(w * scalar) }; }
 		constexpr			TQuat		operator /				(double scalar)												const				{ return { (_tBase)(x / scalar), (_tBase)(y / scalar), (_tBase)(z / scalar), (_tBase)(w / scalar) }; }
 
-							TQuat		operator *				(const TQuat& q)											const				{
+							TQuat		operator *				(const TQuat& q)											const	noexcept	{
 								TQuat			r;
 								r.x			= w*q.x + x*q.w + y*q.z - z*q.y;
 								r.y			= w*q.y + y*q.w + z*q.x - x*q.z;
@@ -201,7 +201,7 @@ namespace nwol
 		
 								return r;
 							}
-							TQuat		operator *				(const TCoord3& v)											const				{
+							TQuat		operator *				(const TCoord3& v)											const	noexcept	{
 								return 
 									{	  w*v.x + y*v.z - z*v.y
 									,	  w*v.y + z*v.x - x*v.z
@@ -213,7 +213,7 @@ namespace nwol
 							TQuat&		operator-=				(const TQuat& other)												noexcept	{ x -= other.x; y -= other.y; z -= other.z; w -= other.w; return *this; }
 							TQuat&		operator*=				(double scalar)														noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar); z = (_tBase)(z * scalar); w = (_tBase)(w * scalar); return *this; }
 							TQuat&		operator/=				(double scalar)																	{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); z = (_tBase)(z / scalar); w = (_tBase)(w / scalar); return *this; }
-		inline				TQuat&		operator*=				(const TQuat& q)																{ return *this = operator*(q); }
+		inline				TQuat&		operator*=				(const TQuat& q)													noexcept	{ return *this = operator*(q); }
 		// Unary operators
 		constexpr inline	TQuat		operator-				()															const	noexcept	{ return {x*-1, y*-1, z*-1, w*-1}; }
 		constexpr inline	TQuat		operator~				()															const	noexcept	{ return {-x, -y, -z, w}; }
@@ -225,10 +225,10 @@ namespace nwol
 		constexpr inline	_tBase		LengthSquared			()															const	noexcept	{ return x * x + y * y + z * z + w * w; }
 		constexpr inline	double		Length					()															const				{ return sqrt(LengthSquared()); }
 		inline				TQuat&		LinearInterpolate		(const TQuat &p, const TQuat &q, double fTime)						noexcept	{ return *this = ((q-p)*fTime)+p; }
-							void		AddScaled				(const TCoord4& vector, double scale)											{ TQuat q = {(_tBase)(vector.x * scale), (_tBase)(vector.y * scale), (_tBase)(vector.z * scale), (_tBase)0}; q *= *this; w += (_tBase)(q.w * 0.5); x += (_tBase)(q.x * 0.5); y += (_tBase)(q.y * 0.5); z += (_tBase)(q.z * 0.5); }
-							void		AddScaled				(const TCoord3& vector, double scale)											{ TQuat q = {(_tBase)(vector.x * scale), (_tBase)(vector.y * scale), (_tBase)(vector.z * scale), (_tBase)0}; q *= *this; w += (_tBase)(q.w * 0.5); x += (_tBase)(q.x * 0.5); y += (_tBase)(q.y * 0.5); z += (_tBase)(q.z * 0.5); }
-		inline				void		SetRotation				(const TQuat& q1, const TQuat& q2)												{ return *this = q1 * q2 * ~q1; }
-							TCoord3		RotateVector			(const TCoord3 &v)											const				{ 
+							void		AddScaled				(const TCoord4& vector, double scale)								noexcept	{ TQuat q = {(_tBase)(vector.x * scale), (_tBase)(vector.y * scale), (_tBase)(vector.z * scale), (_tBase)0}; q *= *this; w += (_tBase)(q.w * 0.5); x += (_tBase)(q.x * 0.5); y += (_tBase)(q.y * 0.5); z += (_tBase)(q.z * 0.5); }
+							void		AddScaled				(const TCoord3& vector, double scale)								noexcept	{ TQuat q = {(_tBase)(vector.x * scale), (_tBase)(vector.y * scale), (_tBase)(vector.z * scale), (_tBase)0}; q *= *this; w += (_tBase)(q.w * 0.5); x += (_tBase)(q.x * 0.5); y += (_tBase)(q.y * 0.5); z += (_tBase)(q.z * 0.5); }
+		inline				void		SetRotation				(const TQuat& q1, const TQuat& q2)									noexcept	{ return *this = q1 * q2 * ~q1; }
+							TCoord3		RotateVector			(const TCoord3 &v)											const	noexcept	{ 
 			const TQuat							t						= {x, y, z, w};
 			const TQuat							r						= t * v * (~t);
 			return {r.x, r.y, r.z}; 
@@ -253,21 +253,16 @@ namespace nwol
 		// Convert from Euler Angles	
 		inline				TQuat&		MakeFromEulerTaitBryan	(const TCoord3& v)																{ return MakeFromEulerTaitBryan(v.x, v.y, v.z); }
 							TQuat&		MakeFromEulerTaitBryan	(double fPitch, double fYaw, double fRoll)										{
-			 //Basically we create 3 Quaternions, one for pitch, one for yaw, one for roll
-			 //and multiply those together.
-			 //the calculation below does the same, just shorter
-		
+			 //Basically we create 3 Quaternions, one for pitch, one for yaw, one for roll and multiply those together. the calculation below does the same, just shorter.
 			//float p = fPitch * GMATH_PI_180 * .5;
 			//float y = fYaw * GMATH_PI_180 * .5;
 			//float r = fRoll * GMATH_PI_180 * .5;
-		
 			//float sinp = sin(p);
 			//float siny = sin(y);
 			//float sinr = sin(r);
 			//float cosp = cos(p);
 			//float cosy = cos(y);
 			//float cosr = cos(r);
-		
 			//this->w = cosr * cosp * cosy + sinr * sinp * siny;
 			//this->x = sinr * cosp * cosy - cosr * sinp * siny;
 			//this->y = cosr * sinp * cosy + sinr * cosp * siny;

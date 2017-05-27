@@ -29,15 +29,16 @@ int32_t										loadValidModules				(const char* modulesPath, ::nwol::SRuntimeV
 	::nwol::array_obj<::nwol::glabel>			fileNames;
 	nwol_pecall(::nwol::listFiles(modulesPath, fileNames), "Cannot load modules from path: %s.", modulesPath);
 
-	char										fileExtensionToLookFor	[]			= "." DYNAMIC_LIBRARY_EXTENSION;
+	static constexpr const char					fileExtensionToLookFor	[]			= "." DYNAMIC_LIBRARY_EXTENSION;
+	static constexpr const int32_t				fileExtensionLength					= ::nwol::size(fileExtensionToLookFor)-1;
 	::nwol::array_obj<::nwol::glabel>			possibleModuleNames;
 	for(uint32_t iFile = 0, fileCount = fileNames.size(); iFile < fileCount; ++iFile) {
 		const ::nwol::glabel						& moduleName						= fileNames[iFile];
 		info_printf("File found: %s.", moduleName.begin());
-		if(moduleName.size() > 4) {
-			const char									* nameText							= &moduleName[moduleName.size()-4];
-			char										fileExtension	[5]					= {};
-			for(uint32_t iChar=0, charCount = ::nwol::size(fileExtension)-1; iChar<charCount; ++iChar)
+		if(moduleName.size() > fileExtensionLength) {
+			const char									* nameText								= &moduleName[moduleName.size()-4];
+			char										fileExtension	[fileExtensionLength+1]	= {};
+			for(uint32_t iChar = 0, charCount = fileExtensionLength; iChar < charCount; ++iChar)
 				fileExtension[iChar]					= (char)tolower(nameText[iChar]);
 
 			if(0 == strcmp(fileExtension, fileExtensionToLookFor)) {
@@ -46,21 +47,16 @@ int32_t										loadValidModules				(const char* modulesPath, ::nwol::SRuntimeV
 			}
 		}
 	}
-
 	for(uint32_t iFile = 0, fileCount = possibleModuleNames.size(); iFile < fileCount; ++iFile) {
 		const ::nwol::glabel						& moduleName						= possibleModuleNames[iFile];
 		::nwol::SModuleInterface					loadedModule						= {};
 		loadedModule.RuntimeValues				= runtimeValues;
 
 		int32_t										errorLoad							= ::nwol::loadModule(loadedModule, moduleName.begin());
-		if errored(errorLoad) {
-			warning_printf("Module is not a valid NWOR interface: %s.", moduleName.begin());
-			continue;
-		}
+		continue_warn_if(errored(errorLoad), "Module is not a valid NWOR interface: %s.", moduleName.begin());
 		nwol_pecall(loadedModules.push_back(loadedModule), "Failed to push module to output list. Out of memory?");
 		info_printf("Valid module found: %s.", moduleName.begin());
 	}
-
 	return 0;
 }
 
@@ -84,6 +80,13 @@ int32_t										listDLLFiles					(const char* modulesPath, ::nwol::array_obj<::
 	return 0;
 }
 
+int32_t										unloadModules					(::nwol::array_pod<::nwol::SModuleInterface> & loadedModules)																	{
+	for(uint32_t iModule=0, moduleCount = loadedModules.size(); iModule < moduleCount; ++iModule)
+		error_if(errored(::nwol::unloadModule(loadedModules[iModule])), "Unknown reason.");
+	loadedModules.clear();
+	return 0;
+}
+
 int32_t										refreshModules					(::SApplication& instanceApp)																									{
 	info_printf("Refreshing modules...");
 #if defined(__WINDOWS__)
@@ -92,11 +95,10 @@ int32_t										refreshModules					(::SApplication& instanceApp)															
 	const char										modulesPath	[]					= "./modules";
 #endif
 	::nwol::array_obj<::nwol::glabel>				possibleModuleNames;
-	::listDLLFiles(modulesPath, possibleModuleNames);
+	error_if(errored(::listDLLFiles(modulesPath, possibleModuleNames)), "Failed to load modules from folder: %s", modulesPath);
 	PLATFORM_CRT_CHECK_MEMORY();
 	::nwol::array_pod<::nwol::SModuleInterface>		& loadedModules					= instanceApp.ApplicationModulesHandle;
-
-	loadedModules.clear();
+	::unloadModules(loadedModules);
 	uint32_t										maxModuleNameLength				= 0;
 	uint32_t										maxModuleTitleLength			= 0;
 	PLATFORM_CRT_CHECK_MEMORY();
@@ -110,15 +112,13 @@ int32_t										refreshModules					(::SApplication& instanceApp)															
 			warning_printf("DLL is not a valid module: %s." , moduleName.begin());
 			continue;
 		}
-			
 		const uint32_t									titleLen						= loadedModule.ModuleTitle ? (uint32_t)strlen(loadedModule.ModuleTitle) : 0;
 		maxModuleNameLength							= (maxModuleNameLength	> moduleName.size())	? maxModuleNameLength	: moduleName.size();
 		maxModuleTitleLength						= (maxModuleTitleLength > titleLen)				? maxModuleTitleLength	: titleLen;
 		int32_t											moduleIndex						= loadedModules.push_back(loadedModule);
-
 		if(-1 == moduleIndex) {
 			error_printf("Failed to push loaded module. Out of memory?");
-			::nwol::unloadModule(loadedModule);
+			error_if(errored(::nwol::unloadModule(loadedModule)), "Is this even possible? We shouldn't get here if the module isn't unloadable! Failed to unlaod module: %s", moduleName.c_str());
 			return -1;
 		}
 		info_printf("Valid module found: %s." , moduleName.begin());
@@ -151,13 +151,9 @@ int32_t										refreshModules					(::SApplication& instanceApp)															
 		sprintf_s(versionString, "%u.%u", module.VersionMajor(), module.VersionMinor());
 		sprintf_s(itemText.begin(), itemText.size(), itemTextFormat, module.ModuleFile, versionString, module.ModuleTitle);
 		newControl.Text								= ::nwol::glabel(itemText.begin(), ~0U);
-		::nwol::error_t									errMy							= ::nwol::createControl(guiSystem, newControl);
-		if errored(errMy) {
-			error_printf("%s.", "Failed to create control");
-		}
+		error_if(errored(::nwol::createControl(guiSystem, newControl)), "Failed to create control for module #%u ('s').", newControl.Text.begin());
 		++newControl.AreaASCII.Offset.y;
 	}
-
 	info_printf("Finished refreshing modules.");
 	return 0;
 }
@@ -180,7 +176,7 @@ int32_t										setup							(::SApplication& instanceApp)																						
 
 	// Create exit button
 	nwol_pecall(::nwol::createControl(guiSystem, newControl)	, "%s.", "Failed to create control");
-	nwol_pecall(::refreshModules(instanceApp)				, "%s.", "Failed to refresh modules");
+	nwol_pecall(::refreshModules(instanceApp)					, "%s.", "Failed to refresh modules");
 
 	instanceApp.SelectorState					= ::SELECTOR_STATE_MENU;
 	return 0; 
@@ -284,56 +280,45 @@ int32_t										update							(::SApplication & instanceApp, bool exitRequested)
 	const char										* moduleTitle					= iif(moduleSelected) moduleSelected->ModuleTitle : 0;
 
 	switch(instanceApp.SelectorState) {
-	case SELECTOR_STATE_MENU:
-		return updateSelectorApp(instanceApp, exitRequested);
-	case SELECTOR_STATE_LOADING_SELECTION:
-		errResult								= loadSelection(instanceApp);
-		if errored(errResult) 
-			error_printf("Module \"%s\" failed to load with error code %u.", moduleTitle, errResult);
-		break;
-	case SELECTOR_STATE_RUNNING_SELECTION:
-		if(0 == moduleSelected) {
-			error_printf("The module pointer is null. The only reason I can think of for this to happen is a write overrun but probably someone broke the code since I wrote this.");
-			errResult								= ::nwol::APPLICATION_STATE_FATAL;
-			break;
-		}
-
-		updateResult							= moduleSelected->Update(exitRequested);
-		if errored(updateResult) {
-			error_printf("Module \"%s\" failed to update with error code %u.", moduleTitle, errResult);
-		}
+	case SELECTOR_STATE_MENU				: return ::updateSelectorApp(instanceApp, exitRequested);
+	case SELECTOR_STATE_LOADING_SELECTION	: nwol_pecall(::loadSelection(instanceApp), "Selected module \"%s\" failed to load.", moduleTitle);			break;
+	case SELECTOR_STATE_RUNNING_SELECTION	:
+		retval_error_if(::nwol::APPLICATION_STATE_FATAL, 0 == moduleSelected, "The module pointer is null. The only reason I can think of for this to happen is a write overrun but probably someone broke the code since I wrote this.");
+		error_if(errored(updateResult = moduleSelected->Update(exitRequested)), "Module \"%s\" failed to update with error code %u.", moduleTitle, updateResult)
 		else if(updateResult == ::nwol::APPLICATION_STATE_EXIT) {
 			instanceApp.SelectorState				= SELECTOR_STATE_MENU;
 			while(INTERLOCKED_COMPARE_EXCHANGE(instanceApp.RenderSemaphore, 2, 0) == 1)
 				continue;
-			::nwol::error_t								errCleanup							= moduleSelected->Cleanup(); 
-			if(0 > errCleanup) { 
-				error_printf(errorFormat2, errCleanup, "moduleCleanup()"); 
-			} 
-
+			error_if(errored(moduleSelected->Cleanup()), "Failed to clean up module %i ('%s')", moduleTitle)
+			else {
+				info_printf("Module cleaned up successfully  (%i:'%s')", moduleTitle);
+			}
 			callbackPointersErased					= moduleSelected->TestForNullPointerFunctions();
 			if(callbackPointersErased) { 
-				printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
+				::nwol::printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
 				errResult								= ::nwol::APPLICATION_STATE_FATAL;
 			}
 			else { 
 				info_printf("Client application cleanup succeeded."); 
 			}
 				
-			::nwol::error_t								errDelete							= moduleSelected->Delete(); 
-			error_if(0 > errDelete, errorFormat2, errDelete, "moduleDelete()"); 
+			::nwol::error_t								errDelete							= 0; 
+			error_if(errored(errDelete = moduleSelected->Delete()), errorFormat2, errDelete, "moduleDelete()")
+			else {
+				info_printf("Module deleted successfully  (%i:'%s')", moduleTitle);
+			}
 
 			callbackPointersErased					= moduleSelected->TestForNullPointerFunctions();
 			if(callbackPointersErased) { 
-				printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
+				::nwol::printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
 				errResult								= ::nwol::APPLICATION_STATE_FATAL;
 			}
 			else {	// Reinitialize the selector window which was probably closed before starting the new app.
 				::nwol::initASCIIScreen(instanceApp.GUI.TargetSizeASCII.x, instanceApp.GUI.TargetSizeASCII.y);
-				char	windowTitle[512]	= {};
-				sprintf_s(windowTitle, "%s v%u.%u", nwol_moduleTitle(), (nwol_moduleVersion() & 0xF0U) >> 4, nwol_moduleVersion() & 0x0FU);
+				char										windowTitle[512]					= {};
+				sprintf_s(windowTitle, "%s v%u.%u", ::nwol_moduleTitle(), (::nwol_moduleVersion() & 0xF0U) >> 4, ::nwol_moduleVersion() & 0x0FU);
 				SetWindowText(instanceApp.RuntimeValues->Screen.PlatformDetail.hWnd, windowTitle);
-				error_if(errored(refreshModules(instanceApp)), "Error refreshing modules.");
+				error_if(errored(::refreshModules(instanceApp)), "Error refreshing modules.");
 				info_printf("Client application instance deleted successfully."); 
 			}
 			while(INTERLOCKED_COMPARE_EXCHANGE(instanceApp.RenderSemaphore, 0, 2) == 3)
@@ -341,7 +326,6 @@ int32_t										update							(::SApplication & instanceApp, bool exitRequested)
 		}
 		break;
 	}
-
 	return errored(errResult) ? -1 : 0; 
 }
 
@@ -362,9 +346,9 @@ int32_t										render							(::SApplication& instanceApp)																					
 	if( 1 == INTERLOCKED_INCREMENT(instanceApp.RenderSemaphore) ) {
 		switch(instanceApp.SelectorState) {
 		case SELECTOR_STATE_START				:
-		case SELECTOR_STATE_MENU				: retVal = renderSelectorApp(instanceApp);														break;
+		case SELECTOR_STATE_MENU				: retVal = renderSelectorApp(instanceApp);													break;
 		case SELECTOR_STATE_LOADING_SELECTION	: break;	// careful because of unique ASCII screen instance. We may be closing ours or the client app can be creating hers.
-		case SELECTOR_STATE_RUNNING_SELECTION	: if errored(renderSelection(instanceApp)) error_printf("Failed to render client application");	break;
+		case SELECTOR_STATE_RUNNING_SELECTION	: error_if(errored(renderSelection(instanceApp)), "Failed to render client application");	break;
 		default:
 			error_printf("Unrecognized state: %u", (uint32_t)instanceApp.SelectorState);
 		}
