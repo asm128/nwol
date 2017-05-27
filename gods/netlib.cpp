@@ -188,15 +188,8 @@ int32_t									nwol::shutdownConnection			( ::nwol::SConnectionEndpoint** out_c
 	if(0 == clientToDelete) 
 		return 0;
 	
-	if( clientToDelete->sd )  {
-#if defined(__WINDOWS__)
-		::closesocket(clientToDelete->sd);
-#else
-		::close(clientToDelete->sd);
-#endif
-		clientToDelete->sd							= 0;
-	}
-	delete( clientToDelete );
+	safe_closesocket(clientToDelete->sd);
+	delete(clientToDelete);
 	return 0;
 }
 

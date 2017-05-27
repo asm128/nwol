@@ -41,16 +41,16 @@ namespace nwol
 	template<typename _tValue, size_t _Size>		static inline _tValue*			grid_transpose				( _tValue (&targetGrid)[_Size][_Size], _tValue (&sourceGrid)[_Size][_Size] )	{
 		for( uint32_t z=0; z < _Size; z++ )
 			for( uint32_t x=0; x < _Size; x++ )
-				targetGrid[x][z]															= sourceGrid[z][x];
+				targetGrid[x][z]																= sourceGrid[z][x];
 
 		return &targetGrid[0][0];																		
 	}
 	template<typename _tValue, size_t _Size>		static inline _tValue*			grid_transpose				( _tValue (&targetGrid)[_Size][_Size] )											{
 		for( uint32_t z=0; z < _Size; ++z )
 			for( uint32_t x=z+1; x < _Size; ++x ) {
-				_tValue																			otherValue					= targetGrid[x][z];
-				targetGrid[x][z]															= targetGrid[z][x];
-				targetGrid[z][x]															= otherValue;
+				_tValue																				otherValue					= targetGrid[x][z];
+				targetGrid[x][z]																= targetGrid[z][x];
+				targetGrid[z][x]																= otherValue;
 			}
 		return &targetGrid[0][0];																		
 	}
