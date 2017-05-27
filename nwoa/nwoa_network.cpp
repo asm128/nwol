@@ -54,8 +54,7 @@ void										runCommunications						(void* pInstanceApp)						{
 	info_printf("%s", "Network successfully initialized.");
 
 	::nwol::SApplicationNetworkClient				& instanceAppNetwork					= instanceApp.NetworkClient;
-	gbit_set(instanceAppNetwork.State, ::nwol::NETWORK_STATE_ENABLED);
-	gbit_set(instanceAppNetwork.State, ::nwol::NETWORK_STATE_RUNNING);
+	gbit_set(instanceAppNetwork.State, ::nwol::NETWORK_STATE_ENABLED | ::nwol::NETWORK_STATE_RUNNING);
 	_beginthread(::runCommunications, 0, &instanceApp);
 	::std::this_thread::sleep_for(::std::chrono::milliseconds(1000));
 	info_printf("%s", "Communications thread started.");
