@@ -25,7 +25,7 @@ namespace nwol
 #	define					errored(errVal)								(::nwol::failed(errVal)) 
 #endif
 #if !defined(not_errored)
-#	define					not_errored(errVal)							(!::nwol::failed(errVal)) 
+#	define					not_errored(errVal)							(::nwol::succeeded(errVal)) 
 #endif
 
 #endif // __NWOL_ERROR_H__827394__

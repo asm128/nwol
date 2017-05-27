@@ -104,24 +104,23 @@ int32_t														update									(::SApplication& instanceApp, bool exitReque
 		if(::nwol::bit_true(controlFlags[iControl], ::nwol::CONTROL_FLAG_EXECUTE)) {
 			info_printf("Execute control %u.", iControl);
 			switch(iControl) {
-			case 0:		
-				return ::nwol::APPLICATION_STATE_EXIT; 
-				break;
-			default:
-				break;
+			case 0	:	return ::nwol::APPLICATION_STATE_EXIT;					break;
+			default	:	warning_printf("Unhandled control id: %u", iControl);	break;
 			}
 		}
-
 	return 0; 
 }
 
 int32_t														render									(::SApplication& instanceApp)							{ 
 	::nwol::clearASCIIBackBuffer(' ', COLOR_WHITE);
-
 	::nwol::SASCIITarget											target;
-	nwol_pecall(::nwol::getASCIIBackBuffer(target), "%s", "Failed to get ASCII target!");
-	::nwol::renderGUIASCII(target, instanceApp.GUI);
-	::nwol::presentASCIIBackBuffer();
+	if(not_errored(::nwol::getASCIIBackBuffer(target))) {
+		error_if(errored(::nwol::renderGUIASCII(target, instanceApp.GUI)), "%s", "Failed to render ASCII GUI!")
+		else
+			::nwol::presentASCIIBackBuffer();
+	}
+	else 
+		error_printf("%s", "Failed to get ASCII target!");
 	
 	return 0; 
 }
