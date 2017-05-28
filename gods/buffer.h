@@ -30,7 +30,7 @@ namespace nwol
 	};
 	GDECLARE_NCO( SBuffer );
 
-					void				cloneBuffer				(GREF(SBuffer)** out_pTarget, const GREF(SBuffer)* src_Data);
+					::nwol::error_t		cloneBuffer				(GREF(SBuffer)** out_pTarget, const GREF(SBuffer)* src_Data);
 					void				gcreate					(GREF(SBuffer)** out_newBuffer, const SBuffer & in_cBuffer);
 	//__GDECLARE_COMMON_COPIABLE_FUNCTIONS(SBuffer);
 	__GDECLARE_POD_SERIALIZATION_FUNCTIONS(SBuffer);	// Buffers support serialization

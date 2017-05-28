@@ -3,8 +3,8 @@
 #include "nwol_safe.h"
 #include "platform_handle_wrapper.h"
 
-#ifndef __MEMORY_H__92836409283642038462309846__
-#define __MEMORY_H__92836409283642038462309846__
+#ifndef NWOL_MEMORY_H__92836409283642038462309846
+#define NWOL_MEMORY_H__92836409283642038462309846
 
 #define GREF_CUSTOM_ALIGN					16
 #define NWOL_MALLOC_CUSTOM_ALIGN			16
@@ -25,23 +25,23 @@
 namespace nwol
 {
 #if defined(__WINDOWS__)
-	static inline void*																			nwol_malloc					(size_t size)										{ return _aligned_malloc(size, NWOL_MALLOC_CUSTOM_ALIGN);	}
-	static inline void																			nwol_free					(void* ptr)											{ _aligned_free(ptr);										}
+	static inline void*																			nwol_malloc					(size_t size)													{ return _aligned_malloc(size, NWOL_MALLOC_CUSTOM_ALIGN);	}
+	static inline void																			nwol_free					(void* ptr)														{ _aligned_free(ptr);										}
 #elif defined(__LINUX__) || defined(__ANDROID__)
-	static inline void*																			nwol_malloc					(size_t size)										{ return ::memalign(NWOL_MALLOC_CUSTOM_ALIGN, size);		}
-	static inline void																			nwol_free					(void* ptr)											{ ::free(ptr);												}
+	static inline void*																			nwol_malloc					(size_t size)													{ return ::memalign(NWOL_MALLOC_CUSTOM_ALIGN, size);		}
+	static inline void																			nwol_free					(void* ptr)														{ ::free(ptr);												}
 #endif
 
 	struct auto_nwol_free : public ::nwol::platform_handle_wrapper<void*, 0>					{ using TWrapper::platform_handle_wrapper; inline ~auto_nwol_free() { close(); } inline void close() { safe_nwol_free(Handle); } };
 
 #define GREF_PAGE_SIZE_MAX (4096)
-	template<typename _tBase>	static inline constexpr		uint32_t							get_page_size				()										noexcept	{ return (uint32_t)(sizeof(_tBase) <= GREF_PAGE_SIZE_MAX) ? GREF_PAGE_SIZE_MAX/sizeof(_tBase) : 1; };
-	template<typename _tBase>	static inline constexpr		uint32_t							get_type_size				()										noexcept	{ return (uint32_t) sizeof(_tBase); }
-	template<typename _tBase>	static inline constexpr		uint32_t							get_type_size				(const _tBase&)							noexcept	{ return (uint32_t) sizeof(_tBase); }
-	template<typename _tBase>	static inline constexpr		uint32_t							get_type_size_padded		(uint32_t paddingInBytes)							{ 
+	template<typename _tBase>	static inline constexpr		uint32_t							get_page_size				()													noexcept	{ return (uint32_t)(sizeof(_tBase) <= GREF_PAGE_SIZE_MAX) ? GREF_PAGE_SIZE_MAX/sizeof(_tBase) : 1; };
+	template<typename _tBase>	static inline constexpr		uint32_t							get_type_size				()													noexcept	{ return (uint32_t) sizeof(_tBase); }
+	template<typename _tBase>	static inline constexpr		uint32_t							get_type_size				(const _tBase&)										noexcept	{ return (uint32_t) sizeof(_tBase); }
+	template<typename _tBase>	static inline constexpr		uint32_t							get_type_size_padded		(uint32_t paddingInBytes)										{ 
 		return (uint32_t) ( (sizeof(_tBase) / paddingInBytes) + one_if(sizeof(_tBase) % paddingInBytes) ) * paddingInBytes; 
 	}
-	template <typename _tBase>	static inline constexpr		uint32_t							get_type_align				()										noexcept	{
+	template <typename _tBase>	static inline constexpr		uint32_t							get_type_align				()													noexcept	{
 		return (uint32_t)	
 			(	(0 == (sizeof(_tBase) % 32))	? 32	
 			:	(0 == (sizeof(_tBase) % 16))	? 16	
@@ -51,7 +51,7 @@ namespace nwol
 			:	1
 			);
 	}
-	template <typename _tBase>	static inline constexpr		uint32_t							get_type_align_multiplier	()										noexcept	{
+	template <typename _tBase>	static inline constexpr		uint32_t							get_type_align_multiplier	()													noexcept	{
 		return (uint32_t) 
 			(	(0 == (sizeof(_tBase) % 32)) ? sizeof(_tBase) / 32
 			:	(0 == (sizeof(_tBase) % 16)) ? sizeof(_tBase) / 16
@@ -61,7 +61,7 @@ namespace nwol
 			:	sizeof(_tBase) 
 			);
 	}
-	template <typename _tBase>	static inline				int32_t								podcmp						(const _tBase* pA, const _tBase* pB)				{																		
+	template <typename _tBase>	static inline				int32_t								podcmp						(const _tBase* pA, const _tBase* pB)							{																		
 		if (0 == pA && 0 == pB)		
 			return 0;				
 		else if (0 == pA || 0 == pB)
@@ -69,54 +69,21 @@ namespace nwol
 									
 		return memcmp(pA, pB, sizeof(_tBase));							
 	}
-	template <typename _tBase>								_tBase*								podcpy						(_tBase* dest, const _tBase* source)				{																		
+	template <typename _tBase>	static inline				_tBase*								chkcpy						(_tBase* destination, const _tBase* source, uint32_t count)		{																		
+			for (uint32_t i = 0; i < count; ++i)
+				if (destination[i] != source[i])
+					destination[i]  = source[i];
+			return destination;
+	}
+	template <typename _tBase>								_tBase*								podcpy						(_tBase* dest, const _tBase* source)							{																		
 		static constexpr	const uint32_t																dataMultiplier				= (uint32_t)get_type_align_multiplier<_tBase>();
-		switch (get_type_align<_tBase>()) {
-		case 32: 
-		{
-			const uint64_t																					* psrctmp					= (const uint64_t*)source;
-			uint64_t																						* pdsttmp					= (uint64_t*)dest;
-			for (uint32_t i = 0; i<dataMultiplier*4; i++)
-				if (pdsttmp[i] != psrctmp[i])
-					pdsttmp[i]  = psrctmp[i];
-			break;
-		}
-		case 16:	
-		{
-			const uint64_t																					* psrctmp					= (const uint64_t*)source;
-			uint64_t																						* pdsttmp					= (uint64_t*)dest;
-			for (uint32_t i = 0; i<dataMultiplier*2; i++)
-				if (pdsttmp[i] != psrctmp[i])
-					pdsttmp[i]  = psrctmp[i];
-			break;
-		}
-		case 8:
-		{
-			const uint64_t																					* psrctmp					= (const uint64_t*)source;
-			uint64_t																						* pdsttmp					= (uint64_t*)dest;
-			for (uint32_t i = 0; i<dataMultiplier; i++)
-				if (pdsttmp[i] != psrctmp[i])
-					pdsttmp[i]  = psrctmp[i];
-			break;
-		}
-		case 4:
-		{
-			const uint32_t																					* psrctmp					= (const uint32_t*)source;
-			uint32_t																						* pdsttmp					= (uint32_t*)dest;
-			for (uint32_t i = 0; i<dataMultiplier; i++)
-				if (pdsttmp[i] != psrctmp[i])
-					pdsttmp[i]  = psrctmp[i];
-			break;
-		}
-		case 2:
-		{
-			const uint16_t																					* psrctmp					= (const uint16_t*)source;
-			uint16_t																						* pdsttmp					= (uint16_t*)dest;
-			for (uint32_t i = 0; i<dataMultiplier; i++)
-				if (pdsttmp[i] != psrctmp[i])
-					pdsttmp[i]  = psrctmp[i];
-			break;
-		}
+		static constexpr	const uint32_t																typeAlign					= (uint32_t)get_type_align<_tBase>();
+		switch (typeAlign) {
+		case 32: chkcpy((uint64_t*)dest, (const uint64_t*)source, dataMultiplier * 4);	break;
+		case 16: chkcpy((uint64_t*)dest, (const uint64_t*)source, dataMultiplier * 2);	break;
+		case  8: chkcpy((uint64_t*)dest, (const uint64_t*)source, dataMultiplier);		break;
+		case  4: chkcpy((uint32_t*)dest, (const uint32_t*)source, dataMultiplier);		break;
+		case  2: chkcpy((uint16_t*)dest, (const uint16_t*)source, dataMultiplier);		break;
 		default:
 			if( memcmp(dest, source, sizeof(_tBase)) )
 				memcpy(dest, source, sizeof(_tBase));
@@ -126,4 +93,4 @@ namespace nwol
 	}
 }	// namespace
 
-#endif // __MEMORY_H__92836409283642038462309846__
+#endif // NWOL_MEMORY_H__92836409283642038462309846

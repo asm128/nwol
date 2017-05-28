@@ -58,7 +58,6 @@ namespace nwol
 				if( 0 != (newRef = p1[i]))
 					new (newRef->Instance) _tBase(lstInstances[i]);
 		}
-
 	}; // __CObjDestructor
 
 

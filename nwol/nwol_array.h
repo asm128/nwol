@@ -1,10 +1,5 @@
 #include "array_view.h"
 #include "nwol_memory.h"
-#include "evaluation.h"
-
-#include "nwol_safe.h"
-
-#include <memory.h>
 
 #ifndef __ARRAY_H__652434654236655143465__
 #define __ARRAY_H__652434654236655143465__
@@ -82,7 +77,8 @@ namespace nwol
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
 				throw_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tPOD)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
 				else {
-					Data											= (_tPOD*)::nwol::nwol_malloc(mallocSize);
+					::nwol::auto_nwol_free								safeguard;
+					Data											= (_tPOD*)(safeguard.Handle = ::nwol::nwol_malloc(mallocSize));
 						 throw_if(0 == Data			, "", "Failed to allocate array. Requested size: %u. ", (uint32_t)newSize)
 					else throw_if(0 == other.Data	, "", "%s", "other.Data is null!")
 					else {
@@ -90,6 +86,7 @@ namespace nwol
 							Data[i]											= other[i];
 						Size											= (uint32_t)reserveSize;
 						Count											= other.Count;
+						safeguard.Handle								= 0;
 					}
 				}
 			}
@@ -102,7 +99,8 @@ namespace nwol
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
 				throw_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tPOD)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
 				else {
-					Data											= (_tPOD*)::nwol::nwol_malloc(mallocSize);
+					::nwol::auto_nwol_free								safeguard;
+					Data											= (_tPOD*)(safeguard.Handle = ::nwol::nwol_malloc(mallocSize));
 						 throw_if(0 == Data			, "", "Failed to allocate array. Requested size: %u. ", (uint32_t)newSize) 
 					else throw_if(0 == other.Data	, "", "%s", "other.Data is null!") 
 					else {
@@ -110,6 +108,7 @@ namespace nwol
 							Data[i]											= other[i];
 						Size											= (uint32_t)reserveSize;
 						Count											= other.Count;
+						safeguard.Handle								= 0;
 					}
 				}
 			} // 
@@ -168,7 +167,8 @@ namespace nwol
 				uint32_t											reserveSize									= calc_reserve_size(newSize);
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
 				reterr_error_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tPOD)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
-				_tPOD												* newData									= (_tPOD*)::nwol::nwol_malloc(mallocSize);
+				::nwol::auto_nwol_free								safeguard;
+				_tPOD												* newData									= (_tPOD*)(safeguard.Handle = ::nwol::nwol_malloc(mallocSize));
 				reterr_error_if(nullptr == newData, "Failed to resize array. Requested size: %u. Current size: %u.", newSize, (uint32_t)Size);
 
 				_TArrayView											safe_data									= {newData, reserveSize};
@@ -179,6 +179,7 @@ namespace nwol
 				Size											= (uint32_t)reserveSize;
 				Count											= newSize;
 				Data											= newData;
+				safeguard.Handle								= 0;
 				if(oldData)
 					::nwol::nwol_free(oldData);
 			}
@@ -196,7 +197,8 @@ namespace nwol
 				uint32_t											reserveSize									= calc_reserve_size(Count+1);
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
 				reterr_error_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tPOD)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
-				_tPOD												* newData									= (_tPOD*)::nwol::nwol_malloc(mallocSize);
+				::nwol::auto_nwol_free								safeguard;
+				_tPOD												* newData									= (_tPOD*)(safeguard.Handle = ::nwol::nwol_malloc(mallocSize));
 				reterr_error_if(nullptr == newData, "Failed to allocate array for inserting new value.");
 
 				_TArrayView											viewSafe									= {newData, Count+1};
@@ -206,6 +208,7 @@ namespace nwol
 				for(uint32_t i=index, maxCount = ::nwol::min(index+1, Count); i<maxCount; ++i) 
 					viewSafe[i+1]									= oldData[i];
 				Data											= newData;
+				safeguard.Handle								= 0;
 			}	
 			else {
 				for(int32_t i = (int32_t)::nwol::min(index, Count-1), maxCount = (int32_t)index; i >= maxCount; --i) 
@@ -226,13 +229,15 @@ namespace nwol
 				uint32_t											newSize										= calc_reserve_size(Count + chainLength);
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
 				reterr_error_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tObj)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
-				_tPOD												* newData									= (_tPOD*)::nwol::nwol_malloc(mallocSize);
+				::nwol::auto_nwol_free								safeguard;
+				_tPOD												* newData									= (_tPOD*)(safeguard.Handle = ::nwol::nwol_malloc(mallocSize));
 				reterr_error_if(nullptr == newData, "Failed to allocate array for inserting new value.");
 				::nwol::array_view<_tPOD>							viewSafe									= {newData, newSize};
 				for(uint32_t i=0				, maxCount = ::nwol::min(index, Count)				; i <	maxCount; ++i)	viewSafe[i			]	= oldData[i];
 				for(uint32_t i=0				, maxCount = ::nwol::min(chainLength, newSize-index); i <	maxCount; ++i)	viewSafe[i + index	]	= chainToInsert[i];
 				for(uint32_t i=index+chainLength, maxCount = ::nwol::min(index+1, Count)			; i <	maxCount; ++i)	viewSafe[i + 1		]	= oldData[i];
 				Data											= newData;
+				safeguard.Handle								= 0;
 			}	
 			else {	// no need to reallocate and copy, just shift rightmost elements and insert in-place
 				for(int32_t  i = (int32_t)::nwol::min(index, Count - 1), maxCount = (int32_t)index	; i >=	maxCount; --i)	Data[i + chainLength]	= Data[i];
@@ -291,7 +296,8 @@ namespace nwol
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
 				throw_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tObj)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
 				else {
-					_tObj												* newData									= (_tObj*)::nwol::nwol_malloc(mallocSize);
+					::nwol::auto_nwol_free								safeguard;
+					_tObj												* newData									= (_tObj*)(safeguard.Handle = ::nwol::nwol_malloc(mallocSize));
 						 throw_if(0 == newData		, "", "Failed to resize array. Requested size: %u. Current size: %u.", (uint32_t)newSize, (uint32_t)Size)
 					else throw_if(0 == other.Data	, "", "%s", "other.Data is null!")
 					else {
@@ -300,6 +306,7 @@ namespace nwol
 						Data											= newData;
 						Size											= reserveSize;
 						Count											= other.Count;
+						safeguard.Handle								= 0;
 					}
 				}
 			}
@@ -341,7 +348,8 @@ namespace nwol
 				uint32_t											reserveSize								= calc_reserve_size(Count+1);
 				uint32_t											mallocSize								= calc_malloc_size(reserveSize);
 				reterr_error_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tObj)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
-				_tObj												* newData								= (_tObj*)::nwol::nwol_malloc(mallocSize);
+				::nwol::auto_nwol_free								safeguard;
+				_tObj												* newData								= (_tObj*)(safeguard.Handle = ::nwol::nwol_malloc(mallocSize));
 				reterr_error_if(0 == newData, "Failed to allocate for inserting new element into array! current size: %u. new size: %u.", Size, mallocSize);
 				::nwol::array_view<_tObj>							viewSafe								= {newData, Count+1};
 				for(uint32_t i=0, maxCount = ::nwol::min(index+1, Count); i<maxCount; ++i) {
@@ -355,6 +363,7 @@ namespace nwol
 				}
 				Data											= newData;
 				Size											= reserveSize;
+				safeguard.Handle								= 0;
 			}	
 			else {
 				for(int32_t i = (int32_t)::nwol::min(index, Count-1), maxCount = (int32_t)index; i >= maxCount; --i) {
@@ -374,7 +383,8 @@ namespace nwol
 				uint32_t											reserveSize									= calc_reserve_size(newSize);
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
 				reterr_error_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tObj)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
-				_tObj												* newData									= (_tObj*)::nwol::nwol_malloc(mallocSize);
+				::nwol::auto_nwol_free								safeguard;
+				_tObj												* newData									= (_tObj*)(safeguard.Handle = ::nwol::nwol_malloc(mallocSize));
 				reterr_error_if(nullptr == newData, "Failed to resize array. Requested size: %u. Current size: %u.", newSize, Size)
 				if(oldData) {
 					for(uint32_t i=0, copyCount = ::nwol::min(oldCount, newSize); i<copyCount; ++i)
@@ -385,6 +395,7 @@ namespace nwol
 				Data											= newData;
 				Size											= reserveSize;
 				Count											= (uint32_t)newSize;
+				safeguard.Handle								= 0;
 				if(oldData) 
 					::nwol::nwol_free(oldData);
 			}

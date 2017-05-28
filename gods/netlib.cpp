@@ -108,7 +108,7 @@ int32_t									nwol::createConnectionByHostName	( char_t* host_name, uint16_t p
 			debug_print("AF_INET (IPv4)");
 			sockaddr_ipv4								= (::sockaddr_in *) ptr->ai_addr;
 			ipbufferlength								= 46;
- 			inet_ntop(AF_INET, ptr->ai_addr, ipstringbuffer, ipbufferlength);
+ 			inet_ntop(AF_INET, &sockaddr_ipv4->sin_addr, ipstringbuffer, ipbufferlength);
 			info_printf("IPv4 address %s", ipstringbuffer);
 			/* Copy address */
 			b1											= sockaddr_ipv4->sin_addr.S_un.S_un_b.s_b1;

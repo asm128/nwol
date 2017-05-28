@@ -87,7 +87,7 @@ const ::nwol::SGUIControlEx									controlDefinitions[] =
 
 int32_t														setupGUI								(::SApplication& instanceApp)							{ 
 	::nwol::SGUI													& guiSystem								= instanceApp.GUI;
-
+	::nwol::array_static<::nwol::SGUIControlEx, ::nwol::size(controlDefinitions)>	testStatic	= controlDefinitions;
 	guiSystem.TargetSizeASCII.x									= ::nwol::getASCIIBackBufferWidth	();
 	guiSystem.TargetSizeASCII.y									= ::nwol::getASCIIBackBufferHeight	();
 

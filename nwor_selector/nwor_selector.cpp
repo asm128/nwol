@@ -19,9 +19,8 @@
 DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Application Selector", 0, 1);
 
 int32_t										cleanup							(::SApplication& instanceApp)																									{ 
-	for(uint32_t iModule = 0, moduleCount = instanceApp.ApplicationModulesHandle.size(); iModule < moduleCount; ++iModule) {
+	for(uint32_t iModule = 0, moduleCount = instanceApp.ApplicationModulesHandle.size(); iModule < moduleCount; ++iModule)
 		error_if(::nwol::unloadModule(instanceApp.ApplicationModulesHandle[iModule]), "Failed to unload module. Maybe the module wasn't actually loaded?");
-	}
 	return 0; 
 }
 
@@ -62,7 +61,7 @@ int32_t										loadValidModules				(const char* modulesPath, ::nwol::SRuntimeV
 
 int32_t										listDLLFiles					(const char* modulesPath, ::nwol::array_obj<::nwol::glabel>& possibleModuleNames)												{
 	::nwol::array_obj<::nwol::glabel>				fileNames;
-	::nwol::listFiles(modulesPath, fileNames);
+	nwol_necall(::nwol::listFiles(modulesPath, fileNames), "Failed to list module files from path: '%s'.", modulesPath);
 	for(uint32_t iFile=0, fileCount = fileNames.size(); iFile < fileCount; ++iFile) {
 		const ::nwol::glabel							& moduleName					= fileNames[iFile];
 		info_printf("File found: %s.", moduleName.begin());
@@ -72,9 +71,8 @@ int32_t										listDLLFiles					(const char* modulesPath, ::nwol::array_obj<::
 			for(uint32_t iChar = 0, charCount = ::nwol::size(fileExtension)-1; iChar<charCount; ++iChar)
 				fileExtension[iChar]						= (char)tolower(nameText[iChar]);
 
-			if(0 == strcmp(fileExtension, "." DYNAMIC_LIBRARY_EXTENSION)) {
-				reterr_error_if(-1 == possibleModuleNames.push_back(moduleName), "Failed to push module name to output list. Out of memory?");
-			}
+			if(0 == strcmp(fileExtension, "." DYNAMIC_LIBRARY_EXTENSION))
+				nwol_necall(possibleModuleNames.push_back(moduleName), "Failed to push module name to output list. Out of memory?");
 		}
 	}
 	return 0;
@@ -108,10 +106,7 @@ int32_t										refreshModules					(::SApplication& instanceApp)															
 		::nwol::SModuleInterface						loadedModule					= {};
 		loadedModule.RuntimeValues					= instanceApp.RuntimeValues;
 		int32_t											errorLoad						= ::nwol::loadModule(loadedModule, moduleName.begin());
-		if errored(errorLoad) {
-			warning_printf("DLL is not a valid module: %s." , moduleName.begin());
-			continue;
-		}
+		continue_warn_if(errored(errorLoad), "DLL is not a valid module: %s." , moduleName.begin());
 		const uint32_t									titleLen						= loadedModule.ModuleTitle ? (uint32_t)strlen(loadedModule.ModuleTitle) : 0;
 		maxModuleNameLength							= (maxModuleNameLength	> moduleName.size())	? maxModuleNameLength	: moduleName.size();
 		maxModuleTitleLength						= (maxModuleTitleLength > titleLen)				? maxModuleTitleLength	: titleLen;
@@ -183,14 +178,14 @@ int32_t										setup							(::SApplication& instanceApp)																						
 }
 
 #ifndef VK_ESCAPE
-#define VK_ESCAPE 0x1B
+#	define VK_ESCAPE 0x1B
 #endif
 
 int32_t										updateSelectorApp				(::SApplication& instanceApp, bool exitRequested)																				{
 	if(exitRequested)
 		return ::nwol::APPLICATION_STATE_EXIT;
 
-	::nwol::SInput									& inputSystem					= instanceApp.Input	; nwol_necall(::nwol::pollInput(inputSystem)				, "%s", "Failed to update input states.");
+	::nwol::SInput									& inputSystem					= instanceApp.Input	; nwol_necall(::nwol::pollInput(inputSystem)			, "%s", "Failed to update input states.");
 	::nwol::SGUI									& guiSystem						= instanceApp.GUI	; nwol_necall(::nwol::updateGUI(guiSystem, inputSystem)	, "%s", "Failed to update gui states.");
 
 	::nwol::array_pod<::nwol::CONTROL_FLAG>			& controlFlags					= guiSystem.Controls.ControlFlags;
@@ -203,9 +198,7 @@ int32_t										updateSelectorApp				(::SApplication& instanceApp, bool exitReq
 				return ::nwol::APPLICATION_STATE_EXIT;
 			default:
 				selectedModuleIndex							= iControl-1;
-				if(false == ::nwol::in_range(selectedModuleIndex, 0U, instanceApp.ApplicationModulesHandle.size())) {
-					error_printf("Invalid module index: %u.", selectedModuleIndex);	
-				}
+				error_if(false == ::nwol::in_range(selectedModuleIndex, 0U, instanceApp.ApplicationModulesHandle.size()), "Invalid module index: %u.", selectedModuleIndex)
 				else {
 					instanceApp.ApplicationModuleSelected		= selectedModuleIndex;	// Module indices are 
 					instanceApp.SelectorState					= ::SELECTOR_STATE_LOADING_SELECTION;
@@ -232,10 +225,14 @@ int32_t										loadSelection					(::SApplication& instanceApp)																
 		::nwol::shutdownASCIIScreen();
 		char	windowTitle[512]	= {};
 		sprintf_s(windowTitle, "%s v%u.%u", moduleInterface.ModuleTitle, moduleInterface.VersionMajor(), moduleInterface.VersionMinor());
+#if defined(__WINDOWS__)
 		SetWindowText(instanceApp.RuntimeValues->Screen.PlatformDetail.hWnd, windowTitle);
+#else
+#	error "Not implemented."
+#endif
 		int32_t											errSetup						= moduleInterface.Setup(); 
 		if(0 > errSetup) { 
-			error_printf(errorFormat2, "moduleSetup()" ); 
+			error_printf(errorFormat2, "moduleSetup()"); 
 			retVal										= -1;
 			moduleInterface.Cleanup();
 			::nwol::initASCIIScreen();
@@ -291,7 +288,7 @@ int32_t										update							(::SApplication & instanceApp, bool exitRequested)
 				continue;
 			error_if(errored(moduleSelected->Cleanup()), "Failed to clean up module %i ('%s')", moduleTitle)
 			else {
-				info_printf("Module cleaned up successfully  (%i:'%s')", moduleTitle);
+				info_printf("Module cleaned up successfully: '%s'", moduleTitle);
 			}
 			callbackPointersErased					= moduleSelected->TestForNullPointerFunctions();
 			if(callbackPointersErased) { 
@@ -305,7 +302,7 @@ int32_t										update							(::SApplication & instanceApp, bool exitRequested)
 			::nwol::error_t								errDelete							= 0; 
 			error_if(errored(errDelete = moduleSelected->Delete()), errorFormat2, errDelete, "moduleDelete()")
 			else {
-				info_printf("Module deleted successfully  (%i:'%s')", moduleTitle);
+				info_printf("Module deleted successfully: '%s'", moduleTitle);
 			}
 
 			callbackPointersErased					= moduleSelected->TestForNullPointerFunctions();
@@ -317,7 +314,11 @@ int32_t										update							(::SApplication & instanceApp, bool exitRequested)
 				::nwol::initASCIIScreen(instanceApp.GUI.TargetSizeASCII.x, instanceApp.GUI.TargetSizeASCII.y);
 				char										windowTitle[512]					= {};
 				sprintf_s(windowTitle, "%s v%u.%u", ::nwol_moduleTitle(), (::nwol_moduleVersion() & 0xF0U) >> 4, ::nwol_moduleVersion() & 0x0FU);
+#if defined(__WINDOWS__)
 				SetWindowText(instanceApp.RuntimeValues->Screen.PlatformDetail.hWnd, windowTitle);
+#else
+#	error "Not implemented."
+#endif
 				error_if(errored(::refreshModules(instanceApp)), "Error refreshing modules.");
 				info_printf("Client application instance deleted successfully."); 
 			}

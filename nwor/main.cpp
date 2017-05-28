@@ -105,22 +105,18 @@ int32_t														mainLoop								(SRuntimeState & runtimeState, ::nwol::SMod
 		switch(errUpdate) {
 		case ::nwol::APPLICATION_STATE_NORMAL: 
 			break;
-		
 		case ::nwol::APPLICATION_STATE_EXIT :
 			runtimeState.Quit											= true;													
 			runtimeState.Processing										= false;												
 			break;															
-	
 		case ::nwol::APPLICATION_STATE_BUSY :
 			runtimeState.Processing										= true;													
 			break;															
-		
 		case ::nwol::APPLICATION_STATE_STAY :
 			executionState												|= ~RUNTIME_FLAG_NOT_YET_REQUESTED;
 			runtimeState.Quit											= false;
 			runtimeState.Processing										= true;					
 			break;
-		
 		default:
 			error_printf(errorFormat2, errUpdate, "moduleUpdate()"); 
 			errLoop														= -1;

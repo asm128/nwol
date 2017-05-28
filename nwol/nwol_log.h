@@ -259,7 +259,7 @@ namespace nwol
 		if(::nwol::failed(_nwol_errCall)) 																																			\
 			return retval; 																																							\
 	}
-#	define nwol_pewcall							nwol_pecall	// Non-propagable retval_error error-warning call.
+#	define nwol_pewcall							nwol_pecall			// Propagable retval_error error-warning call.
 #endif
 
 #define nwol_necall(nwo_call, ...)				nwol_rve_ecall (-1, nwo_call, __VA_ARGS__)	// Non-propagable error call.
