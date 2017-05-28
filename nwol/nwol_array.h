@@ -23,7 +23,7 @@ namespace nwol
 		template<size_t _arraySizeOther>
 		inline											array_static							(const _tBase (&sourceData)[_arraySizeOther])												: array_view<_tBase>(Block)													{
 			Count											= 0;
-			for(uint32_t maxCount = ::nwol::min(_arraySize, _arraySizeOther); Count < maxCount; ++Count)
+			for(const uint32_t maxCount = (uint32_t)::nwol::min(_arraySize, _arraySizeOther); Count < maxCount; ++Count)
 				Block[Count]									= sourceData[Count];
 		}
 	};

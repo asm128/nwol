@@ -44,9 +44,9 @@ namespace nwol
 		template <typename _tRef> 
 		inline	::nwol::error_t					PushReference			(const ::nwol::gptr_nco<_tRef>& ref, ::nwol::id_t* index, const ::nwol::glabel description = ::nwol::glabel::statics().empty)	{
 			uint32_t									newIndex				= DataNames.size(); 
-			if errored(Data				.push_back(ref.acquire())		) { error_printf("Failed to push reference. Out of memory?");											}
-			if errored(DataNames		.push_back(ref.get_type_name())	) { error_printf("Failed to push reference. Out of memory?"); Data.pop_back(0); 						}
-			if errored(DataDescriptions	.push_back(description)			) { error_printf("Failed to push reference. Out of memory?"); Data.pop_back(0); DataNames.pop_back(0);	}
+			if errored(Data				.push_back(ref.acquire())		) { error_printf("Failed to push reference. Out of memory?");									}
+			if errored(DataNames		.push_back(ref.get_type_name())	) { error_printf("Failed to push reference. Out of memory?"); Data.pop(0); 						}
+			if errored(DataDescriptions	.push_back(description)			) { error_printf("Failed to push reference. Out of memory?"); Data.pop(0); DataNames.pop(0);	}
 
 			if(index)
 				*index									= newIndex;
