@@ -1,4 +1,4 @@
-#include "nwoa.h"
+#include "nwoc.h"
 
 #include <thread>
 

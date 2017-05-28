@@ -72,7 +72,7 @@ uint32_t							nwol::glabel::load				(const char* in_pMemoryBuffer)													
 
 ::nwol::error_t						nwol::glabel::save				(FILE* out_pMemoryBuffer)				const													{
 	const sint32							labelSize						= (int32_t)size();
-	nwol_pecall(labelSize.write(out_pMemoryBuffer), "%s", "Failed to write label to file! Label: '%s'.", begin());
+	nwol_necall(labelSize.write(out_pMemoryBuffer), "%s", "Failed to write label to file! Label: '%s'.", begin());
 	if(labelSize) {
 		reterr_error_if(labelSize != (int32_t)fwrite(begin(), sizeof(char), labelSize, out_pMemoryBuffer), "Failed to write label to file! Label: '%s'.", begin());
 	}
@@ -81,7 +81,7 @@ uint32_t							nwol::glabel::load				(const char* in_pMemoryBuffer)													
 
 ::nwol::error_t						nwol::glabel::load				(FILE* in_pMemoryBuffer)																		{
 	sint32									labelSize						= sint32(0);
-	nwol_pecall(labelSize.read(in_pMemoryBuffer), "%s", "Failed to read label from file!");
+	nwol_necall(labelSize.read(in_pMemoryBuffer), "%s", "Failed to read label from file!");
 	if(labelSize) {
 		::nwol::auto_nwol_free					a;
 		a.Handle							= (char*)::nwol::nwol_malloc(labelSize);

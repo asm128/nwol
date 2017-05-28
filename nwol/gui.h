@@ -46,9 +46,110 @@ namespace nwol
 					::nwol::ALIGN_SCREEN										AlignArea				= ::nwol::SCREEN_BOTTOM_RIGHT									;
 					::nwol::ALIGN_SCREEN										AlignText				= ::nwol::SCREEN_TOP_LEFT										;
 					::nwol::CONTROL_FLAG										ControlFlags			= ::nwol::CONTROL_FLAG_NONE										;
-	};																				   
 
-	struct SGUIControlTable			{				
+																				SGUIControl			
+				(	const ::nwol::glabel					& text					= {"GUI Control", 1024}
+				,	const ::nwol::SRectangle2D<int32_t>		& areaASCII				= {{1, 1}, {11, 1}}	
+				,	const ::nwol::SRectangle2D<int32_t>		& areaBitmap			= {{1, 1}, {11, 1}}	
+				,	const ::nwol::STextColor32				& textColors32			= {0xFFFFFFFFL, 0xFF000000L}
+				,	const ::nwol::SControlTextColorASCII	& textColorsASCII		= {{COLOR_BLUE, COLOR_DARKGREY}, {COLOR_YELLOW, COLOR_BLUE}}	
+				,	const ::nwol::ALIGN_SCREEN				& alignArea				= ::nwol::SCREEN_BOTTOM_RIGHT
+				,	const ::nwol::ALIGN_SCREEN				& alignText				= ::nwol::SCREEN_TOP_LEFT	
+				,	const ::nwol::CONTROL_FLAG				& controlFlags			= ::nwol::CONTROL_FLAG_NONE	
+				) 
+			:	Text			(text				)
+			,	AreaASCII		(areaASCII			)
+			,	AreaBitmap		(areaBitmap			)
+			,	TextColors32	(textColors32		)
+			,	TextColorsASCII	(textColorsASCII	)	
+			,	AlignArea		(alignArea			)
+			,	AlignText		(alignText			)
+			,	ControlFlags	(controlFlags		)
+		{}
+	};
+
+	//--------------------------------------------------------- Objects
+	struct SGUIControlBase			{				
+					::nwol::glabel												Text					= {"GUI Control", 1024}											;
+					::nwol::CONTROL_FLAG										ControlFlags			= ::nwol::CONTROL_FLAG_NONE										;
+
+																				SGUIControlBase			
+				(	const ::nwol::glabel					& text					= {"GUI Control", 1024}
+				,	const ::nwol::CONTROL_FLAG				& controlFlags			= ::nwol::CONTROL_FLAG_NONE	
+				) 
+			:	Text			(text				)
+			,	ControlFlags	(controlFlags		)
+		{}
+	};
+
+	//--------------------------------------------------------- Objects
+	struct SGUIControlBitmap				{	
+					::nwol::SGUIControlBase										BaseProperties			= {}															;
+					::nwol::SRectangle2D<int32_t>								AreaBitmap				= {{1, 1}, {11, 1}}												;
+					::nwol::STextColor32										TextColors32			= {0xFFFFFFFFL, 0xFF000000L}									;
+					::nwol::ALIGN_SCREEN										AlignArea				= ::nwol::SCREEN_BOTTOM_RIGHT									;
+					::nwol::ALIGN_SCREEN										AlignText				= ::nwol::SCREEN_TOP_LEFT										;
+
+																				SGUIControlBitmap			
+				(	const ::nwol::SGUIControlBase			& baseProperties		= {}
+				,	const ::nwol::SRectangle2D<int32_t>		& areaBitmap			= {{1, 1}, {11, 1}}	
+				,	const ::nwol::STextColor32				& textColors32			= {0xFFFFFFFFL, 0xFF000000L}
+				,	const ::nwol::ALIGN_SCREEN				& alignArea				= ::nwol::SCREEN_BOTTOM_RIGHT
+				,	const ::nwol::ALIGN_SCREEN				& alignText				= ::nwol::SCREEN_TOP_LEFT	
+				) 
+			:	BaseProperties	(baseProperties		)
+			,	AreaBitmap		(areaBitmap			)
+			,	TextColors32	(textColors32		)
+			,	AlignArea		(alignArea			)
+			,	AlignText		(alignText			)
+		{}
+	};
+
+	struct SGUIControlASCII				{				
+					::nwol::SGUIControlBase										BaseProperties			= {}															;
+					::nwol::SRectangle2D<int32_t>								AreaASCII				= {{1, 1}, {11, 1}}												;
+					::nwol::SControlTextColorASCII								TextColorsASCII			= {{COLOR_BLUE, COLOR_DARKGREY}, {COLOR_YELLOW, COLOR_BLUE}}	;
+					::nwol::ALIGN_SCREEN										AlignArea				= ::nwol::SCREEN_BOTTOM_RIGHT									;
+					::nwol::ALIGN_SCREEN										AlignText				= ::nwol::SCREEN_TOP_LEFT										;
+
+																				SGUIControlASCII			
+				(	const ::nwol::SGUIControlBase			& baseProperties		= {}
+				,	const ::nwol::SRectangle2D<int32_t>		& areaASCII				= {{1, 1}, {11, 1}}	
+				,	const ::nwol::SControlTextColorASCII	& textColorsASCII		= {{COLOR_BLUE, COLOR_DARKGREY}, {COLOR_YELLOW, COLOR_BLUE}}	
+				,	const ::nwol::ALIGN_SCREEN				& alignArea				= ::nwol::SCREEN_BOTTOM_RIGHT
+				,	const ::nwol::ALIGN_SCREEN				& alignText				= ::nwol::SCREEN_TOP_LEFT	
+				) 
+			:	BaseProperties	(baseProperties		)
+			,	AreaASCII		(areaASCII			)
+			,	TextColorsASCII	(textColorsASCII	)	
+			,	AlignArea		(alignArea			)
+			,	AlignText		(alignText			)
+		{}
+	};
+
+	//--------------------------------------------------------- Objects
+	struct SGUIControlEx {				
+					::nwol::SGUIControlBase										BaseProperties			;
+					::nwol::SGUIControlASCII									ASCIIProperties			;
+					::nwol::SGUIControlBitmap									BitmapProperties		;
+
+																				SGUIControlEx
+				(	const ::nwol::glabel					& text					= {"GUI Control", 1024}
+				,	const ::nwol::SRectangle2D<int32_t>		& areaASCII				= {{ 1,  1}, { 11,  1}}	
+				,	const ::nwol::SRectangle2D<int32_t>		& areaBitmap			= {{10, 10}, {110, 20}}	
+				,	const ::nwol::STextColor32				& textColors32			= {0xFFFFFFFFL, 0xFF000000L}
+				,	const ::nwol::SControlTextColorASCII	& textColorsASCII		= {{COLOR_BLUE, COLOR_DARKGREY}, {COLOR_YELLOW, COLOR_BLUE}}	
+				,	const ::nwol::ALIGN_SCREEN				& alignArea				= ::nwol::SCREEN_BOTTOM_RIGHT
+				,	const ::nwol::ALIGN_SCREEN				& alignText				= ::nwol::SCREEN_TOP_LEFT	
+				,	const ::nwol::CONTROL_FLAG				& controlFlags			= ::nwol::CONTROL_FLAG_NONE	
+				) 
+			:	BaseProperties		(text, controlFlags	)
+			,	ASCIIProperties		{{text, controlFlags}, areaASCII	, textColorsASCII	, alignArea, alignText}
+			,	BitmapProperties	{{text, controlFlags}, areaBitmap	, textColors32		, alignArea, alignText}
+		{}
+	};
+
+	struct SGUIControlTable	{				
 					::nwol::array_pod<::nwol::SRectangle2D<int32_t>		>		AreasRealignedASCII		;
 					::nwol::array_pod<::nwol::SRectangle2D<int32_t>		>		AreasRealignedBitmap	;
 					::nwol::array_pod<::nwol::SRectangle2D<int32_t>		>		AreasASCII				;

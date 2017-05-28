@@ -10,6 +10,6 @@
 		return 0;
 	const uint8_t											key												= ((uint8_t)GTYPEID_TOTALBYTES(descriptor[0])) % MAX_DESCRIPTORDATA_ARRAYS;
 	int32_t													itemIndex										= -1;
-	nwol_pecall(DescriptorData[key].push_back(descriptor, maxReadSize, &itemIndex, arrayView), "Failed to add descriptor! descriptor: %s. key: 0x%X.", descriptor, (uint32_t)key);
+	nwol_necall(DescriptorData[key].push_back(descriptor, maxReadSize, &itemIndex, arrayView), "Failed to add descriptor! descriptor: %s. key: 0x%X.", descriptor, (uint32_t)key);
 	return 0;
 }

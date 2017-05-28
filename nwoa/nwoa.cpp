@@ -14,7 +14,7 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(::SApplication, "No Workflow Overhead Applica
 int32_t														cleanup									(::SApplication& instanceApp)							{ 
 	::nwol::shutdownASCIIScreen();
 
-	nwol_pecall(::networkDisable(instanceApp), "Error when disabling network.");
+	nwol_necall(::networkDisable(instanceApp), "Error when disabling network.");
 	::std::this_thread::sleep_for(::std::chrono::milliseconds(1000));
 	return 0; 
 }
@@ -24,7 +24,8 @@ void														printTypeDebug							()														{
 	for(uint32_t iMember=0; iMember < memberRegistry.get_member_count(); ++iMember) {
 		const ::nwol::STypeIdentifier								& identifier						= memberRegistry.get_types()[iMember];
 		always_printf
-			(	"0x%X: %s::%s %s (%s): %s."
+			(	"0x%*.8X: %s::%s %s (%s): %s"
+			,	8
 			,	memberRegistry.get_data_type_ids	()[iMember]
 			,	identifier.NameSpace	.c_str()
 			,	identifier.Name			.c_str()
@@ -38,7 +39,8 @@ void														printTypeDebug							()														{
 	for(uint32_t iMember=0; iMember < memberRegistry.get_member_count(); ++iMember) {
 		const ::nwol::STypeIdentifier					& identifier						= memberRegistryNet.get_types()[iMember];
 		always_printf
-			(	"0x%X: %s::%s %s (%s): %s."
+			(	"0x%*.8X: %s::%s %s (%s): %s"
+			,	8
 			,	memberRegistryNet.get_data_type_ids	()[iMember]
 			,	identifier.NameSpace	.c_str()
 			,	identifier.Name			.c_str()
@@ -61,7 +63,7 @@ int32_t														setupGUI								(::SApplication& instanceApp)							{
 
 	newControl.AreaASCII										= {1, 1, (int32_t)newControlLabel.size(), 1}	;
 	newControl.Text												= newControlLabel								;
-	nwol_pecall(::nwol::createControl(guiSystem, newControl), "Failed to create control!");
+	nwol_necall(::nwol::createControl(guiSystem, newControl), "Failed to create control!");
 
 	return 0;
 }
@@ -76,8 +78,8 @@ int32_t														setup									(::SApplication& instanceApp)							{
 
 	printTypeDebug();
 
-	nwol_pecall(::networkEnable	(instanceApp), "Failed to enable network."	);
-	nwol_pecall(::setupGUI		(instanceApp), "Failed to setup GUI."		);
+	nwol_necall(::networkEnable	(instanceApp), "Failed to enable network."	);
+	nwol_necall(::setupGUI		(instanceApp), "Failed to setup GUI."		);
 
 	return 0; 
 }

@@ -52,6 +52,6 @@ WNDCLASSEX									initWndClass								(HINSTANCE hInstance)											{
 	::nwol::SScreen									newScreen;
 	newScreen.PlatformDetail.hWnd				= hWnd;
 	newScreen.PlatformDetail.pWindowClass		= &classRegistration.WindowClass;
-	nwol_pecall(screenIndex = Screens.push_back(newScreen), "%s", "Failed to push new screen to screen list!");
+	nwol_necall(screenIndex = Screens.push_back(newScreen), "%s", "Failed to push new screen to screen list!");
 	return screenIndex;
 }

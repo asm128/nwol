@@ -16,6 +16,6 @@
 
 	uint8_t												key										= ((uint8_t)text[0]) % MAX_LABELDATA_ARRAYS;
 	int32_t												itemIndex								= -1;
-	nwol_pecall(LabelData[key].push_back(text, maxReadSize, &itemIndex, arrayView), "Failed to add label! label: %s. key: 0x%X.", text, (uint32_t)key);
+	nwol_necall(LabelData[key].push_back(text, maxReadSize, &itemIndex, arrayView), "Failed to add label! label: %s. key: 0x%X.", text, (uint32_t)key);
 	return 0;
 }

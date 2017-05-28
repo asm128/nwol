@@ -38,8 +38,8 @@ bool										bListenFailure					= false;
 	newControl.AreaASCII						= {1, 1, (int32_t)newControlLabel.size(), 1}	;
 	newControl.Text								= newControlLabel								;
 
-	nwol_pecall(::nwol::createControl(instanceApp.GUI, newControl), "Failed to create GUI control %s.", newControl.Text.c_str());
-	nwol_pecall(::serverInit(instanceApp), "Failed to initialize server");
+	nwol_necall(::nwol::createControl(instanceApp.GUI, newControl), "Failed to create GUI control %s.", newControl.Text.c_str());
+	nwol_necall(::serverInit(instanceApp), "Failed to initialize server");
 	return 0; 
 }
 
@@ -51,8 +51,8 @@ bool										bListenFailure					= false;
 	if(exitRequested)
 		return ::nwol::APPLICATION_STATE_EXIT;
 
-	::nwol::SInput									& inputSystem					= instanceApp.Input;	nwol_pecall(::nwol::pollInput(inputSystem), "Failed to poll input device.");
-	::nwol::SGUI									& guiSystem						= instanceApp.GUI;		nwol_pecall(::nwol::updateGUI(guiSystem, inputSystem), "Failed to update GUI states!");
+	::nwol::SInput									& inputSystem					= instanceApp.Input;	nwol_necall(::nwol::pollInput(inputSystem), "Failed to poll input device.");
+	::nwol::SGUI									& guiSystem						= instanceApp.GUI;		nwol_necall(::nwol::updateGUI(guiSystem, inputSystem), "Failed to update GUI states!");
 
 	::nwol::array_pod<::nwol::CONTROL_FLAG>			& controlFlags					= guiSystem.Controls.ControlFlags;
 	for(uint32_t iControl = 0, controlCount = controlFlags.size(); iControl < controlCount; ++iControl)
@@ -66,13 +66,16 @@ bool										bListenFailure					= false;
 	return 0; 
 }
 
-::nwol::error_t								render							(::SApplication& instanceApp)								{ 
+int32_t														render									(::SApplication& instanceApp)							{ 
 	::nwol::clearASCIIBackBuffer(' ', COLOR_WHITE);
-
-	::nwol::SASCIITarget							target;
-	nwol_pecall(::nwol::getASCIIBackBuffer(target)				, "%s", "Failed to get ASCII target!");
-	nwol_pecall(::nwol::renderGUIASCII(target, instanceApp.GUI)	, "%s", "Failed to render GUI!");
-	::nwol::presentASCIIBackBuffer();
+	::nwol::SASCIITarget											target;
+	if(not_errored(::nwol::getASCIIBackBuffer(target))) {
+		error_if(errored(::nwol::renderGUIASCII(target, instanceApp.GUI)), "%s", "Failed to render ASCII GUI!")
+		else
+			::nwol::presentASCIIBackBuffer();
+	}
+	else 
+		error_printf("%s", "Failed to get ASCII target!");
 	
 	return 0; 
 }
@@ -113,8 +116,8 @@ void										serverListen					( void* server )											{ serverListen((::nwol
 	reterr_error_if(sscanf_s(&port_number_str[0], "%u", &port_number) != 1, "%s.", "Invalid server port string.");	// Only run if port is provided
 
 																													// Open windows connection 
-	nwol_pecall(::nwol::initNetwork()								, "%s", "Failed to initialize network."			);
-	nwol_pecall(instanceApp.NetworkServer.InitServer(port_number)	, "%s", "Failed to initialize connection server.");
+	nwol_necall(::nwol::initNetwork()								, "%s", "Failed to initialize network."			);
+	nwol_necall(instanceApp.NetworkServer.InitServer(port_number)	, "%s", "Failed to initialize connection server.");
 	_beginthread( serverListen, 0, &instanceApp.NetworkServer );	
 	return 0;
 }

@@ -184,7 +184,7 @@ namespace nwol
 		::nwol::error_t									init						()																																	{
 			if( bInitialized )
 				return 0;
-			nwol_pecall(pushItemRange(0, 0, 0), "%s", "Failed to allocate item array!");
+			nwol_necall(pushItemRange(0, 0, 0), "%s", "Failed to allocate item array!");
 			TBlock												*firstBlock					= (TBlock*)::nwol::nwol_malloc(sizeof(TBlock));	
 			reterr_error_if(0 == firstBlock, "%s", "Failed to allocate initial block! Out of memory?");
 			firstBlock->Data[0]								= (_tBase)0;

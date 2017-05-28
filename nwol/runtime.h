@@ -149,7 +149,7 @@ namespace nwol
 					return i; 
 
 			::nwol::SModuleInterface								moduleInstance; 
-			nwol_pecall(::nwol::loadModule(moduleInstance, moduleName), "Module not loaded: %s.", moduleName); 
+			nwol_necall(::nwol::loadModule(moduleInstance, moduleName), "Module not loaded: %s.", moduleName); 
 			return Modules.push_back(moduleInstance); 
 		}
 	};	// struct

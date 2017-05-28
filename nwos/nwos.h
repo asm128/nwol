@@ -10,7 +10,7 @@ struct SApplication	: public ::nwol::SApplicationBase {
 	NWOM_REGISTRY
 		(	NWOM_NAME(NetworkServer		)
 		);
-	inline										SApplication			(::nwol::SRuntimeValues	* runtimeValues)						: SApplicationBase(runtimeValues)	{ GUI = {{640, 480}, {132>>1, 60>>1}}; }
+	inline										SApplication			(::nwol::SRuntimeValues	* runtimeValues)						: SApplicationBase(runtimeValues)	{ GUI = {{640, 480}, {132 >> 1, 60 >> 1}}; }
 };
 
 int32_t										setup					(::SApplication	& instanceApp);

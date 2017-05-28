@@ -32,7 +32,7 @@ namespace nwol
 							bool								operator==				(const ::nwol::glabel& other)		const	noexcept	;
 		inline				bool								operator!=				(const ::nwol::glabel& other)		const	noexcept	{ return !operator==(other);												}
 
-		inline				const char*							c_str					()									const	noexcept	{ return begin();															}
+		inline constexpr	const char*							c_str					()									const	noexcept	{ return begin();															}
 
 							uint32_t							save					(char* out_pMemoryBuffer)			const				;
 							uint32_t							load					(const char* in_pMemoryBuffer)							;
