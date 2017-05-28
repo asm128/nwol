@@ -22,8 +22,10 @@ void																renderLoop								(::nwor::SRuntimeState& stateRuntime)					
 	static const char														* errorFormat2							= "Module function failed with code 0x%x: %s.";
 	::nwol::SModuleInterface												& containerForCallbacks					= stateRuntime.Interface;
 	while(false == stateRuntime.Quit) {
-		break_error_if(stateRuntime.Quit = errored(containerForCallbacks.Render()) ? true : false, "Fatal error rendering client module.");
-
+		if(errored(containerForCallbacks.Render())) {
+			error_printf("%s", "Fatal error rendering client module.");
+			stateRuntime.Quit													= true;
+		}
 		::nwol::RUNTIME_CALLBACK_ID												callbackPointersErased					= containerForCallbacks.TestForNullPointerFunctions();
 		if(callbackPointersErased) { 
 			printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);

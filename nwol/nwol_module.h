@@ -13,51 +13,54 @@
 #define NWOL_MODULE_H__29348729374234
 
 namespace nwol {
+
+#if defined(__WINDOWS__)
+#	define NWOL_PLATFORM_LOAD_MODULE								LoadLibrary
+#	define NWOL_PLATFORM_FREE_MODULE(hModule)						FreeLibrary((HMODULE)(hModule));
+#	define NWOL_PLATFORM_LOAD_FUNCTION_ADDRESS(hModule, lpProcName)	GetProcAddress((HMODULE)hModule, lpProcName)
+#else
+#	define NWOL_PLATFORM_LOAD_MODULE(moduleName)					dlopen(moduleName, RTLD_NOW | RTLD_LOCAL)
+#	define NWOL_PLATFORM_FREE_MODULE								dlclose
+#	define NWOL_PLATFORM_LOAD_FUNCTION_ADDRESS						dlsym
+#endif
+
 #pragma pack(push, 1)
 	struct SModuleBase {
-		void										* Handle										= nullptr;
+		::nwol::glabel												FilenameOriginal								;
+		::nwol::glabel												FilenameImage									;
+		void														* Handle										= nullptr;
 	};
 #pragma pack(pop)
 
 	template <typename _tModule> 
-	::nwol::error_t									unloadModule									(_tModule& moduleInstance)								{
-		void												* moduleHandle									= moduleInstance.Handle;
+	::nwol::error_t												unloadModule									(_tModule& moduleInstance)								{
+		void															* moduleHandle									= moduleInstance.Handle;
 		retwarn_error_if(0 == moduleHandle, "Invalid module handle! This could happen if the unloadModule() function was called twice for the same module.");
-		moduleInstance.Handle							= 0;
-#if defined(__WINDOWS__)
-		::FreeLibrary((HMODULE)moduleHandle);
-#else
-		::dlclose(moduleHandle);
-#endif
+		moduleInstance.Handle										= 0;
+		NWOL_PLATFORM_FREE_MODULE(moduleHandle);
 		return 0;
 	}
 
 	template <typename _tModule> 
-	::nwol::error_t									loadModule										(const char* moduleName, _tModule& moduleInstance)		{
-		_tModule											newModuleInstance								= {};
+	::nwol::error_t												loadModule										(const char* moduleName, _tModule& moduleInstance)		{
+		_tModule														newModuleInstance								= {};
 		if(moduleInstance.Handle)
 			::nwol::unloadModule(moduleInstance);
 
-#if defined(__WINDOWS__)
-		static	const char_t								* errorFormat0									= "Failed to load library: %s: 0x%X - \"%s\"";
-		::std::string										errorString;
-		DWORD												lastError;
-		reterr_error_if(nullptr == (newModuleInstance.Handle = LoadLibrary( moduleName )), errorFormat0, moduleName, (lastError = ::GetLastError()), (errorString = getWindowsErrorAsString(::GetLastError())).c_str()); 
-#	define LOAD_FUNCTION_ADDRESS(hModule, lpProcName)	GetProcAddress((HMODULE)hModule, lpProcName)
-#else
-		static	const char_t								* errorFormat0									= "Failed to load library: %s.";
-		reterr_error_if(0 == (newModuleInstance.Handle = dlopen( moduleName, RTLD_NOW | RTLD_LOCAL )), errorFormat0, moduleName); 
-#	define LOAD_FUNCTION_ADDRESS							dlsym
-#endif		
-		const _tModule::TRegistry							& memberRegistry								= NWOM_GET_MEMBER_REGISTRY(_tModule); 
-		const ::nwol::array_view<const ::nwol::gsyslabel>	& memberNames									= memberRegistry.get_names(); 
-		const ::nwol::array_view<const ::nwol::GDATA_TYPE>	& memberTypeIds									= memberRegistry.get_data_type_ids(); 
-		uint64_t											myErr											= 0;
+		moduleInstance.FilenameOriginal								= 
+		moduleInstance.FilenameImage								= ::nwol::glabel(moduleName, 2048);
+
+		reterr_error_if(0 == (newModuleInstance.Handle = NWOL_PLATFORM_LOAD_MODULE(moduleName)), "Failed to load library: %s.", moduleName); 
+
+		const _tModule::TRegistry										& memberRegistry								= NWOM_GET_MEMBER_REGISTRY(_tModule); 
+		const ::nwol::array_view<const ::nwol::gsyslabel>				& memberNames									= memberRegistry.get_names(); 
+		const ::nwol::array_view<const ::nwol::GDATA_TYPE>				& memberTypeIds									= memberRegistry.get_data_type_ids(); 
+		uint64_t														myErr											= 0;
 		for(uint32_t iSymbol = 0, symbolCount = memberNames.size()-1; iSymbol < symbolCount; ++iSymbol) {
 			if(memberTypeIds[iSymbol] == ::nwol::GDATA_TYPE_FUN) {
-				if(0 == ((&newModuleInstance.Handle)[iSymbol+1] = LOAD_FUNCTION_ADDRESS(newModuleInstance.Handle, memberNames[iSymbol].c_str()))) {
+				if(0 == ((&newModuleInstance.Handle)[iSymbol+1] = NWOL_PLATFORM_LOAD_FUNCTION_ADDRESS(newModuleInstance.Handle, memberNames[iSymbol].c_str()))) {
 					error_printf("Function address not found: \"%s\".", memberNames[iSymbol].c_str());
-					myErr											|= (1ULL << iSymbol);
+					myErr														|= (1ULL << iSymbol);
 				}
 			}
 		}
@@ -69,7 +72,7 @@ namespace nwol {
 		else {
 			info_printf("Module loaded successfully: \"%s\".", moduleName);
 		}
-		moduleInstance									= newModuleInstance;
+		moduleInstance												= newModuleInstance;
 		return 0;
 	}
 
@@ -80,9 +83,9 @@ namespace nwol {
 	
 #define NWOL_MODULE_FUNCTION_NAME(functionName)	NWOL_Func_##functionName
 
-#define NWOL_DECLARE_MODULE_FUNCTION(functionName, ...) 																\
-	extern "C"	::nwol::error_t		 _stdcall		functionName									(__VA_ARGS__);		\
-	typedef		::nwol::error_t		(_stdcall		* NWOL_MODULE_FUNCTION_NAME(functionName))		(__VA_ARGS__);		\
+#define NWOL_DECLARE_MODULE_FUNCTION(functionName, ...) 																	\
+	extern "C"	::nwol::error_t		 _stdcall			functionName									(__VA_ARGS__);		\
+	typedef		::nwol::error_t		(_stdcall			* NWOL_MODULE_FUNCTION_NAME(functionName))		(__VA_ARGS__);		\
 
 #define NWOM_PFUNC(structNameSpace, structName, functionName)	NWOM(structNameSpace, structName, , NWOL_MODULE_FUNCTION_NAME(functionName), functionName, ::nwol::GDATA_TYPE_FUN, #functionName, "Function")	= nullptr
 
