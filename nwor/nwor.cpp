@@ -20,7 +20,7 @@ void																renderLoop								(::nwor::SRuntimeState& stateRuntime)					
 	info_printf("Render loop start.");
 	static const char														* errorFormat1							= "Dynamically loaded function is null, maybe due to a buffer overrun which erased the pointers: %s.";
 	static const char														* errorFormat2							= "Module function failed with code 0x%x: %s.";
-	::nwol::SApplicationModule												& containerForCallbacks					= stateRuntime.Interface;
+	::nwol::SApplicationModule												& containerForCallbacks					= stateRuntime.MainModule;
 	while(false == stateRuntime.Quit) {
 		if(errored(containerForCallbacks.Render())) {
 			error_printf("%s", "Fatal error rendering client module.");
@@ -262,7 +262,7 @@ int															nwor::rtMain							(::nwor::SRuntimeState& runtimeState)						
 	preContainerForCallbacks.RuntimeValues						= &runtimeValues;
 	nwol_necall(::nwol::applicationModuleLoad(runtimeValues, preContainerForCallbacks, runtimeValues.FileNameApplication), "Failed to load module %s.", runtimeValues.FileNameApplication);
 	
-	::nwol::SApplicationModule										& containerForCallbacks					= runtimeState.Interface	= preContainerForCallbacks;
+	::nwol::SApplicationModule										& containerForCallbacks					= runtimeState.MainModule	= preContainerForCallbacks;
 	char															windowTitle[512]						= {};
 	sprintf_s(windowTitle, "%s v%u.%u", containerForCallbacks.ModuleTitle, containerForCallbacks.VersionMajor(), containerForCallbacks.VersionMinor());
 	reterr_error_if(0 > ::setupScreen(runtimeValues, windowTitle), "Failed to create main window.");
@@ -335,7 +335,7 @@ int															nwor::rtMain							(::nwor::SRuntimeState& runtimeState)						
 			runtimeState.Quit											= true; 
 		}
 	}
-	nwol_necall(::nwol::unloadModule(containerForCallbacks)	, "Error unloading main module.");
+	nwol_necall(::nwol::moduleUnload(containerForCallbacks)	, "Error unloading main module.");
 	nwol_necall(::shutdownScreen(runtimeState)				, "Failed to shut down main screen/window.");
 	return 0;
 }

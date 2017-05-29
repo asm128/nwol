@@ -43,16 +43,12 @@
 #define DEFINE_RUNTIME_INTERFACE_SETUP(_yourCustomClass)	::nwol::error_t	__stdcall	::nwol_moduleSetup		(void* instanceApp)		noexcept		{ reterr_error_if(instanceApp == 0, "%s", "Invalid pointer!"); return setup		(*(_yourCustomClass*)instanceApp); }
 #define DEFINE_RUNTIME_INTERFACE_CLEANUP(_yourCustomClass)	::nwol::error_t	__stdcall	::nwol_moduleCleanup	(void* instanceApp)		noexcept		{ reterr_error_if(instanceApp == 0, "%s", "Invalid pointer!"); return cleanup	(*(_yourCustomClass*)instanceApp); }
 #define DEFINE_RUNTIME_INTERFACE_RENDER(_yourCustomClass)	::nwol::error_t	__stdcall	::nwol_moduleRender		(void* instanceApp)		noexcept		{ reterr_error_if(instanceApp == 0, "%s", "Invalid pointer!"); return render	(*(_yourCustomClass*)instanceApp); }
-#define DEFINE_RUNTIME_INTERFACE_UPDATE(_yourCustomClass)																										\
-::nwol::error_t	__stdcall	::nwol_moduleUpdate				(void* instanceApp, bool requestedExit)							noexcept		{		\
-	if(instanceApp == 0) {																																		\
-		error_printf("%s", "Invalid pointer!");																													\
-		return ::nwol::APPLICATION_STATE_FATAL;																													\
-	}																																							\
-																																								\
-	_yourCustomClass							& customApp					= *(_yourCustomClass*)instanceApp;													\
-	::nwol::APPLICATION_STATE					result						= (::nwol::APPLICATION_STATE)update(customApp, requestedExit);						\
-	return result;																																				\
+#define DEFINE_RUNTIME_INTERFACE_UPDATE(_yourCustomClass)																											\
+::nwol::error_t	__stdcall				::nwol_moduleUpdate				(void* instanceApp, bool requestedExit)							noexcept		{			\
+	retval_error_if(::nwol::APPLICATION_STATE_FATAL, instanceApp == 0, "%s", "Invalid pointer!");																	\
+	_yourCustomClass							& customApp					= *(_yourCustomClass*)instanceApp;														\
+	::nwol::APPLICATION_STATE					result						= (::nwol::APPLICATION_STATE)update(customApp, requestedExit);							\
+	return result;																																					\
 }
 
 /// - In order to take advantage of the DEFINE_RUNTIME_INTERFACE_FUNCTIONS() macro below, your application will need to define an update(), 

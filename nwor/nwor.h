@@ -11,7 +11,7 @@ namespace nwor
 	#else
 		::nwol::refcount_t											RenderThreadUsers						;			
 	#endif
-		::nwol::SApplicationModule									Interface								= {}		;	// 
+		::nwol::SApplicationModule									MainModule								= {}		;	// 
 		::nwol::SRuntimeValues										RuntimeValues							= {}		;	// 
 		bool														Quit									= false		;	// turn to true when quit has been requested
 		bool														Processing								= true		;	// 

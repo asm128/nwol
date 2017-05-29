@@ -15,14 +15,6 @@
 
 namespace nwol
 {
-	enum APPLICATION_STATE : ::nwol::error_t
-		{	APPLICATION_STATE_NORMAL					=  0
-		,	APPLICATION_STATE_EXIT						=  1
-		,	APPLICATION_STATE_BUSY						=  2
-		,	APPLICATION_STATE_STAY						=  3
-		,	APPLICATION_STATE_FATAL						= -1
-		};
-
 	struct SRuntimeValues;
 }	// nwol
 
@@ -42,6 +34,14 @@ extern "C"
 
 namespace nwol
 {
+	enum APPLICATION_STATE : ::nwol::error_t
+		{	APPLICATION_STATE_NORMAL					=  0
+		,	APPLICATION_STATE_EXIT						=  1
+		,	APPLICATION_STATE_BUSY						=  2
+		,	APPLICATION_STATE_STAY						=  3
+		,	APPLICATION_STATE_FATAL						= -1
+		};
+
 	enum RUNTIME_CALLBACK_ID : uint8_t
 		{	RUNTIME_CALLBACK_ID_NONE								= 0
 		,	RUNTIME_CALLBACK_ID_TITLE								= 0x01
@@ -53,7 +53,6 @@ namespace nwol
 		,	RUNTIME_CALLBACK_ID_RENDER								= 0x40
 		,	RUNTIME_CALLBACK_ID_UPDATE								= 0x80
 		};									
-
 
 	static constexpr	const char								formatModuleFunctionPtrNull[]	= "Function pointer for %s() in module %s is null.";
 	struct SApplicationModule : public SModuleBase {
@@ -68,7 +67,7 @@ namespace nwol
 		// -----------------------------------------------------------------------------------------------
 		NWOM(::nwol, SApplicationModule, ::nwol	, SRuntimeValues	* , RuntimeValues			, ::nwol::GDATA_TYPE_POINTER, "Runtime Values"	, "Holds global runtime information."									)	= nullptr;
 		NWOM(::nwol, SApplicationModule, 		, void_t			* , ClientInstance			, ::nwol::GDATA_TYPE_POINTER, "Client Instance"	, "Holds the client application instance created by moduleCreate()."	)	= nullptr;
-		NWOM(::nwol, SApplicationModule, const	, char_t			* , ModuleFile				, ::nwol::GDATA_TYPE_POINTER, "Module File"		, "The module filename."												)	= nullptr;
+		//NWOM(::nwol, SApplicationModule, const	, char_t			* , ModuleFile				, ::nwol::GDATA_TYPE_POINTER, "Module File"		, "The module filename."												)	= nullptr;
 		NWOM(::nwol, SApplicationModule, const	, char_t			* , ModuleTitle				, ::nwol::GDATA_TYPE_POINTER, "Module Title"	, "The module title."													)	= nullptr;
 		NWOM_REGISTRY
 			(	NWOM_NAME(nwol_moduleTitle		)
@@ -82,20 +81,20 @@ namespace nwol
 			// ----------------------------------
 			,	NWOM_NAME(RuntimeValues			)
 			,	NWOM_NAME(ClientInstance		)
-			,	NWOM_NAME(ModuleFile			)
+		//	,	NWOM_NAME(ModuleFile			)
 			,	NWOM_NAME(ModuleTitle			)
 			);
 
 		inline	uint8_t												VersionMajor					()						const	noexcept	{ const uint16_t version = Version(); return (uint8_t)(version & 0x00FF);	}
 		inline	uint8_t												VersionMinor					()						const	noexcept	{ const uint16_t version = Version(); return (uint8_t)((version & 0xFF00) >> 8);			}
-				const char_t*										Title							()						const				{ retval_error_if(nullptr	,							0 == nwol_moduleTitle	, formatModuleFunctionPtrNull, "moduleTitle"	, ModuleTitle ? ModuleTitle : ModuleFile); char		title [240]	= {}; uint8_t titleLen = (uint8_t)::nwol::size(title); nwol_moduleTitle(title, &titleLen); return ::nwol::glabel(title, titleLen).c_str();	}
-		inline	uint16_t											Version							()						const				{ retval_error_if(0xFF		,							0 == nwol_moduleVersion	, formatModuleFunctionPtrNull, "moduleVersion"	, ModuleTitle ? ModuleTitle : ModuleFile); uint16_t moduleVer	=  0; retnul_error_if(errored(nwol_moduleVersion(&moduleVer)), "Failed to get module version.");	return moduleVer;						}
-		inline	::nwol::error_t										Create							()											{ retval_error_if(-1,									0 == nwol_moduleCreate	, formatModuleFunctionPtrNull, "moduleCreate"	, ModuleTitle ? ModuleTitle : ModuleFile); return nwol_moduleCreate								(&ClientInstance, RuntimeValues);																			}
-		inline	::nwol::error_t										Delete							()											{ retval_error_if(-1,									0 == nwol_moduleDelete	, formatModuleFunctionPtrNull, "moduleDelete"	, ModuleTitle ? ModuleTitle : ModuleFile); return nwol_moduleDelete								(&ClientInstance);																							}
-		inline	::nwol::error_t										Setup							()						const				{ retval_error_if(-1,									0 == nwol_moduleSetup	, formatModuleFunctionPtrNull, "moduleSetup"	, ModuleTitle ? ModuleTitle : ModuleFile); return nwol_moduleSetup								(ClientInstance	);																							}
-		inline	::nwol::error_t										Cleanup							()						const				{ retval_error_if(-1,									0 == nwol_moduleCleanup	, formatModuleFunctionPtrNull, "moduleCleanup"	, ModuleTitle ? ModuleTitle : ModuleFile); return nwol_moduleCleanup							(ClientInstance	);																							}
-		inline	::nwol::error_t										Render							()						const				{ retval_error_if(-1,									0 == nwol_moduleRender	, formatModuleFunctionPtrNull, "moduleRender"	, ModuleTitle ? ModuleTitle : ModuleFile); return nwol_moduleRender								(ClientInstance	);																							}
-		inline	::nwol::APPLICATION_STATE							Update							(bool bRequestedExit)	const				{ retval_error_if(::nwol::APPLICATION_STATE_FATAL	,	0 == nwol_moduleUpdate	, formatModuleFunctionPtrNull, "moduleUpdate"	, ModuleTitle ? ModuleTitle : ModuleFile); return (::nwol::APPLICATION_STATE)nwol_moduleUpdate	(ClientInstance, bRequestedExit);																			}
+				const char_t*										Title							()						const				{ retval_error_if(nullptr	,							0 == nwol_moduleTitle	, formatModuleFunctionPtrNull, "moduleTitle"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); char		title [240]	= {}; uint8_t titleLen = (uint8_t)::nwol::size(title); nwol_moduleTitle(title, &titleLen); return ::nwol::glabel(title, titleLen).c_str();	}
+		inline	uint16_t											Version							()						const				{ retval_error_if(0xFF		,							0 == nwol_moduleVersion	, formatModuleFunctionPtrNull, "moduleVersion"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); uint16_t moduleVer	=  0; retnul_error_if(errored(nwol_moduleVersion(&moduleVer)), "Failed to get module version.");	return moduleVer;						}
+		inline	::nwol::error_t										Create							()											{ retval_error_if(-1,									0 == nwol_moduleCreate	, formatModuleFunctionPtrNull, "moduleCreate"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); return nwol_moduleCreate								(&ClientInstance, RuntimeValues);																			}
+		inline	::nwol::error_t										Delete							()											{ retval_error_if(-1,									0 == nwol_moduleDelete	, formatModuleFunctionPtrNull, "moduleDelete"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); return nwol_moduleDelete								(&ClientInstance);																							}
+		inline	::nwol::error_t										Setup							()						const				{ retval_error_if(-1,									0 == nwol_moduleSetup	, formatModuleFunctionPtrNull, "moduleSetup"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); return nwol_moduleSetup								(ClientInstance	);																							}
+		inline	::nwol::error_t										Cleanup							()						const				{ retval_error_if(-1,									0 == nwol_moduleCleanup	, formatModuleFunctionPtrNull, "moduleCleanup"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); return nwol_moduleCleanup							(ClientInstance	);																							}
+		inline	::nwol::error_t										Render							()						const				{ retval_error_if(-1,									0 == nwol_moduleRender	, formatModuleFunctionPtrNull, "moduleRender"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); return nwol_moduleRender								(ClientInstance	);																							}
+		inline	::nwol::APPLICATION_STATE							Update							(bool bRequestedExit)	const				{ retval_error_if(::nwol::APPLICATION_STATE_FATAL	,	0 == nwol_moduleUpdate	, formatModuleFunctionPtrNull, "moduleUpdate"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); return (::nwol::APPLICATION_STATE)nwol_moduleUpdate	(ClientInstance, bRequestedExit);																			}
 				
 				::nwol::RUNTIME_CALLBACK_ID							TestForNullPointerFunctions		()						const				{
 			::nwol::RUNTIME_CALLBACK_ID										result							= RUNTIME_CALLBACK_ID_NONE;
@@ -110,10 +109,10 @@ namespace nwol
 			return result;
 		}
 	};
-			::nwol::error_t										applicationModuleLoad			(::nwol::SRuntimeValues& runtimeValues, ::nwol::SApplicationModule& containerForCallbacks, const char_t* moduleName);
-			::nwol::error_t										applicationModuleUnload			(::nwol::SApplicationModule& containerForCallbacks);
+					::nwol::error_t								applicationModuleLoad			(::nwol::SRuntimeValues& runtimeValues, ::nwol::SApplicationModule& containerForCallbacks, const char_t* moduleName);
+	static inline	::nwol::error_t								applicationModuleUnload			(::nwol::SApplicationModule& containerForCallbacks)	{ return ::nwol::moduleUnload(containerForCallbacks); };
 
-			void												printErasedModuleInterfacePointers	(::nwol::RUNTIME_CALLBACK_ID erasedCallbacks	, const char_t* errorFormat);
+					void										printErasedModuleInterfacePointers	(::nwol::RUNTIME_CALLBACK_ID erasedCallbacks	, const char_t* errorFormat);
 }	// namespace
 
 namespace nwol
@@ -151,7 +150,7 @@ namespace nwol
 				// Returns -1 on error or the index of the loaded module.
 				::nwol::error_t										ModuleLoad							(const char_t* moduleName)	{
 			for(uint32_t i=0; i<Modules.size(); ++i) 
-				if(0 == strcmp(Modules[i].ModuleFile, moduleName)) 
+				if(0 == strcmp(Modules[i].FilenameOriginal.c_str(), moduleName)) 
 					return i; 
 
 			::nwol::SApplicationModule								moduleInstance; 

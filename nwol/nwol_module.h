@@ -1,5 +1,3 @@
-#include "nwol_error.h"
-#include "nwol_log.h"
 #include "member_registry.h"
 
 #if defined(__WINDOWS__)
@@ -33,22 +31,22 @@ namespace nwol {
 #pragma pack(pop)
 
 	template <typename _tModule> 
-	::nwol::error_t												unloadModule									(_tModule& moduleInstance)								{
+	::nwol::error_t												moduleUnload									(_tModule& moduleInstance)								{
 		void															* moduleHandle									= moduleInstance.Handle;
-		retwarn_error_if(0 == moduleHandle, "Invalid module handle! This could happen if the unloadModule() function was called twice for the same module.");
+		retwarn_error_if(0 == moduleHandle, "Invalid module handle! This could happen if the moduleUnload() function was called twice for the same module.");
 		moduleInstance.Handle										= 0;
 		NWOL_PLATFORM_FREE_MODULE(moduleHandle);
 		return 0;
 	}
 
 	template <typename _tModule> 
-	::nwol::error_t												loadModule										(const char* moduleName, _tModule& moduleInstance)		{
+	::nwol::error_t												moduleLoad										(const char* moduleName, _tModule& moduleInstance)		{
 		_tModule														newModuleInstance								= {};
 		if(moduleInstance.Handle)
-			::nwol::unloadModule(moduleInstance);
+			::nwol::moduleUnload(moduleInstance);
 
-		moduleInstance.FilenameOriginal								= 
-		moduleInstance.FilenameImage								= ::nwol::glabel(moduleName, 2048);
+		newModuleInstance.FilenameOriginal								= 
+		newModuleInstance.FilenameImage								= ::nwol::glabel(moduleName, 2048);
 
 		reterr_error_if(0 == (newModuleInstance.Handle = NWOL_PLATFORM_LOAD_MODULE(moduleName)), "Failed to load library: %s.", moduleName); 
 
@@ -66,7 +64,7 @@ namespace nwol {
 		}
 		if(myErr) {
 			error_printf("Failed to load module symbols for library: \"%s\".", moduleName);
-			::nwol::unloadModule(newModuleInstance);
+			::nwol::moduleUnload(newModuleInstance);
 			return -1;
 		} 
 		else {

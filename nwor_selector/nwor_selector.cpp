@@ -20,7 +20,7 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Application Selector", 0, 1);
 
 int32_t											cleanup											(::SApplication& instanceApp)																									{ 
 	for(uint32_t iModule = 0, moduleCount = instanceApp.ApplicationModulesHandle.size(); iModule < moduleCount; ++iModule)
-		error_if(::nwol::unloadModule(instanceApp.ApplicationModulesHandle[iModule]), "Failed to unload module. Maybe the module wasn't actually loaded?");
+		error_if(::nwol::moduleUnload(instanceApp.ApplicationModulesHandle[iModule]), "Failed to unload module. Maybe the module wasn't actually loaded?");
 	return 0; 
 }
 
@@ -78,9 +78,9 @@ int32_t											listDLLFiles									(const char* modulesPath, ::nwol::array_o
 	return 0;
 }
 
-int32_t											unloadModules									(::nwol::array_pod<::nwol::SApplicationModule> & loadedModules)																	{
+int32_t											moduleUnloads									(::nwol::array_pod<::nwol::SApplicationModule> & loadedModules)																	{
 	for(uint32_t iModule=0, moduleCount = loadedModules.size(); iModule < moduleCount; ++iModule)
-		error_if(errored(::nwol::unloadModule(loadedModules[iModule])), "Unknown reason.");
+		error_if(errored(::nwol::moduleUnload(loadedModules[iModule])), "Unknown reason.");
 	loadedModules.clear();
 	return 0;
 }
@@ -96,7 +96,7 @@ int32_t											refreshModules									(::SApplication& instanceApp)										
 	error_if(errored(::listDLLFiles(modulesPath, possibleModuleNames)), "Failed to load modules from folder: %s", modulesPath);
 	PLATFORM_CRT_CHECK_MEMORY();
 	::nwol::array_pod<::nwol::SApplicationModule>			& loadedModules									= instanceApp.ApplicationModulesHandle;
-	::unloadModules(loadedModules);
+	::moduleUnloads(loadedModules);
 	uint32_t											maxModuleNameLength								= 0;
 	uint32_t											maxModuleTitleLength							= 0;
 	PLATFORM_CRT_CHECK_MEMORY();
@@ -113,7 +113,7 @@ int32_t											refreshModules									(::SApplication& instanceApp)										
 		int32_t												moduleIndex										= loadedModules.push_back(loadedModule);
 		if(-1 == moduleIndex) {
 			error_printf("Failed to push loaded module. Out of memory?");
-			error_if(errored(::nwol::unloadModule(loadedModule)), "Is this even possible? We shouldn't get here if the module isn't unloadable! Failed to unlaod module: %s", moduleName.c_str());
+			error_if(errored(::nwol::moduleUnload(loadedModule)), "Is this even possible? We shouldn't get here if the module isn't unloadable! Failed to unlaod module: %s", moduleName.c_str());
 			return -1;
 		}
 		info_printf("Valid module found: %s." , moduleName.begin());
@@ -129,9 +129,9 @@ int32_t											refreshModules									(::SApplication& instanceApp)										
 	++maxModuleNameLength	; // Leave a space after the text
 	++maxModuleTitleLength	; // Leave a space after the text
 	
-	char												versionString		[16]						= {};
-	char												itemTextPreFormat	[]							= "%%-%u.%us v%%3.3s: %%-%u.%us";
+	static constexpr const char							itemTextPreFormat	[]							= "%%-%u.%us v%%3.3s: %%-%u.%us";
 	char												itemTextFormat		[1024]						= {};
+	char												versionString		[16]						= {};
 	sprintf_s(itemTextFormat, itemTextPreFormat, maxModuleNameLength, maxModuleNameLength, maxModuleTitleLength, maxModuleTitleLength);
 
 	PLATFORM_CRT_CHECK_MEMORY();
@@ -142,9 +142,9 @@ int32_t											refreshModules									(::SApplication& instanceApp)										
 	guiSystem.Controls.Resize(1);
 	PLATFORM_CRT_CHECK_MEMORY();
 	for(uint32_t iModuleItem = 0, moduleItemCount = loadedModules.size(); iModuleItem < moduleItemCount; ++iModuleItem) {
-		const ::nwol::SApplicationModule						& module										= loadedModules[iModuleItem];
-		sprintf_s(versionString, "%u.%u", module.VersionMajor(), module.VersionMinor());
-		sprintf_s(itemText.begin(), itemText.size(), itemTextFormat, module.ModuleFile, versionString, module.ModuleTitle);
+		const ::nwol::SApplicationModule						& _module										= loadedModules[iModuleItem];
+		sprintf_s(versionString, "%u.%u", _module.VersionMajor(), _module.VersionMinor());
+		sprintf_s(itemText.begin(), itemText.size(), itemTextFormat, _module.FilenameOriginal.c_str(), versionString, _module.ModuleTitle);
 		newControl.Text									= ::nwol::glabel(itemText.begin(), ~0U);
 		error_if(errored(::nwol::createControl(guiSystem, newControl)), "Failed to create control for module #%u ('s').", newControl.Text.begin());
 		++newControl.AreaASCII.Offset.y;

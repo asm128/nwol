@@ -32,9 +32,7 @@ int											runCommunications						(::nwol::SApplicationNetworkClient& appNetw
 	}
 
 	::nwol::requestDisconnect(instanceClient);
-
 	gbit_clear(appNetwork.State, ::nwol::NETWORK_STATE_RUNNING);
-
 	::nwol::disconnectClient(instanceClient);
 
 	return result;
