@@ -185,27 +185,29 @@ int32_t																mainLoop								(::nwor::SRuntimeState & runtimeState, ::
 	return errLoop;
 }
 
+WNDCLASSEX															initWndClass							(HINSTANCE hInstance)											{
+	WNDCLASSEX																windowClass									;
+	windowClass.cbSize													= sizeof(WNDCLASSEX)							;
+	windowClass.style													= NULL											; // CS_HREDRAW | CS_VREDRAW;	;
+	windowClass.lpfnWndProc												= mainWndProc									;
+	windowClass.cbClsExtra												= 0												;
+	windowClass.cbWndExtra												= 0												;
+	windowClass.hInstance												= hInstance										;
+	windowClass.hIcon													= LoadIcon(0, IDI_APPLICATION)					;
+	windowClass.hCursor													= LoadCursor(0, IDC_ARROW)						;
+	windowClass.hbrBackground											= CreateSolidBrush(GetSysColor(COLOR_3DFACE))	;
+	windowClass.lpszMenuName											= 0												;
+	windowClass.lpszClassName											= "nwor_screen"									;
+	windowClass.hIconSm													= LoadIcon(0, IDI_WINLOGO)						;
+	return windowClass;
+}
+
 int32_t																setupScreen								(::nwol::SRuntimeValues& runtimeValues, const char_t* windowTitle)							{ 
 #if defined(__WINDOWS__)
-	WNDCLASSEX																windowClass								= {};
-	windowClass.cbSize													= sizeof(WNDCLASSEX);
-	windowClass.style													= NULL; // CS_HREDRAW | CS_VREDRAW;
-	windowClass.lpfnWndProc												= mainWndProc; 
-	windowClass.cbClsExtra												= 0;
-	windowClass.cbWndExtra												= 0;
-	windowClass.hInstance												= runtimeValues.PlatformDetail.hInstance;
-	windowClass.hIcon													= LoadIcon(0, IDI_APPLICATION);
-	windowClass.hCursor													= LoadCursor(0, IDC_ARROW);
-	windowClass.hbrBackground											= CreateSolidBrush(GetSysColor(COLOR_3DFACE));
-	windowClass.lpszMenuName											= 0;
-	windowClass.lpszClassName											= "nwor_screen";
-	windowClass.hIconSm													= LoadIcon(0, IDI_WINLOGO);
+	static	const WNDCLASSEX												windowClass								= runtimeValues.PlatformDetail.MainWindowClass = initWndClass(runtimeValues.PlatformDetail.hInstance);
+	reterr_error_if(0 == RegisterClassExA(&runtimeValues.PlatformDetail.MainWindowClass), "Failed to register WNDCLASS \"%s\".", windowClass.lpszClassName);
+
 	DWORD																	dwStyle									= WS_OVERLAPPED | WS_THICKFRAME | WS_BORDER | WS_MAXIMIZEBOX | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX;
-	runtimeValues.PlatformDetail.MainWindowClass						= windowClass;
-
-	bool_t																	bClassRegistered						= (RegisterClassExA(&runtimeValues.PlatformDetail.MainWindowClass) != 0) ? true : false;
-	reterr_error_if(!bClassRegistered, "Failed to register WNDCLASS \"%s\".", windowClass.lpszClassName);
-
 	HWND																	newWindow								= CreateWindowExA
 		(	0L
 		,	"nwor_screen"
