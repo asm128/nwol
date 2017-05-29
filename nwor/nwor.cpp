@@ -58,7 +58,9 @@ int32_t																launchRenderThread						(::nwor::SRuntimeState& runtimeSt
 }
 
 LRESULT	WINAPI														mainWndProc								(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)	{
-	::nwol::SScreenState													& screenState							= g_RuntimeState->RuntimeValues.Screen.State;
+	::nwol::SScreen															& mainScreen							= g_RuntimeState->RuntimeValues.Screen;
+	::nwol::SScreenState													& screenState							= mainScreen.State;
+	error_if(errored(mainScreen.PlatformDetail.Messages.push_back({hWnd, uMsg, wParam, lParam})), "Out of memory?");
 	switch( uMsg ) {
 	case WM_DESTROY:
 		info_printf( "Received WM_DESTROY message." );
@@ -87,7 +89,6 @@ LRESULT	WINAPI														mainWndProc								(HWND hWnd, UINT uMsg, WPARAM wPa
 			//State.RequiresResizeWindow						= true;
 			screenState.MinOrMaxed = screenState.NoDraw							= false;
 		}
-
 		break;
 	case WM_SHOWWINDOW:
 	case WM_CREATE:
@@ -135,48 +136,48 @@ int32_t																mainLoop								(::nwor::SRuntimeState & runtimeState, ::
 			TranslateMessage( &windowMessage );
 			DispatchMessage	( &windowMessage );
 		}
-		::nwol::APPLICATION_STATE										errUpdate								= containerForCallbacks.Update(runtimeState.Quit || runtimeState.RuntimeValues.Screen.State.Closed); 
-		runtimeState.RuntimeValues.Screen.State.Closed				= false;
+		::nwol::APPLICATION_STATE												errUpdate								= containerForCallbacks.Update(runtimeState.Quit || runtimeState.RuntimeValues.Screen.State.Closed); 
+		runtimeState.RuntimeValues.Screen.State.Closed						= false;
 		switch(errUpdate) {
 		case ::nwol::APPLICATION_STATE_NORMAL: 
 			break;
 		case ::nwol::APPLICATION_STATE_EXIT :
-			runtimeState.Quit											= true;													
-			runtimeState.Processing										= false;												
-			break;															
+			runtimeState.Quit													= true;													
+			runtimeState.Processing												= false;												
+			break;																	
 		case ::nwol::APPLICATION_STATE_BUSY :
-			runtimeState.Processing										= true;													
-			break;															
+			runtimeState.Processing												= true;													
+			break;																	
 		case ::nwol::APPLICATION_STATE_STAY :
-			executionState												|= ~RUNTIME_FLAG_NOT_YET_REQUESTED;
-			runtimeState.Quit											= false;
-			runtimeState.Processing										= true;					
+			executionState														|= ~RUNTIME_FLAG_NOT_YET_REQUESTED;
+			runtimeState.Quit													= false;
+			runtimeState.Processing												= true;					
 			break;
 		default:
 			error_printf("Module function failed with code 0x%x: %s.", errUpdate, "moduleUpdate()"); 
-			errLoop														= -1;
-			runtimeState.Quit											= true;													
-			runtimeState.Processing										= false;												
+			errLoop																= -1;
+			runtimeState.Quit													= true;													
+			runtimeState.Processing												= false;												
 			break;
 		}
-		
-		::nwol::RUNTIME_CALLBACK_ID										callbackPointersErased					= containerForCallbacks.TestForNullPointerFunctions();
-		static constexpr	const char									errorFormat1[]							= "Dynamically loaded function is null, maybe due to a buffer overrun which erased the pointers: %s.";
+		g_RuntimeState->RuntimeValues.Screen.PlatformDetail.Messages.clear();
+		::nwol::RUNTIME_CALLBACK_ID												callbackPointersErased					= containerForCallbacks.TestForNullPointerFunctions();
+		static constexpr	const char											errorFormat1[]							= "Dynamically loaded function is null, maybe due to a buffer overrun which erased the pointers: %s.";
 		if(callbackPointersErased) { 
 			::nwol::printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
-			errLoop														= -1;
-			runtimeState.Quit											= true; 
+			errLoop																= -1;
+			runtimeState.Quit													= true; 
 			break; 
 		}
 
 		if(runtimeState.Quit) {
 			if(false == runtimeState.Processing) {
-				executionState												&= ~RUNTIME_FLAG_RUNNING;
+				executionState														&= ~RUNTIME_FLAG_RUNNING;
 				info_printf("Execution shutting down...");
 				break;
 			}
 			else if(executionState & RUNTIME_FLAG_NOT_YET_REQUESTED) {
-				executionState												&= ~RUNTIME_FLAG_NOT_YET_REQUESTED;
+				executionState														&= ~RUNTIME_FLAG_NOT_YET_REQUESTED;
 				info_printf("Client module requested exit.");
 			}
 		}
@@ -184,28 +185,28 @@ int32_t																mainLoop								(::nwor::SRuntimeState & runtimeState, ::
 	return errLoop;
 }
 
-int32_t														setupScreen								(::nwol::SRuntimeValues& runtimeValues, const char_t* windowTitle)							{ 
+int32_t																setupScreen								(::nwol::SRuntimeValues& runtimeValues, const char_t* windowTitle)							{ 
 #if defined(__WINDOWS__)
-	WNDCLASSEX														windowClass								= {};
-	windowClass.cbSize											= sizeof(WNDCLASSEX);
-	windowClass.style											= NULL; // CS_HREDRAW | CS_VREDRAW;
-	windowClass.lpfnWndProc										= mainWndProc; 
-	windowClass.cbClsExtra										= 0;
-	windowClass.cbWndExtra										= 0;
-	windowClass.hInstance										= runtimeValues.PlatformDetail.hInstance;
-	windowClass.hIcon											= LoadIcon(0, IDI_APPLICATION);
-	windowClass.hCursor											= LoadCursor(0, IDC_ARROW);
-	windowClass.hbrBackground									= CreateSolidBrush(GetSysColor(COLOR_3DFACE));
-	windowClass.lpszMenuName									= 0;
-	windowClass.lpszClassName									= "nwor_screen";
-	windowClass.hIconSm											= LoadIcon(0, IDI_WINLOGO);
-	DWORD															dwStyle									= WS_OVERLAPPED | WS_THICKFRAME | WS_BORDER | WS_MAXIMIZEBOX | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX;
-	runtimeValues.PlatformDetail.MainWindowClass				= windowClass;
+	WNDCLASSEX																windowClass								= {};
+	windowClass.cbSize													= sizeof(WNDCLASSEX);
+	windowClass.style													= NULL; // CS_HREDRAW | CS_VREDRAW;
+	windowClass.lpfnWndProc												= mainWndProc; 
+	windowClass.cbClsExtra												= 0;
+	windowClass.cbWndExtra												= 0;
+	windowClass.hInstance												= runtimeValues.PlatformDetail.hInstance;
+	windowClass.hIcon													= LoadIcon(0, IDI_APPLICATION);
+	windowClass.hCursor													= LoadCursor(0, IDC_ARROW);
+	windowClass.hbrBackground											= CreateSolidBrush(GetSysColor(COLOR_3DFACE));
+	windowClass.lpszMenuName											= 0;
+	windowClass.lpszClassName											= "nwor_screen";
+	windowClass.hIconSm													= LoadIcon(0, IDI_WINLOGO);
+	DWORD																	dwStyle									= WS_OVERLAPPED | WS_THICKFRAME | WS_BORDER | WS_MAXIMIZEBOX | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX;
+	runtimeValues.PlatformDetail.MainWindowClass						= windowClass;
 
-	bool_t															bClassRegistered						= (RegisterClassExA(&runtimeValues.PlatformDetail.MainWindowClass) != 0) ? true : false;
+	bool_t																	bClassRegistered						= (RegisterClassExA(&runtimeValues.PlatformDetail.MainWindowClass) != 0) ? true : false;
 	reterr_error_if(!bClassRegistered, "Failed to register WNDCLASS \"%s\".", windowClass.lpszClassName);
 
-	HWND															newWindow								= CreateWindowExA
+	HWND																	newWindow								= CreateWindowExA
 		(	0L
 		,	"nwor_screen"
 		,	windowTitle
@@ -218,8 +219,8 @@ int32_t														setupScreen								(::nwol::SRuntimeValues& runtimeValues, 
 		); 
 	reterr_error_if(0 == newWindow, "CreateWindow FAILED!");
 
-	runtimeValues.Screen.PlatformDetail	.hWnd					= newWindow;
-	runtimeValues.PlatformDetail		.MainWindowStyle		= dwStyle;
+	runtimeValues.Screen.PlatformDetail	.hWnd							= newWindow;
+	runtimeValues.PlatformDetail		.MainWindowStyle				= dwStyle;
 	ShowWindow(newWindow, SW_SHOW);
 #else
 #	error "Not implemented"
@@ -227,90 +228,89 @@ int32_t														setupScreen								(::nwol::SRuntimeValues& runtimeValues, 
 	return 0;
 }
 
-int32_t														shutdownScreen							(::nwor::SRuntimeState& instanceApp)							{ 
-	::nwol::SRuntimeValues											& runtimeValues							= instanceApp.RuntimeValues;
-	::nwol::SScreenDetail											& screenDetail							= runtimeValues.Screen.PlatformDetail;
+int32_t																shutdownScreen							(::nwor::SRuntimeState& instanceApp)							{ 
+	::nwol::SRuntimeValues													& runtimeValues							= instanceApp.RuntimeValues;
+	::nwol::SScreenDetail													& screenDetail							= runtimeValues.Screen.PlatformDetail;
 	if( screenDetail.hWnd ) {
-		::nwol::SScreenState											& screenState							= runtimeValues.Screen.State;
-		HWND															oldWindow								= screenDetail.hWnd;
-		screenState.NoDraw											= true;
-		screenDetail.hWnd											= 0;
-		MSG																windowMessage;
+		::nwol::SScreenState													& screenState							= runtimeValues.Screen.State;
+		HWND																	oldWindow								= screenDetail.hWnd;
+		screenState.NoDraw													= true;
+		screenDetail.hWnd													= 0;
+		MSG																		windowMessage;
 		info_printf("Calling DestroyWindow().");
 		DestroyWindow( oldWindow );
 		while(PeekMessageA(&windowMessage, oldWindow, 0, 0, PM_REMOVE)) {
 			TranslateMessage( &windowMessage );
 			DispatchMessageA( &windowMessage );
 		}
-		WNDCLASSEX														& mainWindowClass						= runtimeValues.PlatformDetail.MainWindowClass;
-		bool_t															bClassUnregistered						= (UnregisterClass(mainWindowClass.lpszClassName, mainWindowClass.hInstance) != 0) ? true : false;
-		std::string														windowsError							= ::nwol::getWindowsErrorAsString(GetLastError());
+		WNDCLASSEX																& mainWindowClass						= runtimeValues.PlatformDetail.MainWindowClass;
+		bool_t																	bClassUnregistered						= (UnregisterClass(mainWindowClass.lpszClassName, mainWindowClass.hInstance) != 0) ? true : false;
+		std::string																windowsError							= ::nwol::getWindowsErrorAsString(GetLastError());
 		reterr_error_if(!bClassUnregistered, "Failed to unregister WNDCLASS \"%s\". \"%s\"", mainWindowClass.lpszClassName, windowsError.c_str());
 	}
-
 	return 0;
 }
 
-int															nwor::rtMain							(::nwor::SRuntimeState& runtimeState)							{
+int																	nwor::rtMain							(::nwor::SRuntimeState& runtimeState)							{
 #if defined(__WINDOWS__) && defined(NWOL_DEBUG_ENABLED)
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_DELAY_FREE_MEM_DF );	// Enable run-time memory check for debug builds.
 	//_CrtSetBreakAlloc( 322 );
 #endif	
 
-	::nwol::SRuntimeValues											& runtimeValues							= runtimeState.RuntimeValues;
-	::nwol::SApplicationModule										preContainerForCallbacks				= {};
-	preContainerForCallbacks.RuntimeValues						= &runtimeValues;
+	::nwol::SRuntimeValues													& runtimeValues							= runtimeState.RuntimeValues;
+	::nwol::SApplicationModule												preContainerForCallbacks				= {};
+	preContainerForCallbacks.RuntimeValues								= &runtimeValues;
 	nwol_necall(::nwol::applicationModuleLoad(runtimeValues, preContainerForCallbacks, runtimeValues.FileNameApplication), "Failed to load module %s.", runtimeValues.FileNameApplication);
 	
-	::nwol::SApplicationModule										& containerForCallbacks					= runtimeState.MainModule	= preContainerForCallbacks;
-	char															windowTitle[512]						= {};
+	::nwol::SApplicationModule												& containerForCallbacks					= runtimeState.MainModule	= preContainerForCallbacks;
+	char																	windowTitle[512]						= {};
 	sprintf_s(windowTitle, "%s v%u.%u", containerForCallbacks.ModuleTitle, containerForCallbacks.VersionMajor(), containerForCallbacks.VersionMinor());
 	reterr_error_if(0 > ::setupScreen(runtimeValues, windowTitle), "Failed to create main window.");
 
-	static const char												* errorFormat1							= "Dynamically loaded function is null, maybe due to a buffer overrun which erased the pointers: %s.";
-	static const char												* errorFormat2							= "Module function failed with code 0x%x: %s.";
-	int32_t															errCreate								= containerForCallbacks.Create(); 
+	static constexpr const char												errorFormat1	[]						= "Dynamically loaded function is null, maybe due to a buffer overrun which erased the pointers: %s.";
+	static constexpr const char												errorFormat2	[]						= "Module function failed with code 0x%x: %s.";
+	int32_t																	errCreate								= containerForCallbacks.Create(); 
 	if(0 > errCreate) { 
-		runtimeState.Quit											= true; 
+		runtimeState.Quit													= true; 
 		error_printf(errorFormat2, errCreate, "moduleCreate()"); 
 	} 
 	else {
-		::nwol::RUNTIME_CALLBACK_ID										callbackPointersErased					= containerForCallbacks.TestForNullPointerFunctions();
+		::nwol::RUNTIME_CALLBACK_ID												callbackPointersErased					= containerForCallbacks.TestForNullPointerFunctions();
 		if(callbackPointersErased) { 
 			printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
-			runtimeState.Quit											= true; 
+			runtimeState.Quit													= true; 
 		}
 		else {
-			int32_t															errSetup								= containerForCallbacks.Setup(); 
+			int32_t																	errSetup								= containerForCallbacks.Setup(); 
 			if(0 > errSetup) { 
-				runtimeState.Quit											= true; 
+				runtimeState.Quit													= true; 
 				error_printf(errorFormat2, errSetup, "moduleSetup()" ); 
 			} 
 			else {
-				callbackPointersErased										= containerForCallbacks.TestForNullPointerFunctions();
+				callbackPointersErased												= containerForCallbacks.TestForNullPointerFunctions();
 				if(callbackPointersErased) { 
 					printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
-					runtimeState.Quit											= true; 
+					runtimeState.Quit													= true; 
 				}
 				else {
 					INTERLOCKED_INCREMENT(runtimeState.RenderThreadUsers);
 
-					::nwol::error_t													errLoop									= mainLoop(runtimeState, containerForCallbacks);
+					::nwol::error_t															errLoop									= mainLoop(runtimeState, containerForCallbacks);
 					always_printf("Main loop exited with code %u.", (uint32_t)errLoop); 
 
 					while(INTERLOCKED_COMPARE_EXCHANGE(runtimeState.RenderThreadUsers, 0, 1))
 						::std::this_thread::sleep_for(::std::chrono::milliseconds(1));;
 						
- 					::nwol::error_t													errCleanup								= containerForCallbacks.Cleanup(); 
+ 					::nwol::error_t															errCleanup								= containerForCallbacks.Cleanup(); 
 					if(0 > errCleanup) { 
-						runtimeState.Quit											= true; 
+						runtimeState.Quit													= true; 
 						error_printf(errorFormat2, errCleanup, "moduleCleanup()"); 
 					} 
 					else {
-						callbackPointersErased										= containerForCallbacks.TestForNullPointerFunctions();
+						callbackPointersErased												= containerForCallbacks.TestForNullPointerFunctions();
 						if(callbackPointersErased) { 
 							printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
-							runtimeState.Quit											= true; 
+							runtimeState.Quit													= true; 
 						}
 					}
 				}
@@ -318,21 +318,20 @@ int															nwor::rtMain							(::nwor::SRuntimeState& runtimeState)						
 		}
 #if defined(__WINDOWS__)
 		PostQuitMessage(0);
-		MSG																windowMessage							= {};
+		MSG																		windowMessage							= {};
 		while(WM_QUIT != windowMessage.message) 
 			while(PeekMessageA(&windowMessage, 0, 0, 0, PM_REMOVE)) {
 				TranslateMessage( &windowMessage );
 				DispatchMessage	( &windowMessage );
 			}
 #endif
-		::nwol::error_t													errDelete								= containerForCallbacks.Delete(); 
-		if(0 > errDelete) { 
-			error_printf(errorFormat2, errDelete, "moduleDelete()"); 
-		}
-		callbackPointersErased										= containerForCallbacks.TestForNullPointerFunctions();
+		::nwol::error_t															errDelete								= containerForCallbacks.Delete(); 
+		error_if(errored(errDelete), errorFormat2, errDelete, "moduleDelete()"); 
+
+		callbackPointersErased												= containerForCallbacks.TestForNullPointerFunctions();
 		if(callbackPointersErased) { 
 			printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
-			runtimeState.Quit											= true; 
+			runtimeState.Quit													= true; 
 		}
 	}
 	nwol_necall(::nwol::moduleUnload(containerForCallbacks)	, "Error unloading main module.");

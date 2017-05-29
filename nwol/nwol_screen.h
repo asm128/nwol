@@ -1,4 +1,5 @@
 #include "nwol_coord.h"
+#include "nwol_array.h"
 #if defined(__WINDOWS__)
 #	include <Windows.h>
 #endif
@@ -14,10 +15,18 @@ namespace nwol
 		::nwol::SCoord2<uint16_t>							Size;		
 	};
 
+	struct SWindowsMessage {
+		HWND	hWnd; 
+		UINT	uMsg; 
+		WPARAM	wParam; 
+		LPARAM	lParam;
+	};
+
 	struct SScreenDetail {
 #if defined(__WINDOWS__)
 		const WNDCLASSEX									* pWindowClass				= nullptr;
 		HWND												hWnd						= NULL;
+		::nwol::array_pod<::nwol::SWindowsMessage>			Messages;
 #else
 #	error	"Not implemented."
 #endif
