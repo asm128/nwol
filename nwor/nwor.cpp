@@ -20,7 +20,7 @@ void																renderLoop								(::nwor::SRuntimeState& stateRuntime)					
 	info_printf("Render loop start.");
 	static const char														* errorFormat1							= "Dynamically loaded function is null, maybe due to a buffer overrun which erased the pointers: %s.";
 	static const char														* errorFormat2							= "Module function failed with code 0x%x: %s.";
-	::nwol::SModuleInterface												& containerForCallbacks					= stateRuntime.Interface;
+	::nwol::SApplicationModule												& containerForCallbacks					= stateRuntime.Interface;
 	while(false == stateRuntime.Quit) {
 		if(errored(containerForCallbacks.Render())) {
 			error_printf("%s", "Fatal error rendering client module.");
@@ -114,7 +114,7 @@ LRESULT	WINAPI														mainWndProc								(HWND hWnd, UINT uMsg, WPARAM wPa
 	return DefWindowProc( hWnd, uMsg, wParam, lParam );
 }
 
-int32_t																mainLoop								(::nwor::SRuntimeState & runtimeState, ::nwol::SModuleInterface& containerForCallbacks)								{
+int32_t																mainLoop								(::nwor::SRuntimeState & runtimeState, ::nwol::SApplicationModule& containerForCallbacks)								{
 	typedef				uint8_t												RUNTIME_FLAG;
 	static constexpr	const RUNTIME_FLAG									RUNTIME_FLAG_RUNNING					= 1;
 	static constexpr	const RUNTIME_FLAG									RUNTIME_FLAG_NOT_YET_REQUESTED			= 2;
@@ -258,11 +258,11 @@ int															nwor::rtMain							(::nwor::SRuntimeState& runtimeState)						
 #endif	
 
 	::nwol::SRuntimeValues											& runtimeValues							= runtimeState.RuntimeValues;
-	::nwol::SModuleInterface										preContainerForCallbacks				= {};
+	::nwol::SApplicationModule										preContainerForCallbacks				= {};
 	preContainerForCallbacks.RuntimeValues						= &runtimeValues;
-	nwol_necall(::nwol::loadModule(preContainerForCallbacks, runtimeValues.FileNameApplication), "Failed to load module %s.", runtimeValues.FileNameApplication);
+	nwol_necall(::nwol::applicationModuleLoad(runtimeValues, preContainerForCallbacks, runtimeValues.FileNameApplication), "Failed to load module %s.", runtimeValues.FileNameApplication);
 	
-	::nwol::SModuleInterface										& containerForCallbacks					= runtimeState.Interface	= preContainerForCallbacks;
+	::nwol::SApplicationModule										& containerForCallbacks					= runtimeState.Interface	= preContainerForCallbacks;
 	char															windowTitle[512]						= {};
 	sprintf_s(windowTitle, "%s v%u.%u", containerForCallbacks.ModuleTitle, containerForCallbacks.VersionMajor(), containerForCallbacks.VersionMinor());
 	reterr_error_if(0 > ::setupScreen(runtimeValues, windowTitle), "Failed to create main window.");

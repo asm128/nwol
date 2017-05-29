@@ -24,7 +24,7 @@ int32_t											cleanup											(::SApplication& instanceApp)															
 	return 0; 
 }
 
-int32_t											loadValidModules								(const char* modulesPath, ::nwol::SRuntimeValues* runtimeValues, ::nwol::array_pod<::nwol::SModuleInterface>& loadedModules)	{
+int32_t											loadValidModules								(const char* modulesPath, ::nwol::SRuntimeValues* runtimeValues, ::nwol::array_pod<::nwol::SApplicationModule>& loadedModules)	{
 	::nwol::array_obj<::nwol::glabel>					fileNames;
 	nwol_necall(::nwol::listFiles(modulesPath, fileNames), "Cannot load modules from path: %s.", modulesPath);
 
@@ -48,10 +48,10 @@ int32_t											loadValidModules								(const char* modulesPath, ::nwol::SRun
 	}
 	for(uint32_t iFile = 0, fileCount = possibleModuleNames.size(); iFile < fileCount; ++iFile) {
 		const ::nwol::glabel								& moduleName									= possibleModuleNames[iFile];
-		::nwol::SModuleInterface							loadedModule									= {};
+		::nwol::SApplicationModule							loadedModule									= {};
 		loadedModule.RuntimeValues						= runtimeValues;
 
-		int32_t												errorLoad										= ::nwol::loadModule(loadedModule, moduleName.begin());
+		int32_t												errorLoad										= ::nwol::applicationModuleLoad(*runtimeValues, loadedModule, moduleName.begin());
 		continue_warn_if(errored(errorLoad), "Module is not a valid NWOR interface: %s.", moduleName.begin());
 		nwol_necall(loadedModules.push_back(loadedModule), "Failed to push module to output list. Out of memory?");
 		info_printf("Valid module found: %s.", moduleName.begin());
@@ -78,7 +78,7 @@ int32_t											listDLLFiles									(const char* modulesPath, ::nwol::array_o
 	return 0;
 }
 
-int32_t											unloadModules									(::nwol::array_pod<::nwol::SModuleInterface> & loadedModules)																	{
+int32_t											unloadModules									(::nwol::array_pod<::nwol::SApplicationModule> & loadedModules)																	{
 	for(uint32_t iModule=0, moduleCount = loadedModules.size(); iModule < moduleCount; ++iModule)
 		error_if(errored(::nwol::unloadModule(loadedModules[iModule])), "Unknown reason.");
 	loadedModules.clear();
@@ -95,7 +95,7 @@ int32_t											refreshModules									(::SApplication& instanceApp)										
 	::nwol::array_obj<::nwol::glabel>					possibleModuleNames;
 	error_if(errored(::listDLLFiles(modulesPath, possibleModuleNames)), "Failed to load modules from folder: %s", modulesPath);
 	PLATFORM_CRT_CHECK_MEMORY();
-	::nwol::array_pod<::nwol::SModuleInterface>			& loadedModules									= instanceApp.ApplicationModulesHandle;
+	::nwol::array_pod<::nwol::SApplicationModule>			& loadedModules									= instanceApp.ApplicationModulesHandle;
 	::unloadModules(loadedModules);
 	uint32_t											maxModuleNameLength								= 0;
 	uint32_t											maxModuleTitleLength							= 0;
@@ -103,9 +103,9 @@ int32_t											refreshModules									(::SApplication& instanceApp)										
 	for(uint32_t iFile=0, fileCount = possibleModuleNames.size(); iFile < fileCount; ++iFile) {
 		const ::nwol::glabel								& moduleName									= possibleModuleNames[iFile];
 		info_printf("DLL found: %s.", moduleName.begin());
-		::nwol::SModuleInterface							loadedModule									= {};
+		::nwol::SApplicationModule							loadedModule									= {};
 		loadedModule.RuntimeValues						= instanceApp.RuntimeValues;
-		int32_t												errorLoad										= ::nwol::loadModule(loadedModule, moduleName.begin());
+		int32_t												errorLoad										= ::nwol::applicationModuleLoad(*instanceApp.RuntimeValues, loadedModule, moduleName.begin());
 		continue_warn_if(errored(errorLoad), "DLL is not a valid module: %s." , moduleName.begin());
 		const uint32_t										titleLen										= loadedModule.ModuleTitle ? (uint32_t)strlen(loadedModule.ModuleTitle) : 0;
 		maxModuleNameLength								= (maxModuleNameLength	> moduleName.size())	? maxModuleNameLength	: moduleName.size();
@@ -142,7 +142,7 @@ int32_t											refreshModules									(::SApplication& instanceApp)										
 	guiSystem.Controls.Resize(1);
 	PLATFORM_CRT_CHECK_MEMORY();
 	for(uint32_t iModuleItem = 0, moduleItemCount = loadedModules.size(); iModuleItem < moduleItemCount; ++iModuleItem) {
-		const ::nwol::SModuleInterface						& module										= loadedModules[iModuleItem];
+		const ::nwol::SApplicationModule						& module										= loadedModules[iModuleItem];
 		sprintf_s(versionString, "%u.%u", module.VersionMajor(), module.VersionMinor());
 		sprintf_s(itemText.begin(), itemText.size(), itemTextFormat, module.ModuleFile, versionString, module.ModuleTitle);
 		newControl.Text									= ::nwol::glabel(itemText.begin(), ~0U);
@@ -157,7 +157,10 @@ int32_t											setup											(::SApplication& instanceApp)																	
 	instanceApp.GUI.Controls.Clear();
 
 	::nwol::initASCIIScreen(instanceApp.GUI.TargetSizeASCII.x, instanceApp.GUI.TargetSizeASCII.y);
-	::nwol::setASCIIScreenTitle(nwol_moduleTitle());
+	char															moduleTitle[240]						= {};
+	uint8_t															moduleTitleLen							= (uint8_t)::nwol::size(moduleTitle);
+	nwol_necall(::nwol_moduleTitle(moduleTitle, &moduleTitleLen), "If this fails then something weird is going on.");
+	::nwol::setASCIIScreenTitle(moduleTitle);
 
 	::nwol::SGUI										& guiSystem										= instanceApp.GUI;
 
@@ -212,7 +215,7 @@ static	const char	errorFormat1[] = "Dynamically loaded function is null, maybe d
 static	const char	errorFormat2[] = "Module function failed: %s.";
 
 int32_t											loadSelection									(::SApplication& instanceApp)																									{
- 	::nwol::SModuleInterface							& moduleInterface								= instanceApp.ApplicationModulesHandle[instanceApp.ApplicationModuleSelected];
+ 	::nwol::SApplicationModule							& moduleInterface								= instanceApp.ApplicationModulesHandle[instanceApp.ApplicationModuleSelected];
 	::nwol::error_t										retVal											= 0;
 	nwol_necall(moduleInterface.Create(), errorFormat2, "moduleCreate()"); 
 	
@@ -255,7 +258,7 @@ int32_t											loadSelection									(::SApplication& instanceApp)											
 
 int32_t											renderSelection									(const ::SApplication & instanceApp)																							{
 	int32_t												errVal											= 0;
- 	const ::nwol::SModuleInterface						& moduleInterface								= instanceApp.ApplicationModulesHandle[instanceApp.ApplicationModuleSelected];
+ 	const ::nwol::SApplicationModule						& moduleInterface								= instanceApp.ApplicationModulesHandle[instanceApp.ApplicationModuleSelected];
 	error_if(errored(errVal = moduleInterface.Render()), "Failed to call module function.");
 
 	::nwol::RUNTIME_CALLBACK_ID						callbackPointersErased				= moduleInterface.TestForNullPointerFunctions();
@@ -271,9 +274,9 @@ int32_t											update											(::SApplication & instanceApp, bool exitReque
 	::nwol::error_t										errResult										= 0;
 	::nwol::APPLICATION_STATE							updateResult									= ::nwol::APPLICATION_STATE_FATAL;
 	::nwol::RUNTIME_CALLBACK_ID							callbackPointersErased							= ::nwol::RUNTIME_CALLBACK_ID_NONE;
-	::nwol::array_pod<::nwol::SModuleInterface>			& moduleHandles									= instanceApp.ApplicationModulesHandle;
+	::nwol::array_pod<::nwol::SApplicationModule>			& moduleHandles									= instanceApp.ApplicationModulesHandle;
 	uint32_t											moduleSelectedIndex								= (uint32_t)instanceApp.ApplicationModuleSelected;
-	::nwol::SModuleInterface							* moduleSelected								= iif(moduleSelectedIndex >= moduleHandles.size()) 0 : &moduleHandles[moduleSelectedIndex];
+	::nwol::SApplicationModule							* moduleSelected								= iif(moduleSelectedIndex >= moduleHandles.size()) 0 : &moduleHandles[moduleSelectedIndex];
 	const char											* moduleTitle									= iif(moduleSelected) moduleSelected->ModuleTitle : 0;
 
 	switch(instanceApp.SelectorState) {
@@ -312,7 +315,11 @@ int32_t											update											(::SApplication & instanceApp, bool exitReque
 			else {	// Reinitialize the selector window which was probably closed before starting the new app.
 				::nwol::initASCIIScreen(instanceApp.GUI.TargetSizeASCII.x, instanceApp.GUI.TargetSizeASCII.y);
 				char										windowTitle[512]					= {};
-				sprintf_s(windowTitle, "%s v%u.%u", ::nwol_moduleTitle(), (::nwol_moduleVersion() & 0xF0U) >> 4, ::nwol_moduleVersion() & 0x0FU);
+				char										selectorModuleTitle[240]					= {};
+				uint8_t										selectorModuleTitleLen						= (uint8_t)::nwol::size(selectorModuleTitle);
+				uint16_t									selectorModuleVersion						= 0xFFFF;
+				nwol_necall(::nwol_moduleTitle(selectorModuleTitle, &selectorModuleTitleLen), "If this fails then something weird is going on.");
+				sprintf_s(windowTitle, "%s v%u.%u", moduleTitle, selectorModuleVersion & 0xFFU, (selectorModuleVersion & 0xFF00U) >> 4);
 #if defined(__WINDOWS__)
 				SetWindowText(instanceApp.RuntimeValues->Screen.PlatformDetail.hWnd, windowTitle);
 #else

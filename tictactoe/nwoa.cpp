@@ -70,7 +70,10 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
 	int32_t											screenWidth							= guiSystem.TargetSizeASCII.x;
 	int32_t											screenHeight						= guiSystem.TargetSizeASCII.y;
 	::nwol::initASCIIScreen(screenWidth, screenHeight);
-	::nwol::setASCIIScreenTitle(nwol_moduleTitle());
+	char															moduleTitle[240]						= {};
+	uint8_t															moduleTitleLen							= (uint8_t)::nwol::size(moduleTitle);
+	nwol_necall(::nwol_moduleTitle(moduleTitle, &moduleTitleLen), "If this fails then something weird is going on.");
+	::nwol::setASCIIScreenTitle(moduleTitle);
 
 	nwol_necall(::networkEnable	(instanceApp), "Failed to enable network."			);
 	//nwol_necall(::setupDB		(instanceApp), "%s", "Failed to set up database."	);

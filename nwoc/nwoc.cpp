@@ -111,7 +111,10 @@ int32_t														setup									(::SApplication& instanceApp)							{
 	g_App														= &instanceApp;	// We need this for the WndProc()
 	::nwol::SCoord2<uint32_t>										& sizeTargetASCII						= instanceApp.GUI.TargetSizeASCII;
 	::nwol::initASCIIScreen(sizeTargetASCII.x, sizeTargetASCII.y);
-	::nwol::setASCIIScreenTitle(nwol_moduleTitle());
+	char															moduleTitle[240]						= {};
+	uint8_t															moduleTitleLen							= (uint8_t)::nwol::size(moduleTitle);
+	nwol_necall(::nwol_moduleTitle(moduleTitle, &moduleTitleLen), "If this fails then something weird is going on.");
+	::nwol::setASCIIScreenTitle(moduleTitle);
 
 	printTypeDebug();
 

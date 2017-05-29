@@ -17,7 +17,7 @@ struct SApplication : public ::nwol::SApplicationBase
 	::SELECTOR_STATE							SelectorState					= SELECTOR_STATE_START;
 	int32_t										ApplicationModuleSelected		= -1;
 	::nwol::array_pod<::nwol::glabel>			ApplicationModulesName			= {};
-	::nwol::array_pod<::nwol::SModuleInterface>	ApplicationModulesHandle		= {};
+	::nwol::array_pod<::nwol::SApplicationModule>	ApplicationModulesHandle		= {};
 
 	inline										SApplication					(::nwol::SRuntimeValues	* runtimeValues)	: SApplicationBase(runtimeValues)	{
 		GUI											= {{640, 480}, {132, 25},};

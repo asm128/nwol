@@ -15,7 +15,7 @@ int											runCommunications						(::nwol::SApplicationNetworkClient& appNetw
 	::nwol::error_t									result									= 0;
 	while gbit_true(appNetwork.State, ::nwol::NETWORK_STATE_ENABLED) {
 		// Ping before anything else to make sure everything is more or less in order.
-		break_error_if(result = ::nwol::ping(instanceClient.pClient, instanceClient.pServer) ? 0 : -1, "%s", "Ping timeout.");
+		break_error_if(errored(result = ::nwol::ping(instanceClient.pClient, instanceClient.pServer) ? 0 : -1), "%s", "Ping timeout.");
 
 		// get server time
 		uint64_t										current_time;
