@@ -5,50 +5,50 @@
 #define __RUNTIME_IMPL_H__29834908347__
 
 //--------------------------------------------------------------- Runtime Interface
-#define DEFINE_RUNTIME_INTERFACE_TITLE(_yourCustomClass, _pluginTitle)																								\
-::nwol::error_t	__stdcall				::nwol_moduleTitle				(char_t* outputBuffer, uint8_t* outputBufferLength)				noexcept		{			\
-	reterr_error_if(0 == outputBufferLength, "Invalid parameters.");																								\
-	static constexpr const char					customAppTitle[]				= _pluginTitle;																		\
-	*outputBufferLength						= (uint8_t)(outputBuffer ? sprintf_s(outputBuffer, *outputBufferLength, customAppTitle) : strlen(customAppTitle));		\
-	return 0; 																																						\
+#define DEFINE_RUNTIME_INTERFACE_TITLE(_yourCustomClass, _pluginTitle)																									\
+::nwol::error_t	NWOL_STDCALL			::nwol_moduleTitle				(char_t* outputBuffer, uint8_t* outputBufferLength)					noexcept		{			\
+	reterr_error_if(0 == outputBufferLength, "Invalid parameters.");																									\
+	static constexpr const char					customAppTitle[]				= _pluginTitle;																			\
+	*outputBufferLength						= (uint8_t)(outputBuffer ? sprintf_s(outputBuffer, *outputBufferLength, customAppTitle) : strlen(customAppTitle));			\
+	return 0; 																																							\
 }
 
-#define DEFINE_RUNTIME_INTERFACE_VERSION(_yourCustomClass, _versionMajor, _versionMinor)																			\
-::nwol::error_t	__stdcall				::nwol_moduleVersion			(uint16_t* version)												noexcept		{			\
-	reterr_error_if(0 == version, "Invalid parameters.");																											\
-	static constexpr const uint16_t				_nwol_module_version			= ((_versionMinor & 0xFF)<<8) | (_versionMajor & 0xFF);								\
-	*version								= _nwol_module_version;																									\
-	return 0; 																																						\
+#define DEFINE_RUNTIME_INTERFACE_VERSION(_yourCustomClass, _versionMajor, _versionMinor)																				\
+::nwol::error_t	NWOL_STDCALL			::nwol_moduleVersion			(uint16_t* version)													noexcept		{			\
+	reterr_error_if(0 == version, "Invalid parameters.");																												\
+	static constexpr const uint16_t				_nwol_module_version			= ((_versionMinor & 0xFF)<<8) | (_versionMajor & 0xFF);									\
+	*version								= _nwol_module_version;																										\
+	return 0; 																																							\
 }
 
-#define DEFINE_RUNTIME_INTERFACE_CREATE(_yourCustomClass)																											\
-::nwol::error_t	__stdcall				::nwol_moduleCreate				(void** instanceApp, ::nwol::SRuntimeValues* runtimeValues)		noexcept		{			\
-	reterr_error_if(instanceApp == 0, "%s", "Invalid pointer!");																									\
-	_yourCustomClass							* newApp						= new _yourCustomClass(runtimeValues), *oldApp = (_yourCustomClass*)*instanceApp; 	\
-	reterr_error_if(0 == newApp, "Cannot create application object. Not enough memory?");																			\
-	*instanceApp							= newApp; 																												\
-	safe_delete(oldApp); 																																			\
-	return 0;																																						\
+#define DEFINE_RUNTIME_INTERFACE_CREATE(_yourCustomClass)																												\
+::nwol::error_t	NWOL_STDCALL			::nwol_moduleCreate				(void** instanceApp, ::nwol::SRuntimeValues* runtimeValues)			noexcept		{			\
+	reterr_error_if(instanceApp == 0, "%s", "Invalid pointer!");																										\
+	_yourCustomClass							* newApp						= new _yourCustomClass(runtimeValues), *oldApp = (_yourCustomClass*)*instanceApp;		\
+	reterr_error_if(0 == newApp, "Cannot create application object. Not enough memory?");																				\
+	*instanceApp							= newApp; 																													\
+	safe_delete(oldApp); 																																				\
+	return 0;																																							\
 }
 
-#define DEFINE_RUNTIME_INTERFACE_DELETE(_yourCustomClass)																											\
-::nwol::error_t	__stdcall				::nwol_moduleDelete				(void** instanceApp)											noexcept		{			\
-	reterr_error_if(instanceApp == 0, "%s", "Invalid pointer!");																									\
-	_yourCustomClass							* oldApp						= (_yourCustomClass*)*instanceApp;													\
-	*instanceApp							= 0; 																													\
-	safe_delete(oldApp); 																																			\
-	return 0;																																						\
+#define DEFINE_RUNTIME_INTERFACE_DELETE(_yourCustomClass)																												\
+::nwol::error_t	NWOL_STDCALL			::nwol_moduleDelete				(void** instanceApp)												noexcept		{			\
+	reterr_error_if(instanceApp == 0, "%s", "Invalid pointer!");																										\
+	_yourCustomClass							* oldApp						= (_yourCustomClass*)*instanceApp;														\
+	*instanceApp							= 0; 																														\
+	safe_delete(oldApp); 																																				\
+	return 0;																																							\
 }
 
-#define DEFINE_RUNTIME_INTERFACE_SETUP(_yourCustomClass)	::nwol::error_t	__stdcall	::nwol_moduleSetup		(void* instanceApp)		noexcept		{ reterr_error_if(instanceApp == 0, "%s", "Invalid pointer!"); return setup		(*(_yourCustomClass*)instanceApp); }
-#define DEFINE_RUNTIME_INTERFACE_CLEANUP(_yourCustomClass)	::nwol::error_t	__stdcall	::nwol_moduleCleanup	(void* instanceApp)		noexcept		{ reterr_error_if(instanceApp == 0, "%s", "Invalid pointer!"); return cleanup	(*(_yourCustomClass*)instanceApp); }
-#define DEFINE_RUNTIME_INTERFACE_RENDER(_yourCustomClass)	::nwol::error_t	__stdcall	::nwol_moduleRender		(void* instanceApp)		noexcept		{ reterr_error_if(instanceApp == 0, "%s", "Invalid pointer!"); return render	(*(_yourCustomClass*)instanceApp); }
-#define DEFINE_RUNTIME_INTERFACE_UPDATE(_yourCustomClass)																											\
-::nwol::error_t	__stdcall				::nwol_moduleUpdate				(void* instanceApp, bool requestedExit)							noexcept		{			\
-	retval_error_if(::nwol::APPLICATION_STATE_FATAL, instanceApp == 0, "%s", "Invalid pointer!");																	\
-	_yourCustomClass							& customApp					= *(_yourCustomClass*)instanceApp;														\
-	::nwol::APPLICATION_STATE					result						= (::nwol::APPLICATION_STATE)update(customApp, requestedExit);							\
-	return result;																																					\
+#define DEFINE_RUNTIME_INTERFACE_SETUP(_yourCustomClass)	::nwol::error_t	NWOL_STDCALL	::nwol_moduleSetup		(void* instanceApp)		noexcept		{ reterr_error_if(instanceApp == 0, "%s", "Invalid pointer!"); return setup		(*(_yourCustomClass*)instanceApp); }
+#define DEFINE_RUNTIME_INTERFACE_CLEANUP(_yourCustomClass)	::nwol::error_t	NWOL_STDCALL	::nwol_moduleCleanup	(void* instanceApp)		noexcept		{ reterr_error_if(instanceApp == 0, "%s", "Invalid pointer!"); return cleanup	(*(_yourCustomClass*)instanceApp); }
+#define DEFINE_RUNTIME_INTERFACE_RENDER(_yourCustomClass)	::nwol::error_t	NWOL_STDCALL	::nwol_moduleRender		(void* instanceApp)		noexcept		{ reterr_error_if(instanceApp == 0, "%s", "Invalid pointer!"); return render	(*(_yourCustomClass*)instanceApp); }
+#define DEFINE_RUNTIME_INTERFACE_UPDATE(_yourCustomClass)																												\
+::nwol::error_t	NWOL_STDCALL			::nwol_moduleUpdate				(void* instanceApp, bool requestedExit)								noexcept		{			\
+	retval_error_if(::nwol::APPLICATION_STATE_FATAL, instanceApp == 0, "%s", "Invalid pointer!");																		\
+	_yourCustomClass							& customApp					= *(_yourCustomClass*)instanceApp;															\
+	::nwol::APPLICATION_STATE					result						= (::nwol::APPLICATION_STATE)update(customApp, requestedExit);								\
+	return result;																																						\
 }
 
 /// - In order to take advantage of the DEFINE_RUNTIME_INTERFACE_FUNCTIONS() macro below, your application will need to define an update(), 

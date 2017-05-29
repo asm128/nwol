@@ -81,25 +81,27 @@ namespace nwol {
 	
 #define NWOL_MODULE_FUNCTION_NAME(functionName)	NWOL_Func_##functionName
 
-#define NWOL_DECLARE_MODULE_FUNCTION(functionName, ...) 																	\
-	extern "C"	::nwol::error_t		 _stdcall			functionName									(__VA_ARGS__);		\
-	typedef		::nwol::error_t		(_stdcall			* NWOL_MODULE_FUNCTION_NAME(functionName))		(__VA_ARGS__);		\
-
-#define NWOM_PFUNC(structNameSpace, structName, functionName)	NWOM(structNameSpace, structName, , NWOL_MODULE_FUNCTION_NAME(functionName), functionName, ::nwol::GDATA_TYPE_FUN, #functionName, "Function")	= nullptr
-
 #if defined(__WINDOWS__)
-#	define NWOL_MODULE_API_EXPORT __declspec(dllexport)
-#	define NWOL_MODULE_API_IMPORT __declspec(dllimport)
+#	define NWOL_STDCALL				__stdcall
+#	define NWOL_MODULE_API_EXPORT	__declspec(dllexport)
+#	define NWOL_MODULE_API_IMPORT	__declspec(dllimport)
 #elif defined(__LINUX__)
-#	define NWOL_MODULE_API_EXPORT __attribute__((visibility("default")))
+#	define NWOL_STDCALL				
+#	define NWOL_MODULE_API_EXPORT	__attribute__((visibility("default")))
 #	define NWOL_MODULE_API_IMPORT
 #else
 //  do nothing and hope for the best?
+#	define NWOL_STDCALL				
 #	define NWOL_MODULE_API_EXPORT
 #	define NWOL_MODULE_API_IMPORT
 #	pragma warning "Unknown dynamic link import/export semantics."
 #endif
+	
+#define NWOL_DECLARE_MODULE_FUNCTION(functionName, ...) 																	\
+	extern "C"	::nwol::error_t		 NWOL_STDCALL		functionName									(__VA_ARGS__);		\
+	typedef		::nwol::error_t		(NWOL_STDCALL		* NWOL_MODULE_FUNCTION_NAME(functionName))		(__VA_ARGS__);		\
 
+#define NWOM_PFUNC(structNameSpace, structName, functionName)	NWOM(structNameSpace, structName, , NWOL_MODULE_FUNCTION_NAME(functionName), functionName, ::nwol::GDATA_TYPE_FUN, #functionName, "Function")	= nullptr
 }	// namespace
 
 #endif // NWOL_MODULE_H__29348729374234

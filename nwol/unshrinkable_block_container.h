@@ -198,7 +198,7 @@ namespace nwol
 	public:
 														unordered_string_set		()																																	: bInitialized(false)	{ (void)INIT_CRITICAL_SECTION(Lock); }
 														~unordered_string_set		()																																	{
-#if defined(NWOL_DEBUG_ENABLED)
+#if defined(NWOL_DEBUG_ENABLED) && defined(VERBOSE_PRINTF_ENABLED)
 			uint64_t											totalChars					= 0;
 			for( uint32_t iItem=1, count=ItemOffsets.size(); iItem<count; iItem++) {
 				const ::nwol::array_view<const _tBase>	arrayView					= this->get_array_view((int32_t)iItem);

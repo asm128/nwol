@@ -21,9 +21,7 @@ namespace nwol
 		inline constexpr												gbuffer				()																						= default;
 																		gbuffer				(GODS(SBuffer) other)																	{
 			if( other ) {
-				if( other->get()->DataFormat != _F || other->get()->Usage != _USAGE ) {
-					error_printf("%s", "Invalid buffer format!");
-				}
+				error_if(other->get()->DataFormat != _F || other->get()->Usage != _USAGE, "%s", "Invalid buffer format!")
 				else {
 					m_ArrayBuffer = ::nwol::acquire(other);
 					this->Data	= (_tBase*)other->get()->pByteArray;
@@ -55,9 +53,7 @@ namespace nwol
 		template <size_t _Size> 
 		inline															gbuffer				(const _tBase (&_Dst)[_Size])															: gbuffer(_Size, _Dst)							{}
 																		gbuffer				(uint32_t size, const _tBase* valueList)												{
-			if(0 > resize(size)) {
-				error_printf("%s", "Out of memory!");
-			}
+			throw_if(errored(resize(size)), "", "%s", "Out of memory!")
 			else if(valueList) {
 				for(uint32_t i=0; i<size; i++)
 					set_value(i, valueList[i]);
@@ -73,11 +69,8 @@ namespace nwol
 		inline constexpr		const _tBase&							get_value			( uint32_t index )													const				{ return this->Data[index];						}
 								::nwol::error_t							set_value			( uint32_t index, const _tBase& value )
 		{
-			if(index >= this->size()) {
-				error_printf("Invalid index: #%u!", index);
-				return -1;
-			}
-			else if(m_ArrayBuffer.writable()) {
+			reterr_error_if(index >= this->size(), "Invalid index: #%u!", index);
+			if(m_ArrayBuffer.writable()) {
 				this->Data[index]												= value;
 				return 0;
 			}
@@ -85,7 +78,7 @@ namespace nwol
 			static constexpr const bool											bIsText				= _USAGE == GUSAGE_TEXT;
 
 			GPNCO(::nwol, SBuffer)												newListBuffer;
-			reterr_error_if(0 > ::nwol::createBuffer(_F, _USAGE, this->Count, &newListBuffer), "Failed to create buffer for array! Out of memory? Element count requested: %u", (uint32_t)this->Count);
+			nwol_necall(::nwol::createBuffer(_F, _USAGE, this->Count, &newListBuffer), "Failed to create buffer for array! Out of memory? Element count requested: %u", (uint32_t)this->Count);
 		
 			memcpy(newListBuffer->pByteArray, this->Data, sizeof(_tBase)*this->Count);
 			((_tBase*)newListBuffer->pByteArray)[index]						= value;
@@ -111,12 +104,8 @@ namespace nwol
 				this->Data														= 0;
 				this->Count														= 0;
 			}
-			else if(InputBuffer->get()->DataFormat != _F) {
-				error_printf("%s", "Invalid buffer format!");
-			}
-			else if(InputBuffer->get()->Usage != _USAGE ) {
-				error_printf("%s", "Invalid buffer usage!");
-			}
+			else error_if(InputBuffer->get()->DataFormat != _F, "%s", "Invalid buffer format!")
+			else error_if(InputBuffer->get()->Usage != _USAGE, "%s", "Invalid buffer usage!")
 			else {
 				m_ArrayBuffer													= ::nwol::acquire( InputBuffer );
 				this->Data														= (_tBase*)m_ArrayBuffer->pByteArray;
@@ -150,7 +139,7 @@ namespace nwol
 					this->Data[iFirst]												= newValue;
 				else {
 					GPNCO(::nwol, SBuffer)												newArray;
-					cloneBuffer(&newArray, m_ArrayBuffer);
+					nwol_necall(cloneBuffer(&newArray, m_ArrayBuffer), "Unknown error.");
 					((_tBase*)newArray->pByteArray)[iFirst]							= newValue;
 					set(newArray);
 				}
@@ -168,7 +157,7 @@ namespace nwol
 					this->Data[iLast]												= newValue;
 				else {
 					GPNCO(::nwol, SBuffer)												newArray;
-					cloneBuffer(&newArray, m_ArrayBuffer);
+					nwol_necall(cloneBuffer(&newArray, m_ArrayBuffer), "Unknown error.");
 					reterr_error_if(0 == newArray || 0 == newArray->pByteArray, "Failed to allocate new buffer.");
 					((_tBase*)newArray->pByteArray)[iLast]							= newValue;
 					set(newArray);
@@ -195,7 +184,7 @@ namespace nwol
 				uint32_t															firstOccurrence		= find(oldValue);
 				if( -1 != firstOccurrence ) {
 					GPNCO(::nwol, SBuffer)												newArray;
-					cloneBuffer(&newArray, m_ArrayBuffer);
+					nwol_necall(cloneBuffer(&newArray, m_ArrayBuffer), "Unknown error.");
 					for( uint32_t iEl=firstOccurrence; iEl < this->Count; iEl++ ) {
 						_tBase																* pElArray		= (_tBase*)newArray->pByteArray;
 						if( 0 == memcmp(&pElArray[iEl], &oldValue, sizeof(_tBase)) ) {
@@ -206,7 +195,6 @@ namespace nwol
 					this->set(newArray);
 				}
 			}
-
 			return nReplacedCount;
 		}
 
@@ -229,7 +217,7 @@ namespace nwol
 			}
 
 			GPNCO(::nwol, SBuffer)												newListBuffer;
-			reterr_error_if(0 > ::nwol::createBuffer(_F, _USAGE, (uint32_t)(newSize + one_if(bIsText)), &newListBuffer), "Failed to create buffer for array! Out of memory? Element count requested: %u", (uint32_t)newSize);
+			nwol_necall(::nwol::createBuffer(_F, _USAGE, (uint32_t)(newSize + one_if(bIsText)), &newListBuffer), "Failed to create buffer for array! Out of memory? Element count requested: %u", (uint32_t)newSize);
 
 			uint32_t															copyCount			= nwol::min(this->Count, newSize);
 			if(copyCount)
@@ -246,19 +234,19 @@ namespace nwol
 								::nwol::error_t							push_back			(const _tBase& value)																	{
 			uint32_t															oldSize				= this->Count;
 			uint32_t															newSize				= oldSize+1;
-			reterr_error_if(0 > resize(newSize), "%s", "Cannot resize array! Out of memory?")
-			else if(m_ArrayBuffer.writable())
+			nwol_necall(resize(newSize), "%s", "Cannot resize array! Out of memory?");
+			if(m_ArrayBuffer.writable())
 				this->Data[oldSize]													= value;
 			else {	// how does this happen?
 				PLATFORM_CRT_BREAKPOINT();
 				GPNCO(::nwol, SBuffer)												newListBuffer;
 				if(m_ArrayBuffer) {
-					reterr_error_if(0 > ::nwol::createBuffer(_F, _USAGE, newSize, m_ArrayBuffer->nColumnCount, m_ArrayBuffer->nSliceCount, &newListBuffer), "Failed to create buffer for array! Out of memory? Element count requested: %u", (uint32_t)newSize);
+					nwol_necall(::nwol::createBuffer(_F, _USAGE, newSize, m_ArrayBuffer->nColumnCount, m_ArrayBuffer->nSliceCount, &newListBuffer), "Failed to create buffer for array! Out of memory? Element count requested: %u", (uint32_t)newSize);
 					memcpy(newListBuffer->pByteArray, this->Data, oldSize);
 				}
 				else {	// Entering here doesn't make any sense either if we resized()+1 successfully in a previous statement.
 					PLATFORM_CRT_BREAKPOINT();
-					reterr_error_if(0 > ::nwol::createBuffer(_F, _USAGE, newSize, &newListBuffer), "Failed to create buffer for array! Out of memory? Element count requested: %u", (uint32_t)newSize);
+					nwol_necall(::nwol::createBuffer(_F, _USAGE, newSize, &newListBuffer), "Failed to create buffer for array! Out of memory? Element count requested: %u", (uint32_t)newSize);
 				}
 				((_tBase*)newListBuffer->pByteArray)[oldSize]					= value;
 				set(newListBuffer);
@@ -269,26 +257,21 @@ namespace nwol
 								::nwol::error_t							pop						( _tBase* out_value )																	{
 			uint32_t															newSize					= this->Count-1;
 			_tBase																value					= this->Data[newSize];
-			if( 0 > resize( newSize ) ) {
-				error_printf("%s", "Cannot resize array! Out of memory?");
-				return -1;
-			}
+			nwol_necall(resize(newSize), "%s", "Cannot resize array! Out of memory?");
 			if( out_value )
 				*out_value													= value;
 			return 0;
 		}
 
 								::nwol::error_t							insert					(uint32_t nIndex, const _tBase& value)													{
-			if(nIndex >= this->size()) {
-				error_printf("Invalid index! Index=%u. Max index=%u", nIndex, this->size()-1);
-				return -1;
-			}
+			reterr_error_if(nIndex >= this->size(), "Invalid index! Index=%u. Max index=%u", nIndex, this->size()-1);
 			uint32_t															nOldSize				= this->Count;
 			uint32_t															newSize					= this->Count+1;
 
 			static const bool													bIsText					= _USAGE == GUSAGE_TEXT;
-			if(m_ArrayBuffer.writable() &&
-				m_ArrayBuffer->nSizeInBytes >= (sizeof(_tBase)*(newSize+one_if(bIsText))))
+			if( m_ArrayBuffer.writable() 
+			 && m_ArrayBuffer->nSizeInBytes >= (sizeof(_tBase)*(newSize+one_if(bIsText)))
+			 )
 			{
 				for(uint32_t nOldIndex = nOldSize; nOldIndex>nIndex; nOldIndex--)
 					this->Data[nOldIndex]											= this->Data[nOldIndex-1];
@@ -301,7 +284,7 @@ namespace nwol
 			GPNCO(::nwol, SBuffer)												newListBuffer
 				,																oldListBuffer			(m_ArrayBuffer)
 				;
-			reterr_error_if(0 > ::nwol::createBuffer(_F, _USAGE, newSize, oldListBuffer->nColumnCount, oldListBuffer->nSliceCount, &newListBuffer), "Failed to create buffer for array! Out of memory? Element count requested: %u", (uint32_t)newSize);
+			nwol_necall(::nwol::createBuffer(_F, _USAGE, newSize, oldListBuffer->nColumnCount, oldListBuffer->nSliceCount, &newListBuffer), "Failed to create buffer for array! Out of memory? Element count requested: %u", (uint32_t)newSize);
 
 			uint32_t															iElement				= 0;
 			for(iElement=0; iElement < nIndex; iElement++)
@@ -317,10 +300,7 @@ namespace nwol
 		}
 
 								::nwol::error_t							remove					(uint32_t nIndex)																		{
-			if( nIndex >= this->size() ) {
-				error_printf("Invalid index! Index=%u. Max index=%llu", nIndex, (uint64_t)this->size()-1);
-				return -1;
-			}
+			reterr_error_if(nIndex >= this->size(), "Invalid index! Index=%u. Max index=%llu", nIndex, (uint64_t)this->size()-1);
 
 			uint32_t															newSize					= this->Count-1;
 			static constexpr const bool											bIsText					= _USAGE == GUSAGE_TEXT;
@@ -334,7 +314,7 @@ namespace nwol
 
 			// WARNING! Unsafe pointer handling in course.
 			GPNCO(::nwol, SBuffer)	newListBuffer;
-			reterr_error_if(0 > ::nwol::createBuffer(_F, _USAGE, newSize, m_ArrayBuffer->nColumnCount, m_ArrayBuffer->nSliceCount, &newListBuffer), "Failed to create buffer for array! Out of memory? Element count requested: %u", (uint32_t)newSize);
+			nwol_necall(::nwol::createBuffer(_F, _USAGE, newSize, m_ArrayBuffer->nColumnCount, m_ArrayBuffer->nSliceCount, &newListBuffer), "Failed to create buffer for array! Out of memory? Element count requested: %u", (uint32_t)newSize);
 
 			uint32_t															iElement;
 
@@ -367,7 +347,7 @@ namespace nwol
 			}
 			else {
 				GPNCO(::nwol, SBuffer)												newListBuffer;
-				reterr_error_if(0 > ::nwol::createBuffer(_F, _USAGE, this->Count, m_ArrayBuffer->nColumnCount, m_ArrayBuffer->nSliceCount, &newListBuffer), "Failed to create buffer for array! Out of memory? Element count requested: %u", (uint32_t)this->Count);
+				nwol_necall(::nwol::createBuffer(_F, _USAGE, this->Count, m_ArrayBuffer->nColumnCount, m_ArrayBuffer->nSliceCount, &newListBuffer), "Failed to create buffer for array! Out of memory? Element count requested: %u", (uint32_t)this->Count);
 
 				_tBase																* newData				= (_tBase*)newListBuffer->pByteArray;
 				for( uint32_t iElement=0; iElement<this->Count; iElement++ )
@@ -381,7 +361,7 @@ namespace nwol
 								::nwol::error_t							reserve					(uint32_t size)																			{
 			GPNCO(::nwol, SBuffer)												newListBuffer;
 			if( !m_ArrayBuffer ) {
-				reterr_error_if(0 > ::nwol::createBuffer(_F, _USAGE, size, size, 1, &newListBuffer), "%s", "Failed to reserve buffer! Out of memory?");
+				nwol_necall(::nwol::createBuffer(_F, _USAGE, size, size, 1, &newListBuffer), "%s", "Failed to reserve buffer! Out of memory?");
 				newListBuffer->nElementCount									= 0;
 				m_ArrayBuffer													= newListBuffer;
 				return 0;
@@ -390,7 +370,7 @@ namespace nwol
 				return 0;
 
 			GPNCO(::nwol, SBuffer)												oldBuffer				= m_ArrayBuffer;
-			reterr_error_if(0 > ::nwol::createBuffer(_F, _USAGE, size, oldBuffer->nColumnCount, oldBuffer->nSliceCount, &newListBuffer), "Failed to create buffer for array! Out of memory? Element count requested: %u", (uint32_t)size);
+			nwol_necall(::nwol::createBuffer(_F, _USAGE, size, oldBuffer->nColumnCount, oldBuffer->nSliceCount, &newListBuffer), "Failed to create buffer for array! Out of memory? Element count requested: %u", (uint32_t)size);
 
 			newListBuffer->nElementCount									= this->Count;
 			memcpy(newListBuffer->pByteArray, oldBuffer->pByteArray, sizeof(_tBase)*this->Count);
@@ -402,7 +382,7 @@ namespace nwol
 		// Set this instance to the list resulting from joining _A with _B
 								::nwol::error_t							join						(const gbuffer<_tBase, _F, _USAGE>& _a, const gbuffer<_tBase, _F, _USAGE>& _b)					{
 			GPNCO(::nwol, SBuffer)												newListBuffer;
-			joinBuffers( _a.m_ArrayBuffer, _b.m_ArrayBuffer, &newListBuffer );
+			nwol_necall(joinBuffers( _a.m_ArrayBuffer, _b.m_ArrayBuffer, &newListBuffer ), "What happened?");
 			set(newListBuffer);
 			this->Count														= _a.size()+_b.size();
 			return 0;
