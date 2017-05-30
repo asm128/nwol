@@ -1,3 +1,4 @@
+/// Copyright 2009-2017 - asm128
 #include "nwol_math.h"
 
 #ifndef __COLOR_H__29734982734__

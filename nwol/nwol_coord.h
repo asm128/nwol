@@ -1,4 +1,4 @@
-//
+/// Copyright 2009-2017 - asm128
 #include "nwol_bit.h"
 #include "nwol_math.h"
 
@@ -37,7 +37,7 @@ namespace nwol
 		//
 		template<typename _t>
 		constexpr inline	SCoord2<_t>	Cast					()															const	noexcept	{ return {(_t)x, (_t)y};												}
-		inline				TCoord2&	Normalize				()																	noexcept	{ return *this /= sqlen_safe(LengthSquared());							}
+		inline				TCoord2&	Normalize				()																				{ return *this /= sqlen_safe(LengthSquared());							}
 		inline constexpr	double		Dot						(const TCoord2& other)										const	noexcept	{ return x * other.x + y * other.y;										}
 		inline constexpr	_tBase		LengthSquared			()															const	noexcept	{ return x * x + y * y;													}
 		inline constexpr	double		Length					()															const				{ return sqrt(LengthSquared());											}
@@ -86,7 +86,7 @@ namespace nwol
 		constexpr inline	TCoord3		operator-				()															const	noexcept	{ return {x*-1, y*-1, z*-1};																	}
 		template<typename _t>
 		constexpr inline	SCoord3<_t>	Cast					()															const	noexcept	{ return SCoord3<_t>({(_t)x, (_t)y, (_t)z});													}
-		inline				TCoord3&	Normalize				()																	noexcept	{ return *this /= sqlen_safe(LengthSquared());													}
+		inline				TCoord3&	Normalize				()																				{ return *this /= sqlen_safe(LengthSquared());													}
 		constexpr			double		Dot						(const TCoord3& other)										const	noexcept	{ return x*other.x + y*other.y + z*other.z;														}
 		constexpr inline	_tBase		LengthSquared			()															const	noexcept	{ return x * x + y * y + z * z;																	}
 		constexpr inline	double		Length					()															const				{ return sqrt(LengthSquared());																	}
@@ -164,7 +164,7 @@ namespace nwol
 		//
 		template<typename _t>
 		constexpr inline	SCoord4<_t>	Cast					()															const	noexcept	{ return SCoord4<_t>({(_t)x, (_t)y, (_t)z, (_t)w}); }
-		inline				TCoord4&	Normalize				()																	noexcept	{ return *this /= ::nwol::sqlen_safe(LengthSquared()); }
+		inline				TCoord4&	Normalize				()																				{ return *this /= ::nwol::sqlen_safe(LengthSquared()); }
 		constexpr			double		Dot						(const TCoord4& other)										const	noexcept	{ return x*other.x + y*other.y + z*other.z + w*other.w; }
 		constexpr inline	_tBase		LengthSquared			()															const	noexcept	{ return x * x + y * y + z * z + w * w; }
 		constexpr inline	double		Length					()															const				{ return ::sqrt(LengthSquared()); }

@@ -1,3 +1,4 @@
+/// Copyright 2015-2017 - asm128
 #include "nwol_string.h"
 
 #ifndef __NWOL_VALUE_H__92837423__

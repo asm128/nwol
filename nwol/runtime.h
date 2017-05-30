@@ -1,5 +1,4 @@
-#include "nwol_array.h"
-#include "nwol_error.h"
+/// Copyright 2017 - asm128
 #include "nwol_screen.h"
 #include "nwol_module.h"
 

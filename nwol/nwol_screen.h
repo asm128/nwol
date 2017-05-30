@@ -1,3 +1,4 @@
+/// Copyright 2017 - asm128
 #include "nwol_coord.h"
 #include "nwol_array.h"
 #if defined(__WINDOWS__)

@@ -1,3 +1,4 @@
+/// Copyright 2016-2017 - asm128
 #include "nwol_misc.h"
 #include "label.h"
 #include "ascii_target.h"

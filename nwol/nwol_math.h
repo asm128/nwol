@@ -1,3 +1,4 @@
+/// Copyright 2010-2017 - asm128
 #include "evaluation.h"
 #include "typeint.h"
 #include <cmath>

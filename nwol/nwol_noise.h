@@ -1,3 +1,4 @@
+/// Copyright 2013-2017 - asm128
 #include "multithread.h"
 #include "nwol_debug.h"
 #include "typeint.h"

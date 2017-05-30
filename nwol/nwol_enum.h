@@ -1,3 +1,4 @@
+/// Copyright 2016-2017 - asm128
 #include "label.h"
 #include "nwol_array.h"
 
@@ -95,8 +96,7 @@ namespace nwol
 					return 0;
 				}
 			error_printf("Enumeration value not found! Name: %s.", name.begin());
-			index = -1;
-			return -1;
+			return index = -1;
 		}
 							int32_t							get_value_index					(const ::nwol::gsyslabel& name)						const			{
 			for(uint32_t i=0, count = Names.size(); i<count; ++i)
@@ -113,8 +113,7 @@ namespace nwol
 					return 0;
 				}
 			error_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
-			index = -1;
-			return -1;
+			return index = -1;
 		}
 							int32_t							get_value_index					(const _tValue& value)									const			{
 			for(uint32_t i=0, count = Names.size(); i<count; ++i)
@@ -145,15 +144,12 @@ namespace nwol
 							::nwol::error_t					add_value						(const _tValue& value, const ::nwol::gsyslabel& name)					{
 			for(uint32_t i=0, count = Values.size(); i<count; ++i)
 				if(Values[i] == value) {
-					if(Names[i] != name) {
-						warning_printf("Enumeration value already defined! Type: '%s'. Value: 0x%llX. Previous name: %s. New name: %s. Second definition ignored..."
+					retwarn_warn_if(Names[i] != name, "Enumeration value already defined! Type: '%s'. Value: 0x%llX. Previous name: %s. New name: %s. Second definition ignored..."
 							, Name				.begin()
 							, (uint64_t)value
 							, Names[i]			.begin()
 							, name				.begin()
 							);
-						return 1;
-					}
 					return 0;	// Found same name and value combination. This is normal when values are defined as static const.
 				}
 			const uint32_t											oldSize							= Values.size();

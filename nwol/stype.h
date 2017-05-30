@@ -1,3 +1,4 @@
+/// Copyright 2015-2017 - asm128
 #include "datatype.h"
 #include "datausage.h"
 #include "nwol_error.h"

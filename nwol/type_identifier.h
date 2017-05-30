@@ -1,3 +1,4 @@
+/// Copyright 2017 - asm128
 #include "label.h"
 
 #ifndef __TYPE_IDENTIFIER_H__02397492873498__

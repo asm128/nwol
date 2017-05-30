@@ -1,3 +1,4 @@
+/// Copyright 2010-2017 - asm128
 #ifndef __PLATFORM_GLOBALS_H__2983423__
 #define __PLATFORM_GLOBALS_H__2983423__
 

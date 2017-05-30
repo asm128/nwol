@@ -1,3 +1,4 @@
+/// Copyright 2017 - asm128
 #include "label.h"
 #include "nwol_array.h"
 

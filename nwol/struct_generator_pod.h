@@ -1,3 +1,4 @@
+/// Copyright 2017 - asm128
 #include "type_identifier.h"
 #include "datatype.h"
 #include "nwol_array.h"

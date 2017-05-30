@@ -1,3 +1,4 @@
+/// Copyright 2014-2017 - asm128
 #include "typeint.h"
 
 #ifndef __TIMER_H__2390847012398470912837409812734__
