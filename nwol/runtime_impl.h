@@ -15,7 +15,7 @@
 
 #define DEFINE_RUNTIME_INTERFACE_VERSION(_yourCustomClass, _versionMajor, _versionMinor)																				\
 ::nwol::error_t	NWOL_STDCALL			::nwol_moduleVersion			(uint16_t* version)													noexcept		{			\
-	reterr_error_if(0 == version, "Invalid parameters.");																												\
+	reterr_error_if(0 == version, "Invalid parameter.");																												\
 	static constexpr const uint16_t				_nwol_module_version			= ((_versionMinor & 0xFF)<<8) | (_versionMajor & 0xFF);									\
 	*version								= _nwol_module_version;																										\
 	return 0; 																																							\
@@ -23,7 +23,7 @@
 
 #define DEFINE_RUNTIME_INTERFACE_CREATE(_yourCustomClass)																												\
 ::nwol::error_t	NWOL_STDCALL			::nwol_moduleCreate				(void** instanceApp, ::nwol::SRuntimeValues* runtimeValues)			noexcept		{			\
-	reterr_error_if(instanceApp == 0, "%s", "Invalid pointer!");																										\
+	reterr_error_if(instanceApp == 0 || 0 == runtimeValues, "Invalid parameters: instanceApp=0x%P, runtimeValues=0x%P", instanceApp, runtimeValues);					\
 	_yourCustomClass							* newApp						= new _yourCustomClass(runtimeValues), *oldApp = (_yourCustomClass*)*instanceApp;		\
 	reterr_error_if(0 == newApp, "Cannot create application object. Not enough memory?");																				\
 	*instanceApp							= newApp; 																													\

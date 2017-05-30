@@ -34,7 +34,7 @@ namespace nwol
 			}
 			else {
 				GPNCO(::nwol, SBuffer)									newListBuffer;
-				reterr_error_if(0 > ::nwol::createBuffer(m_DataType, GUSAGE_POINTER, nInstanceCount, &newListBuffer), "Cannot create buffer for pointer list of size %u! Out of memory?", nInstanceCount);
+				nwol_necall(::nwol::createBuffer(m_DataType, GUSAGE_POINTER, nInstanceCount, &newListBuffer), "Cannot create buffer for pointer list of size %u! Out of memory?", nInstanceCount);
 
 				for (uint32_t iCoreInstance = 0; iCoreInstance < nInstanceCount; iCoreInstance++)
 					((_tRef**)newListBuffer->pByteArray)[iCoreInstance]	= ::nwol::acquire(in_lstCoreInstances[iCoreInstance]);
@@ -45,12 +45,10 @@ namespace nwol
 		}
 		//
 		virtual			::nwol::error_t						create					(::nwol::gptr_nco<_tRef>* in_lstCoreInstances, uint32_t nInstanceCount)														{
-			if (nInstanceCount && 0 == in_lstCoreInstances) {
-				error_printf("%s", "Cannot create list from a null address!");
-				return -1;
-			}
+			reterr_error_if(nInstanceCount && 0 == in_lstCoreInstances, "%s", "Cannot create list from a null address!");
+
 			GPNCO(::nwol, SBuffer)										newListBuffer;
-			reterr_error_if(0 > ::nwol::createBuffer(m_DataType, GUSAGE_POINTER, nInstanceCount, &newListBuffer), "Cannot create buffer for pointer list of size %u! Out of memory?", nInstanceCount);
+			nwol_necall(::nwol::createBuffer(m_DataType, GUSAGE_POINTER, nInstanceCount, &newListBuffer), "Cannot create buffer for pointer list of size %u! Out of memory?", nInstanceCount);
 			for (uint32_t iCoreInstance = 0; iCoreInstance < nInstanceCount; iCoreInstance++)
 				((_tRef**)newListBuffer->pByteArray)[iCoreInstance]		= in_lstCoreInstances[iCoreInstance].acquire();
 		
@@ -77,7 +75,7 @@ namespace nwol
 			}
 			else {
 				GPNCO(::nwol, SBuffer)								newListBuffer;
-				reterr_error_if(0 > ::nwol::createBuffer(m_DataType, GUSAGE_POINTER, (uint32_t)newSize, this->m_BufferData ? this->m_BufferData->nColumnCount : (uint32_t)newSize, this->m_BufferData ? this->m_BufferData->nSliceCount : 1, &newListBuffer), "Cannot create buffer for pointer list of size %u! Out of memory?", newSize);
+				nwol_necall(::nwol::createBuffer(m_DataType, GUSAGE_POINTER, (uint32_t)newSize, this->m_BufferData ? this->m_BufferData->nColumnCount : (uint32_t)newSize, this->m_BufferData ? this->m_BufferData->nSliceCount : 1, &newListBuffer), "Cannot create buffer for pointer list of size %u! Out of memory?", newSize);
 				if (this->Count) {
 					GPNCO(::nwol, SBuffer)								oldListBuffer			= this->m_BufferData; //GetBufferData();
 					uint32_t iCoreInstance = 0, nMaxCount = (uint32_t)nwol::min(this->Count, (uint32_t)newSize);
@@ -133,11 +131,7 @@ namespace nwol
 				if (out_pElement)
 					newElement											= ::nwol::acquire(((_tRef**)this->m_BufferData->pByteArray)[this->Count - 1]);
 
-				::nwol::error_t											errMy					= this->resize(this->Count - 1);
-				if (-1 == errMy) {
-					error_printf("%s", "Failed to resize list!");
-					return -1;
-				}
+				nwol_necall(this->resize(this->Count - 1), "%s", "Failed to resize list to %u elements!", this->Count - 1);
 				if (out_pElement) {
 					oldElement											= *out_pElement;
 					*out_pElement										= newElement;
@@ -148,7 +142,6 @@ namespace nwol
 			::nwol::release(&oldElement);
 			return 0;
 		}
-		
 						::nwol::error_t						insert					(_tRef* CoreInstance, uint32_t nIndex)																						{
 			reterr_error_if(nIndex >= this->Count, "Invalid index! Index=%u. Max index=%u", nIndex, this->Count - 1);
 
@@ -159,7 +152,7 @@ namespace nwol
 			)
 			{
 				GPNCO(::nwol, SBuffer)									newListBuffer;
-				reterr_error_if(0 > ::nwol::createBuffer(m_DataType, GUSAGE_POINTER, newSize, &newListBuffer), "Cannot create buffer for pointer list of size %u! Out of memory?", newSize);
+				nwol_necall(::nwol::createBuffer(m_DataType, GUSAGE_POINTER, newSize, &newListBuffer), "Cannot create buffer for pointer list of size %u! Out of memory?", newSize);
 
 				uint32_t												iElement;
 				for (iElement = 0; iElement < nIndex; iElement++)
@@ -212,7 +205,7 @@ namespace nwol
 			}
 			else {
 				GPNCO(::nwol, SBuffer)									newListBuffer;
-				reterr_error_if(0 > ::nwol::createBuffer(m_DataType, GUSAGE_POINTER, nInstanceCount, &newListBuffer), "Cannot create buffer for pointer list of size %u! Out of memory?", nInstanceCount);
+				nwol_necall(::nwol::createBuffer(m_DataType, GUSAGE_POINTER, nInstanceCount, &newListBuffer), "Cannot create buffer for pointer list of size %u! Out of memory?", nInstanceCount);
 				memset(newListBuffer->pByteArray, 0, nInstanceCount*m_DataBytes);
 
 				gcreateAll((_tRef**)newListBuffer->pByteArray, in_lstCoreInstances, nInstanceCount);
@@ -269,7 +262,7 @@ namespace nwol
 				return 0;
 
 			GPNCO(::nwol, SBuffer)									newListBuffer			= 0;
-			reterr_error_if(0 > ::nwol::createBuffer(m_DataType, GUSAGE_POINTER, nSize, &newListBuffer), "Cannot create buffer for pointer list of size %u! Out of memory?", nSize);
+			nwol_necall(::nwol::createBuffer(m_DataType, GUSAGE_POINTER, nSize, &newListBuffer), "Cannot create buffer for pointer list of size %u! Out of memory?", nSize);
 			memset(newListBuffer->pByteArray, 0, m_DataBytes*nSize);
 
 			uint32_t												instancesRead			= fileDeserializeData((_tRef**)newListBuffer->pByteArray, nSize, fp);
@@ -305,10 +298,7 @@ namespace nwol
 				return bytesRead;
 			}
 			GPNCO(::nwol, SBuffer)									newListBuffer;
-			if(0 > ::nwol::createBuffer(m_DataType, GUSAGE_POINTER, nSize, &newListBuffer)) {
-				error_printf("Cannot create buffer for pointer list of size %u! Out of memory?", nSize);
-				return bytesRead;
-			}
+			retval_error_if(bytesRead, errored(::nwol::createBuffer(m_DataType, GUSAGE_POINTER, nSize, &newListBuffer)), "Cannot create buffer for pointer list of size %u! Out of memory?", nSize);
 
 			memset(newListBuffer->pByteArray, 0, m_DataBytes*nSize);
 			bytesRead											+= memDeserializeData((_tRef**)newListBuffer->pByteArray, nSize, ((char*)in_pByteArray) + bytesRead);
@@ -326,8 +316,7 @@ namespace nwol
 			reterr_error_if(nSize != nInstancesWritten, "Failed to write the requested instances! %u requested to be written, %u actually written.", nSize, nInstancesWritten);
 			return 0;
 		}
-		virtual				::nwol::error_t					read					(FILE* fp)
-		{
+		virtual				::nwol::error_t					read					(FILE* fp)																													{
 			reterr_error_if(0 == fp, "%s", "A null pointer is not a valid file handler!");
 
 			this->SetBufferData(0);
@@ -338,7 +327,7 @@ namespace nwol
 				return 0;
 
 			GPNCO(::nwol, SBuffer)									newListBuffer;
-			reterr_error_if(0 > ::nwol::createBuffer(m_DataType, GUSAGE_POINTER, nSize, &newListBuffer), "Cannot create buffer for pointer list of size %u! Out of memory?", nSize);
+			reterr_error_if(errored(::nwol::createBuffer(m_DataType, GUSAGE_POINTER, nSize, &newListBuffer)), "Cannot create buffer for pointer list of size %u! Out of memory?", nSize);
 
 			memset(newListBuffer->pByteArray, 0, m_DataBytes*nSize);
 			uint32_t												instancesRead			= fileReadData((_tRef**)newListBuffer->pByteArray, nSize, fp);
@@ -373,10 +362,7 @@ namespace nwol
 				return bytesRead;
 
 			GPNCO(::nwol, SBuffer)									newListBuffer;
-			if(0 > ::nwol::createBuffer(m_DataType, GUSAGE_POINTER, nSize, &newListBuffer)) {
-				error_printf("Cannot create buffer for pointer list of size %u! Out of memory?", nSize);
-				return bytesRead;
-			}
+			retval_error_if(bytesRead, errored(::nwol::createBuffer(m_DataType, GUSAGE_POINTER, nSize, &newListBuffer)), "Cannot create buffer for pointer list of size %u! Out of memory?", nSize);
 
 			memset(newListBuffer->pByteArray, 0, m_DataBytes*nSize);
 			bytesRead											+= memReadData((_tRef**)newListBuffer->pByteArray, nSize, ((char*)in_pByteArray) + bytesRead);

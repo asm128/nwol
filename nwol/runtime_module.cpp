@@ -27,7 +27,6 @@ void											nwol::printErasedModuleInterfacePointers		(::nwol::RUNTIME_CALLBA
 		return -1;
 	}
 	containerForCallbacks.RuntimeValues				= &runtimeValues;
-	//containerForCallbacks.ModuleFile				= ::nwol::glabel(moduleName, 1024U).c_str();
 	containerForCallbacks.ModuleTitle				= ::nwol::glabel(containerForCallbacks.Title(), 1024U).c_str();
 	return 0;
 }

@@ -23,13 +23,13 @@ namespace nwol
 
 #if defined( USE_FILE_DEBUG_PRINTF ) && !defined( FORCE_STD_PRINTF_DEBUG )
 #	define _nwol_internal_info_printf( chars, nCharCount )		::nwol::_internal_debug_print_file( chars, nCharCount )
-#	define _nwol_internal_debug_wprintf( chars, nCharCount )	OutputDebugStringW( chars )
+#	define _nwol_internal_info_wprintf( chars, nCharCount )	OutputDebugStringW( chars )
 #elif (defined(__WINDOWS__)) && !defined( FORCE_STD_PRINTF_DEBUG )
 #	define _nwol_internal_info_printf( chars, nCharCount )		::nwol::_internal_debug_print_debugger( chars )
-#	define _nwol_internal_debug_wprintf( chars, nCharCount )	OutputDebugStringW( chars )
+#	define _nwol_internal_info_wprintf( chars, nCharCount )	OutputDebugStringW( chars )
 #else // I use this because I don't have the debugger attached during release build test. Anyway it should be replaced with a proper fprintf to an open log stream.
 #	define _nwol_internal_info_printf( chars, nCharCount )		::nwol::_internal_debug_print_console( chars )
-#	define _nwol_internal_debug_wprintf( chars, nCharCount )	//wprintf( L"%s", chars )
+#	define _nwol_internal_info_wprintf( chars, nCharCount )	//wprintf( L"%s", chars )
 #endif
 
 	void											_nwol_print_system_errors		(const char* prefix);
@@ -39,7 +39,7 @@ namespace nwol
 		_nwol_internal_info_printf(prefix, _sizePrefix-1);
 		wchar_t											customDynamicString	[4096]			= {0};
 		const size_t									stringLength						= swprintf_s(customDynamicString, format, args...);
-		_nwol_internal_debug_wprintf(customDynamicString, (int)stringLength);
+		_nwol_internal_info_wprintf(customDynamicString, (int)stringLength);
 		_nwol_internal_info_printf("\n", 1);
 		if('2' < severity[0])
 			_nwol_print_system_errors(prefix);
@@ -71,12 +71,6 @@ namespace nwol
 		::nwol::__nwol_printf(severity, infoPrefix, format, __VA_ARGS__);																									\
 	}
 
-#if defined(__WINDOWS__)
-#	define error_last_system_error(sev, label)							//{ nwol_printf(sev, label, "Last system error: 0x%X '%s'", errno, ::strerror(errno)); nwol_printf(sev, label, "Last Windows error: 0x%X '%s'", ::GetLastError(), ::nwol::getWindowsErrorAsString(::GetLastError()).c_str()); }
-#else																	//
-#	define error_last_system_error(sev, label)							//nwol_printf(sev, label, "Last system error: 0x%X '%s'", errno, strerror(errno))
-#endif
-	
 #define nwol_wprintf nwol_printf
 
 #if defined( __ANDROID__ )
