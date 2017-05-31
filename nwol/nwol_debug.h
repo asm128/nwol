@@ -1,3 +1,4 @@
+/// Copyright 2010-2017 - asm128
 #include "platform_globals.h"
 
 #ifndef __NWOL_DEBUG_H__97826389432__

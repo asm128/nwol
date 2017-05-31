@@ -1,3 +1,4 @@
+/// Copyright 2015-2017 - asm128
 #include "gui.h"
 #include "fill.h"
 
@@ -97,8 +98,8 @@ void								drawText					(_tChar* target, int32_t targetWidth, int32_t targetHei
 }
 
 ::nwol::error_t						nwol::updateGUI				(::nwol::SGUI& GUISystem, const ::nwol::SInput& inputSystem)							{ 
-	int32_t									mouseX						= GUISystem.MousePosition.x = inputSystem.MouseX;
-	int32_t									mouseY						= GUISystem.MousePosition.y = inputSystem.MouseY;
+	int32_t									mouseX						= GUISystem.MousePosition.x = inputSystem.Mouse.Deltas.x;
+	int32_t									mouseY						= GUISystem.MousePosition.y = inputSystem.Mouse.Deltas.y;
 	::nwol::SGUIControlTable				& controls					= GUISystem.Controls;
 	for(uint32_t iControl=0; iControl < controls.AreasASCII.size(); ++iControl) {
 		::nwol::SRectangle2D<int32_t>			& controlArea				= controls.AreasRealignedASCII[iControl];

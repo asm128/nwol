@@ -1,3 +1,4 @@
+/// Copyright 2010-2017 - asm128
 #include "evaluation.h"
 #include <malloc.h>
 #include "nwol_safe.h"
@@ -91,6 +92,11 @@ namespace nwol
 		}
 		return dest;
 	}
+
+	template <typename _tBase, size_t _sizeArray>			_tBase*								memcpy_s					(_tBase (&dest)[_sizeArray], const _tBase (&src)[_sizeArray]) {
+		memcpy_s(&dest, sizeof(_tBase)*_sizeArray, &input.Mouse, sizeof(input.Mouse));
+	}
+
 }	// namespace
 
 #endif // NWOL_MEMORY_H__92836409283642038462309846

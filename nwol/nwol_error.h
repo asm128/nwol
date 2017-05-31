@@ -1,3 +1,4 @@
+/// Copyright 2013-2017 - asm128
 #include "typeint.h"
 
 #if defined (__WINDOWS__)

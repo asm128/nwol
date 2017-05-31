@@ -1,3 +1,4 @@
+/// Copyright 2010-2017 - asm128
 #include "typeint.h"
 
 #ifndef GCORE_REF_GLOBALS_H_9368498234689723462

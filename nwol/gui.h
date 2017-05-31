@@ -1,3 +1,4 @@
+/// Copyright 2015-2017 - asm128
 #include "nwol_enum.h"
 #include "nwol_input.h"
 #include "nwol_coord.h"

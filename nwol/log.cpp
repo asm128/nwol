@@ -1,5 +1,6 @@
+/// Copyright 2011-2017 - asm128
 #include "nwol_log.h"
-
+#include "nwol_safe.h"
 #include "nwol_string.h"
 #include <time.h>
 
@@ -18,7 +19,7 @@
 #	include <Windows.h>
 #endif
 
-void										nwol::_internal_debug_print_debugger			(const char* chars)						{
+void										nwol::_internal_debug_print_debugger			(const char* chars)								{
 #if defined(__ANDROID__) || defined(__LINUX__)
 	GLOGE( "%s", chars );
 #elif defined(__WINDOWS__)
@@ -46,30 +47,36 @@ void										nwol::_internal_debug_print_file				(const char* chars, int nCharC
 	_internal_debug_print_debugger( chars );
 	errno_t												ferrMy										= 0;
 	if( 2 == (ferrMy = fopen_s( &__debug_fp, __debug_file_name, "ab" )) )	{
-		if( (0 == fopen_s( &__debug_fp, __debug_file_name, "wb" )) && __debug_fp ) {
+		if( (0 == fopen_s( &__debug_fp, __debug_file_name, "wb" )) && __debug_fp )
 			fwrite( chars, sizeof( char ), nCharCount, __debug_fp );
-			fclose( __debug_fp );
-		}
 	}
 	else if( (0 == ferrMy) && __debug_fp ) {
 		fwrite( chars, sizeof( char ), nCharCount, __debug_fp );
-		fclose( __debug_fp );
 	}
+	safe_fclose( __debug_fp );
 }
 
 void										nwol::_nwol_print_system_errors					(const char* prefix)							{
-	char											systemErrorString	[4096]		= {0};
-	char											resultString		[4096]		= {0};
-	::strerror_s(systemErrorString, errno);
-	size_t											stringLength					= ::sprintf_s(resultString, "Last system error: 0x%X '%s'", errno, systemErrorString);
-	_nwol_internal_info_printf(prefix, _sizePrefix-1);
-	_nwol_internal_info_printf(resultString, (int)stringLength);
-	_nwol_internal_info_printf("\n", 1);
+	char											systemErrorString	[4096]						= {0};
+	char											resultString		[4096]						= {0};
+	int												lastSystemError									= errno;
+	if(lastSystemError) {
+		::strerror_s(systemErrorString, lastSystemError);
+		_nwol_internal_info_printf(prefix, _sizePrefix-1);
+		size_t											stringLength									= ::sprintf_s(resultString, "Last system error: 0x%X '%s'", errno, systemErrorString);
+		(void)stringLength;
+		_nwol_internal_info_printf(resultString, stringLength);
+		_nwol_internal_info_printf("\n", 1);
+	}
 #if defined(__WINDOWS__)
-	stringLength								= ::sprintf_s(resultString, "Last Windows error: 0x%X '%s'", ::GetLastError(), ::nwol::getWindowsErrorAsString(::GetLastError()).c_str());
-	_nwol_internal_info_printf(prefix, _sizePrefix-1);
-	_nwol_internal_info_printf(resultString, (int)stringLength);
-	_nwol_internal_info_printf("\n", 1);
+	DWORD											lastWindowsError								= GetLastError();
+	if(lastWindowsError) {
+		_nwol_internal_info_printf(prefix, _sizePrefix-1);
+		size_t											stringLength									= ::sprintf_s(resultString, "Last Windows error: 0x%X '%s'", lastWindowsError, ::nwol::getWindowsErrorAsString(lastWindowsError).c_str());
+		(void)stringLength;
+		_nwol_internal_info_printf(resultString, stringLength);
+		_nwol_internal_info_printf("\n", 1);
+	}
 #endif
 
 }

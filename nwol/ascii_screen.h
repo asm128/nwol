@@ -1,3 +1,4 @@
+/// Copyright 2014-2017 - asm128
 #include "ascii_target.h"
 
 #ifndef __ASCIISCREEN_H__20983472903740928374234__

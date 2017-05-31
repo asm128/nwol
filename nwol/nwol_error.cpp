@@ -1,3 +1,4 @@
+/// Copyright 2017 - asm128
 #include "nwol_log.h"
 
 #if defined (__WINDOWS__)

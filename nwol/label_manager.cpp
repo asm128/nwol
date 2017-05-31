@@ -1,3 +1,4 @@
+/// Copyright 2016-2017 - asm128
 #include "label_manager.h"
 
 ::nwol::CLabelManager*							nwol::getLabelManager					()																					{ return &nwol::CLabelManager::get(); }

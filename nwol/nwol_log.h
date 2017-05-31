@@ -31,7 +31,6 @@ namespace nwol
 #	define _nwol_internal_info_printf( chars, nCharCount )		::nwol::_internal_debug_print_console( chars )
 #	define _nwol_internal_info_wprintf( chars, nCharCount )	//wprintf( L"%s", chars )
 #endif
-
 	void											_nwol_print_system_errors		(const char* prefix);
 
 	template<const size_t _sizePrefix, typename... TArgs>	

@@ -1,3 +1,4 @@
+/// Copyright 2011-2017 - asm128
 #include "nwol_enum.h"
 
 #ifndef __DATAUSAGE_H__928364092634829374234__

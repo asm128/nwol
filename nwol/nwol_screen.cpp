@@ -1,3 +1,4 @@
+/// Copyright 2010-2017 - asm128
 #include "nwol_screen.h"
 #include "nwol_log.h"
 

@@ -1,3 +1,4 @@
+/// Copyright 2016-2017 - asm128
 #include "typeint.h"
 
 #ifndef __SIZE_H__982340928374923__

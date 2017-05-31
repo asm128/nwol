@@ -1,3 +1,4 @@
+/// Copyright 2015-2017 - asm128
 #include "nwol_noise.h"
 #include "nwol_array.h"
 

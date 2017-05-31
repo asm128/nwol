@@ -1,3 +1,4 @@
+/// Copyright 2016-2017 - asm128
 #include "descriptor.h"
 
 #include "descriptor_manager.h"

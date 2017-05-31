@@ -1,3 +1,4 @@
+/// Copyright 2016-2017 - asm128
 #include "array_view.h"
 
 #ifndef __GRID_VIEW_H__926340923746098743230948__

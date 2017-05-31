@@ -8,8 +8,7 @@
 
 namespace nwol
 {
-	// I got the random function code from http://libnoise.sourceforge.net/noisegen/index.html 
-	//
+	// I got this base random function code from http://libnoise.sourceforge.net/noisegen/index.html.
 	static	double						noise1D				(uint32_t x, uint64_t noiseSeed=15731)																	{ x = (x<<13) ^ x; return (1.0 - ( (x * (x * x * noiseSeed + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0);				}
 	static	double						noiseNormal1D		(uint32_t x, uint64_t noiseSeed=15731)																	{ x = (x<<13) ^ x; return (1.0 - ( (x * (x * x * noiseSeed + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0) *.5 + .5f;	}
 	//------------------

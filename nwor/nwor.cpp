@@ -221,6 +221,7 @@ int32_t																setupScreen								(::nwol::SRuntimeValues& runtimeValues
 		); 
 	reterr_error_if(0 == newWindow, "CreateWindow FAILED!");
 
+	runtimeValues.Screen.PlatformDetail	.pWindowClass					= &runtimeValues.PlatformDetail.MainWindowClass;
 	runtimeValues.Screen.PlatformDetail	.hWnd							= newWindow;
 	runtimeValues.PlatformDetail		.MainWindowStyle				= dwStyle;
 	ShowWindow(newWindow, SW_SHOW);

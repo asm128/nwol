@@ -1,3 +1,4 @@
+/// Copyright 2016-2017 - asm128
 #include "unshrinkable_block_container.h"
 
 #ifndef __GLABELMANAGER_H_61596898798741996481968498__

@@ -1,3 +1,4 @@
+/// Copyright 2011-2017 - asm128
 #include "datatype.h"
 #include "evaluation.h"
 

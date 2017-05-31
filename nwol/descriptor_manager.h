@@ -1,3 +1,4 @@
+/// Copyright 2016-2017 - asm128
 #include "unshrinkable_block_container.h"
 #include "datatype.h"
 

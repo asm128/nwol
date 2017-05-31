@@ -1,3 +1,4 @@
+/// Copyright 2016-2017 - asm128
 //#pragma warning(disable:4005)
 #include "label.h"
 

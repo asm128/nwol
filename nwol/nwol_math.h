@@ -26,10 +26,10 @@ namespace nwol
 	static inline									float64_t			powd				(int32_t	base, int32_t	exponent)				noexcept	{ float64_t result=1;
 		if( exponent >= 0 )
 			for( int32_t i=0; i<exponent; ++i )
-				result *= base;
+				result																*= base;
 		else
 			for( int32_t i=0, count=-exponent; i<count; ++i )
-				result /= base;
+				result																/= base;
 		return result;
 	}
 

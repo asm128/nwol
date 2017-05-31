@@ -1,3 +1,4 @@
+/// Copyright 2014-2017 - asm128
 #include "evaluation.h"
 #include "nwol_coord.h"
 

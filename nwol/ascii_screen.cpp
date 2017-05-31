@@ -1,3 +1,4 @@
+/// Copyright 2014-2017 - asm128
 #include "ascii_screen.h"
 #include "ascii_color.h"
 #include "nwol_debug.h"

@@ -1,3 +1,4 @@
+/// Copyright 2010-2017 - asm128
 #include "nwol_debug.h"
 
 #ifndef __TYPEINT_H__941234698724987234__

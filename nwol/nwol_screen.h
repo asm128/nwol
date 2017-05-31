@@ -17,10 +17,10 @@ namespace nwol
 	};
 
 	struct SWindowsMessage {
-		HWND	hWnd; 
-		UINT	uMsg; 
-		WPARAM	wParam; 
-		LPARAM	lParam;
+		HWND												hWnd; 
+		UINT												uMsg; 
+		WPARAM												wParam; 
+		LPARAM												lParam;
 	};
 
 	struct SScreenDetail {

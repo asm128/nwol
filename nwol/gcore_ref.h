@@ -1,3 +1,4 @@
+/// Copyright 2010-2017 - asm128
 #include "gcore_ref_globals.h"
 
 #include "label.h"

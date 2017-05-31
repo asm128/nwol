@@ -1,3 +1,4 @@
+/// Copyright 2010-2017 - asm128
 #include <cstdint>
 
 #ifndef __NWOL_BIT_H__034792701397__

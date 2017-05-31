@@ -1,3 +1,4 @@
+/// Copyright 2014-2017 - asm128
 #include "nwol_timer.h"
 #include <chrono>
 

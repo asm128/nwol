@@ -1,3 +1,4 @@
+/// Copyright 2016-2017 - asm128
 #include "nwol_log.h"
 #include "typeint.h"
 

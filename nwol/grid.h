@@ -1,3 +1,4 @@
+/// Copyright 2016-2017 - asm128
 #include "grid_view.h"
 
 #include "text.h"

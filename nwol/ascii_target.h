@@ -1,3 +1,4 @@
+/// Copyright 2017 - asm128
 #include "grid_view.h"
 
 #ifndef __ASCII_TARGET_H__209834723428374234__

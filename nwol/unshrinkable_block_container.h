@@ -1,3 +1,4 @@
+/// Copyright 2016-2017 - asm128
 #include "nwol_array.h"
 #include "multithread.h"
 #include "nwol_error.h"
