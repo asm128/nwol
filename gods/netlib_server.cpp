@@ -19,6 +19,7 @@
 #endif
 
 GDEFINE_OBJ(nwol, CClient);
+GDEFINE_OBJ(nwol, SClientInputBuffer);
 
 int32_t												nwol::CServer::InitServer						(int32_t port_number)														{
 	::gethostname(HostName, sizeof(HostName));	// Get host name of this computer
@@ -31,7 +32,7 @@ int32_t												nwol::CServer::InitServer						(int32_t port_number)									
 }
 
 int32_t												receiveSystemCommand							(::nwol::CClient* pClient, ::nwol::NETLIB_COMMAND& commandReceived)			{
-	return receiveSystemCommand(pClient->m_ClientListener, pClient->m_ClientTarget, commandReceived);
+	return receiveSystemCommand(pClient->ClientListener, pClient->ClientTarget, commandReceived);
 }
 
 int32_t												nwol::CServer::Listen							()																			{
@@ -73,13 +74,13 @@ int32_t												nwol::CServer::Listen							()																			{
 }
 
 void												disconnectClient								(nwol::CClient* client)														{
-	/* Get current time */
-	info_printf("Disconnecting client %u.", client->m_id);
-	::nwol::shutdownConnection(&client->m_ClientListener);
-	::nwol::shutdownConnection(&client->m_ClientTarget);
+	// Get current time
+	info_printf("Disconnecting client %u.", client->Id);
+	::nwol::shutdownConnection(&client->ClientListener);
+	::nwol::shutdownConnection(&client->ClientTarget);
 }
 
-int32_t												sendSystemCommand								(::nwol::CClient* pClient, const ::nwol::NETLIB_COMMAND& commandToSend)		{ return ::nwol::sendSystemCommand(pClient->m_ClientListener, pClient->m_ClientTarget, commandToSend);	}
+int32_t												sendSystemCommand								(::nwol::CClient* pClient, const ::nwol::NETLIB_COMMAND& commandToSend)		{ return ::nwol::sendSystemCommand(pClient->ClientListener, pClient->ClientTarget, commandToSend);	}
 int32_t												processCommandInternal							(::nwol::CClient* client, ::nwol::NETLIB_COMMAND command)					{
 	info_printf("Processing system command: %s.", ::nwol::get_value_label(command).c_str());
 
@@ -97,7 +98,7 @@ int32_t												processCommandInternal							(::nwol::CClient* client, ::nwol
 		uint64_t												current_time									= time(0);
 		int32_t													sentBytes										= 0;
 		// Send data back
-		::nwol::error_t											errMy											= ::nwol::sendToConnection(client->m_ClientListener, (ubyte_t *)&current_time, (int)sizeof(current_time), &sentBytes, client->m_ClientTarget);
+		::nwol::error_t											errMy											= ::nwol::sendToConnection(client->ClientListener, (ubyte_t *)&current_time, (int)sizeof(current_time), &sentBytes, client->ClientTarget);
 		reterr_error_if(0 > errMy || sentBytes != (int32_t)sizeof(current_time), "Failed to send time to client. 0x%x.", errMy);
 		// Display time
 		char													timestring		[256]							= {};
@@ -109,7 +110,7 @@ int32_t												processCommandInternal							(::nwol::CClient* client, ::nwol
 #endif
 		int														port_number;			// Port number to use
 		int														a1, a2, a3, a4;			// Components of address in xxx.xxx.xxx.xxx form
-		errMy												= ::nwol::getAddress(client->m_ClientTarget, &a1, &a2, &a3, &a4, &port_number);
+		errMy												= ::nwol::getAddress(client->ClientTarget, &a1, &a2, &a3, &a4, &port_number);
 		timestring[strlen(timestring)-1]					= 0;
 		info_printf("Sent time (%s) to %u.%u.%u.%u:%u."
 			, timestring
@@ -125,17 +126,17 @@ int32_t												processCommandInternal							(::nwol::CClient* client, ::nwol
 		int32_t													payloadSize										= 0;
 		int32_t													receivedBytes									= 0;
 		::std::vector<ubyte_t>									payloadBytes;
-		nwol_necall(::nwol::receiveFromConnection(client->m_ClientListener, (ubyte_t*)&payloadSize, sizeof(int32_t), &receivedBytes, 0), "Failed to receive payload size from remote connection.");
+		nwol_necall(::nwol::receiveFromConnection(client->ClientListener, (ubyte_t*)&payloadSize, sizeof(int32_t), &receivedBytes, 0), "Failed to receive payload size from remote connection.");
 		switch(payloadSize) {
-		case 1	: { uint8_t  payloadValue = (uint8_t	)~0; nwol_necall(::nwol::receiveFromConnection(client->m_ClientListener, (ubyte_t*)&payloadValue, sizeof(uint8_t  ), &receivedBytes, 0), "Failed to receive payload size from remote connection."); return executeCommand(client, (const char*)&payloadValue); } 
-		case 2	: { uint16_t payloadValue = (uint16_t	)~0; nwol_necall(::nwol::receiveFromConnection(client->m_ClientListener, (ubyte_t*)&payloadValue, sizeof(uint16_t ), &receivedBytes, 0), "Failed to receive payload size from remote connection."); return executeCommand(client, (const char*)&payloadValue); } 
-		case 4	: { uint32_t payloadValue = (uint32_t	)~0; nwol_necall(::nwol::receiveFromConnection(client->m_ClientListener, (ubyte_t*)&payloadValue, sizeof(uint32_t ), &receivedBytes, 0), "Failed to receive payload size from remote connection."); return executeCommand(client, (const char*)&payloadValue); } 
-		case 8	: { uint64_t payloadValue = (uint64_t	)~0; nwol_necall(::nwol::receiveFromConnection(client->m_ClientListener, (ubyte_t*)&payloadValue, sizeof(uint64_t ), &receivedBytes, 0), "Failed to receive payload size from remote connection."); return executeCommand(client, (const char*)&payloadValue); } 
+		case 1	: { uint8_t  payloadValue = (uint8_t	)~0; nwol_necall(::nwol::receiveFromConnection(client->ClientListener, (ubyte_t*)&payloadValue, sizeof(uint8_t  ), &receivedBytes, 0), "Failed to receive payload size from remote connection."); return executeCommand(client, (const char*)&payloadValue, payloadSize); } 
+		case 2	: { uint16_t payloadValue = (uint16_t	)~0; nwol_necall(::nwol::receiveFromConnection(client->ClientListener, (ubyte_t*)&payloadValue, sizeof(uint16_t ), &receivedBytes, 0), "Failed to receive payload size from remote connection."); return executeCommand(client, (const char*)&payloadValue, payloadSize); } 
+		case 4	: { uint32_t payloadValue = (uint32_t	)~0; nwol_necall(::nwol::receiveFromConnection(client->ClientListener, (ubyte_t*)&payloadValue, sizeof(uint32_t ), &receivedBytes, 0), "Failed to receive payload size from remote connection."); return executeCommand(client, (const char*)&payloadValue, payloadSize); } 
+		case 8	: { uint64_t payloadValue = (uint64_t	)~0; nwol_necall(::nwol::receiveFromConnection(client->ClientListener, (ubyte_t*)&payloadValue, sizeof(uint64_t ), &receivedBytes, 0), "Failed to receive payload size from remote connection."); return executeCommand(client, (const char*)&payloadValue, payloadSize); } 
 		default	:
 			ree_if(payloadSize > 65535 || payloadSize <= 0, "Invalid payload size: %u", payloadSize);
 			payloadBytes.resize(payloadSize);
-			nwol_necall(::nwol::receiveFromConnection(client->m_ClientListener, (ubyte_t*)&payloadBytes[0], payloadSize, &receivedBytes, 0), "Failed to receive payload size from remote connection.");
-			return executeCommand(client, buffer);
+			nwol_necall(::nwol::receiveFromConnection(client->ClientListener, (ubyte_t*)&payloadBytes[0], payloadSize, &receivedBytes, 0), "Failed to receive payload size from remote connection.");
+			return executeCommand(client, buffer, payloadSize);
 		}
 	}
 	else
@@ -150,17 +151,10 @@ void												clientProc										(void *pvClient)															{
 	do {
 		// Receive bytes from client
 		::nwol::NETLIB_COMMAND								command											= ::nwol::NETLIB_COMMAND_INVALID;
-		::nwol::error_t										errMy											= receiveSystemCommand(pClient, command);
-		if(0 > errMy) {
-			error_print("Failed to receive command from client.");
-			break;
-		}
-		if(0 > (errMy = processCommandInternal( pClient, command ))) {
-			error_printf("processCommandInternal failed for command: '%s' (0x%x)(%u).", ::nwol::get_value_label(command).c_str(), (uint32_t)command, (uint32_t)command);
-			break;
-		}
+		break_error_if(receiveSystemCommand(pClient, command), "Failed to receive command from client.");
+		break_error_if(errored(processCommandInternal(pClient, command)), "processCommandInternal failed for command: '%s' (0x%x)(%u).", ::nwol::get_value_label(command).c_str(), (uint32_t)command, (uint32_t)command);
     }
-    while ( pClient->m_ClientListener && pClient->m_ClientTarget );	// Repeat 
+    while ( pClient->ClientListener && pClient->ClientTarget );	// Repeat 
 
 	::std::this_thread::sleep_for(::std::chrono::milliseconds(1000));
 	disconnectClient(pClient); // This used to cause a crash if the server is shutting down because of a thread race. 
@@ -180,11 +174,11 @@ int32_t												nwol::CServer::Accept							()																			{
 	::nwol::SConnectionEndpoint								* newClientListener								= 0
 		,													* targetConn									= QueuedConnectionList[INTERLOCKED_DECREMENT(QueuedConnectionCount)]
 		;
-	nwol_necall(::nwol::getAddress(ServerConnection, &a1, &a2, &a3, &a4, &local_port_number), "Failed to resolve local address.");
-	nwol_necall(::nwol::createConnection(a1, a2, a3, a4, 0, &newClientListener)	, "%s", "Failed to create client listener.");
-	nwol_necall(::nwol::initConnection(newClientListener)						, "%s", "Failed to initialize client listener connection.");
-	nwol_necall(::nwol::bindConnection(newClientListener)						, "%s", "Failed to bind client listener connection.");
-	nwol_necall(::nwol::getAddress(newClientListener, &a1, &a2, &a3, &a4, &local_port_number), "Failed to resolve remote address.");
+	nwol_necall(::nwol::getAddress(ServerConnection, &a1, &a2, &a3, &a4, &local_port_number)	, "Failed to resolve local address.");
+	nwol_necall(::nwol::createConnection(a1, a2, a3, a4, 0, &newClientListener)					, "%s", "Failed to create client listener.");
+	nwol_necall(::nwol::initConnection(newClientListener)										, "%s", "Failed to initialize client listener connection.");
+	nwol_necall(::nwol::bindConnection(newClientListener)										, "%s", "Failed to bind client listener connection.");
+	nwol_necall(::nwol::getAddress(newClientListener, &a1, &a2, &a3, &a4, &local_port_number)	, "Failed to resolve remote address.");
 
 	GPtrObj(CClient)										newClient;
 	bool													bFound											= false
@@ -200,14 +194,14 @@ int32_t												nwol::CServer::Accept							()																			{
 				indexFound											= iClient;
 				break;
 			}
-			else if(refClient->get()->m_ClientListener == 0 || refClient->get()->m_ClientTarget == 0) {
+			else if(refClient->get()->ClientListener == 0 || refClient->get()->ClientTarget == 0) {
 				newClient											= ::nwol::acquire(refClient);
 				bFound												= true;
 				break;
 			}
 		}
 		if(newClient)
-			newClient->InitClient( newClientListener, targetConn, newClient->m_id );
+			newClient->InitClient( newClientListener, targetConn, newClient->Id );
 		else
 			newClient->InitClient( newClientListener, targetConn, connectionsAccepted++ );
 
@@ -269,7 +263,7 @@ void												nwol::CServer::DisconnectClient					(int32_t id)																
 	::nwol::CLock											lockClients										(ConnectionsMutex);
 	for(uint32_t i = 0; i < ClientConnections.size(); ++i) {
 		CClient													* client										= ClientConnections[i];
-		if(client && client->m_id == id) {
+		if(client && client->Id == id) {
 			disconnectClient(client);
 			NWOH(CClient)											endClient;
 			error_if(0 > ClientConnections.pop(&endClient), "The loop is broken! No elements to pop?")

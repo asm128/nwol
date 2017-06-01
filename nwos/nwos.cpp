@@ -11,9 +11,9 @@
 
 DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "No Workflow Overhead Network Server", 0, 1);
 
-bool										bListenFailure					= false;
+bool														bListenFailure					= false;
 
-::nwol::error_t								cleanup							(::SApplication& instanceApp)								{ 
+::nwol::error_t												cleanup							(::SApplication& instanceApp)								{ 
 	::nwol::shutdownASCIIScreen();
 
 	instanceApp.NetworkServer.ShutdownServer();
@@ -22,24 +22,24 @@ bool										bListenFailure					= false;
 	return 0; 
 }
 
-::nwol::error_t								serverInit						(::SApplication& instanceApp);
-::nwol::error_t								setup							(::SApplication& instanceApp)								{ 
-	::nwol::SGUI									& guiSystem						= instanceApp.GUI;
+::nwol::error_t												serverInit						(::SApplication& instanceApp);
+::nwol::error_t												setup							(::SApplication& instanceApp)								{ 
+	::nwol::SGUI													& guiSystem						= instanceApp.GUI;
 	
 	::nwol::initASCIIScreen		(guiSystem.TargetSizeASCII.x, guiSystem.TargetSizeASCII.y);
-	char											moduleTitle[240]					= {};
-	uint8_t											moduleTitleLen						= (uint8_t)::nwol::size(moduleTitle);
+	char															moduleTitle[240]				= {};
+	uint8_t															moduleTitleLen					= (uint8_t)::nwol::size(moduleTitle);
 	nwol_necall(::nwol_moduleTitle(moduleTitle, &moduleTitleLen), "If this fails then something weird is going on.");
 	::nwol::setASCIIScreenTitle	(moduleTitle);
 
-	guiSystem.TargetSizeASCII.x					= nwol::getASCIIBackBufferWidth		();
-	guiSystem.TargetSizeASCII.y					= nwol::getASCIIBackBufferHeight	();
+	guiSystem.TargetSizeASCII.x									= nwol::getASCIIBackBufferWidth		();
+	guiSystem.TargetSizeASCII.y									= nwol::getASCIIBackBufferHeight	();
 
-	static const ::nwol::glabel						newControlLabel					= "Exit";
-	::nwol::SGUIControl								newControl;
+	static const ::nwol::glabel										newControlLabel					= "Exit";
+	::nwol::SGUIControl												newControl;
 	
-	newControl.AreaASCII						= {1, 1, (int32_t)newControlLabel.size(), 1}	;
-	newControl.Text								= newControlLabel								;
+	newControl.AreaASCII										= {1, 1, (int32_t)newControlLabel.size(), 1}	;
+	newControl.Text												= newControlLabel								;
 
 	nwol_necall(::nwol::createControl(instanceApp.GUI, newControl), "Failed to create GUI control %s.", newControl.Text.c_str());
 	nwol_necall(::serverInit(instanceApp), "Failed to initialize server");
@@ -50,14 +50,14 @@ bool										bListenFailure					= false;
 #define VK_ESCAPE 0x1B
 #endif
 
-::nwol::error_t								update							(::SApplication& instanceApp, bool exitRequested)			{
+::nwol::error_t												update									(::SApplication& instanceApp, bool exitRequested)											{
 	if(exitRequested)
 		return ::nwol::APPLICATION_STATE_EXIT;
 
-	::nwol::SInput									& inputSystem					= instanceApp.Input;	nwol_necall(::nwol::pollInput(inputSystem), "Failed to poll input device.");
-	::nwol::SGUI									& guiSystem						= instanceApp.GUI;		nwol_necall(::nwol::updateGUI(guiSystem, inputSystem), "Failed to update GUI states!");
+	::nwol::SInput													& inputSystem							= instanceApp.Input;	nwol_necall(::nwol::pollInput(inputSystem), "Failed to poll input device.");
+	::nwol::SGUI													& guiSystem								= instanceApp.GUI;		nwol_necall(::nwol::updateGUI(guiSystem, inputSystem), "Failed to update GUI states!");
 
-	::nwol::array_pod<::nwol::CONTROL_FLAG>			& controlFlags					= guiSystem.Controls.ControlFlags;
+	::nwol::array_pod<::nwol::CONTROL_FLAG>							& controlFlags							= guiSystem.Controls.ControlFlags;
 	for(uint32_t iControl = 0, controlCount = controlFlags.size(); iControl < controlCount; ++iControl)
 		if(::nwol::bit_true(controlFlags[iControl], ::nwol::CONTROL_FLAG_EXECUTE)) {
 			info_printf("Execute %u.", iControl);
@@ -69,7 +69,7 @@ bool										bListenFailure					= false;
 	return 0; 
 }
 
-int32_t														render									(::SApplication& instanceApp)							{ 
+int32_t														render									(::SApplication& instanceApp)																{ 
 	::nwol::clearASCIIBackBuffer(' ', COLOR_WHITE);
 	::nwol::SASCIITarget											target;
 	if(not_errored(::nwol::getASCIIBackBuffer(target))) {
@@ -101,7 +101,7 @@ namespace nwol
 	GDEFINE_ENUM_VALUE(SERVER_COMMAND, RESERVED				,	12);
 }
 
-void										serverListen					(::nwol::CServer* pServer)									{
+void										serverListen					(::nwol::CServer* pServer)																							{
 	while( !bListenFailure ) {
 		error_if(bListenFailure = errored(pServer->Listen()), "Failed to listen on server")
 		else if errored(pServer->Accept()) {
@@ -112,8 +112,8 @@ void										serverListen					(::nwol::CServer* pServer)									{
 	}
 }
 
-void										serverListen					( void* server )											{ serverListen((::nwol::CServer*)server);	}
-::nwol::error_t								serverInit						(::SApplication& instanceApp) {
+void										serverListen					( void* server )																									{ serverListen((::nwol::CServer*)server);	}
+::nwol::error_t								serverInit						(::SApplication& instanceApp)																						{
 	int												port_number;				// Port number to use
 	char											port_number_str	[]				= "45678";
 	reterr_error_if(sscanf_s(&port_number_str[0], "%u", &port_number) != 1, "%s.", "Invalid server port string.");	// Only run if port is provided
@@ -125,58 +125,72 @@ void										serverListen					( void* server )											{ serverListen((::nwol
 	return 0;
 }
 
-::nwol::error_t								executeCommand					(::nwol::CClient* client, const char* buffer)
-{
-	uint64_t										current_time					= time(0);	// Get current time
+::nwol::error_t								processCommand8					(uint8_t )																											{ return 0; }
+::nwol::error_t								processCommand16				(uint16_t)																											{ return 0; }
+::nwol::error_t								processCommand32				(uint32_t)																											{ return 0; }
+::nwol::error_t								processCommand64				(uint64_t)																											{ return 0; }
+
+
+::nwol::error_t								executeCommand					(::nwol::CClient* client, const char* payloadBuffer, uint32_t bufferLen)											{
 	int												port_number;
 	int												a1
 		,											a2
 		,											a3
 		,											a4
 		;
-	::nwol::getAddress( client->m_ClientTarget, &a1, &a2, &a3, &a4, &port_number );
+	::nwol::getAddress(client->ClientTarget, &a1, &a2, &a3, &a4, &port_number);
+	switch(bufferLen) {
+	case 1:	{	uint8_t		receivedValue = 0xFF		; memcpy(&receivedValue, payloadBuffer, bufferLen); return processCommand8	(receivedValue); break; }
+	case 2:	{	uint16_t	receivedValue = 0xFFFF		; memcpy(&receivedValue, payloadBuffer, bufferLen); return processCommand16	(receivedValue); break; }
+	case 4:	{	uint32_t	receivedValue = 0xFFFFFF	; memcpy(&receivedValue, payloadBuffer, bufferLen); return processCommand32	(receivedValue); break; }
+	case 8:	{	uint64_t	receivedValue = 0xFFFFFFFF	; memcpy(&receivedValue, payloadBuffer, bufferLen); return processCommand64	(receivedValue); break; }
+	default:
+		if (strcmp(payloadBuffer, "GET PLAYER\r\n") == 0) {
+			::nwol::SERVER_COMMAND							response						= ::nwol::SERVER_COMMAND_INVALID;							
+			uint32_t										bytesToSend						= sizeof(response);
 
-	if (strcmp(buffer, "GET PLAYER\r\n") == 0) {
-		error_if(errored(::nwol::sendUserCommand(client->m_ClientListener, client->m_ClientTarget, ::nwol::USER_COMMAND_RESPONSE, (const uint8_t*)&current_time, (uint32_t)sizeof(current_time)))
-				, "Failed to send player data to %u.%u.%u.%u:%u."
-				, (uint32_t)a1
-				, (uint32_t)a2
-				, (uint32_t)a3
-				, (uint32_t)a4
-				, (uint32_t)port_number
-			)
-		else {
-			//info_printf("Sent player data (%s) to %u.%u.%u.%u:%u.", player.Name.c_str()
-			//	, (int)a1
-			//	, (int)a2
-			//	, (int)a3
-			//	, (int)a4
-			//	, (int)port_number
-			//	);
-		}
-	}
-	else {
-		const char										mypong	[]						= "INVALIDMSG\r\n";									// Get current time
-		uint32_t										bytesToSend						= ::nwol::size(mypong) * (uint32_t)sizeof(char_t);	// Send data back
-
-		error_if(errored(::nwol::sendUserCommand(client->m_ClientListener, client->m_ClientTarget, ::nwol::USER_COMMAND_RESPONSE, (const uint8_t*)&mypong, bytesToSend))
-				, "Failed to send player data to %u.%u.%u.%u:%u."
-				,	(uint32_t)a1
-				,	(uint32_t)a2
-				,	(uint32_t)a3
-				,	(uint32_t)a4
-				,	(uint32_t)port_number
+			error_if(errored(::nwol::sendUserCommand(client->ClientListener, client->ClientTarget, ::nwol::USER_COMMAND_RESPONSE, (const uint8_t*)&response, bytesToSend))
+					, "Failed to send player data to %u.%u.%u.%u:%u."
+					, (uint32_t)a1
+					, (uint32_t)a2
+					, (uint32_t)a3
+					, (uint32_t)a4
+					, (uint32_t)port_number
 				)
+			else {
+				//info_printf("Sent player data (%s) to %u.%u.%u.%u:%u.", player.Name.c_str()
+				//	, (int)a1
+				//	, (int)a2
+				//	, (int)a3
+				//	, (int)a4
+				//	, (int)port_number
+				//	);
+			}
+		}
 		else {
-			info_printf("Sent invalid message response to %u.%u.%u.%u:%u."
-				,	(uint32_t)a1
-				,	(uint32_t)a2
-				,	(uint32_t)a3
-				,	(uint32_t)a4
-				,	(uint32_t)port_number
-				);
+			::nwol::SERVER_COMMAND							response						= ::nwol::SERVER_COMMAND_INVALID;							
+			uint32_t										bytesToSend						= sizeof(response);
+
+			error_if(errored(::nwol::sendUserCommand(client->ClientListener, client->ClientTarget, ::nwol::USER_COMMAND_RESPONSE, (const uint8_t*)&response, bytesToSend))
+					, "Failed to send player data to %u.%u.%u.%u:%u."
+					,	(uint32_t)a1
+					,	(uint32_t)a2
+					,	(uint32_t)a3
+					,	(uint32_t)a4
+					,	(uint32_t)port_number
+					)
+			else {
+				info_printf("Sent invalid message response to %u.%u.%u.%u:%u."
+					,	(uint32_t)a1
+					,	(uint32_t)a2
+					,	(uint32_t)a3
+					,	(uint32_t)a4
+					,	(uint32_t)port_number
+					);
+			}
 		}
 	}
+
 
 	return 0;
 }

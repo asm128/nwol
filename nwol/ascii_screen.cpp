@@ -14,21 +14,21 @@
 #endif
 
 static struct SASCIIScreen {
-	char							* ASCIIBackBuffer					= 0;
-	char							* ASCIIFrontBuffer					= 0;
-	uint16_t						* ColorBackBuffer					= 0;
-	uint16_t						* ColorFrontBuffer					= 0;	
-	int								BackBufferWidth						= DEFAULT_ASCII_SCREEN_WIDTH	;
-	int								BackBufferHeight					= DEFAULT_ASCII_SCREEN_HEIGHT	;
-	bool							bCreated							= false;
+	char								* ASCIIBackBuffer					= 0;
+	char								* ASCIIFrontBuffer					= 0;
+	uint16_t							* ColorBackBuffer					= 0;
+	uint16_t							* ColorFrontBuffer					= 0;	
+	int									BackBufferWidth						= DEFAULT_ASCII_SCREEN_WIDTH	;
+	int									BackBufferHeight					= DEFAULT_ASCII_SCREEN_HEIGHT	;
+	bool								bCreated							= false;
 	// platform
 #if defined(__WINDOWS__)
-	CONSOLE_SCREEN_BUFFER_INFOEX	InfoScreenBufferOriginal			= {};
-	CONSOLE_SCREEN_BUFFER_INFOEX	InfoScreenBufferCurrent				= {};
-	CONSOLE_FONT_INFOEX				InfoFontOriginal					= {};
-	CONSOLE_FONT_INFOEX				InfoFontCurrent						= {};
+	CONSOLE_SCREEN_BUFFER_INFOEX		InfoScreenBufferOriginal			= {};
+	CONSOLE_SCREEN_BUFFER_INFOEX		InfoScreenBufferCurrent				= {};
+	CONSOLE_FONT_INFOEX					InfoFontOriginal					= {};
+	CONSOLE_FONT_INFOEX					InfoFontCurrent						= {};
 #endif
-									~SASCIIScreen						()																		{
+										~SASCIIScreen						()																		{
 		if( bCreated )	
 			::nwol::shutdownASCIIScreen();
 		safe_nwol_free( ASCIIBackBuffer		);

@@ -68,8 +68,8 @@ int32_t														setup									(::SApplication& instanceApp)							{
 	nwol_necall(::nwol_moduleTitle(moduleTitle, &moduleTitleLen), "If this fails then something weird is going on.");
 	::nwol::setASCIIScreenTitle(moduleTitle);
 
-	::nwol::setCooperativeLevels(instanceApp.RuntimeValues->Screen.PlatformDetail, instanceApp.Input);	// This tells the input system that it has to bind to the main window.
-	::nwol::acquireInput(instanceApp.Input);
+	::nwol::setCooperativeLevels(instanceApp.RuntimeValues->Screen.PlatformDetail, instanceApp.MainScreenInput);	// This tells the input system that it has to bind to the main window.
+	::nwol::acquireInput(instanceApp.MainScreenInput);
 
 	//printTypeDebug();
 

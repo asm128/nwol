@@ -396,11 +396,13 @@ int32_t									nwol::receiveUserCommand			(::nwol::SConnectionEndpoint* pOrigin
 	::nwol::NETLIB_COMMAND							commandUserReceive				= ::nwol::NETLIB_COMMAND_INVALID;
 	nwol_necall(::nwol::receiveSystemCommand(pOrigin, pTarget, commandUserReceive), "Error receiving system command.");
 
-	requestOrResponse							= (commandUserReceive == ::nwol::NETLIB_COMMAND_USER_REQUEST) ? ::nwol::USER_COMMAND_REQUEST : ::nwol::USER_COMMAND_UNKNOWN;
-	if(requestOrResponse != USER_COMMAND_REQUEST) {
-		requestOrResponse							= (commandUserReceive == ::nwol::NETLIB_COMMAND_USER_RESPONSE) ? ::nwol::USER_COMMAND_RESPONSE : ::nwol::USER_COMMAND_UNKNOWN;
-		reterr_error_if(requestOrResponse != USER_COMMAND_RESPONSE, "Command is not valid.");
-	}
+	requestOrResponse	= (::nwol::USER_COMMAND)
+		( (commandUserReceive == ::nwol::NETLIB_COMMAND_USER_REQUEST											) ? ::nwol::USER_COMMAND_REQUEST 
+		: (commandUserReceive == ::nwol::NETLIB_COMMAND_USER_RESPONSE											) ? ::nwol::USER_COMMAND_RESPONSE 
+		: (commandUserReceive == (::nwol::NETLIB_COMMAND_USER_RESPONSE | ::nwol::NETLIB_COMMAND_USER_RESPONSE)	) ? (::nwol::USER_COMMAND_RESPONSE | ::nwol::NETLIB_COMMAND_USER_REQUEST)
+		: ::nwol::USER_COMMAND_UNKNOWN
+		);
+	reterr_error_if(requestOrResponse == ::nwol::USER_COMMAND_UNKNOWN, "Command is not valid.");
 	int32_t											receivedBytes					= 0;
 	int32_t											userBytesToReceive				= 0;
 	nwol_necall(::nwol::receiveFromConnection( pOrigin, (ubyte_t*)&userBytesToReceive, (uint32_t)sizeof(int32_t), &receivedBytes, &pTarget )	, "Error receiving user data.");

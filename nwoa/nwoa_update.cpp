@@ -15,8 +15,10 @@ int32_t														update									(::SApplication& instanceApp, bool exitReque
 	if(exitRequested)
 		return ::nwol::APPLICATION_STATE_EXIT;
 
-	::nwol::SInput													& inputSystem							= instanceApp.Input;
-	::nwol::pollInput(inputSystem);
+	::nwol::SInput													& consoleInputSystem					= instanceApp.Input;
+	::nwol::SScreenInput											& mainScreeninputSystem					= instanceApp.MainScreenInput;
+	::nwol::pollInput(consoleInputSystem);
+	::nwol::pollInput(mainScreeninputSystem);
 
 	const ::nwol::SInput											& inputSystemConst						= instanceApp.Input;
 	::nwol::SGUI													& guiSystem								= instanceApp.GUI;

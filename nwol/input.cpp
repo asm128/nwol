@@ -123,7 +123,7 @@ void														handleInputChanges							(const ::nwol::SInput& input)								
 }
 
 //struct auto_com_release : public ::nwol::platform_handle_wrapper<IUnknown*, 0>					{ using TWrapper::platform_handle_wrapper; inline ~auto_com_release() { close(); } inline void close() { safe_com_release(Handle); } };
-::nwol::error_t												inputInitialize									(::nwol::SInput& input, ::nwol::SScreenDetail& screenDetail)														{
+::nwol::error_t												inputInitialize									(::nwol::SScreenInput& input, ::nwol::SScreenDetail& screenDetail)														{
 	::nwol::SInputDetail											& inputDetail									= input.PlatformDetail;
 #if defined(__WINDOWS__)
 	HRESULT															hr												= 0;
@@ -155,7 +155,7 @@ void														handleInputChanges							(const ::nwol::SInput& input)								
 	return 0;
 }
 
-::nwol::error_t												nwol::setCooperativeLevels						(::nwol::SScreenDetail& screenDetail, ::nwol::SInput& input)				{
+::nwol::error_t												nwol::setCooperativeLevels						(::nwol::SScreenDetail& screenDetail, ::nwol::SScreenInput& input)				{
 	::nwol::SInputDetail											& inputDetail									= input.PlatformDetail;
 	HRESULT															hr												= 0;
 	::nwol::error_t													finalError										= 0;
@@ -250,16 +250,16 @@ void														handleInputChanges							(const ::nwol::SInput& input)								
 	return 0;
 }
 
-				::nwol::error_t								nwol::unacquireInput							(::nwol::SInput& input)							{
+				::nwol::error_t								nwol::unacquireInput							(::nwol::SScreenInput& input)							{
 	::nwol::SInputDetail											& inputDetail									= input.PlatformDetail;
 	HRESULT															hr;
 
 	error_if(0 == inputDetail.DirectInputKeyboard, "No DirectInput device for keyboard input.")
-	else if(gbit_true(inputDetail.DeviceFlagsKeyboard, WINDOWS_INPUT_STATE_FLAG_Acquired)) {
+	else if gbit_true(inputDetail.DeviceFlagsKeyboard, ::nwol::WINDOWS_INPUT_STATE_FLAG_Acquired) {
 		error_if(DI_OK != (hr = inputDetail.DirectInputKeyboard->Unacquire()), "Failed to unacquire keyboard: 0x%X '%s'", hr, ::nwol::getWindowsErrorAsString(hr).c_str())
 		else {
 			info_printf("Unacquired keyboard device.");
-			gbit_clear(inputDetail.DeviceFlagsKeyboard	, WINDOWS_INPUT_STATE_FLAG_Acquired);
+			gbit_clear(inputDetail.DeviceFlagsKeyboard	, ::nwol::WINDOWS_INPUT_STATE_FLAG_Acquired);
 		}
 		::nwol::array_copy(input.PreviousKeys, input.Keys);
 		::nwol::fillArray(input.Keys, (uint8_t)0U);
@@ -268,11 +268,11 @@ void														handleInputChanges							(const ::nwol::SInput& input)								
 		warning_printf("DirectInput device is already unacquired for keyboard input.");
 
 	error_if(0 == inputDetail.DirectInputMouse, "No DirectInput device for mouse input.")
-	else if(gbit_true(inputDetail.DeviceFlagsMouse	, WINDOWS_INPUT_STATE_FLAG_Acquired)) {
+	else if(gbit_true(inputDetail.DeviceFlagsMouse	, ::nwol::WINDOWS_INPUT_STATE_FLAG_Acquired)) {
 		error_if(DI_OK != (hr = inputDetail.DirectInputMouse	->Unacquire()), "Failed to unacquire mouse: 0x%X '%s'", hr, ::nwol::getWindowsErrorAsString(hr).c_str())
 		else {
 			info_printf("Unacquired mouse device.");
-			gbit_clear(inputDetail.DeviceFlagsKeyboard	, WINDOWS_INPUT_STATE_FLAG_Acquired);
+			gbit_clear(inputDetail.DeviceFlagsKeyboard	, ::nwol::WINDOWS_INPUT_STATE_FLAG_Acquired);
 		}
 		input.PreviousMouse											= input.Mouse;
 		input.Mouse													= {};
@@ -281,15 +281,15 @@ void														handleInputChanges							(const ::nwol::SInput& input)								
 		warning_printf("DirectInput device is already unacquired for mouse input.");
 	return 0;
 }
-				::nwol::error_t								nwol::acquireInput								(::nwol::SInput& input)							{
+				::nwol::error_t								nwol::acquireInput								(::nwol::SScreenInput& input)							{
 	::nwol::SInputDetail											& inputDetail									= input.PlatformDetail;
 	HRESULT															hr;
 	error_if(0 == inputDetail.DirectInputKeyboard, "No DirectInput device for keyboard input.")
-	else if(gbit_false(inputDetail.DeviceFlagsKeyboard, WINDOWS_INPUT_STATE_FLAG_Acquired)) {
+	else if(gbit_false(inputDetail.DeviceFlagsKeyboard, ::nwol::WINDOWS_INPUT_STATE_FLAG_Acquired)) {
 		error_if(DI_OK != (hr = inputDetail.DirectInputKeyboard	->Acquire()), "Failed to acquire keyboard: 0x%X '%s'", hr, ::nwol::getWindowsErrorAsString(hr).c_str())
 		else {
 			info_printf("Acquired keyboard device.");
-			gbit_set(inputDetail.DeviceFlagsKeyboard	, WINDOWS_INPUT_STATE_FLAG_Acquired);
+			gbit_set(inputDetail.DeviceFlagsKeyboard	, ::nwol::WINDOWS_INPUT_STATE_FLAG_Acquired);
 		}
 		::nwol::array_copy(input.PreviousKeys, input.Keys);
 		::nwol::fillArray(input.Keys, (uint8_t)0U);
@@ -298,11 +298,11 @@ void														handleInputChanges							(const ::nwol::SInput& input)								
 		warning_printf("DirectInput device is already acquired for keyboard input.");
 
 	error_if(0 == inputDetail.DirectInputMouse, "No DirectInput device for mouse input.")
-	else if(gbit_false(inputDetail.DeviceFlagsMouse	, WINDOWS_INPUT_STATE_FLAG_Acquired)) {
+	else if(gbit_false(inputDetail.DeviceFlagsMouse	, ::nwol::WINDOWS_INPUT_STATE_FLAG_Acquired)) {
 		error_if(DI_OK != (hr = inputDetail.DirectInputMouse		->Acquire()), "Failed to acquire mouse: 0x%X '%s'", hr, ::nwol::getWindowsErrorAsString(hr).c_str())
 		else {
 			info_printf("Acquired mouse device.");
-			gbit_set(inputDetail.DeviceFlagsMouse		, WINDOWS_INPUT_STATE_FLAG_Acquired);
+			gbit_set(inputDetail.DeviceFlagsMouse		, ::nwol::WINDOWS_INPUT_STATE_FLAG_Acquired);
 		}
 		input.PreviousMouse											= input.Mouse;
 		input.Mouse													= {};
