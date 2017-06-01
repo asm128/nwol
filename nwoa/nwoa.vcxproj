@@ -100,10 +100,10 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>NOMINMAX; NWOA_EXPORTS;  WIN32; _DEBUG; _WINDOWS; _USRDLL; %(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\nwol\nwol; ..\..\nwol\gods; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnablePREfast>false</EnablePREfast>
+      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -121,10 +121,10 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>NOMINMAX; NWOA_EXPORTS; _DEBUG; _WINDOWS; _USRDLL; %(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\nwol\nwol; ..\..\nwol\gods; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnablePREfast>false</EnablePREfast>
+      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -144,10 +144,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NOMINMAX; NWOA_EXPORTS; WIN32; NDEBUG; _WINDOWS; _USRDLL; %(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\nwol\nwol; ..\..\nwol\gods; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnablePREfast>false</EnablePREfast>
+      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -169,10 +169,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NOMINMAX; NWOA_EXPORTS; NDEBUG; _WINDOWS; _USRDLL; %(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\nwol\nwol; ..\..\nwol\gods; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnablePREfast>false</EnablePREfast>
+      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -186,8 +186,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="nwoa.cpp" />
+    <ClCompile Include="nwoa_update.cpp" />
     <ClCompile Include="nwoa_network.cpp" />
+    <ClCompile Include="nwoa_render.cpp" />
+    <ClCompile Include="nwoa_setup.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="nwoa.h" />

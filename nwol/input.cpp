@@ -56,12 +56,12 @@ void											handleKeyboardChanges						(const ::nwol::SInput& input)							{
 	}
 }
 
-void											handleMouseChanges							(const ::nwol::SInput& input)							{
-	static constexpr	const uint32_t					buttonCount									= ::nwol::SInput::ButtonCount;
-						uint8_t							countRequiredButtonUp						= 0;
-						uint8_t							countRequiredButtonDown						= 0;
-						uint8_t							handleRequiredButtonUp		[buttonCount]	= {};
-						uint8_t							handleRequiredButtonDown	[buttonCount]	= {};
+void														handleMouseChanges							(const ::nwol::SInput& input)												{
+	static constexpr	const uint32_t								buttonCount									= ::nwol::SInput::ButtonCount;
+						uint8_t										countRequiredButtonUp						= 0;
+						uint8_t										countRequiredButtonDown						= 0;
+						uint8_t										handleRequiredButtonUp		[buttonCount]	= {};
+						uint8_t										handleRequiredButtonDown	[buttonCount]	= {};
 
 	for(uint32_t iKey = 0; iKey < buttonCount; ++iKey)	// Store in separate arrays the keys that need to be handled by OnKeyUp() and OnKeyDown(). 
 		if( input.Mouse.Buttons[iKey] != input.Mouse.Buttons[iKey] ) {
@@ -95,12 +95,12 @@ void											handleMouseChanges							(const ::nwol::SInput& input)							{
 	//------------------------------------------------
 }
 
-void											handleInputChanges							(const ::nwol::SInput& input)												{
+void														handleInputChanges							(const ::nwol::SInput& input)												{
 	::handleKeyboardChanges	(input);
 	::handleMouseChanges	(input);
 }
 
-::nwol::error_t									createKeyboardDevice						(IDirectInput8* pDirectInput, IDirectInputDevice8** pDirectInputKeyboard)	{
+::nwol::error_t												createKeyboardDevice						(IDirectInput8* pDirectInput, IDirectInputDevice8** pDirectInputKeyboard)	{
 #if defined(__WINDOWS__)
 	HRESULT															hr												= 0;
 	reterr_error_if(S_OK != (hr = pDirectInput->CreateDevice(GUID_SysKeyboard, pDirectInputKeyboard, NULL)), "Failed to obtain an interface to the system keyboard device: 0x%X '%s'", hr, ::nwol::getWindowsErrorAsString(hr).c_str());
@@ -111,7 +111,7 @@ void											handleInputChanges							(const ::nwol::SInput& input)											
 	return 0;
 }
 
-::nwol::error_t									createMouseDevice							(IDirectInput8* pDirectInput, IDirectInputDevice8** pDirectInputMouse)		{
+::nwol::error_t												createMouseDevice							(IDirectInput8* pDirectInput, IDirectInputDevice8** pDirectInputMouse)		{
 #if defined(__WINDOWS__)
 	HRESULT															hr												= 0;
 	reterr_error_if(S_OK != (hr = pDirectInput->CreateDevice(GUID_SysMouse, pDirectInputMouse, NULL)), "Failed to obtain an interface to the system keyboard device: 0x%X '%s'", hr, ::nwol::getWindowsErrorAsString(hr).c_str());

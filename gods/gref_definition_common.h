@@ -3,7 +3,7 @@
 
 
 #define __GDEFINE_RELEASE(baseType)																																														\
-	void														grelease					(GREF(baseType)** refToRelease) {																							\
+	void														grelease					(GREF(baseType)** refToRelease)						{																		\
 		GREF(baseType)													* pRef						= *refToRelease;																									\
 		*refToRelease												= 0;																																				\
 		if(pRef)  																																																		\
@@ -15,7 +15,7 @@
 	}
 
 #define __GDEFINE_COPY_REF_FUNCTIONS(baseType)	\
-	void	gcreate	( GREF(baseType)** p1, const baseType& src )		{ __g_##baseType##Manager.createRef(p1, src); }
+	void														gcreate						( GREF(baseType)** p1, const baseType& src )		{ __g_##baseType##Manager.createRef(p1, src); }
 
 //-------------------------------------------------------------// gcore_ref //------------------------------------------------------------------------// 
 #if defined(NWOL_DEBUG_ENABLED)

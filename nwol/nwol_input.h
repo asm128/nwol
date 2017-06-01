@@ -73,8 +73,6 @@ namespace nwol
 
 							uint8_t										Keys					[KeyCount]		= {};
 							uint8_t										PreviousKeys			[KeyCount]		= {};
-							//uint8_t										MouseButtons			[ButtonCount]	= {};
-							//uint8_t										PreviousMouseButtons	[ButtonCount]	= {};
 
 		::nwol::SInputDetail											PlatformDetail;
 

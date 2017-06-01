@@ -24,6 +24,7 @@ typedef unsigned	__int128			uint128_t;
 #	include <cstdint>	
 #	include <cstddef>
 #endif		
+//-----------------------------------------------------------------------------------------------
 #if defined(__WINDOWS__)
 typedef				float				float32_t;
 typedef				double				float64_t;

@@ -16,28 +16,28 @@ namespace nwol
 		::nwol::SCoord2<uint16_t>							Size;		
 	};
 
-	struct SWindowsMessage {
-		HWND												hWnd; 
-		UINT												uMsg; 
-		WPARAM												wParam; 
-		LPARAM												lParam;
-	};
 
 	struct SScreenDetail {
 #if defined(__WINDOWS__)
-		const WNDCLASSEX									* pWindowClass				= nullptr;
-		HWND												hWnd						= NULL;
-		::nwol::array_pod<::nwol::SWindowsMessage>			Messages;
+		struct SWindowsMessage {
+			HWND												hWnd; 
+			UINT												uMsg; 
+			WPARAM												wParam; 
+			LPARAM												lParam;
+		};
+		const WNDCLASSEX									* pWindowClass				= nullptr;	// Store the window class used to create this window.
+		HWND												hWnd						= NULL;		// This is also required for interaction with other APIs.
+		::nwol::array_pod<SWindowsMessage>					Messages;	// This queues the messages received by some custom wndproc to be processed by the subsystems such as input or gpu APIs. Also the TCP from winsock could probably make use of this.
 #else
 #	error	"Not implemented."
 #endif
 	};
 
 	struct SScreenState {
-		bool												MinOrMaxed					: 1;
-		bool												NoDraw						: 1;
-		bool												RequiresResizeWindow		: 1;
-		bool												Closed						: 1;
+		bool												MinOrMaxed					: 1;	// Used to track something about the window resizing operation. Related to WM_RESTORE and WM_SIZE messages (I think).
+		bool												NoDraw						: 1;	// 
+		bool												RequiresResizeWindow		: 1;	
+		bool												Closed						: 1;	// By closed we mean closed and not hidden or minimized.
 	};
 
 	struct SScreen {

@@ -15,10 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="nwoa.cpp">
+    <ClCompile Include="nwoa_network.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="nwoa_network.cpp">
+    <ClCompile Include="nwoa_setup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nwoa_render.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nwoa_update.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

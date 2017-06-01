@@ -7,10 +7,10 @@
 
 namespace nwol 
 {
-	template <typename... _Args>	void	clear	(_Args&&... args)						{ const int32_t results[] = {args.clear		()			..., 0}; }
-	template <typename... _Args>	void	resize	(uint32_t newSize, _Args&&... args)		{ const int32_t results[] = {args.resize	(newSize)	..., 0}; }
+	template <typename... _Args>	void			clear	(_Args&&... args)						{ const int32_t results[] = {args.clear		()			..., 0}; }
+	template <typename... _Args>	void			resize	(uint32_t newSize, _Args&&... args)		{ const int32_t results[] = {args.resize	(newSize)	..., 0}; }
 
-	template<typename _tBase, size_t _arraySize>				struct array_static_base				{ protected: _tBase Block[_arraySize]; };
+	template<typename _tBase, size_t _arraySize>	struct array_static_base						{ protected: _tBase Block[_arraySize]; };
 	template<typename _tBase, size_t _arraySize>
 	struct array_static : public ::nwol::array_view<_tBase>, public ::nwol::array_static_base<_tBase, _arraySize> {
 		typedef ::nwol::array_static_base<_tBase, _arraySize>	_ArrayStaticBase;

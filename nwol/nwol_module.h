@@ -46,7 +46,7 @@ namespace nwol {
 		if(moduleInstance.Handle)
 			::nwol::moduleUnload(moduleInstance);
 
-		newModuleInstance.FilenameOriginal								= 
+		newModuleInstance.FilenameOriginal							= 
 		newModuleInstance.FilenameImage								= ::nwol::glabel(moduleName, 2048);
 
 		reterr_error_if(0 == (newModuleInstance.Handle = NWOL_PLATFORM_LOAD_MODULE(moduleName)), "Failed to load library: %s.", moduleName); 
