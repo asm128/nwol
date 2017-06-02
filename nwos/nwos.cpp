@@ -139,10 +139,10 @@ void										serverListen					( void* server )																									{ server
 		;
 	::nwol::getAddress(client->ClientTarget, &a1, &a2, &a3, &a4, &port_number);
 	switch(bufferLen) {
-	case 1:	{	uint8_t		receivedValue = 0xFF		; memcpy(&receivedValue, payloadBuffer, bufferLen); return processCommand8	(receivedValue); break; }
-	case 2:	{	uint16_t	receivedValue = 0xFFFF		; memcpy(&receivedValue, payloadBuffer, bufferLen); return processCommand16	(receivedValue); break; }
-	case 4:	{	uint32_t	receivedValue = 0xFFFFFF	; memcpy(&receivedValue, payloadBuffer, bufferLen); return processCommand32	(receivedValue); break; }
-	case 8:	{	uint64_t	receivedValue = 0xFFFFFFFF	; memcpy(&receivedValue, payloadBuffer, bufferLen); return processCommand64	(receivedValue); break; }
+	case 1:	{	uint8_t		receivedValue = 0xFF				; memcpy(&receivedValue, payloadBuffer, bufferLen); return processCommand8	(receivedValue); break; }
+	case 2:	{	uint16_t	receivedValue = 0xFFFF				; memcpy(&receivedValue, payloadBuffer, bufferLen); return processCommand16	(receivedValue); break; }
+	case 4:	{	uint32_t	receivedValue = 0xFFFFFFFF			; memcpy(&receivedValue, payloadBuffer, bufferLen); return processCommand32	(receivedValue); break; }
+	case 8:	{	uint64_t	receivedValue = 0xFFFFFFFFFFFFFFFF	; memcpy(&receivedValue, payloadBuffer, bufferLen); return processCommand64	(receivedValue); break; }
 	default:
 		if (strcmp(payloadBuffer, "GET PLAYER\r\n") == 0) {
 			::nwol::SERVER_COMMAND							response						= ::nwol::SERVER_COMMAND_INVALID;							
