@@ -78,28 +78,6 @@ namespace nwol
 #	define always_printf( format, ... )								nwol_printf(NWOL_ERROR_SEVERITY_DEBUG, "info", format, __VA_ARGS__)
 #endif
 
-#ifdef DEBUG_PRINTF_ENABLED
-#	if defined( __ANDROID__ )
-#		define info_printf( ... )										__android_log_print( ANDROID_LOG_DEBUG, __FILE__ ":", __VA_ARGS__ )
-#	else
-#		define info_printf( format, ... )								nwol_printf(NWOL_ERROR_SEVERITY_DEBUG, "info", format, __VA_ARGS__)
-#	endif
-#else
-#	define info_printf( ... )										do {} while(false)
-#endif
-
-#ifdef WARNING_PRINTF_ENABLED
-#	if defined( __ANDROID__ )
-#		define warning_printf( ... )									__android_log_print(ANDROID_LOG_WARN, __FILE__ ":", __VA_ARGS__  )
-#	elif defined( __WINDOWS__ )
-#		define warning_printf( format, ... )							nwol_printf(NWOL_ERROR_SEVERITY_WARNING, "warning", format, __VA_ARGS__) 
-#	else 
-#		define warning_printf( format, ... )							nwol_printf(NWOL_ERROR_SEVERITY_WARNING, "warning", format, __VA_ARGS__ )
-#	endif
-#else
-#	define warning_printf( ... )									do {} while(false)
-#endif
-
 #if defined(USE_DEBUG_BREAK_ON_ERROR_LOG)
 #	define NWOL_PLATFORM_DEBUG_BREAK()								PLATFORM_CRT_BREAKPOINT()
 #else
@@ -116,6 +94,28 @@ namespace nwol
 #	endif
 #else
 #	define error_printf( ... )										do {} while(false)
+#endif
+
+#ifdef WARNING_PRINTF_ENABLED
+#	if defined( __ANDROID__ )
+#		define warning_printf( ... )									__android_log_print(ANDROID_LOG_WARN, __FILE__ ":", __VA_ARGS__  )
+#	elif defined( __WINDOWS__ )
+#		define warning_printf( format, ... )							nwol_printf(NWOL_ERROR_SEVERITY_WARNING, "warning", format, __VA_ARGS__) 
+#	else 
+#		define warning_printf( format, ... )							nwol_printf(NWOL_ERROR_SEVERITY_WARNING, "warning", format, __VA_ARGS__ )
+#	endif
+#else
+#	define warning_printf( ... )									do {} while(false)
+#endif
+
+#ifdef DEBUG_PRINTF_ENABLED
+#	if defined( __ANDROID__ )
+#		define info_printf( ... )										__android_log_print( ANDROID_LOG_DEBUG, __FILE__ ":", __VA_ARGS__ )
+#	else
+#		define info_printf( format, ... )								nwol_printf(NWOL_ERROR_SEVERITY_DEBUG, "info", format, __VA_ARGS__)
+#	endif
+#else
+#	define info_printf( ... )										do {} while(false)
 #endif
 
 #ifdef DATA_PRINTF_ENABLED
@@ -138,6 +138,12 @@ namespace nwol
 #	define verbose_printf( ... )									do {} while(false)
 #endif
 
+#if defined( __ANDROID__ )
+#	define throw_printf( format, exception, ... )								{ __android_log_print( ANDROID_LOG_ERROR, __FILE__ ":", __VA_ARGS__ ); NWOL_CRASH(); }
+#else
+#	define throw_printf( format, exception, ... )								{ nwol_printf(NWOL_ERROR_SEVERITY_FATAL, "fatal", format, __VA_ARGS__ ); throw(exception); }
+#endif
+
 #if !defined(NWOL_DONT_DEFINE_ERROR_PRINTF_ALIASES)
 
 // These are meant for messages that don't require formatting.
@@ -146,7 +152,7 @@ namespace nwol
 #define debug_print( message )									info_printf		("%s", message)
 
 #if defined(__ANDROID__)
-#	define throw_if(condition, exception, ...)						if(condition) { nwol_printf(NWOL_ERROR_SEVERITY_ERROR	, "error"	, "condition: %s", #condition); error_printf(__VA_ARGS__); uint64_t * _tasdas = 0; for(uint32_t i = 0; i < 0xFFFFFFFF; ++i) _tasdas[i] = 0xFFFFFFFF00000000ULL; }	// No throw so we just crash.
+#	define throw_if(condition, exception, ...)						if(condition) { nwol_printf(NWOL_ERROR_SEVERITY_ERROR	, "error"	, "condition: %s", #condition); error_printf(__VA_ARGS__); NWOL_CRASH(); }	// No throw so we just crash.
 #else
 #	define throw_if(condition, exception, ...)						if(condition) { nwol_printf(NWOL_ERROR_SEVERITY_ERROR	, "error"	, "condition: %s", #condition); error_printf(__VA_ARGS__); throw(exception);	}
 #endif
@@ -257,6 +263,19 @@ namespace nwol
 
 #define nwol_necall(nwo_call, ...)				nwol_rve_ecall (-1, nwo_call, __VA_ARGS__)	// Non-propagable error call.
 #define nwol_newcall(nwo_call, ...)				nwol_rve_ewcall(-1, nwo_call, __VA_ARGS__)	// Non-propagable error-warning call.
+
+// ------------------- Aliases
+#define e_if	error_if
+#define w_if	warn_if
+#define i_if	info_if
+
+#define ce_if	continue_error_if
+#define cw_if	continue_warn_if
+#define ci_if	continue_info_if
+
+#define be_if	break_error_if
+#define bw_if	break_warn_if
+#define bi_if	break_info_if
 
 #define rve_if	retval_error_if
 #define rvw_if	retval_warn_if

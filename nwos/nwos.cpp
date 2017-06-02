@@ -118,9 +118,8 @@ void										serverListen					( void* server )																									{ server
 	char											port_number_str	[]				= "45678";
 	reterr_error_if(sscanf_s(&port_number_str[0], "%u", &port_number) != 1, "%s.", "Invalid server port string.");	// Only run if port is provided
 
-																													// Open windows connection 
-	nwol_necall(::nwol::initNetwork()								, "%s", "Failed to initialize network."			);
-	nwol_necall(instanceApp.NetworkServer.InitServer(port_number)	, "%s", "Failed to initialize connection server.");
+	nwol_necall(::nwol::initNetwork()								, "%s", "Failed to initialize network."			);	info_printf("%s initialized successfully.", "Network"			);
+	nwol_necall(instanceApp.NetworkServer.InitServer(port_number)	, "%s", "Failed to initialize connection server.");	info_printf("%s initialized successfully.", "Connection server"	);
 	_beginthread( serverListen, 0, &instanceApp.NetworkServer );	
 	return 0;
 }

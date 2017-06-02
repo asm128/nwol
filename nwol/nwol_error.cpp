@@ -43,7 +43,7 @@
 //							Very Low						Low									High					- Development speed		
 //							Research						Usability					Productivity					- Focus
 //							OOP								OOP-procedural		  DOD-OOP-procedural					- Design
-//							32								26									   2					- Project members
+//							32								?									   2					- Project members
 //							 2								 3.5								  10					- Average effective coding hours per day per member over 7 consecutive days
 //
 // ---- Estimated sizes:

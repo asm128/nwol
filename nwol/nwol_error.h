@@ -29,4 +29,6 @@ namespace nwol
 #	define						not_errored(errVal)							(::nwol::succeeded(errVal)) 
 #endif
 
+#define NWOL_CRASH()		{ uint64_t * _tasdas = 0; for(uint32_t i = 0; i < 0xFFFFFFFF; ++i) _tasdas[i] = 0xFFFFFFFF00000000ULL; }	// No throw? Just crash.
+
 #endif // __NWOL_ERROR_H__827394__

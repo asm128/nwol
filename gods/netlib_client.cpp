@@ -25,7 +25,7 @@ int32_t											nwol::requestDisconnect						(::nwol::SClientConnection& conn)
 }
 
 int32_t											nwol::disconnectClient						(::nwol::SClientConnection& client)									{
-	/* Get current time */
+	// Get current time
 	info_printf("%s", "Disconnecting client.");
 	::nwol::shutdownConnection(&client.pClient);
 	::nwol::shutdownConnection(&client.pServer);
