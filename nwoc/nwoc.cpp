@@ -19,10 +19,11 @@ int32_t														cleanup									(::SApplication& instanceApp)							{
 	return 0; 
 }
 
+template<typename _tBase>
 void														printTypeDebug							()														{
-	static const ::SApplication::TRegistry							memberRegistry							= ::SApplication::get_member_registry();
+	static const _tBase::TRegistry									memberRegistry							= _tBase::get_member_registry();
 	for(uint32_t iMember=0; iMember < memberRegistry.get_member_count(); ++iMember) {
-		const ::nwol::STypeIdentifier								& identifier						= memberRegistry.get_types()[iMember];
+		const ::nwol::STypeIdentifier									& identifier							= memberRegistry.get_types()[iMember];
 		always_printf
 			(	"0x%X: %s::%s %s (%s): %s."
 			,	memberRegistry.get_data_type_ids	()[iMember]
@@ -32,20 +33,6 @@ void														printTypeDebug							()														{
 			,	memberRegistry.get_display_names	()[iMember].c_str()
 			,	memberRegistry.get_descriptions		()[iMember].c_str()
 			);	
-	}
-
-	::nwol::SApplicationNetworkClient::TRegistry					memberRegistryNet					= ::nwol::SApplicationNetworkClient::get_member_registry();
-	for(uint32_t iMember=0; iMember < memberRegistry.get_member_count(); ++iMember) {
-		const ::nwol::STypeIdentifier					& identifier						= memberRegistryNet.get_types()[iMember];
-		always_printf
-			(	"0x%X: %s::%s %s (%s): %s."
-			,	memberRegistryNet.get_data_type_ids	()[iMember]
-			,	identifier.NameSpace	.c_str()
-			,	identifier.Name			.c_str()
-			,	memberRegistryNet.get_names			()[iMember].c_str()
-			,	memberRegistryNet.get_display_names	()[iMember].c_str()
-			,	memberRegistryNet.get_descriptions	()[iMember].c_str()
-			);
 	}
 }
 
@@ -116,7 +103,8 @@ int32_t														setup									(::SApplication& instanceApp)							{
 	nwol_necall(::nwol_moduleTitle(moduleTitle, &moduleTitleLen), "If this fails then something weird is going on.");
 	::nwol::setASCIIScreenTitle(moduleTitle);
 
-	printTypeDebug();
+	printTypeDebug<::SApplication>();
+	printTypeDebug<::nwol::SApplicationNetworkClient>();
 
 	nwol_necall(::networkEnable	(instanceApp), "Failed to enable network."	);
 	nwol_necall(::setupGUI		(instanceApp), "Failed to setup GUI."		);

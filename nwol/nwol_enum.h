@@ -43,7 +43,27 @@ namespace nwol
 					return 0;
 				}
 			error_printf("Enumeration value not found! Name: %s.", name.begin());
-			value = (_tValue)~(_tValue)0;
+			value												= (_tValue)~(_tValue)0;
+			return -1;
+		}
+							::nwol::error_t					get_value						(const char_t* name, _tValue& value)					const			{
+			for(uint32_t i=0, count = Names.size(); i<count; ++i)
+				if(0 == strcmp(name, Names[i].c_str())) {
+					value												= Values[i];
+					return 0;
+				}
+			error_printf("Enumeration value not found! Name: %s.", name.begin());
+			value												= (_tValue)~(_tValue)0;
+			return -1;
+		}
+							::nwol::error_t					get_value						(const std::string& name, _tValue& value)					const			{
+			for(uint32_t i=0, count = Names.size(); i<count; ++i)
+				if(0 == strcmp(name.c_str(), Names[i].c_str())) {
+					value												= Values[i];
+					return 0;
+				}
+			error_printf("Enumeration value not found! Name: %s.", name.begin());
+			value												= (_tValue)~(_tValue)0;
 			return -1;
 		}
 							_tValue							get_value						(const ::nwol::gsyslabel& name)							const			{
@@ -61,7 +81,7 @@ namespace nwol
 			}
 			else {
 				error_printf("Enumeration index out of range! Index: 0x%u.", index);
-				value = (_tValue)~(_tValue)0;
+				value												= (_tValue)~(_tValue)0;
 				return -1;
 			}
 		}

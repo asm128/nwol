@@ -5,7 +5,7 @@
 #	include <windows.h>
 #endif
 
-::std::string								nwol::getWindowsErrorAsString		(uint64_t lastError)					{	// Get the error message, if any.
+::std::string								nwol::getWindowsErrorAsString		(const uint64_t lastError)					{	// Get the error message, if any.
 	if(0 == lastError) 
 		return {};
 	LPSTR										messageBuffer						= nullptr;

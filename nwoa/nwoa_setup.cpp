@@ -12,37 +12,22 @@ int32_t														cleanup									(::SApplication& instanceApp)							{
 	return 0; 
 }
 
-//void														printTypeDebug							()														{
-//	static const ::SApplication::TRegistry							memberRegistry							= ::SApplication::get_member_registry();
-//	for(uint32_t iMember=0; iMember < memberRegistry.get_member_count(); ++iMember) {
-//		const ::nwol::STypeIdentifier									& identifier							= memberRegistry.get_types()[iMember];
-//		always_printf
-//			(	"0x%*.8X: %s::%s %s (%s): %s"
-//			,	8
-//			,	memberRegistry.get_data_type_ids	()[iMember]
-//			,	identifier.NameSpace	.c_str()
-//			,	identifier.Name			.c_str()
-//			,	memberRegistry.get_names			()[iMember].c_str()
-//			,	memberRegistry.get_display_names	()[iMember].c_str()
-//			,	memberRegistry.get_descriptions		()[iMember].c_str()
-//			);	
-//	}
-//
-//	::nwol::SApplicationNetworkClient::TRegistry					memberRegistryNet						= ::nwol::SApplicationNetworkClient::get_member_registry();
-//	for(uint32_t iMember=0; iMember < memberRegistry.get_member_count(); ++iMember) {
-//		const ::nwol::STypeIdentifier									& identifier							= memberRegistryNet.get_types()[iMember];
-//		always_printf
-//			(	"0x%*.8X: %s::%s %s (%s): %s"
-//			,	8
-//			,	memberRegistryNet.get_data_type_ids	()[iMember]
-//			,	identifier.NameSpace	.c_str()
-//			,	identifier.Name			.c_str()
-//			,	memberRegistryNet.get_names			()[iMember].c_str()
-//			,	memberRegistryNet.get_display_names	()[iMember].c_str()
-//			,	memberRegistryNet.get_descriptions	()[iMember].c_str()
-//			);
-//	}
-//}
+template<typename _tBase>
+void														printTypeDebug							()														{
+	static const _tBase::TRegistry									memberRegistry							= _tBase::get_member_registry();
+	for(uint32_t iMember=0; iMember < memberRegistry.get_member_count(); ++iMember) {
+		const ::nwol::STypeIdentifier									& identifier							= memberRegistry.get_types()[iMember];
+		always_printf
+			(	"0x%X: %s::%s %s (%s): %s."
+			,	memberRegistry.get_data_type_ids	()[iMember]
+			,	identifier.NameSpace	.c_str()
+			,	identifier.Name			.c_str()
+			,	memberRegistry.get_names			()[iMember].c_str()
+			,	memberRegistry.get_display_names	()[iMember].c_str()
+			,	memberRegistry.get_descriptions		()[iMember].c_str()
+			);	
+	}
+}
 
 int32_t														setupGUI								(::SApplication& instanceApp)							{ 
 	::nwol::SGUI													& guiSystem								= instanceApp.GUI;
@@ -71,10 +56,10 @@ int32_t														setup									(::SApplication& instanceApp)							{
 	::nwol::setCooperativeLevels(instanceApp.RuntimeValues->Screen.PlatformDetail, instanceApp.MainScreenInput);	// This tells the input system that it has to bind to the main window.
 	::nwol::acquireInput(instanceApp.MainScreenInput);
 
-	//printTypeDebug();
+	printTypeDebug<::SApplication>();
+	printTypeDebug<::nwol::SApplicationNetworkClient>();
 
 	nwol_necall(::networkEnable	(instanceApp), "Failed to enable network."	);
 	nwol_necall(::setupGUI		(instanceApp), "Failed to setup GUI."		);
-
 	return 0; 
 }

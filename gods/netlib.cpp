@@ -295,11 +295,7 @@ bool									nwol::ping							(::nwol::SConnectionEndpoint* pClient, ::nwol::SCo
 	int32_t											bytesTransmitted				= -1;
 	static const ::nwol::NETLIB_COMMAND				pingCommand						= ::nwol::NETLIB_COMMAND_PING;
 	::nwol::error_t									transmResult					= ::nwol::sendToConnection( pClient, (const ubyte_t*)&pingCommand, sizeof(::nwol::NETLIB_COMMAND), &bytesTransmitted, pServer );
-	if(transmResult < 0 || bytesTransmitted != (int32_t)sizeof(::nwol::NETLIB_COMMAND))
-	{
-		error_print("Error pinging server.");
-		return false;
-	}
+	retval_error_if(false, transmResult < 0 || bytesTransmitted != (int32_t)sizeof(::nwol::NETLIB_COMMAND), "Error pinging server.");
 
 	int32_t											port_number						= 0;
 	int32_t											a1								= 0
@@ -314,14 +310,9 @@ bool									nwol::ping							(::nwol::SConnectionEndpoint* pClient, ::nwol::SCo
 	bytesTransmitted							= -1;
 	::nwol::NETLIB_COMMAND							pongCommand						= ::nwol::NETLIB_COMMAND_INVALID;
 	::nwol::receiveFromConnection( pClient, (ubyte_t*)&pongCommand, sizeof(::nwol::NETLIB_COMMAND), &bytesTransmitted, 0 );
-	if(pongCommand != ::nwol::NETLIB_COMMAND_PONG)
-	{
-		error_print("Error receiving pong from server.");
-		return false;
-	}
+	retval_error_if(false, pongCommand != ::nwol::NETLIB_COMMAND_PONG, "Error receiving pong from server.");
 
 	info_printf("Received pong command from %u.%u.%u.%u:%u.", (uint32_t)a1, (uint32_t)a2, (uint32_t)a3, (uint32_t)a4, (uint32_t)port_number);
-
 	info_printf("Command received: %s", ::nwol::get_value_label(pongCommand).c_str());		
 	return true;
 }

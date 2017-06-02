@@ -1,6 +1,7 @@
 /// Copyright 2017 - asm128
 #include "nwol_screen.h"
 #include "nwol_module.h"
+#include "nwol_enum.h"
 
 #if defined(__WINDOWS__)
 
@@ -30,13 +31,12 @@ NWOL_DECLARE_MODULE_FUNCTION(nwol_moduleUpdate	, void*	 customApplication, bool 
 
 namespace nwol
 {
-	enum APPLICATION_STATE : ::nwol::error_t
-		{	APPLICATION_STATE_NORMAL							=  0
-		,	APPLICATION_STATE_EXIT								=  1
-		,	APPLICATION_STATE_BUSY								=  2
-		,	APPLICATION_STATE_STAY								=  3
-		,	APPLICATION_STATE_FATAL								= -1
-		};
+	GDEFINE_ENUM_TYPE(APPLICATION_STATE, uint8_t);
+	GDEFINE_ENUM_VALUE(APPLICATION_STATE, NORMAL	,  0);
+	GDEFINE_ENUM_VALUE(APPLICATION_STATE, EXIT		,  1);
+	GDEFINE_ENUM_VALUE(APPLICATION_STATE, BUSY		,  2);
+	GDEFINE_ENUM_VALUE(APPLICATION_STATE, STAY		,  3);
+	GDEFINE_ENUM_VALUE(APPLICATION_STATE, FATAL		, -1);
 
 	enum RUNTIME_CALLBACK_ID : uint8_t
 		{	RUNTIME_CALLBACK_ID_NONE							= 0

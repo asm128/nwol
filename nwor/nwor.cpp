@@ -1,6 +1,7 @@
 #include "nwor.h"
 
 #include "multithread.h"
+#include "nwol_enum.h"
 
 #if defined(__ANDROID__)
 #	include <android/native_activity.h>
@@ -16,7 +17,7 @@
 
 ::nwor::SRuntimeState												* g_RuntimeState						= nullptr;
 
-void																renderLoop								(::nwor::SRuntimeState& stateRuntime)																	{
+void																renderLoop								(::nwor::SRuntimeState& stateRuntime)																					{
 	info_printf("Render loop start.");
 	static const char														* errorFormat1							= "Dynamically loaded function is null, maybe due to a buffer overrun which erased the pointers: %s.";
 	static const char														* errorFormat2							= "Module function failed with code 0x%x: %s.";
@@ -36,7 +37,7 @@ void																renderLoop								(::nwor::SRuntimeState& stateRuntime)					
 	info_printf("Render loop end.");
 }
 
-void																renderThread							(void* pStateRuntime)																						{
+void																renderThread							(void* pStateRuntime)																									{
 	ret_error_if(0 == pStateRuntime, "Runtime state pointer is null. Thread function exiting...");
 	info_printf("Render thread started.");
 
@@ -48,7 +49,7 @@ void																renderThread							(void* pStateRuntime)																				
 	info_printf("Render loop exited.");
 }
 
-int32_t																launchRenderThread						(::nwor::SRuntimeState& runtimeState)																				{
+int32_t																launchRenderThread						(::nwor::SRuntimeState& runtimeState)																					{
 #if defined(__WINDOWS__)
 	_beginthread(renderThread, 0, &runtimeState);
 #else
@@ -138,6 +139,7 @@ int32_t																mainLoop								(::nwor::SRuntimeState & runtimeState, ::
 		}
 		::nwol::APPLICATION_STATE												errUpdate								= containerForCallbacks.Update(runtimeState.Quit || runtimeState.RuntimeValues.Screen.State.Closed); 
 		runtimeState.RuntimeValues.Screen.State.Closed						= false;
+		verbose_printf("Update return state for enum '%s': '%s' (0x%X).", ::nwol::genum_definition<::nwol::APPLICATION_STATE>::get().Name.c_str(), ::nwol::get_value_label(errUpdate).c_str());
 		switch(errUpdate) {
 		case ::nwol::APPLICATION_STATE_NORMAL: 
 			break;
@@ -185,7 +187,7 @@ int32_t																mainLoop								(::nwor::SRuntimeState & runtimeState, ::
 	return errLoop;
 }
 
-WNDCLASSEX															initWndClass							(HINSTANCE hInstance)											{
+WNDCLASSEX															initWndClass							(HINSTANCE hInstance)																									{
 	WNDCLASSEX																windowClass									;
 	windowClass.cbSize													= sizeof(WNDCLASSEX)							;
 	windowClass.style													= NULL											; // CS_HREDRAW | CS_VREDRAW;	;
@@ -202,7 +204,7 @@ WNDCLASSEX															initWndClass							(HINSTANCE hInstance)											{
 	return windowClass;
 }
 
-int32_t																setupScreen								(::nwol::SRuntimeValues& runtimeValues, const char_t* windowTitle)							{ 
+int32_t																setupScreen								(::nwol::SRuntimeValues& runtimeValues, const char_t* windowTitle)														{ 
 #if defined(__WINDOWS__)
 	static	const WNDCLASSEX												windowClass								= runtimeValues.PlatformDetail.MainWindowClass = initWndClass(runtimeValues.PlatformDetail.hInstance);
 	reterr_error_if(0 == RegisterClassExA(&runtimeValues.PlatformDetail.MainWindowClass), "Failed to register WNDCLASS \"%s\".", windowClass.lpszClassName);
@@ -231,7 +233,7 @@ int32_t																setupScreen								(::nwol::SRuntimeValues& runtimeValues
 	return 0;
 }
 
-int32_t																shutdownScreen							(::nwor::SRuntimeState& instanceApp)							{ 
+int32_t																shutdownScreen							(::nwor::SRuntimeState& instanceApp)																					{ 
 	::nwol::SRuntimeValues													& runtimeValues							= instanceApp.RuntimeValues;
 	::nwol::SScreenDetail													& screenDetail							= runtimeValues.Screen.PlatformDetail;
 	if( screenDetail.hWnd ) {
@@ -254,7 +256,7 @@ int32_t																shutdownScreen							(::nwor::SRuntimeState& instanceApp)
 	return 0;
 }
 
-int																	nwor::rtMain							(::nwor::SRuntimeState& runtimeState)							{
+int																	nwor::rtMain							(::nwor::SRuntimeState& runtimeState)																					{
 #if defined(__WINDOWS__) && defined(NWOL_DEBUG_ENABLED)
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_DELAY_FREE_MEM_DF );	// Enable run-time memory check for debug builds.
 	//_CrtSetBreakAlloc( 322 );

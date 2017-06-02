@@ -50,6 +50,7 @@ namespace nwol {
 		newModuleInstance.FilenameImage								= ::nwol::glabel(moduleName, 2048);
 
 		reterr_error_if(0 == (newModuleInstance.Handle = NWOL_PLATFORM_LOAD_MODULE(moduleName)), "Failed to load library: %s.", moduleName); 
+		info_printf("Library loaded successfully: '%s'.", moduleName);
 
 		const _tModule::TRegistry										& memberRegistry								= NWOM_GET_MEMBER_REGISTRY(_tModule); 
 		const ::nwol::array_view<const ::nwol::gsyslabel>				& memberNames									= memberRegistry.get_names(); 
