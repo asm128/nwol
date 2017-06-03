@@ -17,7 +17,7 @@ static constexpr const char						_pointer_error_string[]						= "Invalid handler
 ::nwol::error_t									nwol::unregisterHandler						(::nwol::SInput& input, IHandlerKeyboard	* handlerKeyboard	)	{ check_pointer_error(handlerKeyboard	);	int32_t pos = input.HandlersKeyboard	.find(handlerKeyboard	); retwarn_warn_if(pos == -1, "%s.", "Keyboard handler not registered"	); input.HandlersKeyboard	.remove_unordered(pos);	return 0; }
 ::nwol::error_t									nwol::unregisterHandler						(::nwol::SInput& input, IHandlerMouse		* handlerMouse		)	{ check_pointer_error(handlerMouse		);	int32_t pos = input.HandlersMouse		.find(handlerMouse		); retwarn_warn_if(pos == -1, "%s.", "Mouse handler not registered"		); input.HandlersMouse		.remove_unordered(pos);	return 0; }
 
-void											handleKeyboardChanges						(const ::nwol::SInput& input)							{
+void											handleKeyboardChanges						(const ::nwol::SInput& input)										{
 	static constexpr	const uint32_t					keyCount									= ::nwol::SInput::KeyCount;
 						uint8_t							countRequiredKeysUp							= 0;
 						uint8_t							countRequiredKeysDown						= 0;
@@ -155,7 +155,7 @@ void														handleInputChanges							(const ::nwol::SInput& input)								
 	return 0;
 }
 
-::nwol::error_t												nwol::setCooperativeLevels						(::nwol::SScreenDetail& screenDetail, ::nwol::SScreenInput& input)				{
+::nwol::error_t												nwol::setCooperativeLevels						(::nwol::SScreenDetail& screenDetail, ::nwol::SScreenInput& input)		{
 	::nwol::SInputDetail											& inputDetail									= input.PlatformDetail;
 	HRESULT															hr												= 0;
 	::nwol::error_t													finalError										= 0;
@@ -200,7 +200,7 @@ void														handleInputChanges							(const ::nwol::SInput& input)								
 	return 0;
 }
 
-::nwol::error_t												nwol::pollInput									(SInput& input)																{
+::nwol::error_t												nwol::pollInput									(SInput& input)															{
 	static constexpr	const uint32_t								keyCount										= ::nwol::SInput::KeyCount;
 	static constexpr	const uint32_t								buttonCount										= ::nwol::SInput::ButtonCount;
 
@@ -250,7 +250,7 @@ void														handleInputChanges							(const ::nwol::SInput& input)								
 	return 0;
 }
 
-				::nwol::error_t								nwol::unacquireInput							(::nwol::SScreenInput& input)							{
+				::nwol::error_t								nwol::unacquireInput							(::nwol::SScreenInput& input)											{
 	::nwol::SInputDetail											& inputDetail									= input.PlatformDetail;
 	HRESULT															hr;
 
@@ -281,12 +281,12 @@ void														handleInputChanges							(const ::nwol::SInput& input)								
 		warning_printf("DirectInput device is already unacquired for mouse input.");
 	return 0;
 }
-				::nwol::error_t								nwol::acquireInput								(::nwol::SScreenInput& input)							{
+				::nwol::error_t								nwol::acquireInput								(::nwol::SScreenInput& input)											{
 	::nwol::SInputDetail											& inputDetail									= input.PlatformDetail;
 	HRESULT															hr;
 	error_if(0 == inputDetail.DirectInputKeyboard, "No DirectInput device for keyboard input.")
 	else if(gbit_false(inputDetail.DeviceFlagsKeyboard, ::nwol::WINDOWS_INPUT_STATE_FLAG_Acquired)) {
-		error_if(DI_OK != (hr = inputDetail.DirectInputKeyboard	->Acquire()), "Failed to acquire keyboard: 0x%X '%s'", hr, ::nwol::getWindowsErrorAsString(hr).c_str())
+		info_if(DI_OK != (hr = inputDetail.DirectInputKeyboard	->Acquire()), "Failed to acquire keyboard: 0x%X '%s'.", hr, ::nwol::getWindowsErrorAsString(hr).c_str())
 		else {
 			info_printf("Acquired keyboard device.");
 			gbit_set(inputDetail.DeviceFlagsKeyboard	, ::nwol::WINDOWS_INPUT_STATE_FLAG_Acquired);
@@ -299,7 +299,7 @@ void														handleInputChanges							(const ::nwol::SInput& input)								
 
 	error_if(0 == inputDetail.DirectInputMouse, "No DirectInput device for mouse input.")
 	else if(gbit_false(inputDetail.DeviceFlagsMouse	, ::nwol::WINDOWS_INPUT_STATE_FLAG_Acquired)) {
-		error_if(DI_OK != (hr = inputDetail.DirectInputMouse		->Acquire()), "Failed to acquire mouse: 0x%X '%s'", hr, ::nwol::getWindowsErrorAsString(hr).c_str())
+		info_if(DI_OK != (hr = inputDetail.DirectInputMouse		->Acquire()), "Failed to acquire mouse: 0x%X '%s'.", hr, ::nwol::getWindowsErrorAsString(hr).c_str())
 		else {
 			info_printf("Acquired mouse device.");
 			gbit_set(inputDetail.DeviceFlagsMouse		, ::nwol::WINDOWS_INPUT_STATE_FLAG_Acquired);
@@ -309,5 +309,69 @@ void														handleInputChanges							(const ::nwol::SInput& input)								
 	}
 	else
 		warning_printf("DirectInput device is already acquired for mouse input.");
+	return 0;
+}
+
+::nwol::error_t												nwol::pollInput									(::nwol::SScreenInput& input, ::nwol::SScreenDetail boundScreen)		{
+	static constexpr	const uint32_t								keyCount										= ::nwol::SInput::KeyCount;
+	static constexpr	const uint32_t								buttonCount										= ::nwol::SInput::ButtonCount;
+
+	if (gbit_false(input.PlatformDetail.DeviceFlagsKeyboard, ::nwol::WINDOWS_INPUT_STATE_FLAG_Initialized) || gbit_false(input.PlatformDetail.DeviceFlagsMouse, ::nwol::WINDOWS_INPUT_STATE_FLAG_Initialized)) 
+		error_if(errored(inputInitialize(input, boundScreen)), "Failed to initialize low level input system.");
+
+	for(uint32_t iMessage = 0, messageCount = boundScreen.Messages.size(); iMessage < messageCount; ++iMessage) 
+		switch(boundScreen.Messages[iMessage].uMsg) {
+		case WM_ACTIVATE:
+			if( WA_INACTIVE != boundScreen.Messages[iMessage].wParam ) {
+				if gbit_true(input.PlatformDetail.DeviceFlagsKeyboard, ::nwol::WINDOWS_INPUT_STATE_FLAG_Initialized)  { if(0 == input.PlatformDetail.DirectInputKeyboard	->Acquire())	{ gbit_set(input.PlatformDetail.DeviceFlagsKeyboard		, ::nwol::WINDOWS_INPUT_STATE_FLAG_Acquired); info_printf("Acquired input device."	); } else warning_printf("Failed to acquire device");	}
+				if gbit_true(input.PlatformDetail.DeviceFlagsMouse	 , ::nwol::WINDOWS_INPUT_STATE_FLAG_Initialized)  { if(0 == input.PlatformDetail.DirectInputMouse		->Acquire())	{ gbit_set(input.PlatformDetail.DeviceFlagsMouse		, ::nwol::WINDOWS_INPUT_STATE_FLAG_Acquired); info_printf("Acquired input device."	); } else warning_printf("Failed to acquire device");	}
+			}		 																								
+			else { 																									
+				if gbit_true(input.PlatformDetail.DeviceFlagsKeyboard, ::nwol::WINDOWS_INPUT_STATE_FLAG_Initialized)  { if(0 == input.PlatformDetail.DirectInputKeyboard	->Unacquire())	{ gbit_clear(input.PlatformDetail.DeviceFlagsKeyboard	, ::nwol::WINDOWS_INPUT_STATE_FLAG_Acquired); info_printf("Unacquired input device."); } else warning_printf("Failed to unacquire device");	}
+				if gbit_true(input.PlatformDetail.DeviceFlagsMouse	 , ::nwol::WINDOWS_INPUT_STATE_FLAG_Initialized)  { if(0 == input.PlatformDetail.DirectInputMouse		->Unacquire())	{ gbit_clear(input.PlatformDetail.DeviceFlagsMouse		, ::nwol::WINDOWS_INPUT_STATE_FLAG_Acquired); info_printf("Unacquired input device."); } else warning_printf("Failed to unacquire device");	}
+			}
+		}
+
+
+	memcpy(input.PreviousKeys, input.Keys, keyCount);
+#if defined(__WINDOWS__)
+	for(uint32_t i=0; i<keyCount; i++)
+		input.Keys[i]												= GetAsyncKeyState(i) ? 1 : 0;
+#else
+#	error "Not implemented."
+#endif
+	memcpy(input.PreviousMouse.Buttons, input.Mouse.Buttons, buttonCount);
+
+#if defined(__WINDOWS__)
+						INPUT_RECORD								recordIn										= {};
+						DWORD										NumRead											= 0;
+						HANDLE										handleIn										= GetStdHandle(STD_INPUT_HANDLE);
+						DWORD										eventCount										= 0;
+
+	GetNumberOfConsoleInputEvents (handleIn, &eventCount);
+	if( 0 == eventCount )
+		return 0;
+
+	ReadConsoleInput(handleIn, &recordIn, 1, &NumRead);
+
+	switch (recordIn.EventType) {
+	case KEY_EVENT:
+		// Do stuff
+		//input.Keys[recordIn.Event.KeyEvent.wVirtualKeyCode] = recordIn.Event.KeyEvent.bKeyDown ? 1 : 0;
+		break;
+	case MOUSE_EVENT:
+		input.Mouse.Deltas.x										= recordIn.Event.MouseEvent.dwMousePosition.X;
+		input.Mouse.Deltas.y										= recordIn.Event.MouseEvent.dwMousePosition.Y;
+		input.Mouse.Buttons[0]										= recordIn.Event.MouseEvent.dwButtonState & FROM_LEFT_1ST_BUTTON_PRESSED	;
+		input.Mouse.Buttons[1]										= recordIn.Event.MouseEvent.dwButtonState & FROM_LEFT_2ND_BUTTON_PRESSED	;
+		input.Mouse.Buttons[2]										= recordIn.Event.MouseEvent.dwButtonState & FROM_LEFT_3RD_BUTTON_PRESSED	;
+		input.Mouse.Buttons[3]										= recordIn.Event.MouseEvent.dwButtonState & FROM_LEFT_4TH_BUTTON_PRESSED	;
+		input.Mouse.Buttons[4]										= recordIn.Event.MouseEvent.dwButtonState & RIGHTMOST_BUTTON_PRESSED		;
+		break;
+	}
+#else
+#	error "Not implemented."
+#endif
+	::handleInputChanges(input);
 	return 0;
 }

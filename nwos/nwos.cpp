@@ -189,7 +189,5 @@ void										serverListen					( void* server )																									{ server
 			}
 		}
 	}
-
-
 	return 0;
 }

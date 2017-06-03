@@ -1,5 +1,5 @@
 // Tic Tac Toe implementation which stores its whole state in just 4 bytes.
-// Pablo Ariel Zorrilla Cepeda (c) 2017 - Distributed under the MIT License.
+// Pablo Ariel Zorrilla Cepeda (asm128) (c) 2017 - Distributed under the MIT License.
 #include <cstdint>
 #include <random>
 
@@ -30,7 +30,7 @@ namespace ttt
 
 	// This structure is only suitable for boards of up to 3x3 cells. It represents the position of a picked cell and the player.
 	struct CellPick {
-		// ----------------------------------------------------  Variables	-------------------------------------------------------------------------
+		// ----------------------------------------------------	 Variables	-------------------------------------------------------------------------
 							CELL_VALUE									Value							: 2;
 							uint16_t									IndexCell						: 4;
 							uint16_t									Row								: 2;	// Row		= IndexCell % 3
@@ -48,7 +48,7 @@ namespace ttt
 							uint16_t									Used							: 4;	// Keep track of the amount of cells set to true.
 		// ----------------------------------------------------	  Methods	-------------------------------------------------------------------------
 		inline constexpr												TicTacToeBoard16				()																											noexcept	: Cells(0), Used(0)										{}
-		// methods
+		// ---
 		inline constexpr	bool										GetCell							(const CellCoord coord)																				const	noexcept	{ return GetCell(coord.Column * 3 + coord.Row);			}
 		inline				void										SetCell							(const CellCoord coord, const bool value)																	noexcept	{ SetCell		(coord.Column * 3 + coord.Row, value);	}
 		inline constexpr	bool										GetCell							(const int index)																					const	noexcept	{ return (Cells & (1 << index)) ? true : false;			}
@@ -62,7 +62,7 @@ namespace ttt
 			for(int rowOrCol = 0; rowOrCol < 3; ++rowOrCol) {
 				if(((check = cellMaskRows		[rowOrCol]) & Cells) == cellMaskRows	[rowOrCol] ) return true;
 				if(((check = cellMaskColumns	[rowOrCol]) & Cells) == cellMaskColumns	[rowOrCol] ) return true;
-			}
+			}	// 
 			static constexpr	const uint16_t									diagonalMask1					= 0x111;
 			static constexpr	const uint16_t									diagonalMask2					= 0x54;
 								const bool										diagonal1						= (diagonalMask1 & Cells) == diagonalMask1;
@@ -96,7 +96,7 @@ namespace ttt
 		inline constexpr	CELL_VALUE									GetCellValue					(const int row, const int column)																	const	noexcept	{ return GetCellValue	(column * 3 + row);															}
 		inline				void										SetCellValue					(const int row, const int column, const CELL_VALUE value)													noexcept	{ SetCellValue			(column * 3 + row, value);													}
 		inline constexpr	CELL_VALUE									GetCellValue					(const int index)																					const	noexcept	{ return (CELL_VALUE)((Cells & (CELL_VALUE_MASK << (index * 2))) >> index * 2);						}
-		inline				void										SetCellValue					(const int index, const CELL_VALUE value)																	noexcept	{ Cells = Cells | ((value & CELL_VALUE_MASK) << (index * 2));										}
+		inline				void										SetCellValue					(const int index, const CELL_VALUE value)																	noexcept	{ Cells = Cells |	 ((value & CELL_VALUE_MASK) << (index * 2));									}
 							TicTacToeBoard16							GetCells						(const CELL_VALUE value)																			const	noexcept	{
 			TicTacToeBoard16													result;
 			for(int y = 0; y < 3; ++y)
@@ -112,6 +112,7 @@ namespace ttt
 		}
 	};	// struct
 
+	// 
 	template <size_t _sizeWidth, size_t _sizeHeight>
 	struct ScreenASCII {
 		// ----------------------------------------------------  Constants	-------------------------------------------------------------------------
@@ -136,18 +137,18 @@ namespace ttt
 			Board															= {};
 			Board.PlayerIndex												= playerIndex;
 		}
-		// Returns useful information about the move
+		// --- Returns useful information about the move
 							CellPick									TurnPlay						(uint8_t cellIndex)																							noexcept	{
 			CELL_VALUE															result_value					= CELL_VALUE_EMPTY;
 			const uint8_t														playerIndex						= Board.PlayerIndex;
 
-			// Handle turn depending on the player type. Currently there is no AI system other than random behavior which from time to time makes it look like it knows what she's doing.
+			// --- Handle turn depending on the player type. Currently there is no AI system other than random behavior which from time to time makes it look like it knows what she's doing.
 			switch(Board.GetPlayerControl(playerIndex))	{	
 			case PLAYER_CONTROL_HUMAN:	//		If it's the human's turn
 				if(!Board.GetCellValue(cellIndex))
 					result_value													= Board.PlayerIndex ? CELL_VALUE_O : CELL_VALUE_X;
 				break;
-			default:					//		Otherwise just play any empty cell
+			default:					// --- Otherwise just play any empty cell
 				do cellIndex														= rand()%9;
 				while(Board.GetCellValue(cellIndex));
 
@@ -162,7 +163,7 @@ namespace ttt
 			}
 			return {result_value, cellIndex, playerIndex};
 		}
-		// Returns true if a full line was found
+		// --- Returns true if a full line was found
 		inline				CELL_VALUE									EvaluateBoard					()																									const	noexcept	{
 			const TicTacToeBoard16												boardX							= Board.GetCells(CELL_VALUE_X); 
 			const TicTacToeBoard16												boardO							= Board.GetCells(CELL_VALUE_O); 
@@ -170,13 +171,13 @@ namespace ttt
 			if(boardO.EvaluateLines()) return CELL_VALUE_O;
 			return CELL_VALUE_EMPTY;
 		}
-		// Play turn and evaluate board. If the turn has to be played by the AI, cellIndex isn't used. Otherwise it determines the cell chosen by the player.
+		// --- Play turn and evaluate board. If the turn has to be played by the AI, cellIndex isn't used. Otherwise it determines the cell chosen by the player.
 		inline				CellPick									Tick							(const uint8_t cellIndex)																					noexcept	{
 			const CellPick														result							= TurnPlay(cellIndex);
 			Board.Winner													= EvaluateBoard();
 			return result;
 		}
-		// Execute loop. This isn't really working but serves as example of what your application should do more or less depending on user input.
+		// --- Execute loop. This isn't really working but serves as example of what your application should do more or less depending on user input.
 							CELL_VALUE									Run								()																											noexcept	{ 
 			ScreenASCII<SCREEN_WIDTH+1, SCREEN_HEIGHT>							targetScreenTTT;
 			static	const uint32_t												halfWidth						= targetScreenTTT.Width		>> 1;
@@ -190,7 +191,7 @@ namespace ttt
 			DrawResults(Board.GetWinner(), {halfWidth, halfHeight}, targetScreenTTT.Cells);		//		Congratulate the winner or declare a tie
 			return Board.GetWinner();
 		}
-		// Display match results text 
+		// --- Display match results text 
 		template <size_t _sizeWidth, size_t _sizeHeight>
 		inline				void										DrawResults						(const CELL_VALUE winner, const Coord2Du32& textCenter, char (&screen)[_sizeHeight][_sizeWidth])	const	noexcept	{
 			char																text[25]						= {};
@@ -207,7 +208,7 @@ namespace ttt
 			}
 			screen[_sizeHeight - 1][_sizeWidth - 1]							= 0;
 		}
-		// Display the board for a given team
+		// --- Display the board for a given team
 		template <size_t _sizeWidth, size_t _sizeHeight>
 							void										DrawBoard						(const CELL_VALUE cellValue, const Coord2Du32& offset, char (&screen)[_sizeHeight][_sizeWidth])		const	noexcept	{
 			const TicTacToeBoard16												board							= Board.GetCells(cellValue);

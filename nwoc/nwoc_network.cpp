@@ -67,9 +67,9 @@ void										runCommunications						(void* pInstanceApp)						{
 		::nwol::disconnectClient(instanceAppNetwork.Connection);
 	
 	while gbit_true(instanceAppNetwork.State, ::nwol::NETWORK_STATE_RUNNING)
-		::std::this_thread::sleep_for(::std::chrono::milliseconds(1000));
+		::std::this_thread::sleep_for(::std::chrono::milliseconds(250));
 
-	::std::this_thread::sleep_for(::std::chrono::milliseconds(1000));
+	::std::this_thread::sleep_for(::std::chrono::milliseconds(250));
 	::nwol::shutdownNetwork();
 	return 0;
 }

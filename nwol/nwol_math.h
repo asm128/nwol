@@ -33,7 +33,7 @@ namespace nwol
 		return result;
 	}
 
-	struct	SPairSinCos								{ double Sin, Cos; };	// This is used to reduce redundancies in constexpr operations.
+	struct	SPairSinCos								{ double Sin, Cos; };	
 	
 	static inline									SPairSinCos			getSinCos			(double theta)										noexcept	{ return {sin(theta), cos(theta)}; }
 	

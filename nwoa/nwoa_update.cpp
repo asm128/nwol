@@ -18,7 +18,7 @@ int32_t														update									(::SApplication& instanceApp, bool exitReque
 	::nwol::SInput													& consoleInputSystem					= instanceApp.Input;
 	::nwol::SScreenInput											& mainScreeninputSystem					= instanceApp.MainScreenInput;
 	::nwol::pollInput(consoleInputSystem);
-	::nwol::pollInput(mainScreeninputSystem);
+	::nwol::pollInput(mainScreeninputSystem, instanceApp.RuntimeValues->Screen.PlatformDetail);
 
 	const ::nwol::SInput											& inputSystemConst						= instanceApp.Input;
 	::nwol::SGUI													& guiSystem								= instanceApp.GUI;

@@ -38,7 +38,7 @@ int32_t											loadValidModules								(const char* modulesPath, ::nwol::SRun
 			const char											* nameText										= &moduleName[moduleName.size()-4];
 			char												fileExtension	[fileExtensionLength+1]			= {};
 			for(uint32_t iChar = 0, charCount = fileExtensionLength; iChar < charCount; ++iChar)
-				fileExtension[iChar]					= (char)tolower(nameText[iChar]);
+				fileExtension[iChar]							= (char)tolower(nameText[iChar]);
 
 			if(0 == strcmp(fileExtension, fileExtensionToLookFor)) {
 				info_printf("DLL found: %s.", moduleName.begin());
@@ -142,7 +142,7 @@ int32_t											refreshModules									(::SApplication& instanceApp)										
 	guiSystem.Controls.Resize(1);
 	PLATFORM_CRT_CHECK_MEMORY();
 	for(uint32_t iModuleItem = 0, moduleItemCount = loadedModules.size(); iModuleItem < moduleItemCount; ++iModuleItem) {
-		const ::nwol::SApplicationModule						& _module										= loadedModules[iModuleItem];
+		const ::nwol::SApplicationModule					& _module										= loadedModules[iModuleItem];
 		sprintf_s(versionString, "%u.%u", _module.VersionMajor(), _module.VersionMinor());
 		sprintf_s(itemText.begin(), itemText.size(), itemTextFormat, _module.FilenameOriginal.c_str(), versionString, _module.ModuleTitle);
 		newControl.Text									= ::nwol::glabel(itemText.begin(), ~0U);
@@ -157,8 +157,8 @@ int32_t											setup											(::SApplication& instanceApp)																	
 	instanceApp.GUI.Controls.Clear();
 
 	::nwol::initASCIIScreen(instanceApp.GUI.TargetSizeASCII.x, instanceApp.GUI.TargetSizeASCII.y);
-	char															moduleTitle[240]						= {};
-	uint8_t															moduleTitleLen							= (uint8_t)::nwol::size(moduleTitle);
+	char												moduleTitle[240]								= {};
+	uint8_t												moduleTitleLen									= (uint8_t)::nwol::size(moduleTitle);
 	nwol_necall(::nwol_moduleTitle(moduleTitle, &moduleTitleLen), "If this fails then something weird is going on.");
 	::nwol::setASCIIScreenTitle(moduleTitle);
 
@@ -176,7 +176,7 @@ int32_t											setup											(::SApplication& instanceApp)																	
 	nwol_necall(::nwol::createControl(guiSystem, newControl)	, "%s.", "Failed to create control");
 	nwol_necall(::refreshModules(instanceApp)					, "%s.", "Failed to refresh modules");
 
-	instanceApp.SelectorState					= ::SELECTOR_STATE_MENU;
+	instanceApp.SelectorState						= ::SELECTOR_STATE_MENU;
 	return 0; 
 }
 
@@ -211,8 +211,8 @@ int32_t											updateSelectorApp								(::SApplication& instanceApp, bool ex
 	return 0;
 }
 
-static	const char	errorFormat1[] = "Dynamically loaded function is null, maybe due to a buffer overrun which erased the pointers: %s.";
-static	const char	errorFormat2[] = "Module function failed: %s.";
+static	const char								errorFormat1[]									= "Dynamically loaded function is null, maybe due to a buffer overrun which erased the pointers: %s.";
+static	const char								errorFormat2[]									= "Module function failed: %s.";
 
 int32_t											loadSelection									(::SApplication& instanceApp)																									{
  	::nwol::SApplicationModule							& moduleInterface								= instanceApp.ApplicationModulesHandle[instanceApp.ApplicationModuleSelected];
@@ -252,16 +252,15 @@ int32_t											loadSelection									(::SApplication& instanceApp)											
 			}
 		}
 	}
-
 	return retVal;
 }
 
 int32_t											renderSelection									(const ::SApplication & instanceApp)																							{
 	int32_t												errVal											= 0;
- 	const ::nwol::SApplicationModule						& moduleInterface								= instanceApp.ApplicationModulesHandle[instanceApp.ApplicationModuleSelected];
+ 	const ::nwol::SApplicationModule					& moduleInterface								= instanceApp.ApplicationModulesHandle[instanceApp.ApplicationModuleSelected];
 	error_if(errored(errVal = moduleInterface.Render()), "Failed to call module function.");
 
-	::nwol::RUNTIME_CALLBACK_ID						callbackPointersErased				= moduleInterface.TestForNullPointerFunctions();
+	::nwol::RUNTIME_CALLBACK_ID							callbackPointersErased							= moduleInterface.TestForNullPointerFunctions();
 	if(callbackPointersErased) { 
 		printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
 		errVal										= -1;
@@ -286,40 +285,40 @@ int32_t											update											(::SApplication & instanceApp, bool exitReque
 		retval_error_if(::nwol::APPLICATION_STATE_FATAL, 0 == moduleSelected, "The module pointer is null. The only reason I can think of for this to happen is a write overrun but probably someone broke the code since I wrote this.");
 		error_if(errored(updateResult = moduleSelected->Update(exitRequested)), "Module \"%s\" failed to update with error code %u.", moduleTitle, updateResult)
 		else if(updateResult == ::nwol::APPLICATION_STATE_EXIT) {
-			instanceApp.SelectorState				= SELECTOR_STATE_MENU;
+			instanceApp.SelectorState						= SELECTOR_STATE_MENU;
 			while(INTERLOCKED_COMPARE_EXCHANGE(instanceApp.RenderSemaphore, 2, 0) == 1)
 				continue;
 			error_if(errored(moduleSelected->Cleanup()), "Failed to clean up module %i ('%s')", moduleTitle)
 			else {
 				info_printf("Module cleaned up successfully: '%s'", moduleTitle);
 			}
-			callbackPointersErased					= moduleSelected->TestForNullPointerFunctions();
+			callbackPointersErased							= moduleSelected->TestForNullPointerFunctions();
 			if(callbackPointersErased) { 
 				::nwol::printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
-				errResult								= ::nwol::APPLICATION_STATE_FATAL;
+				errResult										= ::nwol::APPLICATION_STATE_FATAL;
 			}
 			else { 
 				info_printf("Client application cleanup succeeded."); 
 			}
-				
-			::nwol::error_t								errDelete							= 0; 
+			::nwol::error_t										errDelete							= 0; 
 			error_if(errored(errDelete = moduleSelected->Delete()), errorFormat2, errDelete, "moduleDelete()")
 			else {
 				info_printf("Module deleted successfully: '%s'", moduleTitle);
 			}
-			callbackPointersErased					= moduleSelected->TestForNullPointerFunctions();
+			callbackPointersErased							= moduleSelected->TestForNullPointerFunctions();
 			if(callbackPointersErased) { 
 				::nwol::printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
-				errResult								= ::nwol::APPLICATION_STATE_FATAL;
+				errResult										= ::nwol::APPLICATION_STATE_FATAL;
 			}
 			else {	// Reinitialize the selector window which was probably closed before starting the new app.
 				::nwol::initASCIIScreen(instanceApp.GUI.TargetSizeASCII.x, instanceApp.GUI.TargetSizeASCII.y);
-				char										windowTitle[512]					= {};
-				char										selectorModuleTitle[240]					= {};
-				uint8_t										selectorModuleTitleLen						= (uint8_t)::nwol::size(selectorModuleTitle);
-				uint16_t									selectorModuleVersion						= 0xFFFF;
+				char												windowTitle[512]							= {};
+				char												selectorModuleTitle[240]					= {};
+				uint8_t												selectorModuleTitleLen						= (uint8_t)::nwol::size(selectorModuleTitle);
+				uint16_t											selectorModuleVersion						= 0;
+				nwol_necall(::nwol_moduleVersion(&selectorModuleVersion), "??");
 				nwol_necall(::nwol_moduleTitle(selectorModuleTitle, &selectorModuleTitleLen), "If this fails then something weird is going on.");
-				sprintf_s(windowTitle, "%s v%u.%u", moduleTitle, selectorModuleVersion & 0xFFU, (selectorModuleVersion & 0xFF00U) >> 4);
+				sprintf_s(windowTitle, "%s v%u.%u", selectorModuleTitle, selectorModuleVersion & 0xFFU, (selectorModuleVersion & 0xFF00U) >> 8);
 #if defined(__WINDOWS__)
 				SetWindowText(instanceApp.RuntimeValues->Screen.PlatformDetail.hWnd, windowTitle);
 #else
@@ -353,8 +352,8 @@ int32_t											render											(::SApplication& instanceApp)																
 	if( 1 == INTERLOCKED_INCREMENT(instanceApp.RenderSemaphore) ) {
 		switch(instanceApp.SelectorState) {
 		case SELECTOR_STATE_START				:
-		case SELECTOR_STATE_MENU				: retVal = renderSelectorApp(instanceApp);													break;
-		case SELECTOR_STATE_LOADING_SELECTION	: break;	// careful because of unique ASCII screen instance. We may be closing ours or the client app can be creating hers.
+		case SELECTOR_STATE_MENU				: retVal	= renderSelectorApp(instanceApp);													break;
+		case SELECTOR_STATE_LOADING_SELECTION	: break;	// careful because of unique ASCII screen instance. We may be closing ours or the client module creating its own.
 		case SELECTOR_STATE_RUNNING_SELECTION	: error_if(errored(renderSelection(instanceApp)), "Failed to render client application");	break;
 		default:
 			error_printf("Unrecognized state: %u", (uint32_t)instanceApp.SelectorState);
