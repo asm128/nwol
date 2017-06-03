@@ -50,8 +50,8 @@ static	int32_t												loadPlatformValues				(::nwol::SRuntimeValues& runtime
 	static const char_t												defaultModuleName[]				= "modules/nwor_selector." DYNAMIC_LIBRARY_EXTENSION;
 	::nwol::error_t													errMy							= 0;		
 		 error_if(errored(errMy = ::loadPlatformValues(runtimeValues, defaultModuleName, 0, 0)	), "%s() failed with code: 0x%X", "loadPlatformValues", errMy)
-	else error_if(errored(errMy = ::nwor::rtMain(runtimeState)									), "%s() failed with code: 0x%X", "rtMain");  
-    info_printf("Exiting function normally: %s", __FUNCTION__);
+	else error_if(errored(errMy = ::nwor::rtMain(runtimeState)									), "%s() failed with code: 0x%X", "rtMain")
+    else info_printf("Exiting function normally: %s", __FUNCTION__);
 }
 #else
 		int													main							(int argc, char** argv)																						{ 
@@ -61,12 +61,9 @@ static	int32_t												loadPlatformValues				(::nwol::SRuntimeValues& runtime
 	g_RuntimeState												= &runtimeState;
 
 	static const char_t												defaultModuleName[]				= "modules/nwor_selector." DYNAMIC_LIBRARY_EXTENSION;
-	if( 0 > loadPlatformValues(runtimeValues, defaultModuleName, argv, argc) )
-		return -1;
-
 	::nwol::error_t													errMy							= 0;
-	retval_error_if(EXIT_FAILURE, errored(errMy = ::loadPlatformValues(runtimeValues, defaultModuleName, __argv, __argc)	), "%s() failed.", "loadPlatformValues"	);  
-	retval_error_if(EXIT_FAILURE, errored(errMy = ::nwor::rtMain(runtimeState)												), "%s() failed.", "rtMain"				);  
+	retval_error_if(EXIT_FAILURE, errored(errMy = ::loadPlatformValues(runtimeValues, defaultModuleName, argv, argc)	), "%Error code: 0x%X.", errMy	);  
+	retval_error_if(EXIT_FAILURE, errored(errMy = ::nwor::rtMain(runtimeState)											), "%Error code: 0x%X.", errMy	);  
 	return 0;
 }
 #	if defined (__WINDOWS__)
@@ -89,8 +86,8 @@ static	int32_t												loadPlatformValues				(::nwol::SRuntimeValues& runtime
 
 	static const char_t												defaultModuleName[]				= "modules/nwor_selector." DYNAMIC_LIBRARY_EXTENSION;
 	::nwol::error_t													errMy							= 0;
-	retval_error_if(EXIT_FAILURE, errored(errMy = ::loadPlatformValues(runtimeValues, defaultModuleName, __argv, __argc)	), "%s() failed.", "loadPlatformValues"	);  
-	retval_error_if(EXIT_FAILURE, errored(errMy = ::nwor::rtMain(runtimeState)												), "%s() failed.", "rtMain"				);  
+	retval_error_if(EXIT_FAILURE, errored(errMy = ::loadPlatformValues(runtimeValues, defaultModuleName, __argv, __argc)	), "%Error code: 0x%X.", errMy	);  
+	retval_error_if(EXIT_FAILURE, errored(errMy = ::nwor::rtMain(runtimeState)												), "%Error code: 0x%X.", errMy	);  
 	return EXIT_SUCCESS;
 }
 #	endif

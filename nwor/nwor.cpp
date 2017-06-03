@@ -112,7 +112,6 @@ LRESULT	WINAPI														mainWndProc								(HWND hWnd, UINT uMsg, WPARAM wPa
 		screenState.Closed													= true;
 		return 0;
 	}
-
 	return DefWindowProc( hWnd, uMsg, wParam, lParam );
 }
 
