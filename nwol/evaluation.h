@@ -1,5 +1,4 @@
 /// Copyright 2016-2017 - asm128
-#include "nwol_debug.h"
 
 #ifndef __EVALUATION_H__92364890278346982374__
 #define __EVALUATION_H__92364890278346982374__

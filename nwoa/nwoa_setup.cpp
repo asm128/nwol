@@ -41,7 +41,6 @@ int32_t														setupGUI								(::SApplication& instanceApp)							{
 	newControl.AreaASCII										= {1, 1, (int32_t)newControlLabel.size(), 1}	;
 	newControl.Text												= newControlLabel								;
 	nwol_necall(::nwol::createControl(guiSystem, newControl), "Failed to create control!");
-
 	return 0;
 }
 
@@ -53,6 +52,8 @@ int32_t														setup									(::SApplication& instanceApp)							{
 	nwol_necall(::nwol_moduleTitle(moduleTitle, &moduleTitleLen), "If this fails then something weird is going on.");
 	::nwol::setASCIIScreenTitle(moduleTitle);
 
+	gbit_set(instanceApp.MainScreenInput.PlatformDetail.DeviceFlagsKeyboard	, ::nwol::WINDOWS_INPUT_STATE_FLAG_Exclusive);
+	gbit_set(instanceApp.MainScreenInput.PlatformDetail.DeviceFlagsMouse	, ::nwol::WINDOWS_INPUT_STATE_FLAG_Exclusive);
 	::nwol::setCooperativeLevels(instanceApp.RuntimeValues->Screen.PlatformDetail, instanceApp.MainScreenInput);	// This tells the input system that it has to bind to the main window.
 	::nwol::acquireInput(instanceApp.MainScreenInput);
 

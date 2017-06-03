@@ -1,4 +1,5 @@
-/// Copyright 2010-2017 - asm128
+// These sources are best viewed in Visual Studio 2017 with a screen of at least 1920x1080 screen and the zoom set to 81 %.
+// Pablo Ariel Zorrilla Cepeda (asm128) Copyright (c) 2010-2017 - Distributed under the MIT License.
 #include "runtime.h"
 #include "nwol_log.h"
 
@@ -46,7 +47,7 @@
 #define DEFINE_RUNTIME_INTERFACE_RENDER(_yourCustomClass)	::nwol::error_t	NWOL_STDCALL	::nwol_moduleRender		(void* instanceApp)		noexcept		{ reterr_error_if(instanceApp == 0, "%s", "Invalid pointer!"); return render	(*(_yourCustomClass*)instanceApp); }
 #define DEFINE_RUNTIME_INTERFACE_UPDATE(_yourCustomClass)																												\
 ::nwol::error_t	NWOL_STDCALL			::nwol_moduleUpdate				(void* instanceApp, bool requestedExit)								noexcept		{			\
-	retval_error_if(::nwol::APPLICATION_STATE_FATAL, instanceApp == 0, "%s", "Invalid pointer!");																		\
+	reterr_error_if(instanceApp == 0, "%s", "Invalid pointer!");																										\
 	_yourCustomClass							& customApp					= *(_yourCustomClass*)instanceApp;															\
 	::nwol::APPLICATION_STATE					result						= (::nwol::APPLICATION_STATE)update(customApp, requestedExit);								\
 	return result;																																						\

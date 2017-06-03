@@ -64,10 +64,10 @@ LRESULT	WINAPI														mainWndProc								(HWND hWnd, UINT uMsg, WPARAM wPa
 	error_if(errored(mainScreen.PlatformDetail.Messages.push_back({hWnd, uMsg, wParam, lParam})), "Out of memory?");
 	switch( uMsg ) {
 	case WM_DESTROY:
-		info_printf( "Received WM_DESTROY message." );
+		info_printf("Received WM_DESTROY message.");
 		return 0;
 	case WM_QUIT:
-		info_printf( "Received WM_QUIT message. return DefWindowProc( hWnd=%p, uMsg=%i, wParam=%i, lParam=%i )...", hWnd, (int)uMsg, (int)wParam, (int)lParam );
+		info_printf("Received WM_QUIT message.");
 		break;
 	case WM_SIZE:
 		if( wParam == SIZE_MINIMIZED ) {

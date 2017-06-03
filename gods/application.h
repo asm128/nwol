@@ -169,12 +169,12 @@ namespace nwol
 		NWOM(::nwol, SApplicationBase, ::nwol, SRenderer					,	Renderer				, ::nwol::GDATA_TYPE_OBJ		, "Render device"				, "Used to render graphics to the backbuffer."								)	= {};
 		NWOM(::nwol, SApplicationBase, ::nwol, SApplicationNetworkClient	,	NetworkClient			, ::nwol::GDATA_TYPE_OBJ		, "Network client"				, "Holds client connection state and server information."					)	= {};	// 
 		NWOM_REGISTRY
-			(	NWOM_NAME(RuntimeValues			)
-			,	NWOM_NAME(Input					)
-			,	NWOM_NAME(MainScreenInput		)
-			,	NWOM_NAME(GUI					)
-			,	NWOM_NAME(Renderer				)
-			,	NWOM_NAME(NetworkClient			)
+			(	NWOM_NAME(RuntimeValues		)
+			,	NWOM_NAME(Input				)
+			,	NWOM_NAME(MainScreenInput	)
+			,	NWOM_NAME(GUI				)
+			,	NWOM_NAME(Renderer			)
+			,	NWOM_NAME(NetworkClient		)
 			);
 
 #if defined(__ANDROID__)

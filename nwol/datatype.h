@@ -500,32 +500,32 @@ namespace nwol
 	static constexpr		const SDataTypeID			GDATA_TYPE_FLOAT64_NORM_256		= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x100);		
 	
 	// --------------		------------------------	------------------------- GDATA_TYPE ---------------------------------------------------------------
-	// -- Non-POD typ		es:
-	static constexpr		const SDataTypeID			GDATA_TYPE_UNKNOWN				= GTYPEID_MAKE_NON_UNIFORM(0x01);	// aka GDATA_TYPE_INT1 
-	static constexpr		const SDataTypeID			GDATA_TYPE_NWOLVECTOR			= GTYPEID_MAKE_NON_UNIFORM(0x02);	// aka GDATA_TYPE_INT1_2
-	static constexpr		const SDataTypeID			GDATA_TYPE_NWOLSTRING			= GTYPEID_MAKE_NON_UNIFORM(0x03);	// aka GDATA_TYPE_INT1_3
-	static constexpr		const SDataTypeID			GDATA_TYPE_GLABEL				= GTYPEID_MAKE_NON_UNIFORM(0x04);	// aka GDATA_TYPE_INT1_4
-	static constexpr		const SDataTypeID			GDATA_TYPE_GENUM				= GTYPEID_MAKE_NON_UNIFORM(0x05);	// aka GDATA_TYPE_INT1_5
-	static constexpr		const SDataTypeID			GDATA_TYPE_GDESCRIPTOR			= GTYPEID_MAKE_NON_UNIFORM(0x06);	// aka GDATA_TYPE_INT1_6
-	static constexpr		const SDataTypeID			GDATA_TYPE_GPOD					= GTYPEID_MAKE_NON_UNIFORM(0x07);	// aka GDATA_TYPE_INT1_7
-	static constexpr		const SDataTypeID			GDATA_TYPE_GOBJ					= GTYPEID_MAKE_NON_UNIFORM(0x08);	// 
-	static constexpr		const SDataTypeID			GDATA_TYPE_GNCO					= GTYPEID_MAKE_NON_UNIFORM(0x09);	// 
-	static constexpr		const SDataTypeID			GDATA_TYPE_GREF					= GTYPEID_MAKE_NON_UNIFORM(0x0A);	// 
-	static constexpr		const SDataTypeID			GDATA_TYPE_GLIST				= GTYPEID_MAKE_NON_UNIFORM(0x0B);	// 
-	static constexpr		const SDataTypeID			GDATA_TYPE_GPURE				= GTYPEID_MAKE_NON_UNIFORM(0x0C);	// 
-	static constexpr		const SDataTypeID			GDATA_TYPE_CUSTOM				= GTYPEID_MAKE_NON_UNIFORM(0x0D);	// 
-	static constexpr		const SDataTypeID			GDATA_TYPE_POD					= GTYPEID_MAKE_NON_UNIFORM(0x0E);	// 
-	static constexpr		const SDataTypeID			GDATA_TYPE_OBJ					= GTYPEID_MAKE_NON_UNIFORM(0x0F);	// 
-	static constexpr		const SDataTypeID			GDATA_TYPE_NCO					= GTYPEID_MAKE_NON_UNIFORM(0x10);	// 
-	static constexpr		const SDataTypeID			GDATA_TYPE_MOD					= GTYPEID_MAKE_NON_UNIFORM(0x11);	//
-	static constexpr		const SDataTypeID			GDATA_TYPE_FUN					= GTYPEID_MAKE_NON_UNIFORM(0x12);	//
-	static constexpr		const SDataTypeID			GDATA_TYPE_PRC					= GTYPEID_MAKE_NON_UNIFORM(0x13);	// aka GDATA_TYPE_INT1_13
+	// -- Non-POD types:
+	static constexpr		const SDataTypeID			GDATA_TYPE_UNKNOWN				= GTYPEID_MAKE_NON_UNIFORM(0x01);				// aka GDATA_TYPE_INT1 
+	static constexpr		const SDataTypeID			GDATA_TYPE_NWOLVECTOR			= GTYPEID_MAKE_NON_UNIFORM(0x02);				// aka GDATA_TYPE_INT1_2
+	static constexpr		const SDataTypeID			GDATA_TYPE_NWOLSTRING			= GTYPEID_MAKE_NON_UNIFORM(0x03);				// aka GDATA_TYPE_INT1_3
+	static constexpr		const SDataTypeID			GDATA_TYPE_GLABEL				= GTYPEID_MAKE_NON_UNIFORM(0x04);				// aka GDATA_TYPE_INT1_4
+	static constexpr		const SDataTypeID			GDATA_TYPE_GENUM				= GTYPEID_MAKE_NON_UNIFORM(0x05);				// aka GDATA_TYPE_INT1_5
+	static constexpr		const SDataTypeID			GDATA_TYPE_GDESCRIPTOR			= GTYPEID_MAKE_NON_UNIFORM(0x06);				// aka GDATA_TYPE_INT1_6
+	static constexpr		const SDataTypeID			GDATA_TYPE_GPOD					= GTYPEID_MAKE_NON_UNIFORM(0x07);				// aka GDATA_TYPE_INT1_7
+	static constexpr		const SDataTypeID			GDATA_TYPE_GOBJ					= GTYPEID_MAKE_NON_UNIFORM(0x08);				// 
+	static constexpr		const SDataTypeID			GDATA_TYPE_GNCO					= GTYPEID_MAKE_NON_UNIFORM(0x09);				// 
+	static constexpr		const SDataTypeID			GDATA_TYPE_GREF					= GTYPEID_MAKE_NON_UNIFORM(0x0A);				// 
+	static constexpr		const SDataTypeID			GDATA_TYPE_GLIST				= GTYPEID_MAKE_NON_UNIFORM(0x0B);				// 
+	static constexpr		const SDataTypeID			GDATA_TYPE_GPURE				= GTYPEID_MAKE_NON_UNIFORM(0x0C);				// 
+	static constexpr		const SDataTypeID			GDATA_TYPE_CUSTOM				= GTYPEID_MAKE_NON_UNIFORM(0x0D);				// 
+	static constexpr		const SDataTypeID			GDATA_TYPE_POD					= GTYPEID_MAKE_NON_UNIFORM(0x0E);				// 
+	static constexpr		const SDataTypeID			GDATA_TYPE_OBJ					= GTYPEID_MAKE_NON_UNIFORM(0x0F);				// 
+	static constexpr		const SDataTypeID			GDATA_TYPE_NCO					= GTYPEID_MAKE_NON_UNIFORM(0x10);				// 
+	static constexpr		const SDataTypeID			GDATA_TYPE_MOD					= GTYPEID_MAKE_NON_UNIFORM(0x11);				//
+	static constexpr		const SDataTypeID			GDATA_TYPE_FUN					= GTYPEID_MAKE_NON_UNIFORM(0x12);				//
+	static constexpr		const SDataTypeID			GDATA_TYPE_PRC					= GTYPEID_MAKE_NON_UNIFORM(0x13);				// aka GDATA_TYPE_INT1_13
 	static constexpr		const SDataTypeID			GDATA_TYPE_POINTER				= GTYPEID_MAKE_NON_UNIFORM(sizeof(void*)*8);	// notice that this definition changes depending on the platform
 
 	// -- STL types
-	static constexpr		const SDataTypeID			GDATA_TYPE_STLOTHER				= GTYPEID_MAKE_STL(0x01);	// aka GDATA_TYPE_INT1_14
-	static constexpr		const SDataTypeID			GDATA_TYPE_STLVECTOR			= GTYPEID_MAKE_STL(0x02);	// aka GDATA_TYPE_INT1_14
-	static constexpr		const SDataTypeID			GDATA_TYPE_STLSTRING			= GTYPEID_MAKE_STL(0x03);	// aka GDATA_TYPE_INT1_15
+	static constexpr		const SDataTypeID			GDATA_TYPE_STLOTHER				= GTYPEID_MAKE_STL(0x01);	// aka GDATA_TYPE_FLOAT1_NORM
+	static constexpr		const SDataTypeID			GDATA_TYPE_STLVECTOR			= GTYPEID_MAKE_STL(0x02);	// aka GDATA_TYPE_FLOAT1_NORM_2
+	static constexpr		const SDataTypeID			GDATA_TYPE_STLSTRING			= GTYPEID_MAKE_STL(0x03);	// aka GDATA_TYPE_FLOAT1_NORM_3
 	
 	// -- Random bullshit that can cause a lot of problems such as security vulnerabilities, buffer overflows, hidden bugs, portability problems, increasing code size, etc.
 	static constexpr		const SDataTypeID			GDATA_TYPE_SIZE_T				= ::nwol::SDataTypeID(sizeof(size_t)*8, 1, false, sizeof(size_t) == 4 ? false : true);

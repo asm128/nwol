@@ -1,4 +1,6 @@
 // Tic Tac Toe implementation which stores its whole state in just 4 bytes.
+// These sources are best viewed in Visual Studio 2017 with a screen of at least 1920x1080 screen and the zoom set to 81 %.
+//
 // Pablo Ariel Zorrilla Cepeda (asm128) (c) 2017 - Distributed under the MIT License.
 #include <cstdint>
 #include <random>

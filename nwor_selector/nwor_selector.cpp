@@ -1,3 +1,5 @@
+// These sources are best viewed in Visual Studio 2017 with a screen of at least 1920x1080 screen and the zoom set to 81 %.
+// Pablo Ariel Zorrilla Cepeda (asm128) Copyright (c) 2010-2017 - Distributed under the MIT License.
 #include "nwor_selector.h"
 
 #include "runtime.h"
@@ -195,16 +197,16 @@ int32_t											updateSelectorApp								(::SApplication& instanceApp, bool ex
 	for(uint32_t iControl = 0, controlCount = controlFlags.size(); iControl < controlCount; ++iControl)
 		if(::nwol::bit_true(controlFlags[iControl], ::nwol::CONTROL_FLAG_EXECUTE)) {
 			info_printf("Execute %u.", iControl);
-			uint32_t										selectedModuleIndex								= UINT_MAX;
+			uint32_t											selectedModuleIndex								= UINT_MAX;
 			switch(iControl) {
 			case 0:		
 				return ::nwol::APPLICATION_STATE_EXIT;
 			default:
-				selectedModuleIndex							= iControl-1;
+				selectedModuleIndex								= iControl-1;
 				error_if(false == ::nwol::in_range(selectedModuleIndex, 0U, instanceApp.ApplicationModulesHandle.size()), "Invalid module index: %u.", selectedModuleIndex)
 				else {
-					instanceApp.ApplicationModuleSelected		= selectedModuleIndex;	// Module indices are 
-					instanceApp.SelectorState					= ::SELECTOR_STATE_LOADING_SELECTION;
+					instanceApp.ApplicationModuleSelected			= selectedModuleIndex;	// Module indices are 
+					instanceApp.SelectorState						= ::SELECTOR_STATE_LOADING_SELECTION;
 				}
 			}
 		}
@@ -263,7 +265,7 @@ int32_t											renderSelection									(const ::SApplication & instanceApp)		
 	::nwol::RUNTIME_CALLBACK_ID							callbackPointersErased							= moduleInterface.TestForNullPointerFunctions();
 	if(callbackPointersErased) { 
 		printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
-		errVal										= -1;
+		errVal											= -1;
 	}
 	return errVal;
 }
@@ -271,9 +273,9 @@ int32_t											renderSelection									(const ::SApplication & instanceApp)		
 
 int32_t											update											(::SApplication & instanceApp, bool exitRequested)																				{
 	::nwol::error_t										errResult										= 0;
-	::nwol::APPLICATION_STATE							updateResult									= ::nwol::APPLICATION_STATE_FATAL;
+	::nwol::APPLICATION_STATE							updateResult									= ::nwol::APPLICATION_STATE_INVALID;
 	::nwol::RUNTIME_CALLBACK_ID							callbackPointersErased							= ::nwol::RUNTIME_CALLBACK_ID_NONE;
-	::nwol::array_pod<::nwol::SApplicationModule>			& moduleHandles									= instanceApp.ApplicationModulesHandle;
+	::nwol::array_pod<::nwol::SApplicationModule>		& moduleHandles									= instanceApp.ApplicationModulesHandle;
 	uint32_t											moduleSelectedIndex								= (uint32_t)instanceApp.ApplicationModuleSelected;
 	::nwol::SApplicationModule							* moduleSelected								= iif(moduleSelectedIndex >= moduleHandles.size()) 0 : &moduleHandles[moduleSelectedIndex];
 	const char											* moduleTitle									= iif(moduleSelected) moduleSelected->ModuleTitle : 0;
@@ -282,7 +284,7 @@ int32_t											update											(::SApplication & instanceApp, bool exitReque
 	case SELECTOR_STATE_MENU				: return ::updateSelectorApp(instanceApp, exitRequested);
 	case SELECTOR_STATE_LOADING_SELECTION	: nwol_necall(::loadSelection(instanceApp), "Selected module \"%s\" failed to load.", moduleTitle);			break;
 	case SELECTOR_STATE_RUNNING_SELECTION	:
-		retval_error_if(::nwol::APPLICATION_STATE_FATAL, 0 == moduleSelected, "The module pointer is null. The only reason I can think of for this to happen is a write overrun but probably someone broke the code since I wrote this.");
+		retval_error_if(::nwol::APPLICATION_STATE_INVALID, 0 == moduleSelected, "The module pointer is null. The only reason I can think of for this to happen is a write overrun but probably someone broke the code since I wrote this.");
 		error_if(errored(updateResult = moduleSelected->Update(exitRequested)), "Module \"%s\" failed to update with error code %u.", moduleTitle, updateResult)
 		else if(updateResult == ::nwol::APPLICATION_STATE_EXIT) {
 			instanceApp.SelectorState						= SELECTOR_STATE_MENU;
@@ -295,12 +297,12 @@ int32_t											update											(::SApplication & instanceApp, bool exitReque
 			callbackPointersErased							= moduleSelected->TestForNullPointerFunctions();
 			if(callbackPointersErased) { 
 				::nwol::printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
-				errResult										= ::nwol::APPLICATION_STATE_FATAL;
+				errResult										= ::nwol::APPLICATION_STATE_INVALID;
 			}
 			else { 
 				info_printf("Client application cleanup succeeded."); 
 			}
-			::nwol::error_t										errDelete							= 0; 
+			::nwol::error_t										errDelete									= 0; 
 			error_if(errored(errDelete = moduleSelected->Delete()), errorFormat2, errDelete, "moduleDelete()")
 			else {
 				info_printf("Module deleted successfully: '%s'", moduleTitle);
@@ -308,7 +310,7 @@ int32_t											update											(::SApplication & instanceApp, bool exitReque
 			callbackPointersErased							= moduleSelected->TestForNullPointerFunctions();
 			if(callbackPointersErased) { 
 				::nwol::printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
-				errResult										= ::nwol::APPLICATION_STATE_FATAL;
+				errResult										= ::nwol::APPLICATION_STATE_INVALID;
 			}
 			else {	// Reinitialize the selector window which was probably closed before starting the new app.
 				::nwol::initASCIIScreen(instanceApp.GUI.TargetSizeASCII.x, instanceApp.GUI.TargetSizeASCII.y);

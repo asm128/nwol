@@ -1,3 +1,5 @@
+// These sources are best viewed in Visual Studio 2017 with a screen of at least 1920x1080 screen and the zoom set to 81 %.
+// Pablo Ariel Zorrilla Cepeda (asm128) Copyright (c) 2010-2017 - Distributed under the MIT License.
 #include "application.h"
 
 #ifndef __NWOA_H__983264902__

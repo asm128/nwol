@@ -1,4 +1,5 @@
-/// Copyright 2017 - asm128
+// These sources are best viewed in Visual Studio 2017 with a screen of at least 1920x1080 screen and the zoom set to 81 %.
+// Pablo Ariel Zorrilla Cepeda (asm128) Copyright (c) 2010-2017 - Distributed under the MIT License.
 #include "nwol_screen.h"
 #include "nwol_module.h"
 #include "nwol_enum.h"
@@ -13,8 +14,7 @@
 #ifndef __RUNTIME_H__29834908347__
 #define __RUNTIME_H__29834908347__
 
-namespace nwol
-{
+namespace nwol {
 	struct SRuntimeValues;
 }	// nwol
 
@@ -36,7 +36,6 @@ namespace nwol
 	GDEFINE_ENUM_VALUE(APPLICATION_STATE, EXIT		,  1);
 	GDEFINE_ENUM_VALUE(APPLICATION_STATE, BUSY		,  2);
 	GDEFINE_ENUM_VALUE(APPLICATION_STATE, STAY		,  3);
-	GDEFINE_ENUM_VALUE(APPLICATION_STATE, FATAL		, -1);
 
 	enum RUNTIME_CALLBACK_ID : uint8_t
 		{	RUNTIME_CALLBACK_ID_NONE							= 0
@@ -48,22 +47,22 @@ namespace nwol
 		,	RUNTIME_CALLBACK_ID_CLEANUP							= 0x20
 		,	RUNTIME_CALLBACK_ID_RENDER							= 0x40
 		,	RUNTIME_CALLBACK_ID_UPDATE							= 0x80
-		};									
+		};					
 
 	static constexpr	const char								formatModuleFunctionPtrNull[]	= "Function pointer for %s() in module %s is null.";
-	struct SApplicationModule : public ::nwol::SModuleBase {
-		NWOM_PFUNC(::nwol, SApplicationModule, nwol_moduleTitle		);
-		NWOM_PFUNC(::nwol, SApplicationModule, nwol_moduleVersion	);
-		NWOM_PFUNC(::nwol, SApplicationModule, nwol_moduleCreate	);
-		NWOM_PFUNC(::nwol, SApplicationModule, nwol_moduleDelete	);
-		NWOM_PFUNC(::nwol, SApplicationModule, nwol_moduleSetup		);
-		NWOM_PFUNC(::nwol, SApplicationModule, nwol_moduleCleanup	);
-		NWOM_PFUNC(::nwol, SApplicationModule, nwol_moduleRender	);
-		NWOM_PFUNC(::nwol, SApplicationModule, nwol_moduleUpdate	);
+	NWOL_BEGIN_MODULE(::nwol, SDeviceDriverModule);
+		NWOM_PFUNC(::nwol, SDeviceDriverModule, nwol_moduleTitle	);
+		NWOM_PFUNC(::nwol, SDeviceDriverModule, nwol_moduleVersion	);
+		NWOM_PFUNC(::nwol, SDeviceDriverModule, nwol_moduleCreate	);
+		NWOM_PFUNC(::nwol, SDeviceDriverModule, nwol_moduleDelete	);
+		NWOM_PFUNC(::nwol, SDeviceDriverModule, nwol_moduleSetup	);
+		NWOM_PFUNC(::nwol, SDeviceDriverModule, nwol_moduleCleanup	);
+		NWOM_PFUNC(::nwol, SDeviceDriverModule, nwol_moduleRender	);
+		NWOM_PFUNC(::nwol, SDeviceDriverModule, nwol_moduleUpdate	);
 		// -----------------------------------------------------------------------------------------------
-		NWOM(::nwol, SApplicationModule, ::nwol	, SRuntimeValues	* , RuntimeValues			, ::nwol::GDATA_TYPE_POINTER, "Runtime Values"	, "Holds global runtime information."									)	= nullptr;
-		NWOM(::nwol, SApplicationModule, 		, void_t			* , ClientInstance			, ::nwol::GDATA_TYPE_POINTER, "Client Instance"	, "Holds the client application instance created by moduleCreate()."	)	= nullptr;
-		NWOM(::nwol, SApplicationModule, const	, char_t			* , ModuleTitle				, ::nwol::GDATA_TYPE_POINTER, "Module Title"	, "The module title."													)	= nullptr;
+		NWOM(::nwol, SDeviceDriverModule, ::nwol	, SRuntimeValues	* , RuntimeValues	, ::nwol::GDATA_TYPE_POINTER, "Runtime Values"	, "Holds global runtime information."									)	= nullptr;
+		NWOM(::nwol, SDeviceDriverModule, 			, void_t			* , ClientInstance	, ::nwol::GDATA_TYPE_POINTER, "Client Instance"	, "Holds the client application instance created by moduleCreate()."	)	= nullptr;
+		NWOM(::nwol, SDeviceDriverModule, const		, char_t			* , ModuleTitle		, ::nwol::GDATA_TYPE_POINTER, "Module Title"	, "The module title."													)	= nullptr;
 		NWOM_REGISTRY
 			(	NWOM_NAME(nwol_moduleTitle		)
 			,	NWOM_NAME(nwol_moduleVersion	)
@@ -82,13 +81,13 @@ namespace nwol
 		inline	uint8_t												VersionMajor					()										const	noexcept	{ const uint16_t version = Version(); return (uint8_t)(version & 0x00FF);					}
 		inline	uint8_t												VersionMinor					()										const	noexcept	{ const uint16_t version = Version(); return (uint8_t)((version & 0xFF00) >> 8);			}
 				const char_t*										Title							()										const				{ retval_error_if(nullptr	,							0 == nwol_moduleTitle	, formatModuleFunctionPtrNull, "moduleTitle"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); char		title [240]	= {}; uint8_t titleLen = (uint8_t)::nwol::size(title); nwol_moduleTitle(title, &titleLen); return ::nwol::glabel(title, titleLen).c_str();	}
-		inline	uint16_t											Version							()										const				{ retval_error_if(0xFF		,							0 == nwol_moduleVersion	, formatModuleFunctionPtrNull, "moduleVersion"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); uint16_t moduleVer	=  0; retnul_error_if(errored(nwol_moduleVersion(&moduleVer)), "Failed to get module version.");	return moduleVer;						}
+		inline	uint16_t											Version							()										const				{ retval_error_if(0xFF		,							0 == nwol_moduleVersion	, formatModuleFunctionPtrNull, "moduleVersion"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); uint16_t moduleVer	=  0; retnul_error_if(errored(nwol_moduleVersion(&moduleVer)), "Failed to get module version.");	return moduleVer;							}
 		inline	::nwol::error_t										Create							()															{ retval_error_if(-1,									0 == nwol_moduleCreate	, formatModuleFunctionPtrNull, "moduleCreate"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); return nwol_moduleCreate								(&ClientInstance, RuntimeValues);																			}
 		inline	::nwol::error_t										Delete							()															{ retval_error_if(-1,									0 == nwol_moduleDelete	, formatModuleFunctionPtrNull, "moduleDelete"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); return nwol_moduleDelete								(&ClientInstance);																							}
 		inline	::nwol::error_t										Setup							()										const				{ retval_error_if(-1,									0 == nwol_moduleSetup	, formatModuleFunctionPtrNull, "moduleSetup"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); return nwol_moduleSetup								(ClientInstance	);																							}
-		inline	::nwol::error_t										Cleanup							()										const				{ retval_error_if(-1,									0 == nwol_moduleCleanup	, formatModuleFunctionPtrNull, "moduleCleanup"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); return nwol_moduleCleanup							(ClientInstance	);																							}
+		inline	::nwol::error_t										Cleanup							()										const				{ retval_error_if(-1,									0 == nwol_moduleCleanup	, formatModuleFunctionPtrNull, "moduleCleanup"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); return nwol_moduleCleanup								(ClientInstance	);																							}
 		inline	::nwol::error_t										Render							()										const				{ retval_error_if(-1,									0 == nwol_moduleRender	, formatModuleFunctionPtrNull, "moduleRender"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); return nwol_moduleRender								(ClientInstance	);																							}
-		inline	::nwol::APPLICATION_STATE							Update							(bool bRequestedExit)					const				{ retval_error_if(::nwol::APPLICATION_STATE_FATAL	,	0 == nwol_moduleUpdate	, formatModuleFunctionPtrNull, "moduleUpdate"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); return (::nwol::APPLICATION_STATE)nwol_moduleUpdate	(ClientInstance, bRequestedExit);																			}
+		inline	::nwol::APPLICATION_STATE							Update							(bool bRequestedExit)					const				{ retval_error_if(::nwol::APPLICATION_STATE_INVALID	,	0 == nwol_moduleUpdate	, formatModuleFunctionPtrNull, "moduleUpdate"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); return (::nwol::APPLICATION_STATE)nwol_moduleUpdate	(ClientInstance, bRequestedExit);																			}
 				
 				::nwol::RUNTIME_CALLBACK_ID							TestForNullPointerFunctions		()										const				{
 			::nwol::RUNTIME_CALLBACK_ID										result							= RUNTIME_CALLBACK_ID_NONE;
@@ -102,7 +101,10 @@ namespace nwol
 			if(0 == nwol_moduleUpdate		)	result						= (::nwol::RUNTIME_CALLBACK_ID)(result | ::nwol::RUNTIME_CALLBACK_ID_UPDATE		);
 			return result;
 		}
-	};
+	NWOL_END_MODULE(::nwol, SDeviceDriverModule, "Defines a common interface for all the device driver modules.");
+
+	 
+	typedef			::nwol::SDeviceDriverModule					SApplicationModule;
 	static inline	::nwol::error_t								applicationModuleUnload				(::nwol::SApplicationModule& containerForCallbacks)			{ return ::nwol::moduleUnload(containerForCallbacks);										}
 					::nwol::error_t								applicationModuleLoad				(::nwol::SRuntimeValues& runtimeValues, ::nwol::SApplicationModule& containerForCallbacks, const char_t* moduleName);
 
