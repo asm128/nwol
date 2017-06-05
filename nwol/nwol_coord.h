@@ -46,14 +46,12 @@ namespace nwol
 			x								+= vectorToScaleAndAdd.x*scale;
 			y								+= vectorToScaleAndAdd.y*scale;
 		}
-
 							TCoord2&	Rotate					(double theta)																	{
 			const SPairSinCos					pairSinCos				= ::nwol::getSinCos(theta);
 			const double						px						= x * pairSinCos.Cos - y * pairSinCos.Sin; 
 
 			y								= (_tBase)(x * pairSinCos.Sin + y * pairSinCos.Cos);
 			x								= (_tBase)px;
-
 			return *this;
 		}
 	};	// struct SCoord2

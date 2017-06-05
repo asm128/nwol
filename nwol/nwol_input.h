@@ -80,17 +80,17 @@ namespace nwol
 			}
 		};
 		
-	struct SScreenInput	: public SInput {
-		using				SInput::									KeyCount								;
-		using				SInput::									ButtonCount								;
-		using				SInput::									HandlersKeyboard						;
-		using				SInput::									HandlersMouse							;
-		using				SInput::									Mouse									;
-		using				SInput::									PreviousMouse							;
-		using				SInput::									Keys									;
-		using				SInput::									PreviousKeys							;
+	struct SScreenInput	: public ::nwol::SInput {
+		using				::nwol::SInput::							KeyCount								;
+		using				::nwol::SInput::							ButtonCount								;
+		using				::nwol::SInput::							HandlersKeyboard						;
+		using				::nwol::SInput::							HandlersMouse							;
+		using				::nwol::SInput::							Mouse									;
+		using				::nwol::SInput::							PreviousMouse							;
+		using				::nwol::SInput::							Keys									;
+		using				::nwol::SInput::							PreviousKeys							;
 
-		::nwol::SInputDetail											PlatformDetail;
+							::nwol::SInputDetail						PlatformDetail;
 
 		inline				bool										KeyUp									(uint8_t index)							const	noexcept	{ return 0 == Keys			[index] && 0 != PreviousKeys			[index]; }
 		inline				bool										KeyDown									(uint8_t index)							const	noexcept	{ return 0 != Keys			[index] && 0 == PreviousKeys			[index]; }

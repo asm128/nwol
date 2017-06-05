@@ -179,7 +179,7 @@ uint32_t									nwol::fileDeserializeData								(GODS(SBuffer)* out_Definition
 
 		GODS(SBuffer)										actualNewBuffer										= 0;
 		if (0 != (count1 = pNewData->nElementCount)) {
-			::nwol::error_t										errMy												= ::nwol::createBuffer(pNewData->DataFormat, pNewData->Usage, pNewData->nElementCount, &actualNewBuffer);
+			::nwol::error_t										errMy												= ::nwol::createBuffer(pNewData->DataFormat, pNewData->Usage, pNewData->nElementCount+1, &actualNewBuffer);
 			retval_error_if(i, errored(errMy), "%s", "createBuffer() FAILED!! Out of memory?");
 			SBuffer												* actualInstance									= actualNewBuffer->get();
 			actualInstance->nColumnCount					= pNewData->nColumnCount;
@@ -201,7 +201,7 @@ uint32_t									nwol::fileDeserializeData								(GODS(SBuffer)* out_Definition
 	return i;
 }
 
-uint32_t									nwol::memDeserializeData								(GODS(SBuffer)* out_DefinitionList, uint32_t nDefinitionCount, const void* in_pMemoryBuffer) {
+uint32_t										nwol::memDeserializeData								(GODS(SBuffer)* out_DefinitionList, uint32_t nDefinitionCount, const void* in_pMemoryBuffer) {
 	retnul_error_if(0 == in_pMemoryBuffer || 0 == out_DefinitionList, 
 			"Invalid parameters calling memLoadBufferData():\n"
 			"GODS(SBuffer)*	: 0x%p\n"
