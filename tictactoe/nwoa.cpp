@@ -93,7 +93,7 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
 #endif
 
 				int32_t						update								(::SApplication& instanceApp, bool exitRequested)														{
-    verbose_printf("%s", "Enter.");
+	verbose_printf("%s", "Enter.");
 	if(exitRequested)
 		return ::nwol::APPLICATION_STATE_EXIT;
 

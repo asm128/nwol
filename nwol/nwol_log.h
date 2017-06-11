@@ -176,15 +176,15 @@ namespace nwol
 #define continue_warn_if( condition, ...)						if(condition) { nwol_printf(NWOL_ERROR_SEVERITY_WARNING	, "warning"	, "condition: %s", #condition); warning_printf	(__VA_ARGS__); continue;			}
 #define continue_info_if( condition, ...)						if(condition) { nwol_printf(NWOL_ERROR_SEVERITY_DEBUG	, "info"	, "condition: %s", #condition); info_printf		(__VA_ARGS__); continue;			}
 
-#define reterr_error_if(condition, ...)							retval_error_if (-1, (condition), __VA_ARGS__)
+#define reterr_error_if(condition, ...)							retval_error_if	(-1, (condition), __VA_ARGS__)
 #define reterr_warn_if( condition, ...)							retval_warn_if	(-1, (condition), __VA_ARGS__)
 #define reterr_info_if( condition, ...)							retval_info_if	(-1, (condition), __VA_ARGS__)
 
-#define retnul_error_if(condition, ...)							retval_error_if ( 0, (condition), __VA_ARGS__)
+#define retnul_error_if(condition, ...)							retval_error_if	( 0, (condition), __VA_ARGS__)
 #define retnul_warn_if( condition, ...)							retval_warn_if	( 0, (condition), __VA_ARGS__)
 #define retnul_info_if( condition, ...)							retval_info_if	( 0, (condition), __VA_ARGS__)
 
-#define retwarn_error_if(condition, ...)						retval_error_if ( 1, (condition), __VA_ARGS__)
+#define retwarn_error_if(condition, ...)						retval_error_if	( 1, (condition), __VA_ARGS__)
 #define retwarn_warn_if( condition, ...)						retval_warn_if	( 1, (condition), __VA_ARGS__)
 #define retwarn_info_if( condition, ...)						retval_info_if	( 1, (condition), __VA_ARGS__)
 

@@ -12,6 +12,7 @@ namespace nwol
 	class	CLabelManager;
 #pragma pack(push, 1)
 	struct	glabel_statics;
+
 	class glabel : public array_view<const char> {
 	protected:
 		CLabelManager											* LabelManager																	= nullptr;

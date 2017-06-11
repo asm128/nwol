@@ -5,9 +5,9 @@
 #ifndef safe_assign
 #	define					safe_assign(p, val)							if(p)						*(p) = (val)
 #endif 
-#ifndef safe_free
-#	define					safe_free(p)								if(p)						{ free		(p); (p) = 0; }
-#endif 
+//#ifndef safe_free
+//#	define					safe_free(p)								if(p)						{ free		(p); (p) = 0; }
+//#endif 
 #ifndef safe_delete
 #	define					safe_delete(p)								if(p)						{ delete	(p); (p) = 0; }
 #endif 
@@ -23,9 +23,9 @@
 #	endif
 #endif 
 // ------------------------------------------
-#ifndef safe_nwol_free
-#	define					safe_nwol_free(p)							if(p)						{ ::nwol::nwol_free	(p); p = 0; }
-#endif 
+//#ifndef safe_nwol_free
+//#	define					safe_nwol_free(p)							if(p)						{ ::nwol::nwol_free	(p); p = 0; }
+//#endif 
 #ifndef safe_podcpy
 #	define					safe_podcpy(pdest, psource)					if(pdest)					podcpy(pdest, psource)
 #endif 
@@ -34,4 +34,15 @@
 #	define					safe_com_release(pcom)						if(pcom)					{ (pcom)->Release(); (pcom) = 0; }
 #endif 
 // ------------------------------------------
+
+namespace nwol {
+	template<typename _typePtr>
+	static inline void		safe_free									(_typePtr &p)				{ 
+		_typePtr					_pepe										= p; 
+		p						= 0; 
+		free(_pepe); 
+	}
+}
+
 #endif // NWOL_SAFE_H_027409278349234
+

@@ -31,10 +31,10 @@ static struct SASCIIScreen {
 										~SASCIIScreen						()																		{
 		if( bCreated )	
 			::nwol::shutdownASCIIScreen();
-		safe_nwol_free( ASCIIBackBuffer		);
-		safe_nwol_free( ASCIIFrontBuffer	);
-		safe_nwol_free( ColorBackBuffer		);
-		safe_nwol_free( ColorFrontBuffer	);
+		::nwol::safe_nwol_free( ASCIIBackBuffer		);
+		::nwol::safe_nwol_free( ASCIIFrontBuffer	);
+		::nwol::safe_nwol_free( ColorBackBuffer		);
+		::nwol::safe_nwol_free( ColorFrontBuffer	);
 	}
 }									__g_ASCIIScreen;	// Main instance (Windows applications seem to support only one console per process, as well as many custom smaller systems)
 

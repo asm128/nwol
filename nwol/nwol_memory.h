@@ -33,6 +33,13 @@ namespace nwol
 	static inline void																			nwol_free					(void* ptr)														{ ::free(ptr);												}
 #endif
 
+	template<typename _typePtr>
+	static inline void																			safe_nwol_free				(_typePtr &p)													{ 
+		_typePtr																						_pepe						= p; 
+		p																							= 0; 
+		_aligned_free(_pepe);
+	}
+
 	struct auto_nwol_free : public ::nwol::platform_handle_wrapper<void*, 0>					{ using TWrapper::platform_handle_wrapper; inline ~auto_nwol_free() { close(); } inline void close() { safe_nwol_free(Handle); } };
 
 #define GREF_PAGE_SIZE_MAX (4096)

@@ -61,7 +61,7 @@ namespace ttt
 			static constexpr	const uint16_t									cellMaskRows	[3]				= {(maskHorizontal	<< (0 * 3)), (maskHorizontal	<< (1 * 3)), (maskHorizontal	<< (2 * 3)), };		
 			static constexpr	const uint16_t									cellMaskColumns	[3]				= {(maskVertical	<< (0 * 1)), (maskVertical		<< (1 * 1)), (maskVertical		<< (2 * 1)), };		
 								uint16_t										check;
-			for(int rowOrCol = 0; rowOrCol < 3; ++rowOrCol) {
+			for(int32_t rowOrCol = 0; rowOrCol < 3; ++rowOrCol) {
 				if(((check = cellMaskRows		[rowOrCol]) & Cells) == cellMaskRows	[rowOrCol] ) return true;
 				if(((check = cellMaskColumns	[rowOrCol]) & Cells) == cellMaskColumns	[rowOrCol] ) return true;
 			}	// 
@@ -219,7 +219,7 @@ namespace ttt
 					screen[offset.y + y][offset.x + x]								= Symbols[board.GetCell({x, y}) ? cellValue : 0];
 				screen[offset.y + y][_sizeWidth - 1]							= '\n';
 			}
-			if((offset.y + 2) < _sizeHeight && (offset.x + 4) < _sizeWidth)	// print number of cells used if the screen is large enough
+			if((offset.y + 2) < _sizeHeight && (offset.x + 4) < _sizeWidth)		// print number of cells used if the screen is large enough
 				screen[offset.y + 2][offset.x + 4]								= (char)('0' + board.Used);
 			screen[_sizeHeight - 1][_sizeWidth - 1]							= 0;
 		}	

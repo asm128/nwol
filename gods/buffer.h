@@ -10,23 +10,22 @@
 namespace nwol
 {
 #pragma pack( push, 1 )
-
 	// This structure will be used to communicate memory buffers to the APIs
 	struct SBuffer {
-					uint32_t			nSizeInBytes									;
-					uint32_t			nElementCount									;
-					uint32_t			nColumnCount									;
-					uint32_t			nSliceCount										;
-					GDATA_USAGE			Usage											;
-					GDATA_TYPE			DataFormat										;
-					void*				pByteArray										;
-					char*				__pBlock										;
-					void				(*pFreeBlock)			(SBuffer*)				;
-					void*				(*pAllocBlock)			(uint32_t nSizeInBytes)	;
+						uint32_t			nSizeInBytes									;
+						uint32_t			nElementCount									;
+						uint32_t			nColumnCount									;
+						uint32_t			nSliceCount										;
+						GDATA_USAGE			Usage											;
+						GDATA_TYPE			DataFormat										;
+						void				* pByteArray									;
+						byte_t				* __pBlock										;
+						void				(*pFreeBlock)			(SBuffer*)				;
+						void*				(*pAllocBlock)			(uint32_t nSizeInBytes)	;
 
-										~SBuffer				()						{ if(pByteArray) pFreeBlock(this); }
-										SBuffer					(const SBuffer& o)		= delete;
-					SBuffer&			operator=				(const SBuffer& o)		= delete;
+											~SBuffer				()						{ if(pByteArray) pFreeBlock(this); }
+											SBuffer					(const SBuffer& o)		= delete;
+						SBuffer&			operator=				(const SBuffer& o)		= delete;
 	};
 	GDECLARE_NCO( SBuffer );
 
