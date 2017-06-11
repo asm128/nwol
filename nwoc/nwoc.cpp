@@ -169,9 +169,6 @@ int32_t														setupGUI								(::SApplication& instanceApp)							{
 	newControl.Text												= exitControlLabel								;
 	nwol_necall(::nwol::createControl(guiSystem, newControl), "Failed to create control!");
 
-
-
-
 	return 0;
 }
 

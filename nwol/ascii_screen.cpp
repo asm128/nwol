@@ -173,8 +173,10 @@ void									createConsole				()																		{
 #if defined(__WINDOWS__)
 	AllocConsole();
 	AttachConsole(GetCurrentProcessId());
-	FILE										* stream					= 0;
-	freopen_s(&stream, "CONOUT$", "w+", stdout);
+	FILE*										
+	stream					= 0;	freopen_s(&stream, "CONOUT$", "w+", stdout);
+	stream					= 0;	freopen_s(&stream, "CONIN$", "r+", stdin);
+
 	SetConsoleTitle("No Workflow Overhead Console");
 	SetConsoleCtrlHandler(HandlerRoutine, TRUE);
 #elif defined(__ANDROID__)
