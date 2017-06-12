@@ -122,7 +122,7 @@ void														printTypeDebug							()														{
 #define DEFAULT_TEXT_COLOR_BUTTON_ASCII	::nwol::SControlTextColorASCII{{COLOR_BLUE, COLOR_DARKGREY}, {COLOR_YELLOW, COLOR_BLUE}}
 #define DEFAULT_TEXT_COLOR_BUTTON_32	::nwol::STextColor32{0xFFFFFFFFL, 0xFF000000L}
 
-const ::nwol::SGUIControlEx									controlDefinitions[] = 
+const ::nwol::SGUIControlEx									controlDefinitions[]					= 
 	{	::nwol::SGUIControlEx({"Exit"			, ~0U}, {{ 1,  1}, { 11,  1}}, {{10, 10}, {110, 20}}, DEFAULT_TEXT_COLOR_BUTTON_32, DEFAULT_TEXT_COLOR_BUTTON_ASCII, ::nwol::SCREEN_BOTTOM_RIGHT, ::nwol::SCREEN_TOP_LEFT)
 	,	::nwol::SGUIControlEx({"GUI Control  1"	, ~0U}, {{ 1,  1}, { 11,  1}}, {{10, 10}, {110, 20}}, DEFAULT_TEXT_COLOR_BUTTON_32, DEFAULT_TEXT_COLOR_BUTTON_ASCII, ::nwol::SCREEN_BOTTOM_RIGHT, ::nwol::SCREEN_TOP_LEFT)
 	,	::nwol::SGUIControlEx({"GUI Control  2"	, ~0U}, {{ 1,  1}, { 11,  1}}, {{10, 10}, {110, 20}}, DEFAULT_TEXT_COLOR_BUTTON_32, DEFAULT_TEXT_COLOR_BUTTON_ASCII, ::nwol::SCREEN_BOTTOM_RIGHT, ::nwol::SCREEN_TOP_LEFT)
