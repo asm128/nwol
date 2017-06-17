@@ -142,10 +142,10 @@
 
 //-------------------------------------------------------------// GDEFINE_PURE() //------------------------------------------------------------------------// 
 #define GDEFINE_PURE_NOPRINT(NameSpace, baseType)			\
-	__GCORE_REF_INIT_STATIC_MEMBERS(NameSpace, baseType)	\
+	__GCORE_REF_INIT_GCORE_REF_MEMBERS(NameSpace, baseType)	\
 
-#define GDEFINE_PURE_NOPRINT_NONS(baseType)			\
-	__GCORE_REF_INIT_STATIC_MEMBERS_NONS(baseType)	\
+#define GDEFINE_PURE_NOPRINT_NONS(baseType)				\
+	__GCORE_REF_INIT_GCORE_REF_MEMBERS_NONS(baseType)	\
 
 #define GDEFINE_PURE_CUSTOMSTRING(NameSpace, baseType, format, ...)		\
 	GDEFINE_PURE_NOPRINT(NameSpace, baseType)							\

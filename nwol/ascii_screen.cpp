@@ -104,11 +104,11 @@ uint32_t								nwol::getASCIIBackBufferWidth	()																		{ return __g_A
 uint32_t								nwol::getASCIIBackBufferHeight	()																		{ return __g_ASCIIScreen.BackBufferHeight;	}
 
 void									nwol::swapASCIIBuffers			()																		{
-	char										* bB						= __g_ASCIIScreen.ASCIIBackBuffer ;
+	char										* bB							= __g_ASCIIScreen.ASCIIBackBuffer ;
 	__g_ASCIIScreen.ASCIIBackBuffer 		= __g_ASCIIScreen.ASCIIFrontBuffer;
 	__g_ASCIIScreen.ASCIIFrontBuffer		= bB;
 
-	uint16_t									* cBB						= __g_ASCIIScreen.ColorBackBuffer ;
+	uint16_t									* cBB							= __g_ASCIIScreen.ColorBackBuffer ;
 	__g_ASCIIScreen.ColorBackBuffer			= __g_ASCIIScreen.ColorFrontBuffer;
 	__g_ASCIIScreen.ColorFrontBuffer		= cBB;
 }
@@ -119,14 +119,14 @@ void									nwol::presentASCIIBackBuffer	()																		{
 }
 
 void									nwol::presentASCIIFrontBuffer	()																		{
-	int32_t										screenSize					= __g_ASCIIScreen.BackBufferWidth*__g_ASCIIScreen.BackBufferHeight;
+	int32_t										screenSize						= __g_ASCIIScreen.BackBufferWidth*__g_ASCIIScreen.BackBufferHeight;
 	screenSize = (screenSize > 4) ? screenSize : 4;
 #if defined(__WINDOWS__)
-	const ::HANDLE								hConsoleOut					= GetStdHandle( STD_OUTPUT_HANDLE );
-	::CONSOLE_SCREEN_BUFFER_INFO				csbiInfo					= {};
+	const ::HANDLE								hConsoleOut						= GetStdHandle( STD_OUTPUT_HANDLE );
+	::CONSOLE_SCREEN_BUFFER_INFO				csbiInfo						= {};
     GetConsoleScreenBufferInfo( hConsoleOut, &csbiInfo );
-	::COORD										Coords						= {0, csbiInfo.dwSize.Y-(SHORT)__g_ASCIIScreen.BackBufferHeight};
-	DWORD										dummy						= 0;
+	::COORD										Coords							= {0, csbiInfo.dwSize.Y-(SHORT)__g_ASCIIScreen.BackBufferHeight};
+	DWORD										dummy							= 0;
 	if( __g_ASCIIScreen.ASCIIFrontBuffer ) {
 		WriteConsoleOutputAttribute ( hConsoleOut, __g_ASCIIScreen.ColorFrontBuffer, screenSize, Coords, &dummy );
 		WriteConsoleOutputCharacter ( hConsoleOut, __g_ASCIIScreen.ASCIIFrontBuffer, screenSize, Coords, &dummy );
@@ -141,18 +141,18 @@ void									nwol::presentASCIIFrontBuffer	()																		{
 }
 
 void									nwol::clearASCIIBackBuffer		(char_t value, uint16_t colorValue)										{
-	int32_t										screenSize					= __g_ASCIIScreen.BackBufferWidth * __g_ASCIIScreen.BackBufferHeight;
+	int32_t										screenSize						= __g_ASCIIScreen.BackBufferWidth * __g_ASCIIScreen.BackBufferHeight;
 	screenSize								= (screenSize > 4) ? screenSize : 4;
 	if( 0 == __g_ASCIIScreen.ASCIIBackBuffer ) {
 #if defined(__WINDOWS__)
-		const ::HANDLE								hConsoleOut					= GetStdHandle( STD_OUTPUT_HANDLE );
-		::CONSOLE_SCREEN_BUFFER_INFOEX				csbiInfo					= {};
+		const ::HANDLE								hConsoleOut						= GetStdHandle( STD_OUTPUT_HANDLE );
+		::CONSOLE_SCREEN_BUFFER_INFOEX				csbiInfo						= {};
 		GetConsoleScreenBufferInfoEx( hConsoleOut, &csbiInfo );
 		csbiInfo.dwCursorPosition.Y				= csbiInfo.dwSize.Y-1;
 		csbiInfo.dwSize.X						= (SHORT)__g_ASCIIScreen.BackBufferWidth;
 		csbiInfo.dwSize.Y						= (SHORT)__g_ASCIIScreen.BackBufferHeight;
 		SetConsoleScreenBufferInfoEx( hConsoleOut, &csbiInfo );
-		COORD										home						= { 0, 0 };
+		COORD										home							= { 0, 0 };
 #elif defined(__ANDROID__)
 #else
 #	error "Not implemented."

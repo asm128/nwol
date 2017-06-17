@@ -63,6 +63,20 @@ namespace klib
 		,	char(0xFF & 218)	// down right		╓	10
 		}; 	//											11
 
+	static const char ascii_wall_solid[] = 
+		{	' '				// empty				0
+		,	char(0xFF & 180)	// vertical left	╢	1
+		,	char(0xFF & 191)	// down left		╖	2
+		,	char(0xFF & 192)	// up right			╙	3
+		,	char(0xFF & 193)	// horizontal up	╧	4
+		,	char(0xFF & 194)	// horizontal down	╤	5
+		,	char(0xFF & 195)	// vertical right	╟	6
+		,	char(0xFF & 197)	// cross vertical	╫	7
+		,	char(0xFF & 197)	// cross horizontal	╪	8
+		,	char(0xFF & 217)	// up left			╜	9
+		,	char(0xFF & 218)	// down right		╓	10
+		}; 	//											11
+
 	#define WALL_CONNECTION_CROSS				9
 	#define WALL_CORNER_UP_RIGHT				4
 	#define WALL_CORNER_UP_LEFT					10
@@ -138,7 +152,7 @@ namespace klib
 	static const char ascii_water[] = {' ', (char)0xF7, '~' };						//'≈', '~'};
 	static const char ascii_tones[] = {' ', (char)0xB0, (char)0xB1, (char)0xB2};	//" ░▒▓";
 	static const char ascii_arrow[] = {0, 0x11, 0x1F, 0x10, 0x1E};					//" ◄▲►▼";
-	//static const char ascii_arrw2[] = " ←↑→↓↕↔";
+	//static const char ascii_arrw2[] = " ←↑→↓↕↔↨";
 
 	#define ARROW_LEFT		1
 	#define ARROW_UP		2
@@ -152,7 +166,7 @@ namespace klib
 	#define MALE			2
 	#define HERMAPHRODITE	3
 
-	//static const char ascii_sound[] = "♫";
+	static const char ascii_sound[] = "♫";
 
 	static const char ascii_cards[] = {' ', 0x03, 0x04, 0x05, 0x06};				// " ♥♦♣♠";
 	#define DECK_HEARTS		1
@@ -172,8 +186,47 @@ namespace klib
 	#define BUTTON_OFF	1
 	#define BUTTON_ON	2
 
-	//static const char ascii_blah0[] = "'☺☻♥♦♣♠•◘○◙♂♀↨♫ ☼ ►◄↕ ‼ ¶ § ▬ ↨↑↓→←∟↔▲▼ !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ⌂ ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬ ½ ¼ ¡« » ░▒▓│┤╣║╗┐└┴┬├─┼╚╔╩╠═╬┘┌ █▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ ";
+	// ↑ ↓ → ← 
+	// ↔ ↕ ↨ 
+	// ⌂
+	// ☼
+	// « »
+	// ª º °
+	// ∙
+	// ÷
+	// ≡
+	// ≥ ≤ ±
+	// ⌠ ⌡
+	// ∞
+	// ö Ö
+	// ü Ü
+	// £ ¥ ₧ $ ¢
+	// { | }
+	// ƒ 
+	// α ß Σ σ µ τ Φ Θ δ Ω φ ε ∩ π 
+	// ‼ ¶ § 
+	// √ ⁿ ² 
+	// ç Ç
+	// c C
+	// [X] [√]
+	// ^ < >
+	//static const char ascii_blah0 = "'☺☻♥♦♣♠ •◘ ○◙  ♂ ♀ ↨ ♫ ☼ ►◄ ↕  ▬ ↨∟ ↔ ▲ ▼ !\"#%&'()*+,-./0123456789:;<=>?@ABDEFGHIJKLMNOPQRSTUVWXYZ[\\]_`abdefghijklmnopqrstuvwxyz~ ⌂ éâäàåêëèïîìÄÅÉæÆôòûùÿ áíóúñÑ ¿⌐¬ ½ ¼ ¡ « » ░▒▓│┤╣║╗┐└┴┬├─┼╚╔╩╠═╬┘┌ Γ ÷≈°∙· ";
 //#pragma warning(default:4566)
 }
 
 #endif // __ASCII_REFERENCE_H__923640__
+
+
+// ▌ █▐ ▄▌▄▌▐▀■█▄▌▐▀■█▄▌▐▀■█▄▌▐▀■▀■▄▌▐
+//    █▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█
+//    ▌                            █
+//    █                            █
+//    █                            █
+//    █                            ▐
+//    █                            █
+//    █                            █
+//    █                            █
+//    █                            █
+//    █                            █
+//    █▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█
+
