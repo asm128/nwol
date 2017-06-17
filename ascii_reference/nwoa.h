@@ -5,7 +5,7 @@
 
 struct SApplication	: public ::nwol::SApplicationBase {
 							SApplication			(::nwol::SRuntimeValues	* runtimeValues)	: SApplicationBase(runtimeValues)	{
-		GUI						= {{320, 200}, {128, 64}};
+		GUI						= {{320, 200}, {168, 64}};
 	}
 };
 

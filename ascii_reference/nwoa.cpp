@@ -44,10 +44,10 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
 
 	for(int32_t y = 0; y < 8; ++y) 
 		for(int32_t x = 0; x < 32; ++x) {
-			newControl.AreaASCII						= {{-48 + x * 3, 0 + y}, {3, 1}}										;
-			newControl.Text								= ::std::to_string(y*32+x)												;
+			newControl.AreaASCII						= {{-78 + x * 5, 0 + y}, {5, 1}}										;
+			newControl.Text								= " " + ::std::to_string(y*32+x)										;
 			::nwol::SControlTextColorASCII					& colorsConsole						= newControl.TextColorsASCII	;
-			colorsConsole.Color.Background				= ((y * 3 + x) % 2) ? COLOR_DARKGREY : COLOR_WHITE						;
+			colorsConsole.Color.Background				= ((y * 5 + x) % 2) ? COLOR_DARKGREY : COLOR_WHITE						;
 			colorsConsole.Color.Foreground				= COLOR_BLACK															;
 			colorsConsole.ColorPressed					= {COLOR_DARKGREY, COLOR_YELLOW}										;
 			//newControl.AlignText						= ::nwol::SCREEN_CENTER												this is not working yet
@@ -124,13 +124,18 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
 			switch(iControl) {
 			case 0:		return ::nwol::APPLICATION_STATE_EXIT; // Exit button clicked.
 			default:	// Board cell clicked 
-				for(uint32_t iotherControl = 0; iotherControl < controlCount; ++iotherControl) {
-					guiControls.TextColorsASCII	[iotherControl].Color		.Foreground					= COLOR_BLACK;
-				}
+				for(int32_t y = 0; y < 8; ++y) 
+					for(int32_t x = 0; x < 32; ++x) {
+						int32_t											iOtherControl						= y * 32 + x + 1;
+						guiControls.TextColorsASCII[iOtherControl+256].Color.Foreground	= guiControls.TextColorsASCII[iOtherControl].Color.Foreground	= COLOR_BLACK;
+						guiControls.TextColorsASCII[iOtherControl+256].Color.Background	= guiControls.TextColorsASCII[iOtherControl].Color.Background	= ((y * 5 + x) % 2) ? COLOR_DARKGREY : COLOR_WHITE;
+					}
 
 				otherControlIndex																	= (iControl > 256) ? iControl - 256 : iControl + 256;
-				guiControls.TextColorsASCII[otherControlIndex]	.Color	.Foreground					= COLOR_ORANGE;
-				guiControls.TextColorsASCII[iControl]			.Color	.Foreground					= COLOR_ORANGE;
+				guiControls.TextColorsASCII[otherControlIndex]	.Color	.Foreground					= COLOR_DARKCYAN;
+				guiControls.TextColorsASCII[iControl]			.Color	.Foreground					= COLOR_DARKCYAN;
+				guiControls.TextColorsASCII[otherControlIndex]	.Color	.Background					= COLOR_YELLOW;
+				guiControls.TextColorsASCII[iControl]			.Color	.Background					= COLOR_YELLOW;
 				handledControlEvent							= true;
 				break;
 			}
