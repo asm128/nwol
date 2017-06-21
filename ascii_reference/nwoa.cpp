@@ -13,7 +13,7 @@
 
 #include <algorithm>
 
-DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
+DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "ASCII Reference", 0, 1);
 
 				int32_t						setupGUI							(::SApplication& instanceApp)																			{ 
     info_printf("%s", "Initializing Graphical User Interface.");
@@ -28,28 +28,51 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
 
 	// Create game board buttons: each board cell is a button.
 	newControl.AlignArea						= (::nwol::ALIGN_SCREEN)(::nwol::SCREEN_CENTER | ::nwol::SCREEN_VCENTER)		;
-	char blech[] = "   ";
-	for(int32_t y = 0; y < 8; ++y) 
-		for(int32_t x = 0; x < 32; ++x) {
-			newControl.AreaASCII						= {{-48 + x * 3, -16 + y}, {3, 1}}										;
-			blech[1]									= char(y*32+x)																;
-			newControl.Text								= blech																	;		
-			::nwol::SControlTextColorASCII					& colorsConsole						= newControl.TextColorsASCII	;
-			colorsConsole.Color.Background				= ((y * 3 + x) % 2) ? COLOR_DARKGREY : COLOR_WHITE						;
-			colorsConsole.Color.Foreground				= COLOR_BLACK															;
-			colorsConsole.ColorPressed					= {COLOR_DARKGREY, COLOR_YELLOW}										;
+
+	char blech[]	= "   ";
+	char blechHex[] = " 0x  ";
+	
+	static constexpr const char						GRID_WIDTH							= 32;
+	static constexpr const char						GRID_HEIGHT							= 8;
+	
+	static constexpr const char						cell_width_symbols					= 3;
+	newControl.AreaASCII.Size					= {cell_width_symbols, 1}																	;
+	::nwol::SControlTextColorASCII					& colorsConsole						= newControl.TextColorsASCII						;
+	colorsConsole.Color.Foreground				= COLOR_BLACK																				;
+	colorsConsole.ColorPressed					= {COLOR_DARKGREY, COLOR_YELLOW}															;
+	for(int32_t y = 0; y < GRID_HEIGHT; ++y) 
+		for(int32_t x = 0; x < GRID_WIDTH; ++x) {
+			const int32_t									linearIndex							= y * GRID_WIDTH + x;
+			newControl.AreaASCII.Offset					= {-((GRID_WIDTH / 2) * cell_width_symbols) + x * cell_width_symbols, -16 + y}				;
+			blech[1]									= char(linearIndex)																			;
+			newControl.Text								= blech																						;		
+			colorsConsole.Color.Background				= ((y * cell_width_symbols + x) % 2) ? COLOR_DARKGREY : COLOR_WHITE							;
 			//newControl.AlignText						= ::nwol::SCREEN_CENTER												this is not working yet
 			error_if(errored(::nwol::createControl(guiSystem, newControl)), "%s", "Failed to create control.");
 		}
 
-	for(int32_t y = 0; y < 8; ++y) 
-		for(int32_t x = 0; x < 32; ++x) {
-			newControl.AreaASCII						= {{-78 + x * 5, 0 + y}, {5, 1}}										;
-			newControl.Text								= " " + ::std::to_string(y*32+x)										;
-			::nwol::SControlTextColorASCII					& colorsConsole						= newControl.TextColorsASCII	;
+
+	static constexpr const char						cell_width_codes					= 5;
+	newControl.AreaASCII.Size					= {cell_width_codes, 1};
+	for(int32_t y = 0; y < GRID_HEIGHT; ++y) 
+		for(int32_t x = 0; x < GRID_WIDTH; ++x) {
+			const int32_t									linearIndex							= y * GRID_WIDTH + x;
+			newControl.AreaASCII.Offset					= {-((GRID_WIDTH / 2) * cell_width_codes) + x * cell_width_codes, 0 + y};
+			newControl.Text								= " " + ::std::to_string(linearIndex)													;
+			colorsConsole.Color.Background				= ((y * cell_width_codes + x) % 2) ? COLOR_DARKGREY : COLOR_WHITE						;
+			//newControl.AlignText						= ::nwol::SCREEN_CENTER												this is not working yet
+			error_if(errored(::nwol::createControl(guiSystem, newControl)), "%s", "Failed to create control.");
+		}
+
+	static constexpr const char						cell_width_hex					= 6;
+	newControl.AreaASCII.Size					= {cell_width_hex, 1};
+	for(int32_t y = 0; y < GRID_HEIGHT; ++y) 
+		for(int32_t x = 0; x < GRID_WIDTH; ++x) {
+			const int32_t									linearIndex							= y * GRID_WIDTH + x;
+			newControl.AreaASCII.Offset					= {-((GRID_WIDTH / 2) * cell_width_hex) + x * cell_width_hex, 16 + y};
+			sprintf_s(&blechHex[3], 3, "%x", linearIndex);
+			newControl.Text								= blechHex;
 			colorsConsole.Color.Background				= ((y * 5 + x) % 2) ? COLOR_DARKGREY : COLOR_WHITE						;
-			colorsConsole.Color.Foreground				= COLOR_BLACK															;
-			colorsConsole.ColorPressed					= {COLOR_DARKGREY, COLOR_YELLOW}										;
 			//newControl.AlignText						= ::nwol::SCREEN_CENTER												this is not working yet
 			error_if(errored(::nwol::createControl(guiSystem, newControl)), "%s", "Failed to create control.");
 		}
@@ -83,8 +106,8 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
 	int32_t											screenWidth							= guiSystem.TargetSizeASCII.x;
 	int32_t											screenHeight						= guiSystem.TargetSizeASCII.y;
 	::nwol::initASCIIScreen(screenWidth, screenHeight);
-	char															moduleTitle[240]						= {};
-	uint8_t															moduleTitleLen							= (uint8_t)::nwol::size(moduleTitle);
+	char											moduleTitle[240]					= {};
+	uint8_t											moduleTitleLen						= (uint8_t)::nwol::size(moduleTitle);
 	nwol_necall(::nwol_moduleTitle(moduleTitle, &moduleTitleLen), "If this fails then something weird is going on.");
 	::nwol::setASCIIScreenTitle(moduleTitle);
 
@@ -117,7 +140,7 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
 
 	static uint8_t									tickDelay							= 0;
 	bool											handledControlEvent					= false;
-	int32_t											otherControlIndex;
+	int32_t											otherControlIndex, otherControlIndexHex;
 	for(uint32_t iControl = 0, controlCount = controlFlags.size(); iControl < controlCount; ++iControl) {
 		if(::nwol::bit_true(controlFlags[iControl], ::nwol::CONTROL_FLAG_EXECUTE)) {
 			info_printf("Execute %u.", iControl);
@@ -129,13 +152,28 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Tic Tac Toe", 0, 1);
 						int32_t											iOtherControl						= y * 32 + x + 1;
 						guiControls.TextColorsASCII[iOtherControl+256].Color.Foreground	= guiControls.TextColorsASCII[iOtherControl].Color.Foreground	= COLOR_BLACK;
 						guiControls.TextColorsASCII[iOtherControl+256].Color.Background	= guiControls.TextColorsASCII[iOtherControl].Color.Background	= ((y * 5 + x) % 2) ? COLOR_DARKGREY : COLOR_WHITE;
+						guiControls.TextColorsASCII[iOtherControl+512].Color.Foreground	= guiControls.TextColorsASCII[iOtherControl].Color.Foreground	= COLOR_BLACK;
+						guiControls.TextColorsASCII[iOtherControl+512].Color.Background	= guiControls.TextColorsASCII[iOtherControl].Color.Background	= ((y * 5 + x) % 2) ? COLOR_DARKGREY : COLOR_WHITE;
 					}
 
-				otherControlIndex																	= (iControl > 256) ? iControl - 256 : iControl + 256;
-				guiControls.TextColorsASCII[otherControlIndex]	.Color	.Foreground					= COLOR_DARKCYAN;
-				guiControls.TextColorsASCII[iControl]			.Color	.Foreground					= COLOR_DARKCYAN;
-				guiControls.TextColorsASCII[otherControlIndex]	.Color	.Background					= COLOR_YELLOW;
-				guiControls.TextColorsASCII[iControl]			.Color	.Background					= COLOR_YELLOW;
+				 if(iControl > 512) {
+					otherControlIndex																	= iControl - 256;
+					otherControlIndexHex																= iControl - 512;
+				}
+				else if(iControl > 256) {
+					otherControlIndex																	= iControl + 256;
+					otherControlIndexHex																= iControl - 256;
+				}
+				else {
+					otherControlIndex																	= iControl + 256;
+					otherControlIndexHex																= iControl + 512;
+				}
+				guiControls.TextColorsASCII[otherControlIndex]		.Color	.Foreground					= COLOR_DARKCYAN;
+				guiControls.TextColorsASCII[otherControlIndexHex]	.Color	.Foreground					= COLOR_DARKCYAN;
+				guiControls.TextColorsASCII[iControl]				.Color	.Foreground					= COLOR_DARKCYAN;
+				guiControls.TextColorsASCII[otherControlIndex]		.Color	.Background					= COLOR_YELLOW;
+				guiControls.TextColorsASCII[otherControlIndexHex]	.Color	.Background					= COLOR_YELLOW;
+				guiControls.TextColorsASCII[iControl]				.Color	.Background					= COLOR_YELLOW;
 				handledControlEvent							= true;
 				break;
 			}

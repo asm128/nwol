@@ -181,7 +181,7 @@ namespace ttt
 		}
 		// --- Execute loop. This isn't really working but serves as example of what your application should do more or less depending on user input.
 							CELL_VALUE									Run								()																											noexcept	{ 
-			ScreenASCII<SCREEN_WIDTH+1, SCREEN_HEIGHT>							targetScreenTTT;
+			ScreenASCII<SCREEN_WIDTH + 1, SCREEN_HEIGHT>							targetScreenTTT;
 			static	const uint32_t												halfWidth						= targetScreenTTT.Width		>> 1;
 			static	const uint32_t												halfHeight						= targetScreenTTT.Height	>> 1;
 			Board.PlayerControls											= (PLAYER_CONTROL_AI << 1) | PLAYER_CONTROL_AI;

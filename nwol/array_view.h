@@ -14,7 +14,7 @@ namespace nwol
 							uint32_t					Count					= 0;
 	public:
 		typedef				_tBase						TBase					;
-		static				const uint32_t				element_size			= (uint32_t)sizeof(_tBase);
+		static				const uint32_t				ELEMENT_SIZE			= (uint32_t)sizeof(_tBase);
 
 		template<size_t _arraySize>
 		inline constexpr								array_view				(_tBase (&data)[_arraySize])			noexcept	: Data(data), Count((uint32_t)_arraySize)	{}
