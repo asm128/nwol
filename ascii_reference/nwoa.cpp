@@ -118,11 +118,11 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "ASCII Reference", 0, 1);
 }
 
 #if defined(__WINDOWS__)
-#ifndef VK_ESCAPE
-#define VK_ESCAPE 0x1B
-#endif
+#	ifndef VK_ESCAPE
+#		define VK_ESCAPE 0x1B
+#	endif
 #else 
-#error "Unsupported platform. Define key code for this platform in order to continue."
+#	error "Unsupported platform. Define key code for this platform in order to continue."
 #endif
 
 				int32_t						update								(::SApplication& instanceApp, bool exitRequested)														{
@@ -135,10 +135,8 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "ASCII Reference", 0, 1);
 	::nwol::SGUI									& guiSystem							= instanceApp.GUI;		::nwol::updateGUI(guiSystem, inputSystem);
 	::nwol::SGUIControlTable						& guiControls						= guiSystem.Controls;	
 
-	// Update game
-	::nwol::array_pod<::nwol::CONTROL_FLAG>			& controlFlags						= guiControls.ControlFlags;
+	::nwol::array_pod<::nwol::CONTROL_FLAG>			& controlFlags						= guiControls.ControlFlags;	// 
 
-	static uint8_t									tickDelay							= 0;
 	bool											handledControlEvent					= false;
 	int32_t											otherControlIndex, otherControlIndexHex;
 	for(uint32_t iControl = 0, controlCount = controlFlags.size(); iControl < controlCount; ++iControl) {
@@ -182,9 +180,6 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "ASCII Reference", 0, 1);
 			break;
 	}
 
-	tickDelay									+= 2;	// Always decrease AI delay
-	sizeof(::SApplication);
-    verbose_printf("%s", "Exit.");
 	return 0; 
 }
 
