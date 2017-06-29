@@ -85,7 +85,7 @@ namespace nwol
 		constexpr inline	TCoord3		operator-				()															const	noexcept	{ return {x*-1, y*-1, z*-1};																	}
 		template<typename _t>
 		constexpr inline	SCoord3<_t>	Cast					()															const	noexcept	{ return SCoord3<_t>({(_t)x, (_t)y, (_t)z});													}
-		inline				TCoord3&	Normalize				()																				{ _tBase sqLen = LengthSquared(); return (sqLen) ? *this /= ::ftwlib::sqrt_safe(sqLen) : *this;	}
+		inline				TCoord3&	Normalize				()																				{ _tBase sqLen = LengthSquared(); return (sqLen) ? *this /= ::nwol::sqrt_safe(sqLen) : *this;	}
 		constexpr			double		Dot						(const TCoord3& other)										const	noexcept	{ return x * other.x + y * other.y + z * other.z;												}
 		constexpr inline	_tBase		LengthSquared			()															const	noexcept	{ return x * x + y * y + z * z;																	}
 		inline constexpr	double		Length					()															const				{ const _tBase sqLen = LengthSquared(); return (sqLen) ? ::sqrt(sqLen) : 0;						}
