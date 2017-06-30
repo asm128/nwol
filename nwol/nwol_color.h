@@ -6,7 +6,6 @@
 
 namespace nwol
 {
-
 #pragma pack( push, 1 )
 	// Stores BGRA color channels
 	struct SColor32 {

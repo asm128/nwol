@@ -166,7 +166,7 @@ namespace klib
 	#define MALE			2
 	#define HERMAPHRODITE	3
 
-	static const char ascii_sound[] = "♫";
+	//static const char ascii_sound[] = "♫";
 
 	static const char ascii_cards[] = {' ', 0x03, 0x04, 0x05, 0x06};				// " ♥♦♣♠";
 	#define DECK_HEARTS		1

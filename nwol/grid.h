@@ -80,7 +80,7 @@ namespace nwol
 	int32_t											printfToGridColored				( ::nwol::SGrid<_tCell, _sizeWidth, _sizeHeight>& display, SGrid<uint16_t, _sizeWidth, _sizeHeight>& textAttributes, uint16_t messageColor, int32_t offsetLine, int32_t offsetColumn, ::nwol::ALIGN_SCREEN align, const char* format, _Args&&... args ) {
 		char												precookStr[1024]				= {};
 		int32_t												precookLen						= ::sprintf_s(precookStr, format, args...);
-		int32_t												actualX							= ::lineToGridColored(display, textAttributes, messageColor, offsetLine, offsetColumn, align, precookStr);
+		int32_t												actualX							= ::nwol::lineToGridColored(display, textAttributes, messageColor, offsetLine, offsetColumn, align, precookStr);
 		return actualX;
 	}
 
