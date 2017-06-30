@@ -38,7 +38,7 @@ namespace nwol
 		template<typename _t>
 		constexpr inline	SCoord2<_t>	Cast					()															const	noexcept	{ return {(_t)x, (_t)y};																								}
 		inline				TCoord2&	Scale					(double scalar)														noexcept	{ return *this *= scalar;																								}
-		inline				TCoord2&	Normalize				()																				{ _tBase sqLen = LengthSquared(); return (sqLen) ? *this /= ::ftwlib::sqrt_safe(sqLen) : *this;							}
+		inline				TCoord2&	Normalize				()																				{ _tBase sqLen = LengthSquared(); return (sqLen) ? *this /= ::nwol::sqrt_safe(sqLen) : *this;							}
 		inline constexpr	double		Dot						(const TCoord2& other)										const	noexcept	{ return x * other.x + y * other.y;																						}
 		inline constexpr	_tBase		LengthSquared			()															const	noexcept	{ return x * x + y * y;																									}
 		inline constexpr	double		Length					()															const				{ const _tBase sqLen = LengthSquared(); return (sqLen) ? ::sqrt(sqLen) : 0;												}
@@ -163,7 +163,7 @@ namespace nwol
 		//
 		template<typename _t>
 		constexpr inline	SCoord4<_t>	Cast					()															const	noexcept	{ return SCoord4<_t>({(_t)x, (_t)y, (_t)z, (_t)w});													}
-		inline				TCoord4&	Normalize				()																				{ _tBase sqLen = LengthSquared(); return (sqLen) ? *this /= ::ftwlib::sqrt_safe(sqLen) : *this;		}
+		inline				TCoord4&	Normalize				()																				{ _tBase sqLen = LengthSquared(); return (sqLen) ? *this /= ::nwol::sqrt_safe(sqLen) : *this;		}
 		constexpr			double		Dot						(const TCoord4& other)										const	noexcept	{ return x*other.x + y*other.y + z*other.z + w*other.w;												}
 		constexpr inline	_tBase		LengthSquared			()															const	noexcept	{ return x * x + y * y + z * z + w * w;																}
 		inline constexpr	double		Length					()															const				{ const _tBase sqLen = LengthSquared(); return (sqLen) ? ::sqrt(sqLen) : 0;							}
