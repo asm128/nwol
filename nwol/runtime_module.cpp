@@ -1,5 +1,5 @@
 /// Copyright 2010-2017 - asm128
-#include "runtime.h"
+#include "nwol_runtime.h"
 #include "label.h"
 
 #if defined(__WINDOWS__)

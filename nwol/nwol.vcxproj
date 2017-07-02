@@ -225,8 +225,8 @@
     <ClInclude Include="nwol_value.h" />
     <ClInclude Include="platform_globals.h" />
     <ClInclude Include="platform_handle_wrapper.h" />
-    <ClInclude Include="runtime.h" />
-    <ClInclude Include="runtime_impl.h" />
+    <ClInclude Include="nwol_runtime.h" />
+    <ClInclude Include="nwol_runtime_impl.h" />
     <ClInclude Include="nwol_size.h" />
     <ClInclude Include="storage.h" />
     <ClInclude Include="struct_generator_pod.h" />

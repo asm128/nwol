@@ -4,7 +4,7 @@
 #include "ascii_screen.h"
 #include "netlib_server.h"
 
-#include "runtime_impl.h"
+#include "nwol_runtime_impl.h"
 
 #include <process.h>
 #include <thread>

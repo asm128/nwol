@@ -1,5 +1,5 @@
 #include "nwol_input.h"
-#include "runtime_impl.h"
+#include "nwol_runtime_impl.h"
 
 namespace nwol {
 	struct SModule {

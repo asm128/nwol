@@ -4,7 +4,7 @@
 #include "ascii_screen.h"
 #include "gui.h"
 
-#include "runtime_impl.h"
+#include "nwol_runtime_impl.h"
 
 #include <thread>
 #include <process.h>

@@ -1,4 +1,4 @@
-#include "runtime.h"
+#include "nwol_runtime.h"
 
 #ifndef NWOR_H_02973409823749082374923784293
 #define NWOR_H_02973409823749082374923784293

@@ -1,10 +1,10 @@
 // These sources are best viewed in Visual Studio 2017 with a screen of at least 1920x1080 screen and the zoom set to 81 %.
 // Pablo Ariel Zorrilla Cepeda (asm128) Copyright (c) 2010-2017 - Distributed under the MIT License.
-#include "runtime.h"
+#include "nwol_runtime.h"
 #include "nwol_log.h"
 
-#ifndef __RUNTIME_IMPL_H__29834908347__
-#define __RUNTIME_IMPL_H__29834908347__
+#ifndef RUNTIME_IMPL_H__29834908347
+#define RUNTIME_IMPL_H__29834908347
 
 //--------------------------------------------------------------- Runtime Interface
 #define DEFINE_RUNTIME_INTERFACE_TITLE(_yourCustomClass, _pluginTitle)																									\
@@ -99,4 +99,4 @@
 	DEFINE_RUNTIME_INTERFACE_RENDER		(_yourCustomClass)													\
 	DEFINE_RUNTIME_INTERFACE_UPDATE		(_yourCustomClass)
 
-#endif // __RUNTIME_IMPL_H__29834908347__
+#endif // RUNTIME_IMPL_H__29834908347

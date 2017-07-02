@@ -1,4 +1,4 @@
-#include "runtime.h"
+#include "nwol_runtime.h"
 #include "nwol_screen.h"
 
 #ifndef GSCREEN_H_092734908273498234__

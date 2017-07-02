@@ -2,8 +2,6 @@
 // Pablo Ariel Zorrilla Cepeda (asm128) Copyright (c) 2010-2017 - Distributed under the MIT License.
 #include "nwor_selector.h"
 
-#include "runtime.h"
-
 #include "nwol_input.h"
 #include "text.h"
 #include "ascii_screen.h"
@@ -12,7 +10,7 @@
 #include "storage.h"
 #include "multithread.h"
 
-#include "runtime_impl.h"
+#include "nwol_runtime_impl.h"
 #include "datatype.h"
 #include "datausage.h"
 #include "stype.h"

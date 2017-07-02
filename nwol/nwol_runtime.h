@@ -11,8 +11,8 @@
 #include <jni.h>
 #endif
 
-#ifndef __RUNTIME_H__29834908347__
-#define __RUNTIME_H__29834908347__
+#ifndef RUNTIME_H__29834908347
+#define RUNTIME_H__29834908347
 
 namespace nwol {
 	struct SRuntimeValues;
@@ -158,4 +158,4 @@ namespace nwol
 
 
 
-#endif // __RUNTIME_H__29834908347__
+#endif // RUNTIME_H__29834908347

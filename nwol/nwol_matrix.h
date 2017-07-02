@@ -2,8 +2,8 @@
 #include "nwol_coord.h"
 #include "nwol_log.h"
 
-#ifndef __MATRIX_H__283409263409234649837__
-#define __MATRIX_H__283409263409234649837__
+#ifndef NWOL_MATRIX_H__283409263409234649837
+#define NWOL_MATRIX_H__283409263409234649837
 
 namespace nwol
 {
@@ -790,4 +790,4 @@ namespace nwol
 #pragma pack(pop)
 }
 
-#endif // __MATRIX_H__283409263409234649837__
+#endif // NWOL_MATRIX_H__283409263409234649837

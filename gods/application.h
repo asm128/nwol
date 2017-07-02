@@ -1,6 +1,6 @@
 #include "member_registry.h"
 #include "nwol_mutex.h"
-#include "runtime.h"
+#include "nwol_runtime.h"
 
 #include "gui.h"
 #include "nwol_input.h"
