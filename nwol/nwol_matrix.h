@@ -9,8 +9,7 @@ namespace nwol
 {
 #pragma pack(push, 1)
 	template<typename _tBase>
-	struct SMatrix2
-	{	
+	struct SMatrix2 {	
 		typedef				SMatrix2<_tBase>	TMat2;
 		typedef				SCoord2<_tBase>		TCoord2D;
 		//
@@ -18,8 +17,8 @@ namespace nwol
 								,				_21, _22
 								;
 		//
-		inline				const _tBase&		operator[]					(uint32_t index)																const				{ error_if(index > 3, "Invalid matrix index being accessed: %u", index); return *((&_11)[index]); }
-		inline				_tBase&				operator[]					(uint32_t index)																					{ error_if(index > 3, "Invalid matrix index being accessed: %u", index); return *((&_11)[index]); }
+		inline				const _tBase&		operator[]					(uint32_t index)																const				{ throw_if(index > 3, "", "Invalid matrix element index: %u", index); return *((&_11)[index]); }
+		inline				_tBase&				operator[]					(uint32_t index)																					{ throw_if(index > 3, "", "Invalid matrix element index: %u", index); return *((&_11)[index]); }
 		//
 		constexpr			bool				operator ==					(const TMat2& other)															const	noexcept	{ return _11 == other._11 && _12 == other._12 && _21 == other._21 && _22 == other._22; }
 		constexpr inline	bool				operator !=					(const TMat2& other)															const	noexcept	{ return !operator==(other); }
@@ -76,8 +75,7 @@ namespace nwol
 	};
 
 	template<typename _tBase>
-	struct SMatrix3
-	{
+	struct SMatrix3 {
 		typedef				SMatrix3<_tBase>	_tMat3;
 		typedef				SCoord3<_tBase>		_TCoord3D;
 
@@ -86,8 +84,8 @@ namespace nwol
 								,				_31, _32, _33
 								;
 
-		inline				const _tBase&		operator[]					(uint32_t index)																const				{ error_if(index > 8, "Invalid matrix index being accessed: %u", index); return *((&_11)[index]); }
-		inline				_tBase&				operator[]					(uint32_t index)																					{ error_if(index > 8, "Invalid matrix index being accessed: %u", index); return *((&_11)[index]); }
+		inline				const _tBase&		operator[]					(uint32_t index)																const				{ throw_if(index > 8, "", "Invalid matrix element index: %u", index); return *((&_11)[index]); }
+		inline				_tBase&				operator[]					(uint32_t index)																					{ throw_if(index > 8, "", "Invalid matrix element index: %u", index); return *((&_11)[index]); }
 
 		constexpr			bool				operator ==					(const _tMat3& other)															const	noexcept	{ return _11 == other._11 && _12 == other._12 && _13 == other._13 && _21 == other._21 && _22 == other._22 && _23 == other._23 && _31 == other._31 && _32 == other._32 && _33 == other._33; }
 		constexpr inline	bool				operator !=					(const _tMat3& other)															const	noexcept	{ return !operator==(other); }
@@ -125,9 +123,10 @@ namespace nwol
 			D										= (_13*_32 - _12*_33);/**/ E = (_11*_33 - _13*_31);/**/ F = (_12*_31 - _11*_32);
 			G										= (_12*_23 - _13*_22);/**/ H = (_13*_21 - _11*_23);/**/ I = (_11*_22 - _12*_21);
 
-			const double								det							=	_11*(_22*_33-_23*_32) 
-				+																		_12*(_23*_31-_33*_21) 
-				+																		_13*(_21*_32-_22*_31)
+			const double								det							
+				=	_11*(_22*_33-_23*_32) 
+				+	_12*(_23*_31-_33*_21) 
+				+	_13*(_21*_32-_22*_31)
 				;
 
 			_tMat3										result;
@@ -168,12 +167,11 @@ namespace nwol
 		} 
 							void				Identity					()																						noexcept	{
 			*this = 
-				{ (_tBase)1,  (_tBase)0,  (_tBase)0
-				, (_tBase)0,  (_tBase)1,  (_tBase)0
-				, (_tBase)0,  (_tBase)0,  (_tBase)1
+				{	(_tBase)1,  (_tBase)0,  (_tBase)0
+				,	(_tBase)0,  (_tBase)1,  (_tBase)0
+				,	(_tBase)0,  (_tBase)0,  (_tBase)1
 				};
 		}
-
 							void				RotationX					(double angle)																			noexcept	{	
 			::nwol::SPairSinCos							angleSinCos					= {sin(angle), cos(angle)};
 			_11 = (_tBase)1;	_12 =							_13 = 
@@ -182,21 +180,18 @@ namespace nwol
 			// 
 			_41 = _42 = _43 = _14 = _24 = _34 = (_tBase)0; _44 = (_tBase)1;
 		}
-
 							void				RotationY					(double angle)																			noexcept	{	
 			::nwol::SPairSinCos							angleSinCos					= ::nwol::getSinCos(angle);
 			_11 = (_tBase)angleSinCos.Cos;	_12 = (_tBase)0;	_13 = -(_tBase)angleSinCos.Sin;
 			_21 = (_tBase)0;				_22 = (_tBase)1;	_23 =  (_tBase)0;
 			_31 = (_tBase)angleSinCos.Sin;	_32 = (_tBase)0;	_33 =  (_tBase)angleSinCos.Cos;
 		}
-
 							void				RotationZ					(double angle)																			noexcept	{	
 			::nwol::SPairSinCos							angleSinCos					= ::nwol::getSinCos(angle);
 			_11 =  (_tBase)angleSinCos.Cos;	_12 = (_tBase)angleSinCos.Sin;	_13 = (_tBase)0;
 			_21 = -(_tBase)angleSinCos.Sin;	_22 = (_tBase)angleSinCos.Cos;	_23 = 
 			_31 =							_32 = (_tBase)0;				_33 = (_tBase)1;
 		}
-
 		inline				void				Scale						(_tBase x, _tBase y, _tBase z, bool bEraseContent)										noexcept	{ Scale({x, y, z}, bEraseContent); }
 							void				Scale						(const _TCoord3D& ypr, bool bEraseContent)												noexcept	{ 
 			if( bEraseContent ) {
@@ -208,61 +203,46 @@ namespace nwol
 				_11 = (_tBase)(_11*ypr.x); _22 = (_tBase)(_22*ypr.y); _33 = (_tBase)(_33*ypr.z);
 			}
 		}
-
-
 		inline				void				Rotation					(_tBase x, _tBase y, _tBase z)															noexcept	{ return Rotation({x, y, z}); }
 							void				Rotation					(const _TCoord3D &vc)																	noexcept	{
 			::nwol::SPairSinCos							yaw							= ::nwol::getSinCos(vc.z);
 			::nwol::SPairSinCos							pitch						= ::nwol::getSinCos(vc.y);
 			::nwol::SPairSinCos							roll						= ::nwol::getSinCos(vc.x);
 
-			_11 = (_tBase)(pitch.Cos*yaw.Cos								);
-			_12 = (_tBase)(pitch.Cos*yaw.Sin								);
-			_13 = (_tBase)(-pitch.Sin										);
-			_21 = (_tBase)(roll.Sin*pitch.Sin*yaw.Cos+roll.Cos*-yaw.Sin		);
-			_22 = (_tBase)(roll.Sin*pitch.Sin*yaw.Sin+roll.Cos* yaw.Cos		);
-			_23 = (_tBase)(roll.Sin*pitch.Cos								);
-			_31 = (_tBase)(roll.Cos*pitch.Sin*yaw.Cos+-roll.Sin*-yaw.Sin	);
-			_32 = (_tBase)(roll.Cos*pitch.Sin*yaw.Sin+-roll.Sin* yaw.Cos	);
-			_33 = (_tBase)(roll.Cos*pitch.Cos								);
+			_11										= (_tBase)(pitch.Cos * yaw.Cos									);
+			_12										= (_tBase)(pitch.Cos * yaw.Sin									);
+			_13										= (_tBase)(-pitch.Sin											);
 
-		//	return *this;
+			_21										= (_tBase)(roll.Sin * pitch.Sin * yaw.Cos + roll.Cos *-yaw.Sin	);
+			_22										= (_tBase)(roll.Sin * pitch.Sin * yaw.Sin + roll.Cos * yaw.Cos	);
+			_23										= (_tBase)(roll.Sin * pitch.Cos  		 	 					);
+
+			_31										= (_tBase)(roll.Cos * pitch.Sin * yaw.Cos +-roll.Sin *-yaw.Sin	);
+			_32										= (_tBase)(roll.Cos * pitch.Sin * yaw.Sin +-roll.Sin * yaw.Cos	);
+			_33										= (_tBase)(roll.Cos * pitch.Cos									);
 		} // Rota
-
 							void				RotationArbitraryAxis		(const _TCoord3D& _vcAxis, _tBase a)																{
 			::nwol::SPairSinCos							pairSinCos					= ::nwol::getSinCos(a);
 			_TCoord3D									vcAxis						= _vcAxis;
 			double										fSum						= 1.0 - pairSinCos.Cos;
-   
+
 			if( vcAxis.LengthSquared() != 1.0 )
 				vcAxis.Normalize();
 
-			_11 = (_tBase)(	(vcAxis.x * vcAxis.x) * fSum + pairSinCos.Cos				);
-			_12 = (_tBase)(	(vcAxis.x * vcAxis.y) * fSum - (vcAxis.z * pairSinCos.Sin)	);
-			_13 = (_tBase)(	(vcAxis.x * vcAxis.z) * fSum + (vcAxis.y * pairSinCos.Sin)	);
+			_11										= (_tBase)(	(vcAxis.x * vcAxis.x) * fSum + pairSinCos.Cos				);
+			_12										= (_tBase)(	(vcAxis.x * vcAxis.y) * fSum - (vcAxis.z * pairSinCos.Sin)	);
+			_13										= (_tBase)(	(vcAxis.x * vcAxis.z) * fSum + (vcAxis.y * pairSinCos.Sin)	);
 
-			_21 = (_tBase)(	(vcAxis.y * vcAxis.x) * fSum + (vcAxis.z * pairSinCos.Sin)	);
-			_22 = (_tBase)(	(vcAxis.y * vcAxis.y) * fSum + pairSinCos.Cos 				);
-			_23 = (_tBase)(	(vcAxis.y * vcAxis.z) * fSum - (vcAxis.x * pairSinCos.Sin)	);
+			_21										= (_tBase)(	(vcAxis.y * vcAxis.x) * fSum + (vcAxis.z * pairSinCos.Sin)	);
+			_22										= (_tBase)(	(vcAxis.y * vcAxis.y) * fSum + pairSinCos.Cos 				);
+			_23										= (_tBase)(	(vcAxis.y * vcAxis.z) * fSum - (vcAxis.x * pairSinCos.Sin)	);
 
-			_31 = (_tBase)(	(vcAxis.z * vcAxis.x) * fSum - (vcAxis.y * pairSinCos.Sin)	);
-			_32 = (_tBase)(	(vcAxis.z * vcAxis.y) * fSum + (vcAxis.x * pairSinCos.Sin)	);
-			_33 = (_tBase)(	(vcAxis.z * vcAxis.z) * fSum + pairSinCos.Cos				);
+			_31										= (_tBase)(	(vcAxis.z * vcAxis.x) * fSum - (vcAxis.y * pairSinCos.Sin)	);
+			_32										= (_tBase)(	(vcAxis.z * vcAxis.y) * fSum + (vcAxis.x * pairSinCos.Sin)	);
+			_33										= (_tBase)(	(vcAxis.z * vcAxis.z) * fSum + pairSinCos.Cos				);
 		}
 
 							void				SetOrientation				(const ::nwol::SQuat<_tBase>& qo)														noexcept	{
-			//_11 = 1-2*orientation.j*orientation.j - 2*orientation.k*orientation.k;
-			//_21 = 2*orientation.i*orientation.j - 2*orientation.r*orientation.k;
-			//_31 = 2*orientation.i*orientation.k + 2*orientation.r*orientation.j;
-
-			//_12 = 2*orientation.i*orientation.j + 2*orientation.r*orientation.k;
-			//_22 = 1-2*orientation.i*orientation.i - 2*orientation.k*orientation.k;
-			//_32 = 2*orientation.j*orientation.k - 2*orientation.r*orientation.i;
-
-			//_13 = 2*orientation.i*orientation.k - 2*orientation.r*orientation.j;
-			//_23 = 2*orientation.j*orientation.k + 2*orientation.r*orientation.i;
-			//_33 = 1-2*orientation.i*orientation.i - 2*orientation.j*orientation.j;
-
 			// set matrix to identity
 			_41 = _42 = _43 = _14 = _24 = _34 = (_tBase)0;
 			_44 = (_tBase)1;
@@ -285,20 +265,14 @@ namespace nwol
 			wy										= qo.w * y2;   
 			wz										= qo.w * z2;
 
-			//pMat->_12 = (_tBase)(xy - wz	);
-			//pMat->_13 = (_tBase)(xz + wy	);
 			_11										= (_tBase)(1.0 - (yy + zz)	);
 			_21										= (_tBase)(xy - wz			);
 			_31										= (_tBase)(xz + wy			);
 
-			//pMat->_21 = (_tBase)(xy + wz	);
-			//pMat->_23 = (_tBase)(yz - wx	);
 			_12										= (_tBase)(xy + wz			);
 			_22										= (_tBase)(1.0 - (xx + zz)	);
 			_32										= (_tBase)(yz - wx			);
 
-			//pMat->_31 = (_tBase)(xz - wy	);
-			//pMat->_32 = (_tBase)(yz + wx	);
 			_13										= (_tBase)(xz - wy			);
 			_23										= (_tBase)(yz + wx			);
 			_33										= (_tBase)(1.0 - (xx + yy)	);
@@ -315,24 +289,20 @@ namespace nwol
 			_33 =		(_tBase) iz		;
 		}
 
-		// 
-		// Sets the value of the matrix as an inertia tensor of
-		// a rectangular block aligned with the body's coordinate 
-		// system with the given axis half-sizes and mass.
-		// 
+		// Sets the value of the matrix as an inertia tensor of a rectangular block aligned with the body's coordinate system with the given axis half-sizes and mass.
 							void				SetBlockAngularMass			(const _TCoord3D &halfSizes, double mass)												noexcept	{
 			_TCoord3D									squares						= halfSizes;
 			squares.x								*= halfSizes.x; squares.y *= halfSizes.y; squares.z *= halfSizes.z;
-			SetCoeffsAngularMass(0.3f*mass*(squares.y + squares.z),
-				0.3f*mass*(squares.x + squares.z),
-				0.3f*mass*(squares.x + squares.y));
+			SetCoeffsAngularMass
+				( 0.3f * mass * (squares.y + squares.z)
+				, 0.3f * mass * (squares.x + squares.z)
+				, 0.3f * mass * (squares.x + squares.y)
+				);
 		}
-
 	};
 
 	template<typename _tBase>
-	struct SMatrix4
-	{
+	struct SMatrix4 {
 		typedef				SMatrix4<_tBase>	_tMat4;
 		typedef				SCoord3<_tBase>		_TCoord3;
 							_tBase				_11, _12, _13, _14
@@ -341,8 +311,8 @@ namespace nwol
 								,				_41, _42, _43, _44
 								;
 
-		inline				const _tBase&		operator[]					(uint32_t index)																const				{ error_if(index > 15, "Invalid matrix index being accessed: %u", index); return *((&_11)[index]); }
-		inline				_tBase&				operator[]					(uint32_t index)																					{ error_if(index > 15, "Invalid matrix index being accessed: %u", index); return *((&_11)[index]); }
+		inline				const _tBase&		operator[]					(uint32_t index)																const				{ throw_if(index > 15, "", "Invalid matrix element index: %u", index); return *((&_11)[index]); }
+		inline				_tBase&				operator[]					(uint32_t index)																					{ throw_if(index > 15, "", "Invalid matrix element index: %u", index); return *((&_11)[index]); }
 
 		constexpr			bool				operator ==					(const _tMat4& other)															const	noexcept	{ return _11 == other._11 && _12 == other._12 && _13 == other._13 && _14 == other._14 && _21 == other._21 && _22 == other._22 && _23 == other._23 && _24 == other._24 && _31 == other._31 && _32 == other._32 && _33 == other._33 && _34 == other._34 && _41 == other._41 && _42 == other._42 && _43 == other._43 && _44 == other._44; }
 		constexpr inline	bool				operator !=					(const _tMat4& other)															const	noexcept	{ return !operator==(other); }
@@ -359,7 +329,6 @@ namespace nwol
 				, _41*right._11 + _42*right._21 + _43*right._31 + _44*right._41, _41*right._12 + _42*right._22 + _43*right._32 + _44*right._42, _41*right._13 + _42*right._23 + _43*right._33 + _44*right._43, _41*right._14 + _42*right._24 + _43*right._34 + _44*right._44
 				};
 		}
-
 		inline				_tMat4&				operator +=					(const _tMat4& other)																	noexcept	{ return *this = operator+(other	); }
 		inline				_tMat4&				operator -=					(const _tMat4& other)																	noexcept	{ return *this = operator-(other	); }
 		inline				_tMat4&				operator *=					(double scalar)																			noexcept	{ return *this = operator*(scalar	); }
@@ -558,18 +527,6 @@ namespace nwol
 		}
 
 							void				SetOrientation				(const ::nwol::SQuat<_tBase>& qo)																	{
-			//_11 = 1-2*orientation.j*orientation.j - 2*orientation.k*orientation.k;
-			//_21 = 2*orientation.i*orientation.j - 2*orientation.r*orientation.k;
-			//_31 = 2*orientation.i*orientation.k + 2*orientation.r*orientation.j;
-
-			//_12 = 2*orientation.i*orientation.j + 2*orientation.r*orientation.k;
-			//_22 = 1-2*orientation.i*orientation.i - 2*orientation.k*orientation.k;
-			//_32 = 2*orientation.j*orientation.k - 2*orientation.r*orientation.i;
-
-			//_13 = 2*orientation.i*orientation.k - 2*orientation.r*orientation.j;
-			//_23 = 2*orientation.j*orientation.k + 2*orientation.r*orientation.i;
-			//_33 = 1-2*orientation.i*orientation.i - 2*orientation.j*orientation.j;
-
 			// set matrix to identity
 			_41 = _42 = _43 = _14 = _24 = _34		= (_tBase)0;
 			_44										= (_tBase)1;
@@ -592,20 +549,14 @@ namespace nwol
 			wy										= qo.w * y2;   
 			wz										= qo.w * z2;
 
-			//pMat->_12 = (_tBase)(xy - wz	);
-			//pMat->_13 = (_tBase)(xz + wy	);
 			_11										= (_tBase)(1.0 - (yy + zz)	);
 			_21										= (_tBase)(xy - wz			);
 			_31										= (_tBase)(xz + wy			);
 
-			//pMat->_21 = (_tBase)(xy + wz	);
-			//pMat->_23 = (_tBase)(yz - wx	);
 			_12										= (_tBase)(xy + wz			);
 			_22										= (_tBase)(1.0 - (xx + zz)	);
 			_32										= (_tBase)(yz - wx			);
 
-			//pMat->_31 = (_tBase)(xz - wy	);
-			//pMat->_32 = (_tBase)(yz + wx	);
 			_13											= (_tBase)(xz - wy			);
 			_23											= (_tBase)(yz + wx			);
 			_33											= (_tBase)(1.0 - (xx + yy)	);
