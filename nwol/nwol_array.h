@@ -31,26 +31,26 @@ namespace nwol
 
 	// Base for arrays that keeps track of its actual size.
 	template<typename _tBase>
-	struct vector_base : public array_view<_tBase> {
+	struct array_base : public array_view<_tBase> {
 	protected:
 		using				array_view<_tBase>::		Count;
-							uint32_t					Size									= 0;
+							uint32_t					Size										= 0;
 
-		inline constexpr								vector_base								()																				noexcept	= default;
-		inline constexpr								vector_base								(const vector_base<_tBase>&		other)											noexcept	= delete;
-		inline constexpr								vector_base								(const vector_base<_tBase>&&	other)											noexcept	= delete;
+		inline constexpr								array_base									()																			noexcept	= default;
+		inline constexpr								array_base									(const array_base<_tBase>&		other)										noexcept	= delete;
+		inline constexpr								array_base									(const array_base<_tBase>&&	other)											noexcept	= delete;
 
-							vector_base<_tBase>&		operator =								(const vector_base<_tBase>&		other)														= delete;
-							vector_base<_tBase>&		operator =								(const vector_base<_tBase>&&	other)														= delete;
+							array_base<_tBase>&			operator =									(const array_base<_tBase>&		other)													= delete;
+							array_base<_tBase>&			operator =									(const array_base<_tBase>&&	other)														= delete;
 		// This helper method is used to prevent redundancies. It returns a safe integer of the same or a higher value than the one passed as argument.
-		inline constexpr	uint32_t					calc_reserve_size						(const uint32_t newSize)												const	noexcept	{ return ::nwol::max(newSize, newSize+nwol::max(newSize>>1, 4U));						}
-		inline constexpr	uint32_t					calc_malloc_size						(const uint32_t newSize)												const	noexcept	{ return ::nwol::max(newSize*(uint32_t)sizeof(_tBase), Count*(uint32_t)sizeof(_tBase));	}
-	}; // vector_base
+		inline constexpr	uint32_t					calc_reserve_size							(const uint32_t newSize)											const	noexcept	{ return ::nwol::max(newSize, newSize + nwol::max(newSize>>1, 4U));						}
+		inline constexpr	uint32_t					calc_malloc_size							(const uint32_t newSize)											const	noexcept	{ return ::nwol::max(newSize*(uint32_t)sizeof(_tBase), Count*(uint32_t)sizeof(_tBase));	}
+	}; // array_base
 
 	// This class is optimized to contain POD instances and won't work for C++ objects that require calling constructors/destructors.
 	template<typename _tPOD>
-	struct array_pod : public vector_base<_tPOD> {
-		typedef				vector_base<_tPOD>			_TVectorBase								;
+	struct array_pod : public array_base<_tPOD> {
+		typedef				array_base<_tPOD>			_TVectorBase								;
 		typedef				array_view<_tPOD>			_TArrayView									;
 
 		using				_TVectorBase::				Count										;
@@ -269,8 +269,8 @@ namespace nwol
 
 	//------------------------------------------------------------------------------------------------------------
 	template<typename _tObj>
-	struct array_obj : public vector_base<_tObj> {
-		typedef				vector_base<_tObj>			_TVectorBase;
+	struct array_obj : public array_base<_tObj> {
+		typedef				array_base<_tObj>			_TVectorBase;
 
 		using											_TVectorBase::Count;
 		using											_TVectorBase::Data;

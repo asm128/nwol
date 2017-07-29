@@ -8,16 +8,16 @@
 namespace nwol
 {
 
-	template<typename _ValueType>
+	template<typename _valueType>
 	struct SAccumulator {
-		_ValueType											Value;
-		_ValueType											MaxValue;
+		_valueType											Value;
+		_valueType											MaxValue;
 
 		// The Accumulate and Deplete functions of SAccumulator won't prevent overflow when using negative numbers as arguments.
 		// This is so we don't have unnecessary condition checks in places where we are going to operate always with positive values
-		_ValueType											Accumulate				( _ValueType amount )		noexcept	{
+		_valueType											Accumulate				( _valueType amount )		noexcept	{
 			if( (Value += amount) > MaxValue ) {
-				_ValueType												difference			= Value-MaxValue;
+				_valueType												difference				= Value - MaxValue;
 				Value												= MaxValue;
 				return difference;
 			}
@@ -26,10 +26,10 @@ namespace nwol
 		}
 
 		// The Accumulate and Deplete functions of SAccumulator won't prevent overflow when using negative numbers as arguments.
-		// This is so we don't have unnecessary condition checks in places where we know that we are going to operate always with positive values
-		_ValueType											Deplete					( _ValueType amount )		noexcept	{
+		// This is so we don't have unnecessary condition checks in places where we know that we are going to operate always with positive values 
+		_valueType											Deplete					( _valueType amount )		noexcept	{
 			if( (Value -= amount) < 0 ) {
-				_ValueType												difference			= Value;
+				_valueType												difference				= Value;
 				Value												= 0;
 				return difference;
 			}

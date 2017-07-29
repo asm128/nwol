@@ -93,6 +93,9 @@
     <ClInclude Include="gscreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="netlib_command.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="netlib.cpp">
@@ -120,6 +123,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gscreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="netlib_command.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

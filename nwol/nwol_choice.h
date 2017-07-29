@@ -26,5 +26,4 @@ namespace nwol
 	}
 }
 
-
 #endif // __CHOICE_H_9823423__

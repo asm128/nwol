@@ -169,7 +169,7 @@ void									nwol::clearASCIIBackBuffer		(char_t value, uint16_t colorValue)				
 			__g_ASCIIScreen.ColorBackBuffer[i]		= colorValue;
 }
 	
-void									createConsole				()																		{
+void									consoleCreate				()																		{
 #if defined(__WINDOWS__)
 	AllocConsole();
 	AttachConsole(GetCurrentProcessId());
@@ -188,7 +188,7 @@ void									createConsole				()																		{
 
 void									nwol::initASCIIScreen		(uint32_t width, uint32_t height)										{
 	if(false == __g_ASCIIScreen.bCreated)
-		createConsole();
+		::consoleCreate();
 
 	__g_ASCIIScreen.BackBufferWidth 		= width;
 	__g_ASCIIScreen.BackBufferHeight		= height;

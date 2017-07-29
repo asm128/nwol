@@ -6,11 +6,11 @@
 namespace nwor 
 {
 	struct SRuntimeState {	
-	#if defined(__WINDOWS__) || defined(__LINUX__) || defined(__ANDROID__)
+#if defined(__WINDOWS__) || defined(__LINUX__) || defined(__ANDROID__)
 		::nwol::refcount_t											RenderThreadUsers						= 0			;	// This is used to know if the render thread is still running.
-	#else
+#else
 		::nwol::refcount_t											RenderThreadUsers						;			
-	#endif
+#endif
 		::nwol::SApplicationModule									MainModule								= {}		;	// 
 		::nwol::SRuntimeValues										RuntimeValues							= {}		;	// 
 		bool														Quit									= false		;	// turn to true when quit has been requested

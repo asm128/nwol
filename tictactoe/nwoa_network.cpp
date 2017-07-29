@@ -1,4 +1,5 @@
 #include "nwoa.h"
+#include "netlib_command.h"
 
 #include <thread>
 
@@ -17,16 +18,13 @@ int											runCommunications						(::nwol::SApplicationNetworkClient& appNetw
 		// Ping before anything else to make sure everything is more or less in order.
 		break_error_if(errored(result = ::nwol::ping(instanceClient.pClient, instanceClient.pServer) ? 0 : -1), "%s", "Ping timeout.");
 
-		// get server time
 		uint64_t										current_time;
-		break_error_if(errored(result = ::nwol::serverTime(instanceClient, current_time)), "Failed to get server time.");
-		
+		break_error_if(errored(result = ::nwol::time(instanceClient.pClient, instanceClient.pServer, current_time)), "Failed to get server time.");	// get server time
 		{	// here we update the game instance with the data received from the server.
 			::nwol::CLock									thelock									(appNetwork.ServerTimeMutex);
 			appNetwork.ServerTime						= current_time;
 			info_printf("%s", "Client instance updated successfully.");
 		}
-
 		break_info_if(gbit_false(appNetwork.State, ::nwol::NETWORK_STATE_ENABLED), "Disconnect as the network was disabled.");
 		::std::this_thread::sleep_for(::std::chrono::milliseconds(1000));
 	}
@@ -53,7 +51,7 @@ void										runCommunications						(void* pInstanceApp)						{
 }
 
 ::nwol::error_t								networkEnable							(::SApplication& instanceApp)				{
-	nwol_necall(::nwol::initNetwork(), "Failed to initialize network.");
+	nwol_necall(::nwol::networkInit(), "Failed to initialize network.");
 	info_printf("%s", "Network successfully initialized.");
 
 	::nwol::SApplicationNetworkClient				& instanceAppNetwork					= instanceApp.NetworkClient;
@@ -76,7 +74,7 @@ void										runCommunications						(void* pInstanceApp)						{
 		::std::this_thread::sleep_for(::std::chrono::milliseconds(1000));
 
 	::std::this_thread::sleep_for(::std::chrono::milliseconds(1000));
-	::nwol::shutdownNetwork();
+	::nwol::networkShutdown();
 
 	return 0;
 }

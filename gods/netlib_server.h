@@ -17,12 +17,12 @@ namespace nwol
 
 	struct CClient {
 		int32_t														Id															= -1;
-		::nwol::SConnectionEndpoint									* ClientListener											= 0;
-		::nwol::SConnectionEndpoint									* ClientTarget												= 0;
+		::nwol::SNetworkEndpoint									* ClientListener											= 0;
+		::nwol::SNetworkEndpoint									* ClientTarget												= 0;
 		GLstObj(::nwol, SClientInputBuffer)							QueueInputRequests											= {};
 		GLstObj(::nwol, SClientInputBuffer)							QueueInputResponses											= {};
 
-		int32_t														InitClient													(::nwol::SConnectionEndpoint* listener, ::nwol::SConnectionEndpoint* target, int32_t id)	noexcept	{
+		int32_t														InitClient													(::nwol::SNetworkEndpoint* listener, ::nwol::SNetworkEndpoint* target, int32_t id)	noexcept	{
 			ClientListener												= listener;
 			ClientTarget												= target;
 			Id															= id;
@@ -37,8 +37,8 @@ namespace nwol
 #else
 		::nwol::refcount_t											QueuedConnectionCount										;
 #endif
-		::nwol::SConnectionEndpoint									* ServerConnection											= 0;
-		::nwol::SConnectionEndpoint									* QueuedConnectionList[MAX_CLIENTS_QUEUE]					= {};
+		::nwol::SNetworkEndpoint									* ServerConnection											= 0;
+		::nwol::SNetworkEndpoint									* QueuedConnectionList[MAX_CLIENTS_QUEUE]					= {};
 		GLstObj(::nwol, CClient)									ClientConnections											= {};	
 		GLstObj(::nwol, CClient)									ClientUnused												= {};	
 		::nwol::CMutex												ConnectionsMutex											= {};

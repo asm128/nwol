@@ -3,11 +3,13 @@
 #include "text.h"
 #include "ascii_screen.h"
 #include "netlib_server.h"
+#include "netlib_command.h"
 
 #include "nwol_runtime_impl.h"
 
 #include <process.h>
 #include <thread>
+
 
 DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "No Workflow Overhead Network Server", 0, 1);
 
@@ -17,7 +19,7 @@ bool														bListenFailure					= false;
 	::nwol::shutdownASCIIScreen();
 
 	instanceApp.NetworkServer.ShutdownServer();
-	::nwol::shutdownNetwork();
+	::nwol::networkShutdown();
 
 	return 0; 
 }
@@ -118,7 +120,7 @@ void										serverListen					( void* server )																									{ server
 	char											port_number_str	[]				= "45678";
 	reterr_error_if(sscanf_s(&port_number_str[0], "%u", &port_number) != 1, "%s.", "Invalid server port string.");	// Only run if port is provided
 
-	nwol_necall(::nwol::initNetwork()								, "%s", "Failed to initialize network."			);	info_printf("%s initialized successfully.", "Network"			);
+	nwol_necall(::nwol::networkInit()								, "%s", "Failed to initialize network."			);	info_printf("%s initialized successfully.", "Network"			);
 	nwol_necall(instanceApp.NetworkServer.InitServer(port_number)	, "%s", "Failed to initialize connection server.");	info_printf("%s initialized successfully.", "Connection server"	);
 	_beginthread( serverListen, 0, &instanceApp.NetworkServer );	
 	return 0;
@@ -131,8 +133,8 @@ void										serverListen					( void* server )																									{ server
 
 
 ::nwol::error_t								executeCommand					(::nwol::CClient* client, const char* payloadBuffer, uint32_t bufferLen)											{
-	int												port_number;
-	int												a1
+	uint16_t										port_number;
+	uint8_t											a1
 		,											a2
 		,											a3
 		,											a4
@@ -148,7 +150,7 @@ void										serverListen					( void* server )																									{ server
 			::nwol::SERVER_COMMAND							response						= ::nwol::SERVER_COMMAND_INVALID;							
 			uint32_t										bytesToSend						= sizeof(response);
 
-			error_if(errored(::nwol::sendUserCommand(client->ClientListener, client->ClientTarget, ::nwol::USER_COMMAND_RESPONSE, (const uint8_t*)&response, bytesToSend))
+			error_if(errored(::nwol::dataSend(client->ClientListener, client->ClientTarget, ::nwol::USER_COMMAND_RESPONSE, (const uint8_t*)&response, bytesToSend))
 					, "Failed to send player data to %u.%u.%u.%u:%u."
 					, (uint32_t)a1
 					, (uint32_t)a2
@@ -170,7 +172,7 @@ void										serverListen					( void* server )																									{ server
 			::nwol::SERVER_COMMAND							response						= ::nwol::SERVER_COMMAND_INVALID;							
 			uint32_t										bytesToSend						= sizeof(response);
 
-			error_if(errored(::nwol::sendUserCommand(client->ClientListener, client->ClientTarget, ::nwol::USER_COMMAND_RESPONSE, (const uint8_t*)&response, bytesToSend))
+			error_if(errored(::nwol::dataSend(client->ClientListener, client->ClientTarget, ::nwol::USER_COMMAND_RESPONSE, (const uint8_t*)&response, bytesToSend))
 					, "Failed to send player data to %u.%u.%u.%u:%u."
 					,	(uint32_t)a1
 					,	(uint32_t)a2

@@ -198,6 +198,7 @@
     <ClInclude Include="gstring.h" />
     <ClInclude Include="netlib.h" />
     <ClInclude Include="netlib_client.h" />
+    <ClInclude Include="netlib_command.h" />
     <ClInclude Include="netlib_private.h" />
     <ClInclude Include="netlib_server.h" />
     <ClInclude Include="parse_int.h" />
@@ -211,6 +212,7 @@
     <ClCompile Include="gscreen.cpp" />
     <ClCompile Include="netlib.cpp" />
     <ClCompile Include="netlib_client.cpp" />
+    <ClCompile Include="netlib_command.cpp" />
     <ClCompile Include="netlib_server.cpp" />
     <ClCompile Include="reference_registry.cpp" />
   </ItemGroup>
