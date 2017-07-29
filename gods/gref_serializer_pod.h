@@ -1,7 +1,7 @@
 #include "nwol_debug.h"
 
-#ifndef __GREF_SERIALIZER_POD_H_886465456489__
-#define __GREF_SERIALIZER_POD_H_886465456489__
+#ifndef NWOL_GREF_SERIALIZER_POD_H_886465456489
+#define NWOL_GREF_SERIALIZER_POD_H_886465456489
 
 #define GDEFINE_PRINTGENERIC( baseType, refType, format, ... )																																		\
 void printInfoString	( const refType* in_CoreInstance )													{	printInfoString( in_CoreInstance ? in_CoreInstance->get() : 0 );							}	\
@@ -513,5 +513,5 @@ namespace nwol
 
 } // namespace
 
-#endif // __GREF_SERIALIZER_POD_H_886465456489__
+#endif // NWOL_GREF_SERIALIZER_POD_H_886465456489
 

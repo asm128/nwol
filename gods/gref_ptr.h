@@ -3,8 +3,8 @@
 #include "gcore_ref.h"
 #include "nwol_memory.h"
 
-#ifndef __GREF_PTR_H__23487928374923__
-#define __GREF_PTR_H__23487928374923__
+#ifndef NWOL_GREF_PTR_H_23487928374923
+#define NWOL_GREF_PTR_H_23487928374923
 
 namespace nwol
 {
@@ -285,4 +285,4 @@ namespace nwol
 	};
 }// namespace
 
-#endif // __GREF_PTR_H__23487928374923__
+#endif // NWOL_GREF_PTR_H_23487928374923

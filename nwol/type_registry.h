@@ -4,8 +4,8 @@
 #include "datatype.h"
 
 
-#ifndef __TYPE_REGISTRY_H__92874982742__
-#define __TYPE_REGISTRY_H__92874982742__
+#ifndef NWOL_TYPE_REGISTRY_H_92874982742
+#define NWOL_TYPE_REGISTRY_H_92874982742
 
 namespace nwol
 {
@@ -174,4 +174,4 @@ namespace nwol
 #define NWOL_REGISTER_MOD(_nameSpace, _baseType, _displayName, _descriptionText)									NWOL_REGISTER_TYPE (::nwol::SMODRecordInitializer, ::nwol::GDATA_TYPE_MOD, _nameSpace, _baseType, _displayName, _descriptionText)
 } // namespace
 
-#endif // __TYPE_REGISTRY_H__92874982742__
+#endif // NWOL_TYPE_REGISTRY_H_92874982742

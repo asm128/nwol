@@ -5,8 +5,8 @@
 #include "descriptor.h"
 #include "multithread.h"
 
-#ifndef __NWOL_REF_H__9823479023649023642890734__
-#define __NWOL_REF_H__9823479023649023642890734__
+#ifndef NWOL_REF_H__9823479023649023642890734__
+#define NWOL_REF_H__9823479023649023642890734__
 
 namespace nwol
 {
@@ -86,4 +86,4 @@ namespace nwol
 #define GDECLARE_REF(baseType, ...)		\
 	typedef struct NWOL_REF(baseType, __VA_ARGS__)	GREF(baseType), *NWOH(baseType);							
 
-#endif // __NWOL_REF_H__9823479023649023642890734__
+#endif // NWOL_REF_H__9823479023649023642890734__

@@ -1,8 +1,8 @@
 /// Copyright 2017 - asm128
 #include "label.h"
 
-#ifndef __TYPE_IDENTIFIER_H__02397492873498__
-#define __TYPE_IDENTIFIER_H__02397492873498__
+#ifndef NWOL_TYPE_IDENTIFIER_H_02397492873498
+#define NWOL_TYPE_IDENTIFIER_H_02397492873498
 
 namespace nwol
 {
@@ -19,4 +19,4 @@ namespace nwol
 } // namespace
 
 
-#endif // __TYPE_IDENTIFIER_H__02397492873498__
+#endif // NWOL_TYPE_IDENTIFIER_H_02397492873498

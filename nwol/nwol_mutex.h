@@ -8,8 +8,8 @@
 #error "Platform not supported."
 #endif
 
-#ifndef __NWOL_MUTEX_H_984165163546_ 
-#define __NWOL_MUTEX_H_984165163546_
+#ifndef NWOL_MUTEX_H_984165163546_ 
+#define NWOL_MUTEX_H_984165163546_
 
 namespace nwol
 {
@@ -43,4 +43,4 @@ namespace nwol
 	};
 }
 
-#endif // __NWOL_MUTEX_H_984165163546_
+#endif // NWOL_MUTEX_H_984165163546_

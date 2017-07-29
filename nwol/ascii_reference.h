@@ -1,6 +1,6 @@
 ﻿/// Copyright 2016-2017 - asm128
-#ifndef __ASCII_REFERENCE_H__923640__
-#define __ASCII_REFERENCE_H__923640__
+#ifndef ASCII_REFERENCE_H_923640654654
+#define ASCII_REFERENCE_H_923640654654
 
 namespace klib
 {
@@ -214,7 +214,7 @@ namespace klib
 //#pragma warning(default:4566)
 }
 
-#endif // __ASCII_REFERENCE_H__923640__
+#endif // ASCII_REFERENCE_H_923640654654
 
 
 // ▌ █▐ ▄▌▄▌▐▀■█▄▌▐▀■█▄▌▐▀■█▄▌▐▀■▀■▄▌▐

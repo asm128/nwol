@@ -2,8 +2,8 @@
 #include "nwol_noise.h"
 #include "nwol_array.h"
 
-#ifndef __CHOICE_H_9823423__
-#define __CHOICE_H_9823423__
+#ifndef NWOL_CHOICE_H_9823423
+#define NWOL_CHOICE_H_9823423
 
 namespace nwol
 {
@@ -26,4 +26,4 @@ namespace nwol
 	}
 }
 
-#endif // __CHOICE_H_9823423__
+#endif // NWOL_CHOICE_H_9823423

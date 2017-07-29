@@ -1,8 +1,8 @@
 /// Copyright 2010-2017 - asm128
 #include "nwol_debug.h"
 
-#ifndef __TYPEINT_H__941234698724987234__
-#define __TYPEINT_H__941234698724987234__
+#ifndef NWOL_TYPEINT_H_941234698724987234
+#define NWOL_TYPEINT_H_941234698724987234
 
 #if defined( DISABLE_STDINT ) && (defined(WIN32) || defined(_WIN32))
 typedef				__int8				int8_t; 	
@@ -78,4 +78,4 @@ namespace nwol
 #endif
 
 
-#endif // __TYPEINT_H__941234698724987234__
+#endif // NWOL_TYPEINT_H_941234698724987234

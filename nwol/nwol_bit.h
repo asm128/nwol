@@ -1,8 +1,8 @@
 /// Copyright 2010-2017 - asm128
 #include <cstdint>
 
-#ifndef __NWOL_BIT_H__034792701397__
-#define __NWOL_BIT_H__034792701397__
+#ifndef NWOL_BIT_H__034792701397__
+#define NWOL_BIT_H__034792701397__
 
 namespace nwol
 {
@@ -19,4 +19,4 @@ namespace nwol
 #define gbit_false(in_FlagVariable, in_Bit)				( (((in_FlagVariable) & (in_Bit)) != (in_Bit)) ? true : false )
 }
 
-#endif // __NWOL_BIT_H__034792701397__
+#endif // NWOL_BIT_H__034792701397__

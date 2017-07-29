@@ -7,8 +7,8 @@
 #include "netlib_client.h"
 //#include "netlib_server.h"
 
-#ifndef __NWOL_APPLICATION_H_98364902634__
-#define __NWOL_APPLICATION_H_98364902634__
+#ifndef NWOL_APPLICATION_H_98364902634__
+#define NWOL_APPLICATION_H_98364902634__
 
 namespace nwol
 {
@@ -190,5 +190,5 @@ namespace nwol
 
 }	// namespace
 
-#endif // __NWOL_APPLICATION_H_98364902634__
+#endif // NWOL_APPLICATION_H_98364902634__
 

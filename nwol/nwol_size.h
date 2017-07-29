@@ -1,8 +1,8 @@
 /// Copyright 2016-2017 - asm128
 #include "typeint.h"
 
-#ifndef __SIZE_H__982340928374923__
-#define __SIZE_H__982340928374923__
+#ifndef NWOL_SIZE_H_982340928374923
+#define NWOL_SIZE_H_982340928374923
 
 namespace nwol
 {
@@ -12,4 +12,4 @@ namespace nwol
 	template <typename _t, size_t _sizeDepth, size_t _sizeWidth>	static inline constexpr uint32_t	byte_count	(const _t (&/*staticArray*/)[_sizeDepth][_sizeWidth])	noexcept	{ return sizeof(_t)*_sizeDepth*_sizeWidth;	}
 } // namespace
 
-#endif // __SIZE_H__982340928374923__
+#endif // NWOL_SIZE_H_982340928374923

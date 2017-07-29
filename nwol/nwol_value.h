@@ -1,8 +1,8 @@
 /// Copyright 2015-2017 - asm128
 #include "nwol_string.h"
 
-#ifndef __NWOL_VALUE_H__92837423__
-#define __NWOL_VALUE_H__92837423__
+#ifndef NWOL_VALUE_H__92837423__
+#define NWOL_VALUE_H__92837423__
 
 namespace nwol
 {

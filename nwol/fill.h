@@ -2,8 +2,8 @@
 #include "evaluation.h"
 #include "nwol_coord.h"
 
-#ifndef __FILL_H__9283492364__
-#define __FILL_H__9283492364__
+#ifndef NWOL_FILL_H_9283492364
+#define NWOL_FILL_H_9283492364
 
 namespace nwol
 {
@@ -95,4 +95,4 @@ namespace nwol
 	template <typename _tCell, typename _tCoord>	static inline	void		fillRectangle			(_tCell* target, int32_t targetWidth, int32_t targetHeight, _tCell color, const ::nwol::SRectangle2D<_tCoord>& rect, ::nwol::ALIGN_SCREEN align)	{ fillRectangle(target, targetWidth, targetHeight, targetWidth, color, rect, align);	}
 }
 
-#endif // __FILL_H__9283492364__
+#endif // NWOL_FILL_H_9283492364

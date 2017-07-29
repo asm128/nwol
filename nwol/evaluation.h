@@ -1,7 +1,7 @@
 /// Copyright 2016-2017 - asm128
 
-#ifndef __EVALUATION_H__92364890278346982374__
-#define __EVALUATION_H__92364890278346982374__
+#ifndef NWOL_EVALUATION_H_92364890278346982374
+#define NWOL_EVALUATION_H_92364890278346982374
 
 namespace nwol
 {
@@ -22,4 +22,4 @@ namespace nwol
 #define iif(condition)						(condition) ?
 #define gclamp(_value, _min, _max)			(::nwol::min((_max), ::nwol::max((_min), (_value))))
 
-#endif // __EVALUATION_H__92364890278346982374__
+#endif // NWOL_EVALUATION_H_92364890278346982374

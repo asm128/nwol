@@ -3,8 +3,8 @@
 #include "nwol_runtime.h"
 #include "nwol_log.h"
 
-#ifndef RUNTIME_IMPL_H__29834908347
-#define RUNTIME_IMPL_H__29834908347
+#ifndef RUNTIME_IMPL_H_29834908347
+#define RUNTIME_IMPL_H_29834908347
 
 //--------------------------------------------------------------- Runtime Interface
 #define DEFINE_RUNTIME_INTERFACE_TITLE(_yourCustomClass, _pluginTitle)																									\
@@ -57,8 +57,8 @@
 /// setup(), render() and cleanup() functions taking a reference to your application instance as parameter as indicated in the following example snippet:
 /// 
 /// ---------- File: YourCustomAppHeader.h --------------------------
-//#ifndef __YOURCUSTOMAPPHEADER_H__983264902__
-//#define __YOURCUSTOMAPPHEADER_H__983264902__
+//#ifndef YOUR_CUSTOM_APP_HEADER_H_983264902
+//#define YOUR_CUSTOM_APP_HEADER_H_983264902
 //
 /// Note that the moduleCreate() and moduleDelete functions require the full definition of your type as it has to create a full instance of the object.
 // namespace YourNS {
@@ -72,7 +72,7 @@
 //int32_t render	(YourNS::YourCustomApp& instanceApp);	// <--- These functions shall return 0 on success or -1 to indicate fatal failure and stop execution
 //int32_t update	(YourNS::YourCustomApp& instanceApp);	// <--- These functions shall return 0 on success or -1 to indicate fatal failure and stop execution
 //
-//#endif // __YOURCUSTOMAPPHEADER_H__983264902__
+//#endif // YOUR_CUSTOM_APP_HEADER_H_983264902
 // 
 /// ---------- File: runtime_interface.cpp --------------------------
 // #include "YourCustomAppHeader.h"	// <--- Your stuff from here
@@ -99,4 +99,4 @@
 	DEFINE_RUNTIME_INTERFACE_RENDER		(_yourCustomClass)													\
 	DEFINE_RUNTIME_INTERFACE_UPDATE		(_yourCustomClass)
 
-#endif // RUNTIME_IMPL_H__29834908347
+#endif // RUNTIME_IMPL_H_29834908347

@@ -1,8 +1,8 @@
 #include "gref_ptr.h"
 #include "buffer.h"
 
-#ifndef __GBUFFER_H__92347__
-#define __GBUFFER_H__92347__
+#ifndef NWOL_GBUFFER_H_92347
+#define NWOL_GBUFFER_H_92347
 
 namespace nwol
 {
@@ -462,4 +462,4 @@ namespace nwol
 	typedef gbuffer<::nwol::glabel,	GTYPEID_DATA_MAKE(::nwol::glabel),	GUSAGE_BINARY>							galabel;
 };
 
-#endif // __GBUFFER_H__92347__
+#endif // NWOL_GBUFFER_H_92347

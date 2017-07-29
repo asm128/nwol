@@ -7,8 +7,8 @@
 #	include <dinput.h>
 #endif
 
-#ifndef __INPUT_H__9263487236498723649213640918273098__
-#define __INPUT_H__9263487236498723649213640918273098__
+#ifndef NWOL_INPUT_H_7236498723649213640918273098
+#define NWOL_INPUT_H_7236498723649213640918273098
 
 namespace nwol
 {
@@ -124,4 +124,4 @@ namespace nwol
 						::nwol::error_t								unacquireInput							(::nwol::SScreenInput& input);
 						::nwol::error_t								acquireInput							(::nwol::SScreenInput& input);
 } // namespace
-#endif // __INPUT_H__9263487236498723649213640918273098__
+#endif // NWOL_INPUT_H_7236498723649213640918273098

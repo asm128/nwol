@@ -4,8 +4,8 @@
 #include "nwol_mutex.h"
 #include "nwol_debug.h"
 
-#ifndef __GREF_MANAGER_NCO_H__287346872__
-#define __GREF_MANAGER_NCO_H__287346872__
+#ifndef NWOL_GREF_MANAGER_NCO_H_287346872
+#define NWOL_GREF_MANAGER_NCO_H_287346872
 
 #if defined(ERROR_PRINTF_ENABLED)	// otherwise error_printf() has no effect and these macros resolve into nothing. Removing them reduces warnings from the compiler because of the unused string array.
 static const char* __string_table_errors[2]= 
@@ -616,5 +616,4 @@ namespace nwol
 	}; // class
 }// namespace
 
-#endif // __GREF_MANAGER_NCO_H__287346872__
-		  
+#endif // NWOL_GREF_MANAGER_NCO_H_287346872

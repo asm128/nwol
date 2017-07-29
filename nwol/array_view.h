@@ -2,8 +2,8 @@
 #include "nwol_log.h"
 #include "typeint.h"
 
-#ifndef __ARRAY_VIEW_H__926340923746098743230948__
-#define __ARRAY_VIEW_H__926340923746098743230948__
+#ifndef ARRAY_VIEW_H_926340923746098743230948
+#define ARRAY_VIEW_H_926340923746098743230948
 
 namespace nwol
 {
@@ -38,4 +38,4 @@ namespace nwol
 	};
 }
 
-#endif // __ARRAY_VIEW_H__926340923746098743230948__
+#endif // ARRAY_VIEW_H_926340923746098743230948

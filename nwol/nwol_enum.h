@@ -3,8 +3,8 @@
 #include "label.h"
 #include "nwol_array.h"
 
-#ifndef __ENUM_H__982364987234987234__
-#define __ENUM_H__982364987234987234__
+#ifndef NWOL_ENUM_H_982364987234987234
+#define NWOL_ENUM_H_982364987234987234
 
 namespace nwol
 {
@@ -240,4 +240,4 @@ namespace nwol
 
 #pragma warning(disable : 4063)	// On Windows, using enum types like we do cause the compiler to throw a warning when the warning level is set to 4
 
-#endif // __ENUM_H__982364987234987234__
+#endif // NWOL_ENUM_H_982364987234987234

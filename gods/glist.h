@@ -1,8 +1,8 @@
 #include "glist_base.h"
 #include "gref_serializer_pod.h"
 
-#ifndef __GLIST_H__93873294__
-#define __GLIST_H__93873294__
+#ifndef NWOL_GLIST_H_93873294
+#define NWOL_GLIST_H_93873294
 
 namespace nwol
 {
@@ -374,4 +374,4 @@ namespace nwol
 
 }	// namespace
 
-#endif // __GLIST_H
+#endif // NWOL_GLIST_H_93873294

@@ -1,8 +1,8 @@
 /// Copyright 2009-2017 - asm128
 #include "nwol_math.h"
 
-#ifndef __COLOR_H__29734982734__
-#define __COLOR_H__29734982734__
+#ifndef NWOL_COLOR_H_29734982734
+#define NWOL_COLOR_H_29734982734
 
 namespace nwol
 {
@@ -139,4 +139,4 @@ namespace nwol
 } // namespace
 
 
-#endif // __COLOR_H__29734982734__
+#endif // NWOL_COLOR_H_29734982734

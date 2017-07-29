@@ -1,11 +1,11 @@
-/// This file is part of the Game Object Data System
+/// This file is part of the EX-Game Object Data System - now known as the No Workflow Overhead Library
 /// 2011 (c) Pablo Ariel Zorrilla Cepeda
 #include "gref.h"
 #include "datausage.h"
 #include <cstdio>
 
-#ifndef __BUFFER_H__23984723094__
-#define __BUFFER_H__23984723094__
+#ifndef NWOL_BUFFER_H_23984723094
+#define NWOL_BUFFER_H_23984723094
 
 namespace nwol
 {
@@ -50,4 +50,4 @@ namespace nwol
 					void				checkBlockBoundaries	(SBuffer* pBlock);
 };
 
-#endif // __BUFFER_H__23984723094__
+#endif // NWOL_BUFFER_H_23984723094

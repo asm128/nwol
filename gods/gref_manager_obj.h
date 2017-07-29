@@ -1,7 +1,7 @@
 #include "gref_manager_nco.h"
 
-#ifndef __GREF_MANAGER_OBJ_H__2908374923__
-#define __GREF_MANAGER_OBJ_H__2908374923__
+#ifndef NWOL_GREF_MANAGER_OBJ_H_2908374923
+#define NWOL_GREF_MANAGER_OBJ_H_2908374923
 
 //
 #define __GDEFINE_CREATEOBJECT(baseType) \
@@ -63,5 +63,4 @@ namespace nwol
 
 }// namespace
 
-#endif // __GREF_MANAGER_OBJ_H__2908374923__
-
+#endif // NWOL_GREF_MANAGER_OBJ_H_2908374923

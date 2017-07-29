@@ -1,8 +1,8 @@
 /// Copyright 2016-2017 - asm128
 #include "unshrinkable_block_container.h"
 
-#ifndef __GLABELMANAGER_H_61596898798741996481968498__
-#define __GLABELMANAGER_H_61596898798741996481968498__
+#ifndef NWOL_GLABELMANAGER_H_61596898798741996481968498
+#define NWOL_GLABELMANAGER_H_61596898798741996481968498
 
 namespace nwol
 {
@@ -21,4 +21,4 @@ namespace nwol
 				CLabelManager*								getSystemLabelManager	();
 } // namespace
 
-#endif // __GLABELMANAGER_H_61596898798741996481968498__
+#endif // NWOL_GLABELMANAGER_H_61596898798741996481968498

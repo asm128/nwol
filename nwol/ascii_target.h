@@ -1,8 +1,8 @@
 /// Copyright 2017 - asm128
 #include "grid_view.h"
 
-#ifndef __ASCII_TARGET_H__209834723428374234__
-#define __ASCII_TARGET_H__209834723428374234__
+#ifndef ASCII_TARGET_H_209834723428374234
+#define ASCII_TARGET_H_209834723428374234
 
 namespace nwol
 {
@@ -15,4 +15,4 @@ namespace nwol
 	};	// struct
 }	// namespace
 
-#endif	//	__ASCII_TARGET_H__209834723428374234__
+#endif	//	ASCII_TARGET_H_209834723428374234

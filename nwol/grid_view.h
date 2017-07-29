@@ -1,8 +1,8 @@
 /// Copyright 2016-2017 - asm128
 #include "array_view.h"
 
-#ifndef __GRID_VIEW_H__926340923746098743230948__
-#define __GRID_VIEW_H__926340923746098743230948__
+#ifndef NWOL_GRID_VIEW_H_926340923746098743230948
+#define NWOL_GRID_VIEW_H_926340923746098743230948
 
 namespace nwol
 {
@@ -53,5 +53,5 @@ namespace nwol
 #pragma pack(pop)
 }
 
-#endif // __GRID_VIEW_H__926340923746098743230948__
+#endif // NWOL_GRID_VIEW_H_926340923746098743230948
 

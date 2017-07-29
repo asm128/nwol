@@ -3,8 +3,8 @@
 #include "datatype.h"
 #include "nwol_array.h"
 
-#ifndef __STRUCT_GENERATOR_POD_H__9287349284928734__
-#define __STRUCT_GENERATOR_POD_H__9287349284928734__
+#ifndef NWOL_STRUCT_GENERATOR_POD_H_9287349284928734
+#define NWOL_STRUCT_GENERATOR_POD_H_9287349284928734
 
 namespace nwol
 {
@@ -27,4 +27,4 @@ namespace nwol
 	};	// struct
 }	// namespace
 
-#endif // __STRUCT_GENERATOR_POD_H__9287349284928734__
+#endif // NWOL_STRUCT_GENERATOR_POD_H_9287349284928734

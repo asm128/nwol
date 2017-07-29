@@ -2,8 +2,8 @@
 #include "array_view.h"
 #include "nwol_memory.h"
 
-#ifndef __ARRAY_H__652434654236655143465__
-#define __ARRAY_H__652434654236655143465__
+#ifndef ARRAY_H_652434654236655143465
+#define ARRAY_H_652434654236655143465
 
 namespace nwol 
 {
@@ -452,4 +452,4 @@ namespace nwol
 
 } // namespace
 
-#endif // __ARRAY_H__652434654236655143465__
+#endif // ARRAY_H_652434654236655143465

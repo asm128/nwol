@@ -1,7 +1,7 @@
 #include "nwol_enum.h"
 
-#ifndef __GNODE_CONSTANTS_H__928374902378__
-#define __GNODE_CONSTANTS_H__928374902378__
+#ifndef NWOL_GNODE_CONSTANTS_H_928374902378
+#define NWOL_GNODE_CONSTANTS_H_928374902378
 
 namespace nwol
 {
@@ -10,4 +10,4 @@ namespace nwol
 	GDEFINE_ENUM_VALUE(DATA_DIRECTION, OUTPUT	, 1	);
 } // namespace
 
-#endif  //__GNODE_CONSTANTS_H__928374902378__
+#endif  // NWOL_GNODE_CONSTANTS_H_928374902378

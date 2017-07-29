@@ -10,8 +10,9 @@
 /// 
 /// This file is part of the Game Object Data System.
 /// 2013 (c) Pablo Ariel Zorrilla Cepeda
-#ifndef __GREF_DEFINITION_H__20347892374__
-#define __GREF_DEFINITION_H__20347892374__
+#ifndef NWOL_GREF_DEFINITION_H_20347892374
+#define NWOL_GREF_DEFINITION_H_20347892374
+
 #include "gcore_ref.h"
 #include "gref_serializer_pod.h"
 #include "gref_manager.h"
@@ -172,4 +173,4 @@ inline static const char* G_CSTRING_FROM_BOOL(bool b) {
   return b ? STRING_BOOL_TRUE : STRING_BOOL_FALSE;
 }
 
-#endif // __GREF_DEFINITION_H__20347892374__
+#endif // NWOL_GREF_DEFINITION_H_20347892374

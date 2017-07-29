@@ -1,7 +1,7 @@
 #include "nwol_log.h"
 
-#ifndef __ARRAY_VIEW_BIT_H__892364987234__
-#define __ARRAY_VIEW_BIT_H__892364987234__
+#ifndef ARRAY_VIEW_BIT_H_892364987234
+#define ARRAY_VIEW_BIT_H_892364987234
 
 namespace nwol 
 {
@@ -44,4 +44,4 @@ namespace nwol
 #pragma pack(pop)
 }
 
-#endif
+#endif // ARRAY_VIEW_BIT_H_892364987234

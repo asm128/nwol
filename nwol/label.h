@@ -4,8 +4,8 @@
 
 #include <string>
 
-#ifndef __LABEL_H_61596841996481968498__
-#define __LABEL_H_61596841996481968498__
+#ifndef NWOL_LABEL_H_61596841996481968498
+#define NWOL_LABEL_H_61596841996481968498
 
 namespace nwol
 {
@@ -82,4 +82,4 @@ namespace nwol
 #pragma pack(pop)
 };
 
-#endif // __LABEL_H_61596841996481968498__
+#endif // NWOL_LABEL_H_61596841996481968498

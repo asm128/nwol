@@ -2,8 +2,8 @@
 #include "nwol_bit.h"
 #include "nwol_math.h"
 
-#ifndef __COORD_H__283409263409234698374__
-#define __COORD_H__283409263409234698374__
+#ifndef NWOL_COORD_H_283409263409234698374
+#define NWOL_COORD_H_283409263409234698374
 
 namespace nwol
 {
@@ -438,4 +438,4 @@ namespace nwol
 	typedef SCoord4<float64_t	>											SCoord4f64	;
 }
 
-#endif // __COORD_H__283409263409234698374__
+#endif // NWOL_COORD_H_283409263409234698374

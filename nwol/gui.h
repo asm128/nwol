@@ -5,8 +5,8 @@
 #include "ascii_color.h"
 #include "ascii_target.h"
 
-#ifndef __GUI_H__92834992384223849732__
-#define __GUI_H__92834992384223849732__
+#ifndef NWOL_GUI_H_92834992384223849732
+#define NWOL_GUI_H_92834992384223849732
 
 namespace nwol
 {
@@ -125,4 +125,4 @@ namespace nwol
 	::nwol::error_t															renderGUIBitmap			(uint32_t* bitmap, uint32_t width, uint32_t height, const ::nwol::SGUI& guiSystem);
 }//namespace
 
-#endif // __GUI_H__92834992384223849732__
+#endif // NWOL_GUI_H_92834992384223849732

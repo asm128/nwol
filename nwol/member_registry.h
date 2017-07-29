@@ -2,8 +2,8 @@
 #include "type_identifier.h"
 #include "datatype.h"
 
-#ifndef __SMEMBER_REGISTRY_H__9214982364982734__
-#define __SMEMBER_REGISTRY_H__9214982364982734__
+#ifndef NWOL_MEMBER_REGISTRY_H_9214982364982734
+#define NWOL_MEMBER_REGISTRY_H_9214982364982734
 
 #define NWOM_REGISTRY_NAME		nowl_member_registry
 #define NWOM_NAME(_memberName)	_nwol_info_##_memberName##_	// This mangles the member name for use as the type name.
@@ -39,4 +39,4 @@ namespace nwol {
 #define NWOM_REGISTRY(...)						NWOM_NAMED_REGISTRY(NWOM_REGISTRY_NAME, __VA_ARGS__)
 #define NWOM_GET_MEMBER_REGISTRY(objectType)	objectType::get_member_registry()
 
-#endif // __SMEMBER_REGISTRY_H__9214982364982734__
+#endif // NWOL_MEMBER_REGISTRY_H_9214982364982734

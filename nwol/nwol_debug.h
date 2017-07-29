@@ -1,8 +1,8 @@
 /// Copyright 2010-2017 - asm128
 #include "platform_globals.h"
 
-#ifndef __NWOL_DEBUG_H__97826389432__
-#define __NWOL_DEBUG_H__97826389432__
+#ifndef NWOL_DEBUG_H__97826389432__
+#define NWOL_DEBUG_H__97826389432__
 
 #if defined(NWOL_DEBUG_ENABLED)
 #	if defined(__ANDROID__) || defined(__LINUX__)
@@ -33,4 +33,4 @@
 //#	define DATA_PRINTF_ENABLED		// Uncomment as needed
 #endif
 
-#endif // __NWOL_DEBUG_H__97826389432__
+#endif // NWOL_DEBUG_H__97826389432__

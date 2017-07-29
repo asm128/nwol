@@ -2,8 +2,8 @@
 #include "label.h"
 #include "nwol_array.h"
 
-#ifndef __STORAGE_H__98234687__
-#define __STORAGE_H__98234687__
+#ifndef NWOL_STORAGE_H_98234687
+#define NWOL_STORAGE_H_98234687
 
 namespace nwol
 {
@@ -15,4 +15,4 @@ namespace nwol
 	int32_t									listFiles				(const char* directory, ::nwol::array_obj<::nwol::glabel>& fileNames);
 } // namespace
 
-#endif // __STORAGE_H__98234687__
+#endif // NWOL_STORAGE_H_98234687

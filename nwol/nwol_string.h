@@ -2,8 +2,8 @@
 #include "nwol_io.h"
 #include <cstring>
 
-#ifndef __STRING_H_56847984984__
-#define __STRING_H_56847984984__
+#ifndef NWOL_STRING_H_56847984984
+#define NWOL_STRING_H_56847984984
 
 #if defined(ANDROID) || defined(__linux__)
 
@@ -72,4 +72,4 @@
 
 #endif
 
-#endif // __STRING_H_56847984984__
+#endif // NWOL_STRING_H_56847984984

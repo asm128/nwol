@@ -1,7 +1,7 @@
 /// Copyright 2017 - asm128
 #include "nwol_size.h"
-#ifndef __NWOL_BOOL_H__20987340928374092837__
-#define __NWOL_BOOL_H__20987340928374092837__
+#ifndef NWOL_BOOL_H__20987340928374092837__
+#define NWOL_BOOL_H__20987340928374092837__
 
 namespace nwol
 {
@@ -17,4 +17,4 @@ namespace nwol
 	}
 }
 
-#endif // __NWOL_BOOL_H__20987340928374092837__
+#endif // NWOL_BOOL_H__20987340928374092837__

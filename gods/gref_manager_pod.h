@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <vector>
 
-#ifndef __GREF_MANAGER_POD_H__287343426872__
-#define __GREF_MANAGER_POD_H__287343426872__
+#ifndef NWOL_GREF_MANAGER_POD_H_287343426872
+#define NWOL_GREF_MANAGER_POD_H_287343426872
 
 #define __GDEFINE_CREATEDATA( baseType )																											\
 	void gcreate( GREF(baseType)** p2 )														{ __g_##baseType##Manager.allocRef(p2);				}	\
@@ -51,4 +51,4 @@ namespace nwol
 
 } // namespace 
 
-#endif // __GREF_MANAGER_POD_H__287343426872__
+#endif // NWOL_GREF_MANAGER_POD_H_287343426872

@@ -1,6 +1,6 @@
 /// Copyright 2010-2017 - asm128
-#ifndef __PLATFORM_GLOBALS_H__2983423__
-#define __PLATFORM_GLOBALS_H__2983423__
+#ifndef NWOL_PLATFORM_GLOBALS_H_2983423
+#define NWOL_PLATFORM_GLOBALS_H_2983423
 
 #if (defined(DEBUG) || defined(_DEBUG)) && (!defined(NWOL_DISABLE_DEBUG)) && !defined(NWOL_DEBUG_ENABLED) 
 #	define NWOL_DEBUG_ENABLED
@@ -62,4 +62,4 @@
 #	define DYNAMIC_LIBRARY_EXTENSION "os"
 #endif
 
-#endif // __PLATFORM_GLOBALS_H__2983423__
+#endif // NWOL_PLATFORM_GLOBALS_H_2983423

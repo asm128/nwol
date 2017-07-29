@@ -4,8 +4,8 @@
 #include "nwol_error.h"
 #include <cstdio>
 
-#ifndef __STYPE_H_23984729384_
-#define __STYPE_H_23984729384_
+#ifndef NWOL_TYPE_H_23984729384
+#define NWOL_TYPE_H_23984729384
 
 namespace nwol
 {
@@ -93,4 +93,4 @@ namespace nwol
 
 };
 
-#endif // __STYPE_H_23984729384_
+#endif // NWOL_TYPE_H_23984729384
