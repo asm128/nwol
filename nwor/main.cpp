@@ -14,7 +14,7 @@ static	int32_t												loadPlatformValues				(::nwol::SRuntimeValues& runtime
 		++filenameStart;	// we need to skip the bar character or fix the invalid index if no bar character found.
 
 		runtimeValues.FileNameRuntime								= &runtimeValues.CommandLine[filenameStart];
-		runtimeValues.CommandLineArgCount							= _argCount-1;
+		runtimeValues.CommandLineArgCount							= _argCount - 1;
 		runtimeValues.CommandLineArgCount							= (runtimeValues.CommandLineArgCount >= ::nwol::size(runtimeValues.CommandLineArgList)) ? ::nwol::size(runtimeValues.CommandLineArgList) : runtimeValues.CommandLineArgCount;
 		for(uint32_t iArg = 0, argCount = runtimeValues.CommandLineArgCount; iArg<argCount; ++iArg)
 			runtimeValues.CommandLineArgList[iArg]						= args[iArg+1];
@@ -66,6 +66,7 @@ static	int32_t												loadPlatformValues				(::nwol::SRuntimeValues& runtime
 	retval_error_if(EXIT_FAILURE, errored(errMy = ::nwor::rtMain(runtimeState)											), "%Error code: 0x%X.", errMy	);  
 	return 0;
 }
+
 #	if defined (__WINDOWS__)
 		int WINAPI											WinMain 
 	(    _In_		HINSTANCE	hInstance		

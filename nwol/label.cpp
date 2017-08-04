@@ -81,7 +81,7 @@ uint32_t							nwol::glabel::load				(const char* in_pMemoryBuffer)													
 }
 
 ::nwol::error_t						nwol::glabel::load				(FILE* in_pMemoryBuffer)																		{
-	sint32									labelSize						= sint32(0);
+	sint32									labelSize						= {};
 	nwol_necall(labelSize.read(in_pMemoryBuffer), "%s", "Failed to read label from file!");
 	if(labelSize) {
 		::nwol::auto_nwol_free					a;
