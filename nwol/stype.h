@@ -59,8 +59,8 @@ namespace nwol
 		inline constexpr			const _tBase*					operator->					()							const	noexcept	{ return  &this->Value;				}
 		inline						_tBase*							begin						()									noexcept	{ return  &this->Value;				}
 		inline constexpr			const _tBase*					begin						()							const	noexcept	{ return  &this->Value;				}
-		inline						_tBase*							end							()									noexcept	{ return (&this->Value)+1;			}
-		inline constexpr			const _tBase*					end							()							const	noexcept	{ return (&this->Value)+1;			}
+		inline						_tBase*							end							()									noexcept	{ return (&this->Value) + 1;		}
+		inline constexpr			const _tBase*					end							()							const	noexcept	{ return (&this->Value) + 1;		}
 
 		// These are wrappers for memcpy() and fwrite()/fread() intended to reduce program verbosity. Disk operations return an error while memory operations return the size copied and zero if failed to write.
 		inline						uint32_t						read						(const void* fp)								{ retnul_error_if(0 == fp, "Parameter is null!");	this->Value = *reinterpret_cast<const _tBase*>(fp);	return (uint32_t)sizeof(_tBase); }

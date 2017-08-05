@@ -6,14 +6,18 @@
 
 namespace nwol
 {
-#define MAX_LABELDATA_ARRAYS 16
+//#define MAX_LABELDATA_ARRAYS 16
 	class CLabelManager {
-					::nwol::unordered_string_set<char, 4096>	LabelData				[MAX_LABELDATA_ARRAYS];
+		static constexpr	const uint32_t								MAX_LABELDATA_ARRAYS						= 16;
+							::nwol::unordered_string_set<char, 4096>	LabelData			[MAX_LABELDATA_ARRAYS]	= {};
+
+		inline				CLabelManager&								operator=									(const CLabelManager& other)															= delete;
+
 	public:	//--------------------------------------------------------------			-----
-					::nwol::error_t								AddLabel				(const char* text, uint32_t maxReadSize, nwol::array_view<const char>& arrayView);
-		static		CLabelManager&								get						()																					{
+							::nwol::error_t								AddLabel									(const char* text, uint32_t maxReadSize, nwol::array_view<const char>& arrayView);
+		static				CLabelManager&								get											()																						{
 			static	CLabelManager										globalLabelManager;
-			return	globalLabelManager;
+			return globalLabelManager;
 		}
 	};
 
