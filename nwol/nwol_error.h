@@ -1,9 +1,7 @@
 /// Copyright 2013-2017 - asm128
 #include "typeint.h"
 
-#if defined (__WINDOWS__)
 #include <string>
-#endif
 
 #ifndef NWOL_ERROR_H__827394__
 #define NWOL_ERROR_H__827394__
@@ -17,7 +15,7 @@ namespace nwol
 								::std::string								getWindowsErrorAsString		(const uint64_t lastError);	// Get the error message, if any.
 	static inline				::std::string								getOSErrorAsString			(const uint64_t lastError)					{ return getWindowsErrorAsString(lastError);	}
 #else
-	static inline				::std::string								getOSErrorAsString			(const uint64_t lastError)					{ return "";									}
+	static inline				::std::string								getOSErrorAsString			(const uint64_t lastError)					{ return "Unknown error";						}
 #endif
 
 } // namespace

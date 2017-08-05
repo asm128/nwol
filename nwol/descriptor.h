@@ -26,7 +26,7 @@ namespace nwol
 		inline				bool					operator	!=				(const gdescriptor& other)								const	noexcept	{ return !operator==(other); }
 
 							uint32_t				save						(char* out_pMemoryBuffer)								const				;
-							uint32_t				load						(const char* in_pMemoryBuffer)												;
+							::nwol::error_t			load						(const char* in_pMemoryBuffer)												;
 	};
 #pragma pack(pop)
 

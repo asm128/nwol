@@ -59,7 +59,7 @@ namespace nwol
 				return dataIndex | 0x80000000;
 			}
 
-			output = result;
+			output											= result;
 			return 0;
 		}
 
@@ -193,13 +193,13 @@ namespace nwol
 			const int32_t										blockSpaceIndex				= this->RemainingBlockSpace	.push_back(_BlockSize - 1);
 			if errored(blockIndex		) { error_printf("%s", "Failed to allocate array!"); this->RemainingBlockSpace	.clear(); return -1; }
 			if errored(blockSpaceIndex	) { error_printf("%s", "Failed to allocate array!"); this->BlockArray			.clear(); return -1; }
-			bInitialized						= true;
+			bInitialized									= true;
 			return 0;
 		}
 	public:
 														unordered_string_set		()																																	: bInitialized(false)	{ (void)INIT_CRITICAL_SECTION(Lock); }
 														~unordered_string_set		()																																	{
-#if defined(NWOL_DEBUG_ENABLED) && defined(VERBOSE_PRINTF_ENABLED)
+#if defined(NWOL_DEBUG_ENABLED) //&& defined(VERBOSE_PRINTF_ENABLED)
 			uint64_t											totalChars					= 0;
 			for( uint32_t iItem=1, count=ItemOffsets.size(); iItem<count; iItem++) {
 				const ::nwol::array_view<const _tBase>	arrayView					= this->get_array_view((int32_t)iItem);
@@ -255,8 +255,7 @@ namespace nwol
 			init();
 			arrayView										= ::nwol::array_view<const _tBase>(&this->BlockArray[0]->Data[0], 0);	// return empty string in case of failure
 
-			// return success on storing empty string.
-			if(0 == readCount || 0 == data[0]) {
+			if(0 == readCount || 0 == data[0]) {	// return success on storing empty string.
 				LEAVE_CRITICAL_SECTION(Lock);
 				return 0;
 			}

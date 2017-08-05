@@ -103,8 +103,8 @@ void														handleInputChanges							(const ::nwol::SInput& input)								
 ::nwol::error_t												createKeyboardDevice						(IDirectInput8* pDirectInput, IDirectInputDevice8** pDirectInputKeyboard)	{
 #if defined(__WINDOWS__)
 	HRESULT															hr												= 0;
-	reterr_error_if(S_OK != (hr = pDirectInput->CreateDevice(GUID_SysKeyboard, pDirectInputKeyboard, NULL)), "Failed to obtain an interface to the system keyboard device: 0x%X '%s'", hr, ::nwol::getWindowsErrorAsString(hr).c_str());
-	reterr_error_if(S_OK != (hr = (*pDirectInputKeyboard)->SetDataFormat(&c_dfDIKeyboard)), "Failed to set input data format: 0x%X '%s'", hr, ::nwol::getWindowsErrorAsString(hr).c_str());	// Set the data format to "Keyboard format" - a predefined data format. A data format specifies which controls on a device we are interested in, and how they should be reported. This tells DirectInput that we will be passing an array of 256 bytes to IDirectInputDevice::GetDeviceState.
+	reterr_error_if(S_OK != (hr = pDirectInput->CreateDevice(GUID_SysKeyboard, pDirectInputKeyboard, NULL))	, "Failed to obtain an interface to the system keyboard device: 0x%X '%s'"	, hr, ::nwol::getOSErrorAsString(hr).c_str());
+	reterr_error_if(S_OK != (hr = (*pDirectInputKeyboard)->SetDataFormat(&c_dfDIKeyboard))					, "Failed to set input data format: 0x%X '%s'"								, hr, ::nwol::getOSErrorAsString(hr).c_str());	// Set the data format to "Keyboard format" - a predefined data format. A data format specifies which controls on a device we are interested in, and how they should be reported. This tells DirectInput that we will be passing an array of 256 bytes to IDirectInputDevice::GetDeviceState.
 #else
 #	error "Not implemented."
 #endif
@@ -114,8 +114,8 @@ void														handleInputChanges							(const ::nwol::SInput& input)								
 ::nwol::error_t												createMouseDevice							(IDirectInput8* pDirectInput, IDirectInputDevice8** pDirectInputMouse)		{
 #if defined(__WINDOWS__)
 	HRESULT															hr												= 0;
-	reterr_error_if(S_OK != (hr = pDirectInput->CreateDevice(GUID_SysMouse, pDirectInputMouse, NULL)), "Failed to obtain an interface to the system keyboard device: 0x%X '%s'", hr, ::nwol::getWindowsErrorAsString(hr).c_str());
-	reterr_error_if(S_OK != (hr = (*pDirectInputMouse)->SetDataFormat(&c_dfDIMouse2)), "Failed to set input data forma: 0x%X '%s'", hr, ::nwol::getWindowsErrorAsString(hr).c_str());	// Set the data format to "Keyboard format" - a predefined data format. A data format specifies which controls on a device we are interested in, and how they should be reported. This tells DirectInput that we will be passing an array of 256 bytes to IDirectInputDevice::GetDeviceState.
+	reterr_error_if(S_OK != (hr = pDirectInput->CreateDevice(GUID_SysMouse, pDirectInputMouse, NULL))		, "Failed to obtain an interface to the system keyboard device: 0x%X '%s'"	, hr, ::nwol::getOSErrorAsString(hr).c_str());
+	reterr_error_if(S_OK != (hr = (*pDirectInputMouse)->SetDataFormat(&c_dfDIMouse2))						, "Failed to set input data forma: 0x%X '%s'"								, hr, ::nwol::getOSErrorAsString(hr).c_str());	// Set the data format to "Keyboard format" - a predefined data format. A data format specifies which controls on a device we are interested in, and how they should be reported. This tells DirectInput that we will be passing an array of 256 bytes to IDirectInputDevice::GetDeviceState.
 #else
 #	error "Not implemented."
 #endif

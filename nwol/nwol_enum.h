@@ -17,9 +17,9 @@ namespace nwol
 	// The implementation separates names from values for improving search speed by reducing the memory usage when performing searches for names/values.
 	template <typename _tValue>
 	struct genum_definition {
-							::nwol::gsyslabel				Name;
-							::nwol::array_pod<_tValue>		Values;
-							::nwol::array_pod<gsyslabel>	Names;
+							::nwol::gsyslabel				Name							= ::nwol::gsyslabel::statics().empty;
+							::nwol::array_pod<_tValue>		Values							= {};
+							::nwol::array_pod<gsyslabel>	Names							= {};
 
 		inline												genum_definition				()																		: Name("Enum definition name not set.")						{}
 		inline static		genum_definition<_tValue>&		get								()																		{
@@ -32,8 +32,8 @@ namespace nwol
 			if( instanceHere.Name != enumName || (instanceHere.Values.size() && (instanceHere.Values[0] != ((_tValue)~(_tValue)0))) )
 				info_printf("Initializing enumeration type: '%s'.", enumName.begin());
 
-			static	::nwol::gsyslabel								newName							= instanceHere.Name = enumName;
-			static	::nwol::error_t									errDummy						= instanceHere.add_value((_tValue)(~(_tValue)0), INVALID_ENUM_VALUE_STR);
+			static const ::nwol::gsyslabel							newName							= instanceHere.Name = enumName;
+			static const ::nwol::error_t							errDummy						= instanceHere.add_value((_tValue)(~(_tValue)0), INVALID_ENUM_VALUE_STR);
 
 			return (_tValue)~(_tValue)0;
 		}

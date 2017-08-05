@@ -17,33 +17,20 @@ bool						nwol::gdescriptor::operator	==			(const gdescriptor& other)								con
 }
 
 uint32_t					nwol::gdescriptor::save					(char* out_pMemoryBuffer)								const										{
-	uint32_t						totalBytes								= 0;
-	sint32							descriptorSize							= (int32_t)size();
-	totalBytes					+= descriptorSize.write(out_pMemoryBuffer);
-	if(descriptorSize) {
-		if(out_pMemoryBuffer)
-			memcpy(&out_pMemoryBuffer[totalBytes], begin(), descriptorSize*sizeof(::nwol::GDATA_TYPE)); 
+	static constexpr	const uint32_t		headerBytes						= (uint32_t)sizeof(uint32_t);
+						const uint32_t		arrayBytes						= (uint32_t)(Count * sizeof(::nwol::GDATA_TYPE));
+	if(out_pMemoryBuffer) {
+		*(uint32_t*)out_pMemoryBuffer		= Count;
+		if(arrayBytes) 
+			memcpy(&out_pMemoryBuffer[headerBytes], Data, arrayBytes); 
 	}
-	return totalBytes			+= descriptorSize;
+	return headerBytes + arrayBytes;
 }
 
-uint32_t					nwol::gdescriptor::load					(const char* in_pMemoryBuffer)																		{
-	uint32_t						totalBytes								= 0;
-	sint32							descriptorSize							= 0;
-	totalBytes					+= descriptorSize.read(in_pMemoryBuffer);
-	if(descriptorSize) {
-		::nwol::auto_nwol_free			a;
-		a.Handle					= ::nwol::nwol_malloc(descriptorSize*sizeof(::nwol::GDATA_TYPE));
-		throw_if(0 == a, "out_of_memory", "Failed to allocate memory for descriptor of size %u.", (uint32_t)descriptorSize)
-		else {
-			if(in_pMemoryBuffer) {
-				memcpy(a, &in_pMemoryBuffer[totalBytes], descriptorSize*sizeof(::nwol::GDATA_TYPE)); 
-				*this						= {(const ::nwol::GDATA_TYPE*)a.Handle, descriptorSize};
-			}
-			else {
-				*this						= {};
-			}
-		}
-	}
-	return totalBytes			+= descriptorSize;
+::nwol::error_t				nwol::gdescriptor::load					(const char* in_pMemoryBuffer)																		{
+	reterr_error_if(0 == in_pMemoryBuffer, "Cannot load label from a null pointer!");
+	const uint32_t							headerBytes						= (uint32_t)sizeof(uint32_t);
+	const uint32_t							descriptorSize					= *(const uint32_t*)in_pMemoryBuffer;
+	*this								= descriptorSize ? ::nwol::gdescriptor((const ::nwol::GDATA_TYPE*)&in_pMemoryBuffer[headerBytes], descriptorSize) : ::nwol::gdescriptor();
+	return headerBytes + descriptorSize;
 }
