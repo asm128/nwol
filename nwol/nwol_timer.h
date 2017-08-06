@@ -21,7 +21,6 @@ namespace nwol
 				Value												= MaxValue;
 				return difference;
 			}
-			
 			return 0;
 		}
 
@@ -33,7 +32,6 @@ namespace nwol
 				Value												= 0;
 				return difference;
 			}
-			
 			return 0;
 		}
 	};	// struct

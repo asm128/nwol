@@ -126,9 +126,6 @@
     <ClInclude Include="ascii_color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="array_view_bit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="nwol_color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -209,6 +206,9 @@
     </ClInclude>
     <ClInclude Include="nwol_runtime_impl.h">
       <Filter>runtime</Filter>
+    </ClInclude>
+    <ClInclude Include="array_view_bit.h">
+      <Filter>array</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

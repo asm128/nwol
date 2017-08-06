@@ -7,6 +7,7 @@ LRESULT											nwol::SScreen::WndProc						(HWND hWnd, UINT uMsg, WPARAM wPar
 	sizeof(SScreenDetail	);
 	sizeof(SScreenState		);
 	sizeof(SScreen			);
+	sizeof(::std::string);
 	switch( uMsg ) {
 	case WM_DESTROY:
 		info_printf( "Received WM_DESTROY message. Posting WM_QUIT..." );

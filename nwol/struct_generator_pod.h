@@ -17,13 +17,13 @@ namespace nwol
 								::nwol::GDATA_TYPE											DataTypeId	;
 
 								const bool													operator==							(const SMember& right)							const	noexcept	{ 
-									return	Type		== right.Type
-										&&	Name		== right.Name
-										&&	DisplayName == right.DisplayName
-										&&	Description == right.Description
-										&&	DataTypeId	== right.DataTypeId
-										;
-								}
+			return	Type		== right.Type
+				&&	Name		== right.Name
+				&&	DisplayName == right.DisplayName
+				&&	Description == right.Description
+				&&	DataTypeId	== right.DataTypeId
+				;
+		}
 	};	// struct
 }	// namespace
 
