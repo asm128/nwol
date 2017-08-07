@@ -1,7 +1,7 @@
 /// Copyright 2016-2017 - asm128
 #include "grid_view.h"
 
-#include "text.h"
+#include "nwol_text.h"
 #include "nwol_noise.h"
 
 #ifndef NWOL_GRID_H_973098721983761298736129873691872361

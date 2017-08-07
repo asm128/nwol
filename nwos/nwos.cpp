@@ -1,6 +1,5 @@
 #include "nwos.h"
 
-#include "text.h"
 #include "ascii_screen.h"
 #include "netlib_server.h"
 #include "netlib_command.h"

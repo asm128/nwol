@@ -4,90 +4,95 @@
 
 namespace klib
 {
-//#pragma warning(disable:4566)
-	static const char ascii_wall_double[] = 
+#pragma pack(push, 1)
+	static const unsigned char			ascii_wall_double				[] = 
 		{	' '				// empty				0
-		,	char(0xFF & 0xBA)	// vertical				1	║
-		,	char(0xFF & 0xB9)	// vertical left		2	╣
-		,	char(0xFF & 0xBB)	// down left			3	╗
-		,	char(0xFF & 0xC8)	// up right				4	╚
-		,	char(0xFF & 0xCA)	// horizontal up		5	╩
-		,	char(0xFF & 0xCB)	// horizontal down		6	╦
-		,	char(0xFF & 0xCC)	// vertical right		7	╠
-		,	char(0xFF & 0xCD)	// horizontal			8	═
-		,	char(0xFF & 0xCE)	// cross				9	╬
-		,	char(0xFF & 0xBC)	// up left				10	╝
-		,	char(0xFF & 0xC9)	// down right			11	╔
+		,	0xBA			// vertical				1	║
+		,	0xB9			// vertical left		2	╣
+		,	0xBB			// down left			3	╗
+		,	0xC8			// up right				4	╚
+		,	0xCA			// horizontal up		5	╩
+		,	0xCB			// horizontal down		6	╦
+		,	0xCC			// vertical right		7	╠
+		,	0xCD			// horizontal			8	═
+		,	0xCE			// cross				9	╬
+		,	0xBC			// up left				10	╝
+		,	0xC9			// down right			11	╔
 		}; //" ╝╗╚╔║═╠╣╦╩╬";	
 
-	static const char ascii_wall_single[] = 
+	static const unsigned char			ascii_wall_single				[] = 
 		{	' '				// empty				0	
-		,	char(0xFF & 0xB3)	// vertical				1	│
-		,	char(0xFF & 0xB4)	// vertical left		2	┤
-		,	char(0xFF & 0xBF)	// down left			3	┐
-		,	char(0xFF & 0xC0)	// up right				4	└
-		,	char(0xFF & 0xC1)	// horizontal up		5	┴
-		,	char(0xFF & 0xC2)	// horizontal down		6	┬
-		,	char(0xFF & 0xC3)	// vertical right		7	├
-		,	char(0xFF & 0xC4)	// horizontal			8	─
-		,	char(0xFF & 0xC5)	// cross				9	┼
-		,	char(0xFF & 0xD9)	// up left				10	┘
-		,	char(0xFF & 0xDA)	// down right			11	┌
+		,	0xB3			// vertical				1	│
+		,	0xB4			// vertical left		2	┤
+		,	0xBF			// down left			3	┐
+		,	0xC0			// up right				4	└
+		,	0xC1			// horizontal up		5	┴
+		,	0xC2			// horizontal down		6	┬
+		,	0xC3			// vertical right		7	├
+		,	0xC4			// horizontal			8	─
+		,	0xC5			// cross				9	┼
+		,	0xD9			// up left				10	┘
+		,	0xDA			// down right			11	┌
 		}; //" ┘┐└┌│─├┤┬┴┼";	
 
-	static const char ascii_wall_combined_single[] = 
+	static const unsigned char			ascii_wall_combined_single		[] = 
 		{	' '				// empty				0
-		,	char(0xFF & 0xB4)	// vertical left	╡	1
-		,	char(0xFF & 0xBF)	// down left		╕	2
-		,	char(0xFF & 0xC0)	// up right			╘	3
-		,	char(0xFF & 0xC1)	// horizontal up	╨	4
-		,	char(0xFF & 0xC2)	// horizontal down	╥	5
-		,	char(0xFF & 0xC3)	// vertical right	╞	6
-		,	char(0xFF &  197)	// cross vertical	╪	7
-		,	char(0xFF &  197)	// cross horizontal	╫	8
-		,	char(0xFF & 0xD9)	// up left			╛	9
-		,	char(0xFF & 0xDA)	// down right		╒	10
+		,	0xB4			// vertical left	╡	1
+		,	0xBF			// down left		╕	2
+		,	0xC0			// up right			╘	3
+		,	0xC1			// horizontal up	╨	4
+		,	0xC2			// horizontal down	╥	5
+		,	0xC3			// vertical right	╞	6
+		,	 197			// cross vertical	╪	7
+		,	 197			// cross horizontal	╫	8
+		,	0xD9			// up left			╛	9
+		,	0xDA			// down right		╒	10
 		}; // "   "										11
 
-	static const char ascii_wall_combined_reinforced[] = 
+	static const unsigned char			ascii_wall_combined_reinforced	[] = 
 		{	' '				// empty				0
-		,	char(0xFF & 180)	// vertical left	╢	1
-		,	char(0xFF & 191)	// down left		╖	2
-		,	char(0xFF & 192)	// up right			╙	3
-		,	char(0xFF & 193)	// horizontal up	╧	4
-		,	char(0xFF & 194)	// horizontal down	╤	5
-		,	char(0xFF & 195)	// vertical right	╟	6
-		,	char(0xFF & 197)	// cross vertical	╫	7
-		,	char(0xFF & 197)	// cross horizontal	╪	8
-		,	char(0xFF & 217)	// up left			╜	9
-		,	char(0xFF & 218)	// down right		╓	10
+		,	180				// vertical left	╢	1
+		,	191				// down left		╖	2
+		,	192				// up right			╙	3
+		,	193				// horizontal up	╧	4
+		,	194				// horizontal down	╤	5
+		,	195				// vertical right	╟	6
+		,	197				// cross vertical	╫	7
+		,	197				// cross horizontal	╪	8
+		,	217				// up left			╜	9
+		,	218				// down right		╓	10
 		}; 	//											11
 
-	static const char ascii_wall_solid[] = 
+	static const unsigned char			ascii_wall_solid				[] = 
 		{	' '				// empty				0
-		,	char(0xFF & 180)	// vertical left	╢	1
-		,	char(0xFF & 191)	// down left		╖	2
-		,	char(0xFF & 192)	// up right			╙	3
-		,	char(0xFF & 193)	// horizontal up	╧	4
-		,	char(0xFF & 194)	// horizontal down	╤	5
-		,	char(0xFF & 195)	// vertical right	╟	6
-		,	char(0xFF & 197)	// cross vertical	╫	7
-		,	char(0xFF & 197)	// cross horizontal	╪	8
-		,	char(0xFF & 217)	// up left			╜	9
-		,	char(0xFF & 218)	// down right		╓	10
+		,	180				// vertical left	╢	1
+		,	191				// down left		╖	2
+		,	192				// up right			╙	3
+		,	193				// horizontal up	╧	4
+		,	194				// horizontal down	╤	5
+		,	195				// vertical right	╟	6
+		,	197				// cross vertical	╫	7
+		,	197				// cross horizontal	╪	8
+		,	217				// up left			╜	9
+		,	218				// down right		╓	10
 		}; 	//											11
 
-	#define WALL_CONNECTION_CROSS				9
-	#define WALL_CORNER_UP_RIGHT				4
-	#define WALL_CORNER_UP_LEFT					10
-	#define WALL_CORNER_DOWN_RIGHT				11
-	#define WALL_CORNER_DOWN_LEFT				3
-	#define WALL_VERTICAL						1
-	#define WALL_HORIZONTAL						8
-	#define WALL_CONNECTION_HORIZONTAL_UP		5
-	#define WALL_CONNECTION_HORIZONTAL_DOWN		6
-	#define WALL_CONNECTION_VERTICAL_RIGHT		7
-	#define WALL_CONNECTION_VERTICAL_LEFT		2
+	enum ASCII_WALL : unsigned char
+		{ ASCII_WALL_NONE							= 0
+		, ASCII_WALL_VERTICAL							// 1
+		, ASCII_WALL_CONNECTION_VERTICAL_LEFT			// 2
+		, ASCII_WALL_CORNER_DOWN_LEFT					// 3
+		, ASCII_WALL_CORNER_UP_RIGHT					// 4
+		, ASCII_WALL_CONNECTION_HORIZONTAL_UP			// 5
+		, ASCII_WALL_CONNECTION_HORIZONTAL_DOWN			// 6
+		, ASCII_WALL_CONNECTION_VERTICAL_RIGHT			// 7
+		, ASCII_WALL_HORIZONTAL							// 8
+		, ASCII_WALL_CONNECTION_CROSS					// 9
+		, ASCII_WALL_CORNER_UP_LEFT						// 10
+		, ASCII_WALL_CORNER_DOWN_RIGHT					// 11
+		, ASCII_WALL_COUNT								// 12
+		, ASCII_WALL_INVALID							= 0xFF// 12
+		};										
 
 	struct SASCIIWallConnection {
 		bool								Bottom				: 1;
@@ -100,17 +105,17 @@ namespace klib
 		bool								ReinforcedRight		: 1;
 	};
 
-	static char	resolveASCIIConnectionCross				( bool bIsReinforced, const SASCIIWallConnection& connection) { char result; if(bIsReinforced) { result = ascii_wall_double[WALL_CONNECTION_CROSS			]; } else {	result = ascii_wall_single[WALL_CONNECTION_CROSS			]; } return result; }
-	static char	resolveASCIIConnectionHorizontalUp		( bool bIsReinforced, const SASCIIWallConnection& connection) { char result; if(bIsReinforced) { result = ascii_wall_double[WALL_CONNECTION_HORIZONTAL_UP	]; } else {	result = ascii_wall_single[WALL_CONNECTION_HORIZONTAL_UP	]; } return result; }
-	static char	resolveASCIIConnectionHorizontalDown	( bool bIsReinforced, const SASCIIWallConnection& connection) { char result; if(bIsReinforced) { result = ascii_wall_double[WALL_CONNECTION_HORIZONTAL_DOWN	]; } else {	result = ascii_wall_single[WALL_CONNECTION_HORIZONTAL_DOWN	]; } return result; }
-	static char	resolveASCIIConnectionVerticalRight		( bool bIsReinforced, const SASCIIWallConnection& connection) { char result; if(bIsReinforced) { result = ascii_wall_double[WALL_CONNECTION_VERTICAL_RIGHT	]; } else {	result = ascii_wall_single[WALL_CONNECTION_VERTICAL_RIGHT	]; } return result; }
-	static char	resolveASCIIConnectionVerticalLeft		( bool bIsReinforced, const SASCIIWallConnection& connection) { char result; if(bIsReinforced) { result = ascii_wall_double[WALL_CONNECTION_VERTICAL_LEFT	]; } else {	result = ascii_wall_single[WALL_CONNECTION_VERTICAL_LEFT	]; } return result; }
-	static char	resolveASCIICornerUpRight				( bool bIsReinforced, const SASCIIWallConnection& connection) { char result; if(bIsReinforced) { result = ascii_wall_double[WALL_CORNER_UP_RIGHT			]; } else {	result = ascii_wall_single[WALL_CORNER_UP_RIGHT				]; } return result; }
-	static char	resolveASCIICornerUpLeft				( bool bIsReinforced, const SASCIIWallConnection& connection) { char result; if(bIsReinforced) { result = ascii_wall_double[WALL_CORNER_UP_LEFT				]; } else {	result = ascii_wall_single[WALL_CORNER_UP_LEFT				]; } return result; }
-	static char	resolveASCIICornerDownRight				( bool bIsReinforced, const SASCIIWallConnection& connection) { char result; if(bIsReinforced) { result = ascii_wall_double[WALL_CORNER_DOWN_RIGHT			]; } else {	result = ascii_wall_single[WALL_CORNER_DOWN_RIGHT			]; } return result; }
-	static char	resolveASCIICornerDownLeft				( bool bIsReinforced, const SASCIIWallConnection& connection) { char result; if(bIsReinforced) { result = ascii_wall_double[WALL_CORNER_DOWN_LEFT			]; } else {	result = ascii_wall_single[WALL_CORNER_DOWN_LEFT			]; } return result; }
-	static char	resolveASCIIVertical					( bool bIsReinforced, const SASCIIWallConnection& connection) { char result; if(bIsReinforced) { result = ascii_wall_double[WALL_VERTICAL					]; } else {	result = ascii_wall_single[WALL_VERTICAL					]; } return result; }
-	static char	resolveASCIIHorizontal					( bool bIsReinforced, const SASCIIWallConnection& connection) { char result; if(bIsReinforced) { result = ascii_wall_double[WALL_HORIZONTAL					]; } else {	result = ascii_wall_single[WALL_HORIZONTAL					]; } return result; }
+	static char	resolveASCIIConnectionCross				( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CONNECTION_CROSS				] : ascii_wall_single[ASCII_WALL_CONNECTION_CROSS				]; }
+	static char	resolveASCIIConnectionHorizontalUp		( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CONNECTION_HORIZONTAL_UP		] : ascii_wall_single[ASCII_WALL_CONNECTION_HORIZONTAL_UP		]; }
+	static char	resolveASCIIConnectionHorizontalDown	( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CONNECTION_HORIZONTAL_DOWN	] : ascii_wall_single[ASCII_WALL_CONNECTION_HORIZONTAL_DOWN		]; }
+	static char	resolveASCIIConnectionVerticalRight		( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CONNECTION_VERTICAL_RIGHT		] : ascii_wall_single[ASCII_WALL_CONNECTION_VERTICAL_RIGHT		]; }
+	static char	resolveASCIIConnectionVerticalLeft		( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CONNECTION_VERTICAL_LEFT		] : ascii_wall_single[ASCII_WALL_CONNECTION_VERTICAL_LEFT		]; }
+	static char	resolveASCIICornerUpRight				( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CORNER_UP_RIGHT				] : ascii_wall_single[ASCII_WALL_CORNER_UP_RIGHT				]; }
+	static char	resolveASCIICornerUpLeft				( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CORNER_UP_LEFT				] : ascii_wall_single[ASCII_WALL_CORNER_UP_LEFT					]; }
+	static char	resolveASCIICornerDownRight				( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CORNER_DOWN_RIGHT				] : ascii_wall_single[ASCII_WALL_CORNER_DOWN_RIGHT				]; }
+	static char	resolveASCIICornerDownLeft				( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CORNER_DOWN_LEFT				] : ascii_wall_single[ASCII_WALL_CORNER_DOWN_LEFT				]; }
+	static char	resolveASCIIVertical					( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_VERTICAL						] : ascii_wall_single[ASCII_WALL_VERTICAL						]; }
+	static char	resolveASCIIHorizontal					( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_HORIZONTAL					] : ascii_wall_single[ASCII_WALL_HORIZONTAL						]; }
 														 
 	template<size_t _sizeWidth, size_t _sizeDepth>
 	static char							getASCIIWall			(const ::nwol::SGrid<STileProp, _sizeWidth, _sizeDepth>& propGrid, int32_t x, int32_t z){
@@ -143,15 +148,10 @@ namespace klib
 		return result;
 	}
 
-	static const char ascii_fraction[] = 
-		{	' '
-		,	char(0xFF & 0xAC)
-		,	char(0xFF & 0xAB)
-		};//'¼', '½'};
-
-	static const char ascii_water[] = {' ', (char)0xF7, '~' };						//'≈', '~'};
-	static const char ascii_tones[] = {' ', (char)0xB0, (char)0xB1, (char)0xB2};	//" ░▒▓";
-	static const char ascii_arrow[] = {0, 0x11, 0x1F, 0x10, 0x1E};					//" ◄▲►▼";
+	static const char					ascii_fraction	[]		= {' ',	char(0xFF & 0xAC), char(0xFF & 0xAB) };	//'¼', '½'};
+	static const char					ascii_water		[]		= {' ', (char)0xF7, '~' };						//'≈', '~'};
+	static const char					ascii_tones		[]		= {' ', (char)0xB0, (char)0xB1, (char)0xB2};	//" ░▒▓";
+	static const char					ascii_arrow		[]		= {0, 0x11, 0x1F, 0x10, 0x1E};					//" ◄▲►▼";
 	//static const char ascii_arrw2[] = " ←↑→↓↕↔↨";
 
 	#define ARROW_LEFT		1
@@ -161,28 +161,28 @@ namespace klib
 	#define ARROW_UPDOWN	5
 	#define ARROW_LEFTRIGHT	6
 
-	static const char ascii_gender[] = {' ', 0x0C, 0x0B, (char)232};				// " ♀♂Φ";
+	static const char					ascii_gender	[]		= {' ', 0x0C, 0x0B, (char)232};				// " ♀♂Φ";
 	#define FEMALE			1
 	#define MALE			2
 	#define HERMAPHRODITE	3
 
 	//static const char ascii_sound[] = "♫";
 
-	static const char ascii_cards[] = {' ', 0x03, 0x04, 0x05, 0x06};				// " ♥♦♣♠";
+	static const char					ascii_cards		[]		= {' ', 0x03, 0x04, 0x05, 0x06};				// " ♥♦♣♠";
 	#define DECK_HEARTS		1
 	#define DECK_DIAMONDS	2
 	#define DECK_CLUBS		3
 	#define DECK_SPADES		4
 
-	static const char ascii_face[] = {' ', 0x01, 0x02};								//" ☺☻";
+	static const char					ascii_face		[]		= {' ', 0x01, 0x02};								//" ☺☻";
 	#define FACE_BLACK	1
 	#define FACE_WHITE	2
 
-	static const char ascii_button[] = {' ', 0x09, 0x0A};							//" ○◙";
+	static const char					ascii_button	[]		= {' ', 0x09, 0x0A};							//" ○◙";
 	#define BUTTON_OFF	1
 	#define BUTTON_ON	2
 
-	static const char ascii_buttn2[] = {' ', 0x07, 0x08};							//" •◘";
+	static const char					ascii_buttn2	[]		= {' ', 0x07, 0x08};							//" •◘";
 	#define BUTTON_OFF	1
 	#define BUTTON_ON	2
 
@@ -211,7 +211,7 @@ namespace klib
 	// [X] [√]
 	// ^ < >
 	//static const char ascii_blah0 = "'☺☻♥♦♣♠ •◘ ○◙  ♂ ♀ ↨ ♫ ☼ ►◄ ↕  ▬ ↨∟ ↔ ▲ ▼ !\"#%&'()*+,-./0123456789:;<=>?@ABDEFGHIJKLMNOPQRSTUVWXYZ[\\]_`abdefghijklmnopqrstuvwxyz~ ⌂ éâäàåêëèïîìÄÅÉæÆôòûùÿ áíóúñÑ ¿⌐¬ ½ ¼ ¡ « » ░▒▓│┤╣║╗┐└┴┬├─┼╚╔╩╠═╬┘┌ Γ ÷≈°∙· ";
-//#pragma warning(default:4566)
+#pragma pack(pop)
 }
 
 #endif // ASCII_REFERENCE_H_923640654654

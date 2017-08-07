@@ -2,6 +2,8 @@
 #include "nwol_misc.h"
 #include "label.h"
 #include "ascii_target.h"
+#include "nwol_array.h"
+
 #include <cstring>
 
 #ifndef NWOL_TEXT_H_923649827346982746982346298734623
@@ -82,6 +84,7 @@ namespace nwol
 	template <size_t _Size> 
 	static inline				bool	getMessageSlow			(char (&message)[_Size], const ::nwol::glabel& textToPrint, double lastFrameSeconds)		{ return getMessageSlow(message, textToPrint.c_str(), textToPrint.size(), lastFrameSeconds); }
 
+	int32_t								getLines				(const char* source, int32_t maxLen, ::nwol::array_obj<std::string>& lines_);
 } // namespace
 
 #endif // NWOL_TEXT_H_923649827346982746982346298734623

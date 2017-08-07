@@ -1,6 +1,5 @@
 #include "nwoa.h"
 
-#include "text.h"
 #include "ascii_screen.h"
 #include "gui.h"
 

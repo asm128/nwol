@@ -231,7 +231,7 @@
     <ClInclude Include="storage.h" />
     <ClInclude Include="struct_generator_pod.h" />
     <ClInclude Include="stype.h" />
-    <ClInclude Include="text.h" />
+    <ClInclude Include="nwol_text.h" />
     <ClInclude Include="nwol_timer.h" />
     <ClInclude Include="typeint.h" />
     <ClInclude Include="type_identifier.h" />
@@ -252,6 +252,7 @@
     <ClCompile Include="nwol_screen.cpp" />
     <ClCompile Include="runtime_module.cpp" />
     <ClCompile Include="storage.cpp" />
+    <ClCompile Include="text.cpp" />
     <ClCompile Include="timer.cpp" />
   </ItemGroup>
   <ItemGroup>

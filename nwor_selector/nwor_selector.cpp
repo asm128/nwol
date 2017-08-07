@@ -3,7 +3,6 @@
 #include "nwor_selector.h"
 
 #include "nwol_input.h"
-#include "text.h"
 #include "ascii_screen.h"
 #include "ascii_color.h"
 #include "gui.h"
