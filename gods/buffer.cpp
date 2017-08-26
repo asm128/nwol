@@ -179,12 +179,12 @@ uint32_t									nwol::fileDeserializeData								(GODS(SBuffer)* out_Definition
 
 		GODS(SBuffer)										actualNewBuffer										= 0;
 		if (0 != (count1 = pNewData->nElementCount)) {
-			::nwol::error_t										errMy												= ::nwol::createBuffer(pNewData->DataFormat, pNewData->Usage, pNewData->nElementCount+1, &actualNewBuffer);
+			::nwol::error_t										errMy												= ::nwol::createBuffer(pNewData->DataFormat, pNewData->Usage, pNewData->nElementCount, pNewData->nColumnCount, pNewData->nSliceCount, &actualNewBuffer);
 			retval_error_if(i, errored(errMy), "%s", "createBuffer() FAILED!! Out of memory?");
 			SBuffer												* actualInstance									= actualNewBuffer->get();
 			actualInstance->nColumnCount					= pNewData->nColumnCount;
 			size1											= GTYPEID_TOTALBYTES(actualInstance->DataFormat);
-			count1											= actualInstance->nElementCount;
+			count1											= pNewData->nElementCount;
 			if(fread(actualInstance->pByteArray, size1, count1, in_fp) != (size_t)count1) {
 				error_printf("Error (2) loading byte array for buffer data at index #%u", i);
 				::nwol::release(&actualNewBuffer);
@@ -233,7 +233,7 @@ uint32_t										nwol::memDeserializeData								(GODS(SBuffer)* out_Definition
 		GODS(SBuffer)										actualNewBuffer										= 0;
 		if (0 != pNewData->nElementCount) {
 			::nwol::error_t										errMy												= ::nwol::createBuffer(pNewData->DataFormat, pNewData->Usage, pNewData->nElementCount, pNewData->nColumnCount, pNewData->nSliceCount, &actualNewBuffer);
-			retval_error_if(byteIndex, errored(errMy), "%s", "createBuffer() FAILED!! Out of memory?");
+			rve_if(byteIndex, errored(errMy), "%s", "createBuffer() FAILED!! Out of memory?");
 			SBuffer												* actualInstance									= actualNewBuffer->get();
 			size1											= actualInstance->nElementCount*GTYPEID_TOTALBYTES(actualInstance->DataFormat);
 			memcpy( actualInstance->pByteArray, &((char*)in_pMemoryBuffer)[byteIndex], size1);
