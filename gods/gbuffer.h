@@ -448,10 +448,10 @@ namespace nwol
 	typedef gbuffer<STypeUsage,		GDATA_TYPE_TYPEUSAGE,		GDATA_USAGE(GUSAGE_DATATYPE | GUSAGE_USAGE)>	gatypeusage;
 
 	// These are useful for native type buffers.
-	typedef gbuffer<char,			GDATA_TYPE_INT8,			GUSAGE_SCALAR>									gachar;
+	typedef gbuffer<char,			GDATA_TYPE_INT8,			GUSAGE_SCALAR>									gachar, gabyte;
 	typedef gbuffer<short,			GDATA_TYPE_INT16,			GUSAGE_SCALAR>									gashort;
 	typedef gbuffer<int,			GDATA_TYPE_INT32,			GUSAGE_SCALAR>									gaint;
-	typedef gbuffer<unsigned char,	GDATA_TYPE_UINT8,			GUSAGE_SCALAR>									gauchar;
+	typedef gbuffer<unsigned char,	GDATA_TYPE_UINT8,			GUSAGE_SCALAR>									gauchar, gaubyte;
 	typedef gbuffer<unsigned short,	GDATA_TYPE_UINT16,			GUSAGE_SCALAR>									gaushort;
 	typedef gbuffer<unsigned int,	GDATA_TYPE_UINT32,			GUSAGE_SCALAR>									gauint;
 	typedef gbuffer<float,			GDATA_TYPE_FLOAT32,			GUSAGE_SCALAR>									gafloat;

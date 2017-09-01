@@ -30,18 +30,6 @@
     <ClInclude Include="gstring.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="netlib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="netlib_client.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="netlib_private.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="netlib_server.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="reference_registry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -84,29 +72,17 @@
     <ClInclude Include="application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="parse_int.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gref_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gscreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="netlib_command.h">
+    <ClInclude Include="parse_number.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="netlib.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="netlib_client.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="netlib_server.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="reference_registry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -122,10 +98,7 @@
     <ClCompile Include="graph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gscreen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="netlib_command.cpp">
+    <ClCompile Include="parse_number.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

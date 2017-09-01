@@ -339,7 +339,7 @@ namespace nwol
 			for( uint32_t iMainList=0; iOutPage < nMaxCount && iMainList < mainPageCount; iMainList++ ) {
 				_TPage																	* pPage									= lstReferencePages[iMainList];
 				pPage->Lock();
-				if( PageSizeInInstances == pPage->getAvailableInstanceCountNoLock() ) {
+				if(PageSizeInInstances == pPage->getAvailableInstanceCountNoLock()) {
 					uint32_t																usedItems								= (uint32_t)pPage->UsedItems;
 					uint32_t																unusedCount								= (uint32_t)(pPage->UnusedInstances);
 					pPage->UsedItems													= PageSizeInInstances;					// both capacities exhausted so we can unlock the page and nobody will have a reason to use it.

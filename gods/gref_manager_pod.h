@@ -22,7 +22,7 @@ namespace nwol
 
 	public:
 		static inline	gref_manager_pod<_tRef>&					get						()																		{
-			static gref_manager_pod<_tRef>	managerInstance;
+			static gref_manager_pod<_tRef>									managerInstance;
 			return managerInstance;
 		}
 		using			base_manager_type::							allocRef;

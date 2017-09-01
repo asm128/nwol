@@ -21,7 +21,7 @@ namespace nwol
 		typedef				typename _tRef::TBase							_tBase;
 	public:
 		static inline		gref_manager_obj<_tRef>&						get					()																				{
-			static gref_manager_obj<_tRef>	managerInstance;
+			static gref_manager_obj<_tRef>											managerInstance;
 			return managerInstance;
 		}
 		using				base_manager_type::								allocRef;

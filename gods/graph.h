@@ -51,8 +51,8 @@ namespace nwol
 
 	public:
 								CGraph&								operator=					(const CGraph& other)																								= default;
-								uint32_t							Load						(const char* in_pMemoryBuffer);		// Returns the amount of bytes read
-								uint32_t							Save						(char* out_pMemoryBuffer)				const;	// Returns the amount of bytes written
+								::nwol::error_t						Load						(const char* in_pMemoryBuffer, uint32_t* inout_bytesRead);					// Returns the amount of bytes read
+								::nwol::error_t						Save						(char* out_pMemoryBuffer, uint32_t* inout_bytesWritten)				const;	// Returns the amount of bytes written
 
 								::nwol::error_t						CreateNode					(::nwol::id_t* index, const ::nwol::glabel& nodeLabel);
 								::nwol::error_t						GetNodeLabel				(::nwol::id_t nodeIndex		, ::nwol::glabel& output)																{ reterr_error_if(errored(validateNodeIndex(nodeIndex)), "invalid node index: '%u'", (uint32_t)nodeIndex); output		= NodeLabels[nodeIndex];							return 0;	}

@@ -28,6 +28,35 @@
 	void		getInfoString			(char* dst_pOutputBuffer, uint32_t nBufferSize,	const GREF(baseType)* in_Data);	\
 	void		getInfoString			(char* dst_pOutputBuffer, uint32_t nBufferSize,	const baseType* in_Data);
 
+//-----------------------------------------------------------------------------// //--------------------------------------------------------------------------//
+#define GDECLARE_PURE_NO_TYPEDEFS(baseType)					\
+	__GDECLARE_COMMON_DEBUG_STRING_FUNCTIONS(baseType);	
+
+#define GDECLARE_NCO_NO_TYPEDEFS(baseType)					\
+	__GDECLARE_COMMON_DEBUG_STRING_FUNCTIONS(baseType);		\
+	void galloc(GREF(baseType)** inout_pCoreInstance);		\
+	void gallocAll(GREF(baseType)** inout_pCoreInstance, uint32_t nCount);
+
+#define GDECLARE_PURE(baseType)						\
+	GDECLARE_REF(baseType, (::nwol::GDATA_TYPE)0);	\
+	GDECLARE_PURE_NO_TYPEDEFS(baseType);
+
+#define GDECLARE_NCO(baseType)																					\
+	GDECLARE_REF(baseType, ::nwol::GDATA_TYPE_GNCO);															\
+	GDECLARE_NCO_NO_TYPEDEFS(baseType);																			\
+	template<typename... _Args> void gcreate(GREF(baseType)** pRef, _Args&&... args) {							\
+		galloc(pRef);																							\
+		if(pRef)																								\
+			new ((*pRef)->get()) GREF(baseType)::TBase(args...);												\
+		else																									\
+			error_printf("Failed to allocate memory for type: %s.", GREF(baseType)::get_type_name().begin());	\
+	}
+
+#define GDECLARE_OBJ(baseType)													\
+	GDECLARE_REF						(baseType, ::nwol::GDATA_TYPE_GOBJ);	\
+	GDECLARE_NCO_NO_TYPEDEFS			(baseType);								\
+	__GDECLARE_COMMON_COPIABLE_FUNCTIONS(baseType);
+
 #define __GDECLARE_POD_MEMORY_FUNCTIONS(baseType)		__GDECLARE_COMMON_COPIABLE_FUNCTIONS(baseType);
 
 // This macro is used to declare read/write functions of the structure data (serialization)
@@ -59,35 +88,6 @@
 	NWOL_REGISTER_POD(nameSpace, baseType, displayName, descriptionText);												\
 	GDECLARE_REF(baseType, __VA_ARGS__);																				\
 	__GDECLARE_POD_FUNCTIONS(baseType);
-
-//-----------------------------------------------------------------------------// //--------------------------------------------------------------------------//
-#define GDECLARE_PURE_NO_TYPEDEFS(baseType)					\
-	__GDECLARE_COMMON_DEBUG_STRING_FUNCTIONS(baseType);	
-
-#define GDECLARE_NCO_NO_TYPEDEFS(baseType)					\
-	__GDECLARE_COMMON_DEBUG_STRING_FUNCTIONS(baseType);		\
-	void galloc(GREF(baseType)** inout_pCoreInstance);		\
-	void gallocAll(GREF(baseType)** inout_pCoreInstance, uint32_t nCount);
-
-#define GDECLARE_PURE(baseType)						\
-	GDECLARE_REF(baseType, (::nwol::GDATA_TYPE)0);	\
-	GDECLARE_PURE_NO_TYPEDEFS(baseType);
-
-#define GDECLARE_NCO(baseType)																					\
-	GDECLARE_REF(baseType, ::nwol::GDATA_TYPE_GNCO);															\
-	GDECLARE_NCO_NO_TYPEDEFS(baseType);																			\
-	template<typename... _Args> void gcreate(GREF(baseType)** pRef, _Args&&... args) {							\
-		galloc(pRef);																							\
-		if(pRef)																								\
-			new ((*pRef)->get()) GREF(baseType)::TBase(args...);												\
-		else																									\
-			error_printf("Failed to allocate memory for type: %s.", GREF(baseType)::get_type_name().begin());	\
-	}
-
-#define GDECLARE_OBJ(baseType)													\
-	GDECLARE_REF						(baseType, ::nwol::GDATA_TYPE_GOBJ);	\
-	GDECLARE_NCO_NO_TYPEDEFS			(baseType);								\
-	__GDECLARE_COMMON_COPIABLE_FUNCTIONS(baseType);
 
 #define GODS_POD_BEGIN(_structName)					struct _structName {
 #define GODS_POD_MEMBER(_typeName, _memberName)			_typeName					_memberName

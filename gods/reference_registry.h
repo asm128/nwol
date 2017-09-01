@@ -10,21 +10,22 @@ namespace nwol
 				::nwol::galabel					DataNames				;
 				::nwol::galabel					DataDescriptions		;
 
-		inline	 void							release_all				()																	{
-			for(uint32_t i=0, count=Data.size(); i<count; i++) {
+		inline	 void							release_all				()																																		{
+			for(uint32_t i=0, count = Data.size(); i<count; i++) {
 				::nwol::GODS(SBuffer)						* rangeRef				= (::nwol::GODS(SBuffer)*)&Data.begin()[i];
 				::nwol::release(rangeRef);
 			}
 		}
-		inline	::nwol::error_t					validateIndex			(::nwol::id_t index)										const	{ return (index < 0 || ((uint32_t)index) >= DataNames.size()) ? -1 : 0; }
-	public:
-												~CReferenceContainer	()																	{ release_all(); }
 
-		inline	::nwol::error_t					GetDescription			(::nwol::id_t index, ::nwol::glabel& ref)					const	{ reterr_error_if(validateIndex(index), "Invalid instance index: '%i'", index); ref = DataDescriptions[index];	return 0; }
-		inline	::nwol::error_t					GetTypeName				(::nwol::id_t index, ::nwol::glabel& ref)					const	{ reterr_error_if(validateIndex(index), "Invalid instance index: '%i'", index); ref = DataNames[index];			return 0; }
+		inline	::nwol::error_t					validateIndex			(::nwol::id_t index)																											const	{ return (index < 0 || ((uint32_t)index) >= DataNames.size()) ? -1 : 0; }
+	public:
+												~CReferenceContainer	()																																		{ release_all(); }
+
+		inline	::nwol::error_t					GetDescription			(::nwol::id_t index, ::nwol::glabel& ref)																						const	{ ree_if(validateIndex(index), "Invalid instance index: '%i'", index); ref = DataDescriptions[index];	return 0; }
+		inline	::nwol::error_t					GetTypeName				(::nwol::id_t index, ::nwol::glabel& ref)																						const	{ ree_if(validateIndex(index), "Invalid instance index: '%i'", index); ref = DataNames[index];			return 0; }
 		template <typename _tRef> 
-		inline	::nwol::error_t					SetReference			(::nwol::id_t index, ::nwol::gptr_nco<_tRef>& ref)					{
-			reterr_error_if(validateIndex(index), "Invalid instance index: '%i'", index);
+		inline	::nwol::error_t					SetReference			(::nwol::id_t index, ::nwol::gptr_nco<_tRef>& ref)																						{
+			ree_if(validateIndex(index), "Invalid instance index: '%i'", index);
 			if(ref.get_type_name() != DataNames[index]) {
 				warning_printf("Changing reference type at index %u. Previous type: %s. New type: %s", DataNames[index].begin(), ref.get_type_name().begin());
 			}
@@ -33,8 +34,8 @@ namespace nwol
 			return 0;
 		}
 		template <typename _tRef> 
-		inline	::nwol::error_t					AcquireReference		(::nwol::id_t index, ::nwol::gptr_nco<_tRef>& ref)			const	{
-			reterr_error_if(validateIndex(index), "Invalid instance index: '%i'", index);
+		inline	::nwol::error_t					AcquireReference		(::nwol::id_t index, ::nwol::gptr_nco<_tRef>& ref)																				const	{
+			ree_if(validateIndex(index), "Invalid instance index: '%i'", index);
 			if(ref.get_type_name() != DataNames[index]) {
 				warning_printf("Casting stored reference to a different type! Stored type: '%s'. Casted type: '%s'.", DataNames[index].begin(), ref.get_type_name().begin());
 			}
@@ -42,7 +43,7 @@ namespace nwol
 			return 0;
 		}
 		template <typename _tRef> 
-		inline	::nwol::error_t					PushReference			(const ::nwol::gptr_nco<_tRef>& ref, ::nwol::id_t* index, const ::nwol::glabel description = ::nwol::glabel::statics().empty)	{
+		inline	::nwol::error_t					PushReference			(const ::nwol::gptr_nco<_tRef>& ref, ::nwol::id_t* index, const ::nwol::glabel description = ::nwol::glabel::statics().empty)			{
 			uint32_t									newIndex				= DataNames.size(); 
 			if errored(Data				.push_back(ref.acquire())		) { error_printf("Failed to push reference. Out of memory?");									}
 			if errored(DataNames		.push_back(ref.get_type_name())	) { error_printf("Failed to push reference. Out of memory?"); Data.pop(0); 						}
@@ -53,7 +54,7 @@ namespace nwol
 
 			return 0;
 		}
-				uint32_t						Save					(char* out_pMemoryBuffer)									const;
+				uint32_t						Save					(char* out_pMemoryBuffer)																										const;
 				uint32_t						Load					(const char* in_pMemoryBuffer);
 	};	// class
 	GDECLARE_OBJ(CReferenceContainer)

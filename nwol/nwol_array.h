@@ -76,7 +76,7 @@ namespace nwol
 				const uint32_t										newSize										= other.Count;
 				const uint32_t										reserveSize									= calc_reserve_size(newSize);
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
-				throw_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tPOD)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
+				throw_if(mallocSize != (reserveSize * (uint32_t)sizeof(_tPOD)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
 				else {
 					::nwol::auto_nwol_free								safeguard;
 					Data											= (_tPOD*)(safeguard.Handle = ::nwol::nwol_malloc(mallocSize));
@@ -98,14 +98,14 @@ namespace nwol
 				const uint32_t										newSize										= other.Count;
 				const uint32_t										reserveSize									= calc_reserve_size(newSize);
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
-				throw_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tPOD)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
+				throw_if(mallocSize != (reserveSize * (uint32_t)sizeof(_tPOD)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
 				else {
 					::nwol::auto_nwol_free								safeguard;
 					Data											= (_tPOD*)(safeguard.Handle = ::nwol::nwol_malloc(mallocSize));
 						 throw_if(0 == Data			, "", "Failed to allocate array. Requested size: %u. ", (uint32_t)newSize) 
 					else throw_if(0 == other.Data	, "", "%s", "other.Data is null!") 
 					else {
-						for(uint32_t i = 0, count = newSize; i<count; ++i)
+						for(uint32_t i = 0, count = newSize; i < count; ++i)
 							Data[i]											= other[i];
 						Size											= (uint32_t)reserveSize;
 						Count											= other.Count;
@@ -125,41 +125,45 @@ namespace nwol
 
 		// Returns the new size of the array
 		inline				int32_t						pop_back									(_tPOD* oldValue)																		{ 
-			reterr_error_if(0 == Count, "%s", "Cannot pop elements of an empty array."); 
+			ree_if(0 == Count, "%s", "Cannot pop elements of an empty array."); 
 			--Count;
 			safe_podcpy(oldValue, &Data[Count]); 
 			return Count; 
 		}
+
 		// Returns the index of the pushed value or -1 on failure
 		inline				int32_t						push_back									(const _tPOD& newValue)																	{ 
 			const int32_t										indexExpected								= Count;
 			const int32_t										indexNew									= resize(Count+1, newValue)-1; 
-			reterr_error_if(indexNew != indexExpected, "Failed to push value! Array size: %i.", indexExpected);
+			ree_if(indexNew != indexExpected, "Failed to push value! Array size: %i.", indexExpected);
 			return indexNew;
 		}
+
 		// Returns the index of the pushed value
 		template<size_t _Length>
 		inline				int32_t						append										(const _tPOD (&newChain)[_Length])														{ return append(newChain, _Length);		}
 		inline				int32_t						append										(const _tPOD* chainToAppend, uint32_t chainLength)										{ 
 			const uint32_t										startIndex									= Count;
 			const uint32_t										requestedSize								= Count + chainLength; 
-			reterr_error_if(requestedSize < Count, "Size overflow. Cannot append chain.");
+			ree_if(requestedSize < Count, "Size overflow. Cannot append chain.");
 			const int32_t										newSize										= resize(requestedSize); 
-			reterr_error_if(newSize != requestedSize, "Failed to resize array for appending.");
+			ree_if(newSize != requestedSize, "Failed to resize array for appending.");
 
 			for(uint32_t i = 0, maxCount = ::nwol::min(chainLength, newSize - startIndex); i < maxCount; ++i)
 				Data[startIndex + i]							= chainToAppend[i];
 			return startIndex;
 		}
+
 		// Returns the new size of the array.
 		inline				int32_t						resize										(uint32_t newSize, const _tPOD& newValue)												{ 
 			int32_t												oldCount									= (int32_t)Count;
 			int32_t												newCount									= resize(newSize);
-			reterr_error_if(newCount != (int32_t)newSize, "Failed to resize array. Requested size: %u. Current size: %u (%u).", newCount, Count, Size);
+			ree_if(newCount != (int32_t)newSize, "Failed to resize array. Requested size: %u. Current size: %u (%u).", newCount, Count, Size);
 			for( int32_t i = oldCount; i < newCount; ++i )
 				::nwol::podcpy(&Data[i], &newValue);
 			return newCount;			
-		}	
+		}
+
 		// Returns the new size of the array.
 							int32_t						resize										(uint32_t newSize)																		{ 
 			const uint32_t										oldCount									= Count;
@@ -167,14 +171,14 @@ namespace nwol
 				_tPOD												* oldData									= Data;
 				uint32_t											reserveSize									= calc_reserve_size(newSize);
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
-				reterr_error_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tPOD)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
+				ree_if(mallocSize != (reserveSize * (uint32_t)sizeof(_tPOD)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
 				::nwol::auto_nwol_free								safeguard;
 				_tPOD												* newData									= (_tPOD*)(safeguard.Handle = ::nwol::nwol_malloc(mallocSize));
-				reterr_error_if(nullptr == newData, "Failed to resize array. Requested size: %u. Current size: %u.", newSize, (uint32_t)Size);
+				ree_if(nullptr == newData, "Failed to resize array. Requested size: %u. Current size: %u.", newSize, (uint32_t)Size);
 
 				_TArrayView											safe_data									= {newData, reserveSize};
 				if(oldData) {
-					for(uint32_t i=0, count = ::nwol::min(newSize, oldCount); i<count; ++i)
+					for(uint32_t i = 0, count = ::nwol::min(newSize, oldCount); i<count; ++i)
 						safe_data[i]									= operator[](i);
 				}
 				Size											= (uint32_t)reserveSize;
@@ -189,54 +193,56 @@ namespace nwol
 
 			return (int32_t)Count;
 		}
+
 		// returns the new size of the list or -1 on failure.
 							int32_t						insert										(uint32_t index, const _tPOD& newValue)													{ 
-			reterr_error_if(index >= Count, "Invalid index: %u.", index);
+			ree_if(index >= Count, "Invalid index: %u.", index);
 
 			if(Size < Count+1) {
 				_tPOD												* oldData									= Data;
-				uint32_t											reserveSize									= calc_reserve_size(Count+1);
+				uint32_t											reserveSize									= calc_reserve_size(Count + 1);
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
-				reterr_error_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tPOD)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
+				ree_if(mallocSize != (reserveSize * (uint32_t)sizeof(_tPOD)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
 				::nwol::auto_nwol_free								safeguard;
 				_tPOD												* newData									= (_tPOD*)(safeguard.Handle = ::nwol::nwol_malloc(mallocSize));
-				reterr_error_if(nullptr == newData, "Failed to allocate array for inserting new value.");
+				ree_if(nullptr == newData, "Failed to allocate array for inserting new value.");
 
 				_TArrayView											viewSafe									= {newData, Count+1};
-				for(uint32_t i=0, maxCount = ::nwol::min(index, Count); i<maxCount; ++i)
+				for(uint32_t i = 0, maxCount = ::nwol::min(index, Count); i < maxCount; ++i)
 					viewSafe[i]										= oldData[i];
 				viewSafe[index]									= newValue;
-				for(uint32_t i=index, maxCount = ::nwol::min(index+1, Count); i<maxCount; ++i) 
-					viewSafe[i+1]									= oldData[i];
+				for(uint32_t i = index, maxCount = ::nwol::min(index + 1, Count); i < maxCount; ++i) 
+					viewSafe[i + 1]									= oldData[i];
 				Data											= newData;
 				safeguard.Handle								= 0;
 			}	
 			else {
-				for(int32_t i = (int32_t)::nwol::min(index, Count-1), maxCount = (int32_t)index; i >= maxCount; --i) 
-					Data[i+1]										= Data[i];
+				for(int32_t i = (int32_t)::nwol::min(index, Count - 1), maxCount = (int32_t)index; i >= maxCount; --i) 
+					Data[i + 1]										= Data[i];
 
 				Data[index]										= newValue;
 			}			
 			return ++Count;
 		}
+
 		// returns the new size of the list or -1 on failure.
 		template<size_t _Length>
 		inline				int32_t						insert										(uint32_t index, const _tPOD* (&chainToInsert)[_Length])								{ return insert(index, chainToInsert, _Length); }
 							int32_t						insert										(uint32_t index, const _tPOD* chainToInsert, uint32_t chainLength)						{
-			reterr_error_if(index >= Count, "Invalid index: %u.", index);
+			ree_if(index >= Count, "Invalid index: %u.", index);
 
-			if(Size < Count+chainLength) {
+			if(Size < Count + chainLength) {
 				_tPOD												* oldData									= Data;
 				uint32_t											newSize										= calc_reserve_size(Count + chainLength);
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
-				reterr_error_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tObj)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
+				ree_if(mallocSize != (reserveSize * (uint32_t)sizeof(_tObj)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
 				::nwol::auto_nwol_free								safeguard;
 				_tPOD												* newData									= (_tPOD*)(safeguard.Handle = ::nwol::nwol_malloc(mallocSize));
-				reterr_error_if(nullptr == newData, "Failed to allocate array for inserting new value.");
+				ree_if(nullptr == newData, "Failed to allocate array for inserting new value.");
 				::nwol::array_view<_tPOD>							viewSafe									= {newData, newSize};
-				for(uint32_t i=0				, maxCount = ::nwol::min(index, Count)				; i <	maxCount; ++i)	viewSafe[i			]	= oldData[i];
-				for(uint32_t i=0				, maxCount = ::nwol::min(chainLength, newSize-index); i <	maxCount; ++i)	viewSafe[i + index	]	= chainToInsert[i];
-				for(uint32_t i=index+chainLength, maxCount = ::nwol::min(index+1, Count)			; i <	maxCount; ++i)	viewSafe[i + 1		]	= oldData[i];
+				for(uint32_t i = 0					, maxCount = ::nwol::min(index, Count)				; i <	maxCount; ++i)	viewSafe[i			]	= oldData[i];
+				for(uint32_t i = 0					, maxCount = ::nwol::min(chainLength, newSize-index); i <	maxCount; ++i)	viewSafe[i + index	]	= chainToInsert[i];
+				for(uint32_t i = index + chainLength, maxCount = ::nwol::min(index + 1, Count)			; i <	maxCount; ++i)	viewSafe[i + 1		]	= oldData[i];
 				Data											= newData;
 				safeguard.Handle								= 0;
 			}	
@@ -249,17 +255,70 @@ namespace nwol
 
 		// Returns the new size of the list or -1 if the array pointer is not initialized.
 		inline				int32_t						remove_unordered							(uint32_t index)																		{ 
-			reterr_error_if(0 == Data, "%s", "Uninitialized array pointer!");
-			reterr_error_if(index >= Count, "Invalid index: %u.", index);
+			ree_if(0 == Data, "%s", "Uninitialized array pointer!");
+			ree_if(index >= Count, "Invalid index: %u.", index);
 			Data[index]										= Data[--Count];
 			return Count;
 		}
+
 		// Returns the index of the argument if found or -1 if not.
 		inline				int32_t						find										(const _tPOD& valueToLookFor)										const				{
-			for(uint32_t i=0; i<Count; ++i) 
+			for(uint32_t i = 0; i < Count; ++i) 
 				if(0 == ::nwol::podcmp(&Data[i], &valueToLookFor))
 					return i;
 			return -1;
+		}
+
+		inline				::nwol::error_t				read										(const byte_t* input, uint32_t* inout_bytesRead)										{
+			uint32_t											elementsToRead								= 0;
+			if(input) {
+				uint32_t											elementsToRead								= *(uint32_t*)input;
+				input											+= sizeof(uint32_t);
+			}
+
+			*inout_bytesRead								+= sizeof(uint32_t);
+			if(0 == elementsToRead) {
+				Count											= 0;
+				return 0;
+			}
+
+			::nwol::array_view<_tPOD>							newStorage									= {(_tPOD*)::nwol::nwol_malloc(sizeof(_tPOD) * elementsToRead), elementsToRead};
+			ree_if(0 == newStorage.begin(), "Failed to allocate array for ");
+			if(0 == input) {
+				for(uint32_t i = 0; i < Count; ++i) 
+					*inout_bytesRead								+= sizeof(_tPOD);
+			}
+			else {
+				for(uint32_t i = 0; i < Count; ++i) {
+					::nwol::podcpy(&newStorage[i], input);
+					input											+= sizeof(_tPOD);
+					*inout_bytesRead								+= sizeof(_tPOD);
+				}
+			}
+			Count											= elementsToRead;
+			Size											= elementsToRead;
+			_tPOD											* old											= Data;
+			Data											= newStorage.begin();
+			::nwol::safe_nwol_free(old);
+		}
+
+		inline				::nwol::error_t				write										(byte_t* input, uint32_t* inout_bytesWritten)						const				{
+			if(0 == input) {
+				inout_bytesWritten							+= sizeof(uint32_t) + sizeof(_tPOD) * Count;	// Just return the size required to store this.
+				return 0;
+			}
+
+			*(uint32_t*)input								= Count;
+			input											+= sizeof(uint32_t);
+			*inout_bytesWritten								+= sizeof(uint32_t);
+
+			::nwol::array_view<_tPOD>							newStorage									= {input, Count};
+			for(uint32_t i = 0; i < Count; ++i) {
+				::nwol::podcpy(&newStorage[i], &Data[i]);
+				input											+= sizeof(_tPOD);
+				*inout_bytesRead								+= sizeof(_tPOD);
+			}
+			return 0;
 		}
 	}; // array_pod
 
@@ -279,7 +338,7 @@ namespace nwol
 		using											_TVectorBase::calc_malloc_size;
 		using											_TVectorBase::operator[];
 
-		inline											~array_obj									()																						{ for(uint32_t i=0; i<Count; ++i) Data[i].~_tObj(); safe_nwol_free(Data); }	// dtor
+		inline											~array_obj									()																						{ for(uint32_t i = 0; i < Count; ++i) Data[i].~_tObj(); safe_nwol_free(Data); }	// dtor
 		inline constexpr								array_obj									()																						= default;
 		inline											array_obj									(const uint32_t newSize)																{ throw_if(((int32_t)newSize) != resize(newSize), "", "%s", "Failed to resize array."); }
 		inline											array_obj									(array_obj<_tObj>&& other)													noexcept	{
@@ -302,7 +361,7 @@ namespace nwol
 						 throw_if(0 == newData		, "", "Failed to resize array. Requested size: %u. Current size: %u.", (uint32_t)newSize, (uint32_t)Size)
 					else throw_if(0 == other.Data	, "", "%s", "other.Data is null!")
 					else {
-						for(uint32_t i=0; i<newSize; ++i) 
+						for(uint32_t i = 0; i < newSize; ++i) 
 							new (&newData[i]) _tObj(other.Data[i]);
 						Data											= newData;
 						Size											= reserveSize;
@@ -315,19 +374,19 @@ namespace nwol
 		inline				array_obj<_tObj>&			operator =									(const array_obj<_tObj>& other)															{
 			throw_if(resize(other.Count) != (int32_t)other.Count, "", "Failed to resize array!")
 			else {
-				for(uint32_t iElement=0; iElement < other.Count; ++iElement)
+				for(uint32_t iElement = 0; iElement < other.Count; ++iElement)
 					operator[](iElement)							= other[iElement];
 			}
 			return *this;
 		}
 		inline				int32_t						clear										()																						{ 
-			for(uint32_t i=0; i < Count; ++i)
+			for(uint32_t i = 0; i < Count; ++i)
 				Data[i].~_tObj();
 			return Count									= 0; 
 		}
 		// Returns the new size of the array
 		inline				int32_t						pop_back									(_tObj* oldValue)																		{ 
-			reterr_error_if(0 == Count, "%s", "Cannot pop elements from an empty array."); 
+			ree_if(0 == Count, "%s", "Cannot pop elements from an empty array."); 
 			--Count;
 			safe_assign(oldValue, Data[Count]); 
 			Data[Count].~_tObj();
@@ -337,29 +396,29 @@ namespace nwol
 		inline				int32_t						push_back									(const _tObj& newValue)																	{ 
 			int32_t												indexExpected								= Count;
 			int32_t												indexNew									= resize(Count+1, newValue)-1; 
-			reterr_error_if(indexNew != indexExpected, "Failed to push value! Array size: %i.", indexExpected);
+			ree_if(indexNew != indexExpected, "Failed to push value! Array size: %i.", indexExpected);
 			return indexNew;
 		}
 		// returns the new size of the list or -1 on failure.
 							int32_t						insert										(uint32_t index, const _tObj& newValue)													{ 
-			reterr_error_if(index >= Count, "Invalid index: %u.", index);
+			ree_if(index >= Count, "Invalid index: %u.", index);
 
 			if(Size < Count + 1) {
 				_tObj												* oldData								= Data;
 				uint32_t											reserveSize								= calc_reserve_size(Count+1);
 				uint32_t											mallocSize								= calc_malloc_size(reserveSize);
-				reterr_error_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tObj)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
+				ree_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tObj)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
 				::nwol::auto_nwol_free								safeguard;
 				_tObj												* newData								= (_tObj*)(safeguard.Handle = ::nwol::nwol_malloc(mallocSize));
-				reterr_error_if(0 == newData, "Failed to allocate for inserting new element into array! current size: %u. new size: %u.", Size, mallocSize);
+				ree_if(0 == newData, "Failed to allocate for inserting new element into array! current size: %u. new size: %u.", Size, mallocSize);
 				::nwol::array_view<_tObj>							viewSafe								= {newData, Count+1};
-				for(uint32_t i=0, maxCount = ::nwol::min(index+1, Count); i<maxCount; ++i) {
+				for(uint32_t i = 0, maxCount = ::nwol::min(index + 1, Count); i < maxCount; ++i) {
 					new (&viewSafe[i]) _tObj(oldData[i]);
 					oldData[i].~_tObj();
 				}
 				new (&viewSafe[index]) _tObj(newValue);
-				for(uint32_t i=index, maxCount = ::nwol::min(index+1, Count); i<maxCount; ++i) {
-					new (&viewSafe[i+1]) _tObj(oldData[i]);
+				for(uint32_t i = index, maxCount = ::nwol::min(index + 1, Count); i < maxCount; ++i) {
+					new (&viewSafe[i + 1]) _tObj(oldData[i]);
 					oldData[i].~_tObj();
 				}
 				Data											= newData;
@@ -367,8 +426,8 @@ namespace nwol
 				safeguard.Handle								= 0;
 			}	
 			else {
-				for(int32_t i = (int32_t)::nwol::min(index, Count-1), maxCount = (int32_t)index; i >= maxCount; --i) {
-					new (&Data[i+1]) _tObj(Data[i]);
+				for(int32_t i = (int32_t)::nwol::min(index, Count - 1), maxCount = (int32_t)index; i >= maxCount; --i) {
+					new (&Data[i + 1]) _tObj(Data[i]);
 					Data[i].~_tObj();
 				}
 				new (&Data[index]) _tObj(newValue);
@@ -383,14 +442,14 @@ namespace nwol
 				_tObj												* oldData									= Data;
 				uint32_t											reserveSize									= calc_reserve_size(newSize);
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
-				reterr_error_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tObj)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
+				ree_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tObj)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize)
 				::nwol::auto_nwol_free								safeguard;
 				_tObj												* newData									= (_tObj*)(safeguard.Handle = ::nwol::nwol_malloc(mallocSize));
-				reterr_error_if(nullptr == newData, "Failed to resize array. Requested size: %u. Current size: %u.", newSize, Size)
+				ree_if(nullptr == newData, "Failed to resize array. Requested size: %u. Current size: %u.", newSize, Size)
 				if(oldData) {
-					for(uint32_t i=0, copyCount = ::nwol::min(oldCount, newSize); i<copyCount; ++i)
+					for(uint32_t i = 0, copyCount = ::nwol::min(oldCount, newSize); i < copyCount; ++i)
 						new (&newData[i]) _tObj(oldData[i]);
-					for(uint32_t i=0; i<oldCount; ++i)
+					for(uint32_t i = 0; i < oldCount; ++i)
 						oldData[i].~_tObj();
 				}
 				Data											= newData;
@@ -401,19 +460,19 @@ namespace nwol
 					::nwol::nwol_free(oldData);
 			}
 			else {
-				for(int32_t i=((int32_t)oldCount)-1, newCount=(int32_t)newSize; i >= newCount; --i)	// we need to cast to int32_t because otherwise --i	will underflow to UINT_MAX and loop forever.
+				for(int32_t i = ((int32_t)oldCount) - 1, newCount = (int32_t)newSize; i >= newCount; --i)	// we need to cast to int32_t because otherwise --i	will underflow to UINT_MAX and loop forever.
 					Data[i].~_tObj();
 				Count											= (uint32_t)newSize;
 			}
-			for(uint32_t i=oldCount; i<Count; ++i)
+			for(uint32_t i = oldCount; i < Count; ++i)
 				new (&Data[i])_tObj(constructorArgs...);
 
 			return (int32_t)Count;
 		}	
 		// Returns the new size of the list or -1 if the array pointer is not initialized.
 							int32_t						remove_unordered							(uint32_t index)																		{ 
-			reterr_error_if(0 == Data, "Uninitialized array pointer!");
-			reterr_error_if(index >= Count, "Invalid index: %u.", index);
+			ree_if(0 == Data, "Uninitialized array pointer!");
+			ree_if(index >= Count, "Invalid index: %u.", index);
 			Data[index].~_tObj();							// Destroy old
 			if(1 == Count) 
 				--Count;
@@ -432,21 +491,25 @@ namespace nwol
 		//	return -1;
 		//}
 	}; // array_obj
+
 	// returns the index or -1 if not found.
 	template <typename _tValue>
 	inline				int32_t						find										(const _tValue* begin, const _tValue* end, const _tValue& valueToLookFor)				{
-		for(uint32_t i=0; begin != end; ++i, ++begin)
+		for(uint32_t i = 0; begin != end; ++i, ++begin)
 			if(valueToLookFor == *begin)
 				return i;
+
 		return -1;
 	}
+
 	// returns the index or -1 if not found.
 	template <typename _tValue>
 	inline				int32_t						find										(const array_pod<_tValue>& valueContainer, const _tValue& valueToLookFor)				{
 		const _tValue										* begin										= valueContainer.begin();
-		for(uint32_t i=0, maxCount = valueContainer.size(); i < maxCount; ++i, ++begin)
+		for(uint32_t i = 0, maxCount = valueContainer.size(); i < maxCount; ++i, ++begin)
 			if(valueToLookFor == *begin)
 				return i;
+
 		return -1;
 	}
 

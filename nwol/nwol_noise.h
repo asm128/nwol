@@ -9,17 +9,17 @@
 namespace nwol
 {
 	// I got this base random function code from http://libnoise.sourceforge.net/noisegen/index.html.
-	static	double						noise1D				(uint32_t x, uint64_t noiseSeed=15731)																	{ x = (x<<13) ^ x; return (1.0 - ( (x * (x * x * noiseSeed + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0);				}
-	static	double						noiseNormal1D		(uint32_t x, uint64_t noiseSeed=15731)																	{ x = (x<<13) ^ x; return (1.0 - ( (x * (x * x * noiseSeed + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0) *.5 + .5f;	}
+	static	double						noise1D				(uint64_t x, uint64_t noiseSeed = 16381)																{ x = (x << 13) ^ x; return (1.0 - ( (x * (x * x * noiseSeed + 786109ULL) + 1824261419ULL) & 0x7fffffffffffffffULL) / 4611686018427387903.0);			}
+	static	double						noiseNormal1D		(uint64_t x, uint64_t noiseSeed = 16381)																{ x = (x << 13) ^ x; return (1.0 - ( (x * (x * x * noiseSeed + 786109ULL) + 1824261419ULL) & 0x7fffffffffffffffULL) / 4611686018427387903.0) *.5 + .5f;	}
 	//------------------
-	static	double						noise2D				(uint32_t x, uint32_t y				, uint32_t nWidth					, uint64_t noiseSeed=15731 )	{ x += (y * nWidth);							return noise1D(x, noiseSeed);		}
-	static	double						noise3D				(uint32_t x, uint32_t y, uint32_t z	, uint32_t nWidth, uint32_t nHeight	, uint64_t noiseSeed=15731 )	{ x += (y * nWidth + (z * nHeight * nWidth));	return noise1D(x, noiseSeed);		}
-	static	double						noiseNormal2D		(uint32_t x, uint32_t y				, uint32_t nWidth					, uint64_t noiseSeed=15731 )	{ x += (y * nWidth);							return noiseNormal1D(x, noiseSeed);	}
-	static	double						noiseNormal3D		(uint32_t x, uint32_t y, uint32_t z	, uint32_t nWidth, uint32_t nHeight	, uint64_t noiseSeed=15731 )	{ x += (y * nWidth + (z * nHeight * nWidth));	return noiseNormal1D(x, noiseSeed);	}
+	static	double						noise2D				(uint32_t x, uint32_t y				, uint32_t nWidth					, uint64_t noiseSeed = 16381 )	{ x += (y * nWidth);							return noise1D(x, noiseSeed);		}
+	static	double						noise3D				(uint32_t x, uint32_t y, uint32_t z	, uint32_t nWidth, uint32_t nHeight	, uint64_t noiseSeed = 16381 )	{ x += (y * nWidth + (z * nHeight * nWidth));	return noise1D(x, noiseSeed);		}
+	static	double						noiseNormal2D		(uint32_t x, uint32_t y				, uint32_t nWidth					, uint64_t noiseSeed = 16381 )	{ x += (y * nWidth);							return noiseNormal1D(x, noiseSeed);	}
+	static	double						noiseNormal3D		(uint32_t x, uint32_t y, uint32_t z	, uint32_t nWidth, uint32_t nHeight	, uint64_t noiseSeed = 16381 )	{ x += (y * nWidth + (z * nHeight * nWidth));	return noiseNormal1D(x, noiseSeed);	}
 
 #pragma pack(push, 1)
 	struct SRandomGenerator {
-				uint64_t					Seed				= 15731;
+				uint64_t					Seed				= 16381;
 #if defined(NWOL_MTSUPPORT)
 				refcount_t					Position			= 0;
 #else
@@ -36,7 +36,7 @@ namespace nwol
 
 		inline	double						Next				()						{
 #if defined(NWOL_MTSUPPORT)
-			return Value						= ::nwol::noiseNormal1D((uint32_t)NWOL_INTERLOCKED_INCREMENT(Position), Seed);
+			return Value						= ::nwol::noiseNormal1D(NWOL_INTERLOCKED_INCREMENT(Position), Seed);
 #else
 			return Value						= ::nwol::noiseNormal1D(++Position, Seed);
 #endif
@@ -45,7 +45,7 @@ namespace nwol
 #pragma pack(pop)
 
 	// Based on noiseNormal1D() returns a value between 0 and 1.
-	static double						randNoise			(uint64_t seed=15731)	{
+	static double						randNoise			(uint64_t seed = 16381)	{
 		static	::nwol::SRandomGenerator		generator;
 		if( generator.Seed != seed )
 			generator.Reset(seed);

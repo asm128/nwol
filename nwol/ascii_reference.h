@@ -117,8 +117,7 @@ namespace klib
 	static char	resolveASCIIVertical					( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_VERTICAL						] : ascii_wall_single[ASCII_WALL_VERTICAL						]; }
 	static char	resolveASCIIHorizontal					( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_HORIZONTAL					] : ascii_wall_single[ASCII_WALL_HORIZONTAL						]; }
 														 
-	template<size_t _sizeWidth, size_t _sizeDepth>
-	static char							getASCIIWall			(const ::nwol::SGrid<STileProp, _sizeWidth, _sizeDepth>& propGrid, int32_t x, int32_t z){
+	static char							getASCIIWall			(const ::nwol::grid_view<STileProp>& propGrid, int32_t x, int32_t z){
 		SASCIIWallConnection					connection				= {false};
 
 		char									result					= '-';
@@ -126,10 +125,10 @@ namespace klib
 
 		bool									bIsReinforced			= propGrid[z][x].Modifier > 0;
 
-		if(x-1 >= 0			&& propGrid[z][x-1].Definition != -1 && definitionsStageProp[propGrid[z][x-1].Definition].Name == labelWall) {	connection.Left		= true;	if(propGrid[z][x-1].Modifier > 0) connection.ReinforcedLeft		= true; }
-		if(x+1 < _sizeWidth	&& propGrid[z][x+1].Definition != -1 && definitionsStageProp[propGrid[z][x+1].Definition].Name == labelWall) {	connection.Right	= true;	if(propGrid[z][x+1].Modifier > 0) connection.ReinforcedRight	= true; }
-		if(z-1 >= 0			&& propGrid[z-1][x].Definition != -1 && definitionsStageProp[propGrid[z-1][x].Definition].Name == labelWall) {	connection.Top		= true;	if(propGrid[z-1][x].Modifier > 0) connection.ReinforcedTop		= true; }
-		if(z+1 < _sizeDepth	&& propGrid[z+1][x].Definition != -1 && definitionsStageProp[propGrid[z+1][x].Definition].Name == labelWall) {	connection.Bottom	= true;	if(propGrid[z+1][x].Modifier > 0) connection.ReinforcedBottom	= true; }
+		if(x - 1 >= 0							&& propGrid[z    ][x - 1].Definition != -1 && definitionsStageProp[propGrid[z    ][x - 1].Definition].Name == labelWall) { connection.Left		= true;	if(propGrid[z    ][x - 1].Modifier > 0) connection.ReinforcedLeft	= true; }
+		if(x + 1 < (int32_t)propGrid.width()	&& propGrid[z    ][x + 1].Definition != -1 && definitionsStageProp[propGrid[z    ][x + 1].Definition].Name == labelWall) { connection.Right		= true;	if(propGrid[z    ][x + 1].Modifier > 0) connection.ReinforcedRight	= true; }
+		if(z - 1 >= 0							&& propGrid[z - 1][x    ].Definition != -1 && definitionsStageProp[propGrid[z - 1][x    ].Definition].Name == labelWall) { connection.Top		= true;	if(propGrid[z - 1][x    ].Modifier > 0) connection.ReinforcedTop	= true; }
+		if(z + 1 < (int32_t)propGrid.height()	&& propGrid[z + 1][x    ].Definition != -1 && definitionsStageProp[propGrid[z + 1][x    ].Definition].Name == labelWall) { connection.Bottom	= true;	if(propGrid[z + 1][x    ].Modifier > 0) connection.ReinforcedBottom	= true; }
 		
 			 if(connection.Bottom	&& connection.Top		&& connection.Left && connection.Right	) { result = resolveASCIIConnectionCross			(bIsReinforced, connection); }
 		else if(connection.Left		&& connection.Right		&& connection.Top						) { result = resolveASCIIConnectionHorizontalUp		(bIsReinforced, connection); }
