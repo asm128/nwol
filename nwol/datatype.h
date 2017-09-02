@@ -1,6 +1,6 @@
 /// This file is part of the Game Object Data System
 /// Copyright © 2011-2016: Pablo Ariel Zorrilla Cepeda
-#include "evaluation.h"
+#include "nwol_evaluation.h"
 #include "typeint.h"
 
 // --------------------------------------------------------------- GDATA_TYPE ---------------------------------------------------------------

@@ -1,5 +1,5 @@
 /// Copyright 2010-2017 - asm128
-#include "evaluation.h"
+#include "nwol_evaluation.h"
 #include <malloc.h>
 #include "nwol_safe.h"
 #include "platform_handle_wrapper.h"

@@ -198,7 +198,7 @@
     <ClInclude Include="descriptor.h" />
     <ClInclude Include="descriptor_manager.h" />
     <ClInclude Include="nwol_enum.h" />
-    <ClInclude Include="evaluation.h" />
+    <ClInclude Include="nwol_evaluation.h" />
     <ClInclude Include="fill.h" />
     <ClInclude Include="grid.h" />
     <ClInclude Include="grid_view.h" />
@@ -221,7 +221,6 @@
     <ClInclude Include="nwol_mutex.h" />
     <ClInclude Include="nwol_safe.h" />
     <ClInclude Include="nwol_screen.h" />
-    <ClInclude Include="nwol_sequence.h" />
     <ClInclude Include="nwol_string.h" />
     <ClInclude Include="nwol_value.h" />
     <ClInclude Include="platform_globals.h" />

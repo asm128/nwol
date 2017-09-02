@@ -36,9 +36,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="evaluation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="nwol_string.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -210,7 +207,7 @@
     <ClInclude Include="nwol_text.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="nwol_sequence.h">
+    <ClInclude Include="nwol_evaluation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

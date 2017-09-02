@@ -16,11 +16,13 @@ namespace nwol
 		virtual				void										OnKeyUp									(uint8_t key)												= 0;
 		virtual				void										OnKeyDown								(uint8_t key)												= 0;
 	};
+
 	struct IHandlerMouse		{
 		virtual				void										OnMouseButtonUp							(uint8_t buttonIndex)										= 0;
 		virtual				void										OnMouseButtonDown						(uint8_t buttonIndex)										= 0;
 		virtual				void										OnMouseMove								(int32_t x, int32_t y, int32_t z)							= 0;
 	};
+
 	GDEFINE_FLAG_TYPE(WINDOWS_INPUT_STATE_FLAG, int8_t);
 	GDEFINE_FLAG_VALUE(WINDOWS_INPUT_STATE_FLAG,	Default				, 0x00);
 	GDEFINE_FLAG_VALUE(WINDOWS_INPUT_STATE_FLAG,	Initialized			, 0x01);
@@ -70,8 +72,8 @@ namespace nwol
 
 																			~SInputDetail							()														{ 
 	#if defined(__WINDOWS__)
-				if(DirectInputMouse		&& gbit_true(DeviceFlagsMouse	, WINDOWS_INPUT_STATE_FLAG_Acquired)) DirectInputMouse		->Unacquire();
-				if(DirectInputKeyboard	&& gbit_true(DeviceFlagsKeyboard, WINDOWS_INPUT_STATE_FLAG_Acquired)) DirectInputKeyboard	->Unacquire();
+				if(DirectInputMouse		&& gbit_true(DeviceFlagsMouse	, WINDOWS_INPUT_STATE_FLAG_Acquired)) info_if(errored(DirectInputMouse		->Unacquire()), "");
+				if(DirectInputKeyboard	&& gbit_true(DeviceFlagsKeyboard, WINDOWS_INPUT_STATE_FLAG_Acquired)) info_if(errored(DirectInputKeyboard	->Unacquire()), "");
 				safe_com_release(DirectInputMouse	); 
 				safe_com_release(DirectInputKeyboard); 
 				safe_com_release(DirectInputContext	); 

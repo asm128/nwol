@@ -1,5 +1,5 @@
 /// Copyright 2010-2017 - asm128
-#include "evaluation.h"
+#include "nwol_evaluation.h"
 #include "typeint.h"
 #include <cmath>
 
@@ -21,15 +21,17 @@ namespace nwol
 	template<typename _tNumber>	inline constexpr	_tNumber			mix						(const _tNumber a, const _tNumber b, const double factor)			noexcept	{ return interpolate_linear(a, b, factor);							}
 
 	// 
-	static inline									uint64_t			powui					(const uint32_t	base, const uint32_t	exponent)					noexcept	{ uint64_t	result = 1; for( uint32_t i = 0; i<exponent; ++i ) result *= base; return result;	}
-	static inline									int64_t				powi					(const int32_t	base, const uint32_t	exponent)					noexcept	{ int64_t	result = 1; for( uint32_t i = 0; i<exponent; ++i ) result *= base; return result;	}
+	static inline									uint64_t			powui					(const uint32_t	base, const uint32_t	exponent)					noexcept	{ uint64_t	result = 1; for( uint32_t i = 0; i < exponent; ++i ) result *= base; return result;	}
+	static inline									int64_t				powi					(const int32_t	base, const uint32_t	exponent)					noexcept	{ int64_t	result = 1; for( uint32_t i = 0; i < exponent; ++i ) result *= base; return result;	}
 	static inline									float64_t			powd					(const int32_t	base, const int32_t		exponent)					noexcept	{ float64_t result = 1;
-		if( exponent >= 0 )
+		if( exponent >= 0 ) {
 			for( int32_t i = 0; i < exponent; ++i )
 				result		  														*= base;	
-		else			   	 
+		}
+		else {
 			for( int32_t i = 0, count =- exponent; i < count; ++i )
 				result																/= base;	
+		}
 		return result;
 	}
 
