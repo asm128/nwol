@@ -51,18 +51,18 @@ namespace nwol
 
 	static constexpr	const char								formatModuleFunctionPtrNull[]	= "Function pointer for %s() in module %s is null.";
 	NWOL_BEGIN_MODULE(::nwol, SDeviceDriverModule);
-		NWOM_PFUNC(::nwol, SDeviceDriverModule, nwol_moduleTitle	);
-		NWOM_PFUNC(::nwol, SDeviceDriverModule, nwol_moduleVersion	);
-		NWOM_PFUNC(::nwol, SDeviceDriverModule, nwol_moduleCreate	);
-		NWOM_PFUNC(::nwol, SDeviceDriverModule, nwol_moduleDelete	);
-		NWOM_PFUNC(::nwol, SDeviceDriverModule, nwol_moduleSetup	);
-		NWOM_PFUNC(::nwol, SDeviceDriverModule, nwol_moduleCleanup	);
-		NWOM_PFUNC(::nwol, SDeviceDriverModule, nwol_moduleRender	);
-		NWOM_PFUNC(::nwol, SDeviceDriverModule, nwol_moduleUpdate	);
+		NWOM_PFUNC	(::nwol, SDeviceDriverModule									, nwol_moduleTitle		);
+		NWOM_PFUNC	(::nwol, SDeviceDriverModule									, nwol_moduleVersion	);
+		NWOM_PFUNC	(::nwol, SDeviceDriverModule									, nwol_moduleCreate		);
+		NWOM_PFUNC	(::nwol, SDeviceDriverModule									, nwol_moduleDelete		);
+		NWOM_PFUNC	(::nwol, SDeviceDriverModule									, nwol_moduleSetup		);
+		NWOM_PFUNC	(::nwol, SDeviceDriverModule									, nwol_moduleCleanup	);
+		NWOM_PFUNC	(::nwol, SDeviceDriverModule									, nwol_moduleRender		);
+		NWOM_PFUNC	(::nwol, SDeviceDriverModule									, nwol_moduleUpdate		);
 		// -----------------------------------------------------------------------------------------------
-		NWOM(::nwol, SDeviceDriverModule, ::nwol	, SRuntimeValues	* , RuntimeValues	, ::nwol::GDATA_TYPE_POINTER, "Runtime Values"	, "Holds global runtime information."									)	= nullptr;
-		NWOM(::nwol, SDeviceDriverModule, 			, void_t			* , ClientInstance	, ::nwol::GDATA_TYPE_POINTER, "Client Instance"	, "Holds the client application instance created by moduleCreate()."	)	= nullptr;
-		NWOM(::nwol, SDeviceDriverModule, const		, char_t			* , ModuleTitle		, ::nwol::GDATA_TYPE_POINTER, "Module Title"	, "The module title."													)	= nullptr;
+		NWOM		(::nwol, SDeviceDriverModule, ::nwol	, SRuntimeValues	*	, RuntimeValues			, ::nwol::GDATA_TYPE_POINTER, "Runtime Values"	, "Holds global runtime information."									)	= nullptr;
+		NWOM		(::nwol, SDeviceDriverModule, 			, void_t			*	, ClientInstance		, ::nwol::GDATA_TYPE_POINTER, "Client Instance"	, "Holds the client application instance created by moduleCreate()."	)	= nullptr;
+		NWOM		(::nwol, SDeviceDriverModule, const		, char_t			*	, ModuleTitle			, ::nwol::GDATA_TYPE_POINTER, "Module Title"	, "The module title."													)	= nullptr;
 		NWOM_REGISTRY
 			(	NWOM_NAME(nwol_moduleTitle		)
 			,	NWOM_NAME(nwol_moduleVersion	)

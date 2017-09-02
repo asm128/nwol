@@ -221,6 +221,7 @@
     <ClInclude Include="nwol_mutex.h" />
     <ClInclude Include="nwol_safe.h" />
     <ClInclude Include="nwol_screen.h" />
+    <ClInclude Include="nwol_sequence.h" />
     <ClInclude Include="nwol_string.h" />
     <ClInclude Include="nwol_value.h" />
     <ClInclude Include="platform_globals.h" />

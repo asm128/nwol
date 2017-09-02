@@ -210,6 +210,9 @@
     <ClInclude Include="nwol_text.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="nwol_sequence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="label.cpp">

@@ -281,7 +281,7 @@ int32_t											update											(::SApplication & instanceApp, bool exitReque
 	case SELECTOR_STATE_MENU				: return ::updateSelectorApp(instanceApp, exitRequested);
 	case SELECTOR_STATE_LOADING_SELECTION	: nwol_necall(::loadSelection(instanceApp), "Selected module \"%s\" failed to load.", moduleTitle);			break;
 	case SELECTOR_STATE_RUNNING_SELECTION	:
-		retval_error_if(::nwol::APPLICATION_STATE_INVALID, 0 == moduleSelected, "The module pointer is null. The only reason I can think of for this to happen is a write overrun but probably someone broke the code since I wrote this.");
+		rve_if(::nwol::APPLICATION_STATE_INVALID, 0 == moduleSelected, "The module pointer is null. The only reason I can think of for this to happen is a write overrun but probably someone broke the code since I wrote this.");
 		error_if(errored(updateResult = moduleSelected->Update(exitRequested)), "Module \"%s\" failed to update with error code %u.", moduleTitle, updateResult)
 		else if(updateResult == ::nwol::APPLICATION_STATE_EXIT) {
 			instanceApp.SelectorState						= SELECTOR_STATE_MENU;

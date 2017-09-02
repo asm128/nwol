@@ -1,5 +1,4 @@
 /// Copyright 2016-2017 - asm128
-#include "nwol_io.h"
 #include <cstring>
 
 #ifndef NWOL_STRING_H_56847984984
@@ -7,6 +6,7 @@
 
 #if defined(ANDROID) || defined(__linux__)
 
+#	include "nwol_io.h"
 #	include <cstddef>
 #	include <cstdarg>
 
