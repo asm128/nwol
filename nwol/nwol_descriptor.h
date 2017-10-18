@@ -1,7 +1,6 @@
 /// Copyright 2016-2017 - asm128
-#include "datatype.h"
-#include "array_view.h"
-#include "nwol_error.h"
+#include "nwol_datatype.h"
+#include "nwol_array_view.h"
 
 //#include <cstdio>
 
@@ -35,7 +34,7 @@ namespace nwol
 		uint32_t												totalBytes								= 0;
 		for(uint32_t i = 0, count = descriptor.size(); i < count; ++i)
 			totalBytes											+= GTYPEID_TOTALBYTES(descriptor[i]);
-		reterr_error_if(totalBytes != sizeof(_tBase), "Descriptor and type size don't match. Descriptor size: %u. sizeof(): %u", totalBytes, (uint32_t)sizeof(_tBase));				
+		ree_if(totalBytes != sizeof(_tBase), "Descriptor and type size don't match. Descriptor size: %u. sizeof(): %u", totalBytes, (uint32_t)sizeof(_tBase));				
 		return 0;
 	}
 };

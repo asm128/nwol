@@ -1,10 +1,10 @@
 /// Copyright 2010-2017 - asm128
 #include "nwol_runtime.h"
-#include "label.h"
+#include "nwol_label.h"
 
 #if defined(__WINDOWS__)
 #elif defined(__ANDROID__) || defined(__LINUX__)
-#include <dlfcn.h>
+#	include <dlfcn.h>
 #endif
 
 void											nwol::printErasedModuleInterfacePointers		(::nwol::RUNTIME_CALLBACK_ID erasedCallbacks, const char_t* errorFormat)													{

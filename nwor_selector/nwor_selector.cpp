@@ -3,23 +3,27 @@
 #include "nwor_selector.h"
 
 #include "nwol_input.h"
-#include "ascii_screen.h"
+#include "nwol_ascii_console.h"
 #include "ascii_color.h"
 #include "gui.h"
-#include "storage.h"
-#include "multithread.h"
+#include "nwol_storage.h"
+#include "nwol_multithread.h"
 
 #include "nwol_runtime_impl.h"
-#include "datatype.h"
-#include "datausage.h"
+#include "nwol_datatype.h"
+#include "nwol_datausage.h"
 #include "stype.h"
 #include "gstring.h"
+
+#include "parse_number.h"
 
 DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Application Selector", 0, 1);
 
 int32_t											cleanup											(::SApplication& instanceApp)																									{ 
 	for(uint32_t iModule = 0, moduleCount = instanceApp.ApplicationModulesHandle.size(); iModule < moduleCount; ++iModule)
 		error_if(::nwol::moduleUnload(instanceApp.ApplicationModulesHandle[iModule]), "Failed to unload module. Maybe the module wasn't actually loaded?");
+	::nwol::asciiDisplayDestroy();
+	::nwol::asciiTargetDestroy(instanceApp.ASCIITarget);
 	return 0; 
 }
 
@@ -37,9 +41,9 @@ int32_t											loadValidModules								(const char* modulesPath, ::nwol::SRun
 			const char											* nameText										= &moduleName[moduleName.size()-4];
 			char												fileExtension	[fileExtensionLength+1]			= {};
 			for(uint32_t iChar = 0, charCount = fileExtensionLength; iChar < charCount; ++iChar)
-				fileExtension[iChar]							= (char)tolower(nameText[iChar]);
+				fileExtension[iChar]							= (char)::tolower(nameText[iChar]);
 
-			if(0 == strcmp(fileExtension, fileExtensionToLookFor)) {
+			if(0 == ::strcmp(fileExtension, fileExtensionToLookFor)) {
 				info_printf("DLL found: %s.", moduleName.begin());
 				nwol_necall(possibleModuleNames.push_back(moduleName), "Failed to push module name. Out of memory?");
 			}
@@ -68,9 +72,9 @@ int32_t											listDLLFiles									(const char* modulesPath, ::nwol::array_o
 			const char											* nameText								= &moduleName[moduleName.size()-4];
 			char												fileExtension	[5]						= {};
 			for(uint32_t iChar = 0, charCount = ::nwol::size(fileExtension)-1; iChar<charCount; ++iChar)
-				fileExtension[iChar]							= (char)tolower(nameText[iChar]);
+				fileExtension[iChar]							= (char)::tolower(nameText[iChar]);
 
-			if(0 == strcmp(fileExtension, "." DYNAMIC_LIBRARY_EXTENSION))
+			if(0 == ::strcmp(fileExtension, "." DYNAMIC_LIBRARY_EXTENSION))
 				nwol_necall(possibleModuleNames.push_back(moduleName), "Failed to push module name to output list. Out of memory?");
 		}
 	}
@@ -106,7 +110,7 @@ int32_t											refreshModules									(::SApplication& instanceApp)										
 		loadedModule.RuntimeValues						= instanceApp.RuntimeValues;
 		int32_t												errorLoad										= ::nwol::applicationModuleLoad(*instanceApp.RuntimeValues, loadedModule, moduleName.begin());
 		continue_warn_if(errored(errorLoad), "DLL is not a valid module: %s." , moduleName.begin());
-		const uint32_t										titleLen										= loadedModule.ModuleTitle ? (uint32_t)strlen(loadedModule.ModuleTitle) : 0;
+		const uint32_t										titleLen										= loadedModule.ModuleTitle ? (uint32_t)::strlen(loadedModule.ModuleTitle) : 0;
 		maxModuleNameLength								= (maxModuleNameLength	> moduleName.size())	? maxModuleNameLength	: moduleName.size();
 		maxModuleTitleLength							= (maxModuleTitleLength > titleLen)				? maxModuleTitleLength	: titleLen;
 		int32_t												moduleIndex										= loadedModules.push_back(loadedModule);
@@ -131,7 +135,7 @@ int32_t											refreshModules									(::SApplication& instanceApp)										
 	static constexpr const char							itemTextPreFormat	[]							= "%%-%u.%us v%%3.3s: %%-%u.%us";
 	char												itemTextFormat		[1024]						= {};
 	char												versionString		[16]						= {};
-	sprintf_s(itemTextFormat, itemTextPreFormat, maxModuleNameLength, maxModuleNameLength, maxModuleTitleLength, maxModuleTitleLength);
+	::sprintf_s(itemTextFormat, itemTextPreFormat, maxModuleNameLength, maxModuleNameLength, maxModuleTitleLength, maxModuleTitleLength);
 
 	PLATFORM_CRT_CHECK_MEMORY();
 	::nwol::gacstring									itemText										= maxModuleNameLength + maxModuleTitleLength + 56;
@@ -142,8 +146,8 @@ int32_t											refreshModules									(::SApplication& instanceApp)										
 	PLATFORM_CRT_CHECK_MEMORY();
 	for(uint32_t iModuleItem = 0, moduleItemCount = loadedModules.size(); iModuleItem < moduleItemCount; ++iModuleItem) {
 		const ::nwol::SApplicationModule					& _module										= loadedModules[iModuleItem];
-		sprintf_s(versionString, "%u.%u", _module.VersionMajor(), _module.VersionMinor());
-		sprintf_s(itemText.begin(), itemText.size(), itemTextFormat, _module.FilenameOriginal.c_str(), versionString, _module.ModuleTitle);
+		::sprintf_s(versionString, "%u.%u", _module.VersionMajor(), _module.VersionMinor());
+		::sprintf_s(itemText.begin(), itemText.size(), itemTextFormat, _module.FilenameOriginal.c_str(), versionString, _module.ModuleTitle);
 		newControl.Text									= ::nwol::glabel(itemText.begin(), ~0U);
 		error_if(errored(::nwol::createControl(guiSystem, newControl)), "Failed to create control for module #%u ('s').", newControl.Text.begin());
 		++newControl.AreaASCII.Offset.y;
@@ -154,17 +158,25 @@ int32_t											refreshModules									(::SApplication& instanceApp)										
 
 int32_t											setup											(::SApplication& instanceApp)																									{ 
 	instanceApp.GUI.Controls.Clear();
-
-	::nwol::initASCIIScreen(instanceApp.GUI.TargetSizeASCII.x, instanceApp.GUI.TargetSizeASCII.y);
-	char												moduleTitle[240]								= {};
-	uint8_t												moduleTitleLen									= (uint8_t)::nwol::size(moduleTitle);
-	nwol_necall(::nwol_moduleTitle(moduleTitle, &moduleTitleLen), "If this fails then something weird is going on.");
-	::nwol::setASCIIScreenTitle(moduleTitle);
+	//static constexpr const char							inputNumber[]							= "123456ABCDEF";
+	//int													charsProcessed							= -1;
+	//uint64_t											resultValue								= ~0ULL;
+	//::nwol::gacstring									resultString							;
+	//static constexpr	const char						symbolList []							= "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	//::gods::parseArbitraryBaseInteger(16, symbolList, inputNumber, 0, (int32_t)strlen(inputNumber), &charsProcessed, &resultValue, resultString);
 
 	::nwol::SGUI										& guiSystem										= instanceApp.GUI;
-
-	guiSystem.TargetSizeASCII.x						= nwol::getASCIIBackBufferWidth		();
-	guiSystem.TargetSizeASCII.y						= nwol::getASCIIBackBufferHeight	();
+	nwol_necall(::nwol::asciiDisplayCreate(guiSystem.TargetSizeASCII), "Cannot create our humble display.");
+	nwol_necall(::nwol::asciiTargetCreate(instanceApp.ASCIITarget, guiSystem.TargetSizeASCII), "Failed to create render target. Out of memory?");
+	char												windowTitle[512]							= {};
+	char												selectorModuleTitle[240]					= {};
+	uint8_t												selectorModuleTitleLen						= (uint8_t)::nwol::size(selectorModuleTitle);
+	uint32_t											selectorModuleVersion						= 0;
+	windowTitle[239]								= 0;
+	nwol_necall(::nwol_moduleVersion(&selectorModuleVersion), "??");
+	nwol_necall(::nwol_moduleTitle(selectorModuleTitle, &selectorModuleTitleLen), "If this fails then something weird is going on.");
+	::sprintf_s(windowTitle, "%s v%u.%u", selectorModuleTitle, selectorModuleVersion & 0xFFU, (selectorModuleVersion & 0xFF00U) >> 8);
+	nwol_necall(::nwol::asciiDisplayTitleSet(windowTitle), "Unknown error.");
 
 	static	const ::nwol::glabel						newControlLabel									= "Exit";
 	::nwol::SGUIControl									newControl;
@@ -220,13 +232,13 @@ int32_t											loadSelection									(::SApplication& instanceApp)											
 	
 	::nwol::RUNTIME_CALLBACK_ID							callbackPointersErased							= moduleInterface.TestForNullPointerFunctions();
 	if(callbackPointersErased) { 
-		printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
+		::nwol::printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
 		retVal											= -1;
 	}
 	else  {
-		::nwol::shutdownASCIIScreen();
+		::nwol::asciiDisplayDestroy();
 		char												windowTitle[512]								= {};
-		sprintf_s(windowTitle, "%s v%u.%u", moduleInterface.ModuleTitle, moduleInterface.VersionMajor(), moduleInterface.VersionMinor());
+		::sprintf_s(windowTitle, "%s v%u.%u", moduleInterface.ModuleTitle, moduleInterface.VersionMajor(), moduleInterface.VersionMinor());
 #if defined(__WINDOWS__)
 		SetWindowText(instanceApp.RuntimeValues->Screen.PlatformDetail.hWnd, windowTitle);
 #else
@@ -237,12 +249,12 @@ int32_t											loadSelection									(::SApplication& instanceApp)											
 			error_printf(errorFormat2, "moduleSetup()"); 
 			retVal											= -1;
 			moduleInterface.Cleanup();
-			::nwol::initASCIIScreen();
+			nwol_necall(::nwol::asciiDisplayCreate(instanceApp.GUI.TargetSizeASCII.x, instanceApp.GUI.TargetSizeASCII.y), "Failed to create our humble display.");
 		} 
 		else {
 			callbackPointersErased							= moduleInterface.TestForNullPointerFunctions();
 			if(callbackPointersErased) { 
-				printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
+				::nwol::printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
 				retVal											= -1;
 			}
 			else {
@@ -261,7 +273,7 @@ int32_t											renderSelection									(const ::SApplication & instanceApp)		
 
 	::nwol::RUNTIME_CALLBACK_ID							callbackPointersErased							= moduleInterface.TestForNullPointerFunctions();
 	if(callbackPointersErased) { 
-		printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
+		::nwol::printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
 		errVal											= -1;
 	}
 	return errVal;
@@ -310,14 +322,16 @@ int32_t											update											(::SApplication & instanceApp, bool exitReque
 				errResult										= ::nwol::APPLICATION_STATE_INVALID;
 			}
 			else {	// Reinitialize the selector window which was probably closed before starting the new app.
-				::nwol::initASCIIScreen(instanceApp.GUI.TargetSizeASCII.x, instanceApp.GUI.TargetSizeASCII.y);
+				nwol_necall(::nwol::asciiDisplayCreate(instanceApp.GUI.TargetSizeASCII.x, instanceApp.GUI.TargetSizeASCII.y), "Failed to create our humble display.");
 				char												windowTitle[512]							= {};
 				char												selectorModuleTitle[240]					= {};
 				uint8_t												selectorModuleTitleLen						= (uint8_t)::nwol::size(selectorModuleTitle);
-				uint16_t											selectorModuleVersion						= 0;
+				uint32_t											selectorModuleVersion						= 0;
+				windowTitle[239]								= 0;
 				nwol_necall(::nwol_moduleVersion(&selectorModuleVersion), "??");
 				nwol_necall(::nwol_moduleTitle(selectorModuleTitle, &selectorModuleTitleLen), "If this fails then something weird is going on.");
-				sprintf_s(windowTitle, "%s v%u.%u", selectorModuleTitle, selectorModuleVersion & 0xFFU, (selectorModuleVersion & 0xFF00U) >> 8);
+				::sprintf_s(windowTitle, "%s v%u.%u", selectorModuleTitle, selectorModuleVersion & 0xFFU, (selectorModuleVersion & 0xFF00U) >> 8);
+				nwol_necall(::nwol::asciiDisplayTitleSet(windowTitle), "Unknown error.");
 #if defined(__WINDOWS__)
 				SetWindowText(instanceApp.RuntimeValues->Screen.PlatformDetail.hWnd, windowTitle);
 #else
@@ -334,14 +348,11 @@ int32_t											update											(::SApplication & instanceApp, bool exitReque
 	return errored(errResult) ? -1 : 0; 
 }
 
-int32_t											renderSelectorApp								(const ::SApplication& instanceApp)																								{
-	::nwol::clearASCIIBackBuffer(' ', COLOR_WHITE);
-
-	::nwol::SASCIITarget								target;
-	nwol_necall(::nwol::getASCIIBackBuffer(target)				, "%s", "Failed to get ASCII target!");
+int32_t											renderSelectorApp								(::SApplication& instanceApp)																								{
+	::nwol::SASCIITarget								& target										= instanceApp.ASCIITarget;
+	::nwol::asciiTargetClear(target, ' ', COLOR_WHITE);
 	nwol_necall(::nwol::renderGUIASCII(target, instanceApp.GUI)	, "%s", "renderGUIASCII() Failed!");
-
-	::nwol::presentASCIIBackBuffer();
+	::nwol::asciiDisplayPresent(target);
 	return 0; 
 }
 
@@ -351,9 +362,9 @@ int32_t											render											(::SApplication& instanceApp)																
 	if( 1 == INTERLOCKED_INCREMENT(instanceApp.RenderSemaphore) ) {
 		switch(instanceApp.SelectorState) {
 		case SELECTOR_STATE_START				:
-		case SELECTOR_STATE_MENU				: retVal	= renderSelectorApp(instanceApp);													break;
+		case SELECTOR_STATE_MENU				: retVal = ::renderSelectorApp(instanceApp);													break;
 		case SELECTOR_STATE_LOADING_SELECTION	: break;	// careful because of unique ASCII screen instance. We may be closing ours or the client module creating its own.
-		case SELECTOR_STATE_RUNNING_SELECTION	: error_if(errored(renderSelection(instanceApp)), "Failed to render client application");	break;
+		case SELECTOR_STATE_RUNNING_SELECTION	: error_if(errored(::renderSelection(instanceApp)), "Failed to render client application");	break;
 		default:
 			error_printf("Unrecognized state: %u", (uint32_t)instanceApp.SelectorState);
 		}

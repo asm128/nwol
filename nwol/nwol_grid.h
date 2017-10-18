@@ -1,5 +1,5 @@
 /// Copyright 2016-2017 - asm128
-#include "grid_view.h"
+#include "nwol_grid_view.h"
 
 #include "nwol_text.h"
 #include "nwol_noise.h"

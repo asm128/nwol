@@ -1,10 +1,9 @@
 /// Copyright 2016-2017 - asm128
 //#pragma warning(disable:4005)
-#include "label.h"
+#include "nwol_label.h"
 
-#include "label_manager.h"
+#include "nwol_label_manager.h"
 #include "stype.h"
-#include "platform_handle_wrapper.h"
 
 #include <string>
 
@@ -36,7 +35,7 @@ uint32_t							nwol::glabel::save				(byte_t* out_pMemoryBuffer)				const							
 }
 
 ::nwol::error_t						nwol::glabel::load				(const byte_t* in_pMemoryBuffer)																	{
-	reterr_error_if(0 == in_pMemoryBuffer, "Cannot load label from a null pointer!");
+	ree_if(0 == in_pMemoryBuffer, "Cannot load label from a null pointer!");
 	const uint32_t							headerBytes						= (uint32_t)sizeof(uint32_t);
 	const uint32_t							labelSize						= *(const uint32_t*)in_pMemoryBuffer;
 	*this								= labelSize ? ::nwol::glabel((const char_t*)&in_pMemoryBuffer[headerBytes], labelSize) : ::nwol::glabel::statics().empty;
@@ -46,7 +45,7 @@ uint32_t							nwol::glabel::save				(byte_t* out_pMemoryBuffer)				const							
 ::nwol::error_t						nwol::glabel::save				(FILE* out_pMemoryBuffer)				const														{
 	nwol_necall(sint32(Count).write(out_pMemoryBuffer), "Failed to write label to file! Label: '%s'.", begin());
 	if(Count) {
-		reterr_error_if(Count != (int32_t)fwrite(begin(), sizeof(char_t), Count, out_pMemoryBuffer), "Failed to write label to file! Label: '%s'.", begin());
+		ree_if(Count != (int32_t)fwrite(begin(), sizeof(char_t), Count, out_pMemoryBuffer), "Failed to write label to file! Label: '%s'.", begin());
 	}
 	return 0;
 }
@@ -57,7 +56,7 @@ uint32_t							nwol::glabel::save				(byte_t* out_pMemoryBuffer)				const							
 	if(labelSize) {
 		::nwol::auto_nwol_free					a;
 		a.Handle							= (char_t*)::nwol::nwol_malloc(labelSize);
-		reterr_error_if(0 == a, "Failed to allocate memory for label of size %u.", (uint32_t)labelSize);
+		ree_if(0 == a, "Failed to allocate memory for label of size %u.", (uint32_t)labelSize);
 		if(labelSize != (int32_t)fread(a, sizeof(char_t), labelSize, in_pMemoryBuffer), "%s", "Failed to read label from file!") {
 			error_printf("Failed to read from file label of size: %u bytes.", labelSize);
 			*this								= ::nwol::glabel::statics().empty;

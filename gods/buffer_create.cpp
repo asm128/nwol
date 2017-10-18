@@ -144,9 +144,9 @@ namespace nwol
 			else {
 				LEAVE_CRITICAL_SECTION(cs);
 				uint32_t							sizeRequested				= typeInfo.TotalBytes*nElementCount;
-				pStorage->Lock();
+				pStorage->lock();
 				newBuffer						= getBufferFromStorage(pStorage, sizeRequested); // (uint32_t)(sizeRequested+sizeRequested*.25f));
-				pStorage->Unlock();
+				pStorage->unlock();
 				if( newBuffer ) {
 					SBuffer								* pBuffer = newBuffer->get();
 					pBuffer->DataFormat				= DataFormat;
@@ -259,9 +259,9 @@ namespace nwol
 		}
 
 		inline ::nwol::error_t			releaseToPageLocked		(SBufferManagerStorage* pStorage, GODS(SBuffer) oldBuffer)					{
-			pStorage->Lock();
+			pStorage->lock();
 			releaseToPage(pStorage, oldBuffer);
-			pStorage->Unlock();
+			pStorage->unlock();
 			return 0;
 		}
 		

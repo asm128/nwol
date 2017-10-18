@@ -63,12 +63,12 @@ namespace nwol
 #define NWOL_ERROR_SEVERITY_FATAL		"5"	// Red Alert.
 
 #define nwol_printf(severity, text, format, ...)																															\
-	{																																										\
+	do {																																										\
 		static constexpr const char						infoFormat		[]								= ":" severity ":[" __FILE__ ":%i]|{" __FUNCTION__ "}:" text ":";	\
 		static char										infoPrefix		[::nwol::size(infoFormat)+8]	= {};																\
 		static const int								lengthPrefix									= sprintf_s(infoPrefix, infoFormat, __LINE__);						\
 		::nwol::__nwol_printf(severity, infoPrefix, format, __VA_ARGS__);																									\
-	}
+	} while(0)
 
 #define nwol_wprintf nwol_printf
 
@@ -88,7 +88,7 @@ namespace nwol
 #	if defined( __ANDROID__ )
 #		define error_printf( ... )										__android_log_print(ANDROID_LOG_ERROR, __FILE__ ":", __VA_ARGS__  )
 #	elif defined( __WINDOWS__ )
-#		define error_printf( format, ... )								{ nwol_printf(NWOL_ERROR_SEVERITY_ERROR, "error", format, __VA_ARGS__ ); NWOL_PLATFORM_DEBUG_BREAK(); }
+#		define error_printf( format, ... )								do { nwol_printf(NWOL_ERROR_SEVERITY_ERROR, "error", format, __VA_ARGS__ ); NWOL_PLATFORM_DEBUG_BREAK(); } while(0)
 #	else
 #		define error_printf( format, ... )								nwol_printf(NWOL_ERROR_SEVERITY_ERROR, "error", format, __VA_ARGS__ )
 #	endif
@@ -139,9 +139,9 @@ namespace nwol
 #endif
 
 #if defined( __ANDROID__ )
-#	define throw_printf( format, exception, ... )								{ __android_log_print( ANDROID_LOG_ERROR, __FILE__ ":", __VA_ARGS__ ); NWOL_CRASH(); }
+#	define throw_printf( format, exception, ... )					do { __android_log_print( ANDROID_LOG_ERROR, __FILE__ ":", __VA_ARGS__ ); NWOL_CRASH(); } while(0)
 #else
-#	define throw_printf( format, exception, ... )								{ nwol_printf(NWOL_ERROR_SEVERITY_FATAL, "fatal", format, __VA_ARGS__ ); throw(exception); }
+#	define throw_printf( format, exception, ... )					do { nwol_printf(NWOL_ERROR_SEVERITY_FATAL, "fatal", format, __VA_ARGS__ ); throw(exception); } while(0)
 #endif
 
 #if !defined(NWOL_DONT_DEFINE_ERROR_PRINTF_ALIASES)
@@ -152,7 +152,7 @@ namespace nwol
 #define debug_print( message )									info_printf		("%s", message)
 
 #if defined(__ANDROID__)
-#	define throw_if(condition, exception, ...)						if(condition) { nwol_printf(NWOL_ERROR_SEVERITY_ERROR	, "error"	, "condition: %s", #condition); error_printf(__VA_ARGS__); NWOL_CRASH(); }	// No throw so we just crash.
+#	define throw_if(condition, exception, ...)						if(condition) { nwol_printf(NWOL_ERROR_SEVERITY_ERROR	, "error"	, "condition: %s", #condition); error_printf(__VA_ARGS__); NWOL_CRASH();		}	// No throw so we just crash.
 #else
 #	define throw_if(condition, exception, ...)						if(condition) { nwol_printf(NWOL_ERROR_SEVERITY_ERROR	, "error"	, "condition: %s", #condition); error_printf(__VA_ARGS__); throw(exception);	}
 #endif
@@ -190,23 +190,24 @@ namespace nwol
 
 #if defined (ERROR_PRINTF_ENABLED)
 // Non-propagable retval_error call.
-#	define nwol_rve_ecall(retVal, nwo_call, ...) {																																	\
+#	define nwol_rve_ecall(retVal, nwo_call, format, ...) do {																														\
 		::nwol::error_t errCall = (nwo_call);  																																		\
 		if(errCall < 0) {																																							\
-			nwol_printf(NWOL_ERROR_SEVERITY_ERROR, "error", "%s: 0x%X", #nwo_call, errCall);																						\
-			error_printf(__VA_ARGS__); 																																				\
+			nwol_printf(NWOL_ERROR_SEVERITY_ERROR, "error", "%s: 0x%X.", #nwo_call, errCall);																						\
+			error_printf(format, __VA_ARGS__); 																																		\
 			return retVal; 																																							\
 		}																																											\
 		else {																																										\
 			verbose_printf("%s: Success (0x%X).", #nwo_call, errCall);																												\
 		}																																											\
-	}
+	} while(0)
+
 // Non-propagable retval_error error-warning call.
-#	define nwol_rve_ewcall(retVal, nwo_call, ...) {																																	\
+#	define nwol_rve_ewcall(retVal, nwo_call, format, ...) do {																														\
 		if(::nwol::error_t errCall = (nwo_call)) { 																																	\
 			if(errCall < 0) {																																						\
-				nwol_printf(NWOL_ERROR_SEVERITY_ERROR, "error", "%s: 0x%X", #nwo_call, errCall);																					\
-				error_printf(__VA_ARGS__); 																																			\
+				nwol_printf(NWOL_ERROR_SEVERITY_ERROR, "error", "%s: 0x%X.", #nwo_call, errCall);																					\
+				error_printf(format, __VA_ARGS__); 																																	\
 				return retval; 																																						\
 			}																																										\
 			else {																																									\
@@ -216,10 +217,33 @@ namespace nwol
 		else {																																										\
 			verbose_printf("%s: Success (0x%X).", #nwo_call, errCall);																												\
 		}																																											\
-	}
+	} while(0)
+//
+#	define nwol_rv_hrcall(retVal, hr_call) do {																																		\
+		::HRESULT errCall_ = (hr_call);  																																			\
+		if FAILED(errCall_) {																																						\
+			nwol_printf(NWOL_ERROR_SEVERITY_ERROR, "error", "%s: (0x%X) : '%s'.", #hr_call, errCall_, ::nwol::getWindowsErrorAsString(errCall_).c_str());							\
+			return retVal; 																																							\
+		}																																											\
+		else {																																										\
+			verbose_printf("%s: Success (0x%X).", #hr_call, errCall_);																												\
+		}																																											\
+	} while(0)
+//
+#	define nwol_rve_hrcall(retVal, hr_call, format, ...) do {																														\
+		::HRESULT errCall_ = (hr_call);  																																			\
+		if FAILED(errCall_) {																																						\
+			nwol_printf(NWOL_ERROR_SEVERITY_ERROR, "error", "%s: (0x%X) : '%s' - " format, #hr_call, errCall_, ::nwol::getWindowsErrorAsString(errCall_).c_str(), __VA_ARGS__);		\
+			return retVal; 																																							\
+		}																																											\
+		else {																																										\
+			verbose_printf("%s: Success (0x%X).", #hr_call, errCall_);																												\
+		}																																											\
+	} while(0)
+
 // --------------------------------------------------------------------
 // Propagable retval_error call.
-#	define nwol_pecall(nwo_call, ...) {																																				\
+#	define nwol_pecall(nwo_call, ...) do {																																			\
 		::nwol::error_t errCall = (nwo_call);  																																		\
 		if(errCall < 0) {																																							\
 			nwol_printf(NWOL_ERROR_SEVERITY_ERROR, "error", "%s: 0x%X", #nwo_call, errCall);																						\
@@ -229,9 +253,9 @@ namespace nwol
 		else {																																										\
 			verbose_printf("%s: Success (0x%X).", #nwo_call, errCall);																												\
 		}																																											\
-	}
+	} while(0)
 // Propagable retval_error error-warning call.
-#	define nwol_pewcall(nwo_call, ...) {																																			\
+#	define nwol_pewcall(nwo_call, ...) do {																																			\
 		if(::nwol::error_t errCall = (nwo_call)) { 																																	\
 			if(errCall < 0) {																																						\
 				nwol_printf(NWOL_ERROR_SEVERITY_ERROR, "error", "%s: 0x%X", #nwo_call, errCall);																					\
@@ -245,24 +269,26 @@ namespace nwol
 		else {																																										\
 			verbose_printf("%s: Success (0x%X).", #nwo_call, errCall);																												\
 		}																																											\
-	}
+	} while(0)
 
 #else
-#	define nwol_rve_ecall(retVal, nwo_call, ...) {																																	\
-		if(::nwol::succeeded(nwo_call))  																																			\
+#	define nwol_rve_ecall(retVal, nwo_call, ...) do {																																\
+		if(::nwol::failed(nwo_call))  																																				\
 			return retval; 																																							\
-	}
+	} while(0)
 #	define nwol_rve_ewcall							nwol_rve_ecall	// Non-propagable retval_error error-warning call.
-#	define nwol_pecall(retVal, nwo_call, ...) {																																		\
+#	define nwol_pecall(retVal, nwo_call, ...)  do {																																	\
 		::nwol::error_t _nwol_errCall = ::nwol::succeeded(nwo_call);																												\
 		if(::nwol::failed(_nwol_errCall)) 																																			\
 			return retval; 																																							\
-	}
-#	define nwol_pewcall							nwol_pecall			// Propagable retval_error error-warning call.
+	} while(0)
+#	define nwol_pewcall								nwol_pecall			// Propagable retval_error error-warning call.
 #endif
 
 #define nwol_necall(nwo_call, ...)				nwol_rve_ecall (-1, nwo_call, __VA_ARGS__)	// Non-propagable error call.
 #define nwol_newcall(nwo_call, ...)				nwol_rve_ewcall(-1, nwo_call, __VA_ARGS__)	// Non-propagable error-warning call.
+#define nwol_hrcall(hr_call)					nwol_rv_hrcall (-1, hr_call)				// HRESULT call.
+#define nwol_hrecall(hr_call, ...)				nwol_rve_hrcall(-1, hr_call, __VA_ARGS__)	// HRESULT call.
 
 // ------------------- Aliases
 #define e_if	error_if

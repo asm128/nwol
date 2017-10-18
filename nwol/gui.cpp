@@ -1,6 +1,6 @@
 /// Copyright 2015-2017 - asm128
 #include "gui.h"
-#include "fill.h"
+#include "nwol_fill.h"
 
 ::nwol::error_t						nwol::createControl			(::nwol::SGUI& guiSystem, const ::nwol::SGUIControl& definition)						{
 	::nwol::SRectangle2D<int32_t>			areaRealigned				= {};
@@ -140,7 +140,6 @@ void								drawText					(_tChar* target, int32_t targetWidth, int32_t targetHei
 	return 0;
 }
 
-int32_t								nwol::renderGUIASCII		(::nwol::SASCIITarget& targetAscii	, const ::nwol::SGUI& guiSystem)					{ return renderGUIASCII(targetAscii.Text.begin(), targetAscii.Attributes.begin(), guiSystem); }
 int32_t								nwol::renderGUIASCII		(char* bbText, uint16_t* bbColor	, const ::nwol::SGUI& guiSystem)					{
 	const ::nwol::SCoord2<uint32_t>			& maxSize					= guiSystem.TargetSizeASCII;
 	const ::nwol::SCoord2<int32_t>			& mousePos					= guiSystem.MousePosition;
@@ -179,8 +178,8 @@ int32_t								nwol::renderGUIASCII		(char* bbText, uint16_t* bbColor	, const ::
 }
 
 ::nwol::error_t						nwol::renderGUIBitmap		(uint32_t* bitmap, uint32_t width, uint32_t height, const ::nwol::SGUI& guiSystem)		{
-	reterr_error_if(0 == bitmap					, "Invalid target memory for rendering gui (nullptr).");
-	reterr_error_if(0 == width || 0 == height	, "Invalid target size: (width: %u, height: %u).", width, height);
+	ree_if(0 == bitmap					, "Invalid target memory for rendering gui (nullptr).");
+	ree_if(0 == width || 0 == height	, "Invalid target size: (width: %u, height: %u).", width, height);
 	for(uint32_t iControl = 0, controlCount = guiSystem.Controls.ControlFlags.size(); iControl < controlCount; ++iControl) {
 			
 	}

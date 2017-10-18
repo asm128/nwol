@@ -1,5 +1,5 @@
 /// Copyright 2010-2017 - asm128
-#include "typeint.h"
+#include "nwol_typeint.h"
 
 #ifndef GCORE_REF_GLOBALS_H_9368498234689723462
 #define GCORE_REF_GLOBALS_H_9368498234689723462

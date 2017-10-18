@@ -1,5 +1,5 @@
 /// Copyright 2013-2017 - asm128
-#include "typeint.h"
+#include "nwol_typeint.h"
 
 #include <string>
 

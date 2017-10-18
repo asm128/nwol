@@ -2,10 +2,10 @@
 #include "gref_definition.h"
 #include "stype.h"
 
-GDEFINE_OBJ(nwol, CGraph)
-GDEFINE_OBJ(nwol, CGraphNode)
+GDEFINE_OBJ(gods, CGraph)
+GDEFINE_OBJ(gods, CGraphNode)
 
-::nwol::error_t						nwol::CGraph::CreateNode				(::nwol::id_t* index, const ::nwol::glabel& nodeLabel)			{
+::nwol::error_t						gods::CGraph::CreateNode				(::nwol::id_t* index, const ::nwol::glabel& nodeLabel)			{
 	GPtrObj(CGraphNode)						newNode						= CGraphNode();
 	int32_t									newIndex					= (int32_t)NodeInstances.size();
 	ree_if(newIndex != NodeInstances.push_back(newNode), "Failed to push node instance. Out of memory?");
@@ -27,13 +27,13 @@ GDEFINE_OBJ(nwol, CGraphNode)
 	return 0;
 }
 
-::nwol::error_t						nwol::CGraph::Load						(const char* in_pMemoryBuffer, uint32_t* inout_bytesRead)										{
+::nwol::error_t						gods::CGraph::Load						(const char* in_pMemoryBuffer, uint32_t* inout_bytesRead)										{
 	uint32_t								totalBytes					= 0;
 
 	// Load node attributes
 	::nwol::suint32							nodeCount;
 	totalBytes							+= nodeCount.read(in_pMemoryBuffer);
-	nwol_necall(NodeInstances.resize(nodeCount), "Failed to resize array.")
+	nwol_necall(NodeInstances.resize(nodeCount), "Failed to resize array.");
 	nwol_necall(NodeInstances.create_all(), "Failed to allocate instances! Out of memory?");
 
 	for(uint32_t i=0; i<nodeCount; ++i)
@@ -54,7 +54,7 @@ GDEFINE_OBJ(nwol, CGraphNode)
 	return totalBytes;
 }
 
-::nwol::error_t						nwol::CGraph::Save						(char* out_pMemoryBuffer, uint32_t* inout_bytesWritten) const									{
+::nwol::error_t						gods::CGraph::Save						(char* out_pMemoryBuffer, uint32_t* inout_bytesWritten) const									{
 	uint32_t								totalBytes								= 0;
 
 	::nwol::suint32							nodeCount								= (uint32_t)NodeInstances.size();

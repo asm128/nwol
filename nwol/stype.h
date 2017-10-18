@@ -1,6 +1,6 @@
 /// Copyright 2015-2017 - asm128
-#include "datatype.h"
-#include "datausage.h"
+#include "nwol_datatype.h"
+#include "nwol_datausage.h"
 #include "nwol_error.h"
 #include <cstdio>
 
@@ -63,11 +63,11 @@ namespace nwol
 		inline constexpr			const _tBase*					end							()							const	noexcept	{ return (&this->Value) + 1;		}
 
 		// These are wrappers for memcpy() and fwrite()/fread() intended to reduce program verbosity. Disk operations return an error while memory operations return the size copied and zero if failed to write.
-		inline						uint32_t						read						(const void* fp)								{ retnul_error_if(0 == fp, "Parameter is null!");	this->Value = *reinterpret_cast<const _tBase*>(fp);	return (uint32_t)sizeof(_tBase); }
-		inline						uint32_t						write						(void* fp)					const				{ retnul_error_if(0 == fp, "Parameter is null!");	*reinterpret_cast<_tBase*>(fp) = this->Value;		return (uint32_t)sizeof(_tBase); }
+		inline						uint32_t						read						(const void* fp)								{ rne_if(0 == fp, "Parameter is null!");	this->Value = *reinterpret_cast<const _tBase*>(fp);	return (uint32_t)sizeof(_tBase); }
+		inline						uint32_t						write						(void* fp)					const				{ rne_if(0 == fp, "Parameter is null!");	*reinterpret_cast<_tBase*>(fp) = this->Value;		return (uint32_t)sizeof(_tBase); }
 
-		inline						::nwol::error_t					read						(FILE* fp)										{ reterr_error_if(0 == fp, "Cannot read file from a null pointer.");	return (1 == fread (&this->Value, sizeof(_tBase), 1, fp)) ? 0 : -1; }
-		inline						::nwol::error_t					write						(FILE* fp)					const				{ reterr_error_if(0 == fp, "Cannot write to a null pointer to file.");	return (1 == fwrite(&this->Value, sizeof(_tBase), 1, fp)) ? 0 : -1; }
+		inline						::nwol::error_t					read						(FILE* fp)										{ ree_if(0 == fp, "Cannot read file from a null pointer.");	return (1 == fread (&this->Value, sizeof(_tBase), 1, fp)) ? 0 : -1; }
+		inline						::nwol::error_t					write						(FILE* fp)					const				{ ree_if(0 == fp, "Cannot write to a null pointer to file.");	return (1 == fwrite(&this->Value, sizeof(_tBase), 1, fp)) ? 0 : -1; }
 	};
 
 	// signed

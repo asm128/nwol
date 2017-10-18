@@ -114,12 +114,12 @@ int32_t										nwol::gcompare											(const SBuffer* bA, const SBuffer* bB)
 	}
 
 	if (out_JoinedBuffer)
-		::nwol::set(out_JoinedBuffer, joinedBuffer.get_pointer());
+		::nwol::set(out_JoinedBuffer, joinedBuffer.get_core_ref());
 	return 0;
 }
 
 ::nwol::error_t								nwol::splitBuffer										(const GODS(SBuffer) in_BufferToSplit, uint32_t nIndex, ::nwol::GODS(SBuffer)* out_SplitLeft, ::nwol::GODS(SBuffer)* out_SplitRight) {
-	reterr_error_if(0 == in_BufferToSplit, "%s", "Cannot split a null buffer!");
+	ree_if(0 == in_BufferToSplit, "%s", "Cannot split a null buffer!");
 	const ::nwol::SBuffer								* in_instance										= in_BufferToSplit->get();
 	uint32_t											leftCount											= nIndex
 		,												rightCount											= in_instance->nElementCount - nIndex
@@ -143,8 +143,8 @@ int32_t										nwol::gcompare											(const SBuffer* bA, const SBuffer* bB)
 			((char*)RightBuffer->pByteArray)[elemEnd + i]	= 0;
 	}
 
-	::nwol::set(out_SplitLeft	, LeftBuffer	.get_pointer());
-	::nwol::set(out_SplitRight	, RightBuffer	.get_pointer());
+	::nwol::set(out_SplitLeft	, LeftBuffer	.get_core_ref());
+	::nwol::set(out_SplitRight	, RightBuffer	.get_core_ref());
 	return 0;
 }
 

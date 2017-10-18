@@ -95,10 +95,10 @@ namespace nwol
 			return r;																					
 		}
 
-							::nwol::SReferenceGlobals			Globals;
-							_tRef**								lstUnusedInstances						= 0;
-							_tRef*								lstReferences							= 0;
-							char*								Instances								= 0;
+							::nwol::SReferenceGlobals			Globals									= {};
+							_tRef*								* lstUnusedInstances					= 0;
+							_tRef								* lstReferences							= 0;
+							char								* Instances								= 0;
 							uint32_t							UnusedInstances							= 0;
 							uint32_t							UsedItems								= 0;
 							char								PageBytes[getPageBytes()]				= {};
@@ -160,20 +160,20 @@ namespace nwol
 		// Retrieves an unused reference or initializes a new one if there is enough capacity.
 							_tRef*								getUnusedInstance						()														{
 			_tRef														* newRef								= 0;
-			Lock();
+			lock();
 			if(UnusedInstances > 0) {
 				newRef													= lstUnusedInstances[--UnusedInstances];
-				Unlock();
+				unlock();
 				//newRef->ReferenceCount++;
 			}
 			else if(UsedItems < _PageSizeInInstances) {
 				int32_t														dataIndex								= UsedItems;
 				newRef													= &lstReferences[UsedItems++];
-				Unlock(); // no need for safety anymore
+				unlock(); // no need for safety anymore
 				initRef(newRef, dataIndex);
 			}
 			else
-				Unlock();
+				unlock();
 			return newRef;
 		}
 		//	
@@ -191,9 +191,9 @@ namespace nwol
 		//
 							uint32_t							getAvailableInstanceCount				()														{	
 			uint32_t													r; 
-			Lock();
+			lock();
 			r														= UnusedInstances+(_PageSizeInInstances-UsedItems);
-			Unlock();
+			unlock();
 			return r;
 		}
 
@@ -252,24 +252,24 @@ namespace nwol
 		}																	Counters;
 
 							void											setLastPageUsed							(uint32_t pageIndex)									{
-			ManagerLock.Lock();
+			ManagerLock.lock();
 			LastPageUsed														= pageIndex;
-			ManagerLock.Unlock();
+			ManagerLock.unlock();
 		}
 
 		// Locks the array for getting the pointer of the page.
 							_TPage*											getPage									(uint32_t nIndex)										{
-			ManagerLock.Lock();
+			ManagerLock.lock();
 			_TPage																	* result								= lstReferencePages[nIndex];
-			ManagerLock.Unlock();
+			ManagerLock.unlock();
 			return result;
 		}
 
 		// Tries to get a pointer from the quick alloc list.
 							_tRef*											getNewInstanceFromQuickAlloc			()														{
-			QuickAllocLock.Lock();
+			QuickAllocLock.lock();
 			_tRef																	* result								= QuickAllocCount ? QuickAllocView[--QuickAllocCount] : 0;
-			QuickAllocLock.Unlock();
+			QuickAllocLock.unlock();
 			return result;
 		}
 
@@ -277,7 +277,7 @@ namespace nwol
 							_tRef*											getNewInstanceFromNewPage				()														{
 			_tRef																	* newRef								= 0;
 			::nwol::SReferenceGlobals												globals									= Globals;
-			ManagerLock.Lock();
+			ManagerLock.lock();
 			uint32_t																expectedIndex = globals.Row				= (uint32_t)lstReferencePages.size();
 			_TPage																	* pNewPage								= new _TPage(globals);
 			if( 0 == pNewPage ) {
@@ -294,23 +294,23 @@ namespace nwol
 
 				LastPageUsed														= globals.Row;
 			}
-			ManagerLock.Unlock();
+			ManagerLock.unlock();
 			return newRef;
 		}
 
 		// Tries to get new instance from last page used.
 							_tRef*											getNewInstanceFromLastPageUsed			()														{
 			_tRef																	* newRef								= 0;
-			ManagerLock.Lock();
+			ManagerLock.lock();
 			if ((INVALID_ROW) != LastPageUsed) {
 				_TPage																	* pPage									= lstReferencePages[LastPageUsed];
-				ManagerLock.Unlock();
+				ManagerLock.unlock();
 				newRef																= pPage->getUnusedInstance();
 				if( 0 == newRef )
 					LastPageUsed														= INVALID_ROW;
 			}
 			else
-				ManagerLock.Unlock();
+				ManagerLock.unlock();
 			return newRef;
 		}
 
@@ -318,10 +318,10 @@ namespace nwol
 							_tRef*											getNewInstanceFromPage					()														{
 			_tRef																	* newRef								= 0;
 			for (uint32_t iPage = 0, pageCount = (uint32_t)lstReferencePages.size(); iPage < pageCount; iPage++) {
-				ManagerLock.Lock();
+				ManagerLock.lock();
 				uint32_t																pageIndex								= (uint32_t)lstReferencePages.size() - iPage - 1;
 				_TPage																	* pPage									= lstReferencePages[pageIndex];
-				ManagerLock.Unlock();
+				ManagerLock.unlock();
 				newRef																= pPage->getUnusedInstance();
 				if(newRef) {
 					setLastPageUsed(pPage->getAvailableInstanceCount() ? pageIndex : 0);
@@ -333,18 +333,18 @@ namespace nwol
 
 		// Retrieves pages with full capacity, setting the capacity and unused count to 0 in order to prevent being used by another thread.
 							uint32_t										getFullCapacityPages					(_TPage** outPages, uint32_t nMaxCount)					{
-			ManagerLock.Lock();
+			ManagerLock.lock();
 			uint32_t																mainPageCount							= (uint32_t)lstReferencePages.size();	// We don't really need more than 0xFFFFFFFF pages. If you do, then your program is mismanaging memory.
 			uint32_t																iOutPage								= 0;
 			for( uint32_t iMainList=0; iOutPage < nMaxCount && iMainList < mainPageCount; iMainList++ ) {
 				_TPage																	* pPage									= lstReferencePages[iMainList];
-				pPage->Lock();
+				pPage->lock();
 				if(PageSizeInInstances == pPage->getAvailableInstanceCountNoLock()) {
 					uint32_t																usedItems								= (uint32_t)pPage->UsedItems;
 					uint32_t																unusedCount								= (uint32_t)(pPage->UnusedInstances);
 					pPage->UsedItems													= PageSizeInInstances;					// both capacities exhausted so we can unlock the page and nobody will have a reason to use it.
 					pPage->UnusedInstances												= 0;									// both capacities exhausted so we can unlock the page and nobody will have a reason to use it.
-					pPage->Unlock();
+					pPage->unlock();
 					_tRef																	* newRef								= nullptr;
 					// drain all reference capacity
 					while(usedItems < PageSizeInInstances) {
@@ -361,21 +361,21 @@ namespace nwol
 					outPages[iOutPage++]												= pPage;
 				}
 				else
-					pPage->Unlock();
+					pPage->unlock();
 			}
-			ManagerLock.Unlock();
+			ManagerLock.unlock();
 			return iOutPage;
 		}
 
 		// Push a bunch of page pointers into the page list.
 							void											pushNewPages							(_TPage** lstPages, uint32_t pageCount)					{
 			// Insert new pages into main list so we can finish working with it outside the risky area
-			ManagerLock.Lock();
+			ManagerLock.lock();
 			uint32_t																pageOffset								= (uint32_t) lstReferencePages.size(); 
 			lstReferencePages.resize(pageOffset+pageCount);
 			for( uint32_t iMainList=pageOffset, iNewPage=0; iNewPage<pageCount; iMainList++, iNewPage++ )
 				(lstReferencePages[iMainList] = lstPages[iNewPage])->Globals.Row	= iMainList;
-			ManagerLock.Unlock();
+			ManagerLock.unlock();
 		}
 
 		// Create [pageCount] pages and initialize the references.
@@ -420,7 +420,7 @@ namespace nwol
 
 		// Stores an unused reference into the QuickAlloc array.
 							void											releaseReferenceToQuickAlloc			(_tRef* p1)												{
-			QuickAllocLock.Lock();
+			QuickAllocLock.lock();
 			if( QuickAllocCount == PageSizeInInstances )
 				emptyQuickAlloc();
 			uint32_t																prevPos;
@@ -434,7 +434,7 @@ namespace nwol
 			}
 			else
 				QuickAllocView[QuickAllocCount++]									= p1;
-			QuickAllocLock.Unlock();
+			QuickAllocLock.unlock();
 			COUNTERINCREMENTFREEDREFS();
 		}
 
@@ -446,7 +446,7 @@ namespace nwol
 
 		// Return a bunch of unused references to their pages of origin.
 							void											releaseReferenceListToPage				( _tRef** lstRef, uint32_t nReferenceCount)				{
-			ManagerLock.Lock();
+			ManagerLock.lock();
 			_TPage																	* pPage									= 0;
 			for( uint32_t iRef=0; iRef<nReferenceCount; iRef++ ) {
 				_tRef																	* p0									= lstRef[iRef];
@@ -458,9 +458,9 @@ namespace nwol
 				CHECKBUFFEROVERRUNINSTANCE();
 				if( pPage != pNextPage ) {
 					if( pPage )
-						pPage->Unlock();
+						pPage->unlock();
 					pPage																= pNextPage;
-					pPage->Lock();	// needs to unlock at end of loop
+					pPage->lock();	// needs to unlock at end of loop
 				}
 				uint32_t																prevPos;
 				if( pPage->UnusedInstances > 0 && 
@@ -475,14 +475,14 @@ namespace nwol
 					pPage->lstUnusedInstances[pPage->UnusedInstances++]					= p0;
 			}
 			if( pPage )
-				pPage->Unlock();
-			ManagerLock.Unlock();
+				pPage->unlock();
+			ManagerLock.unlock();
 		}
 
 							void											setRefAllocID							(_tRef* newRef)										{																									
 			newRef->AllocID														= NWOL_INTERLOCKED_INCREMENT(Counters.CreatedRefs)-1;								
 #if defined(NWOL_DEBUG_ENABLED)
-			if (newRef->__breakAllocID != (INVALID_ALLOC_ID) && newRef->__breakAllocID == newRef->AllocID)	 {																								
+			if (newRef->BreakAllocID != (INVALID_ALLOC_ID) && newRef->BreakAllocID == newRef->AllocID) {																								
 				warning_printf("Allocation break triggered.");												
 				PLATFORM_CRT_BREAKPOINT();																				
 			}						

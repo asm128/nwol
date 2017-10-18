@@ -5,6 +5,7 @@
 #include "nwol_memory.h"
 #include "nwol_io.h"
 #include "nwol_safe.h"
+#include "nwol_ascii_console.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -75,7 +76,7 @@ char*											nwol::getASCIIBackBuffer			()																		{
 	return __g_ASCIIScreen.ASCIIBackBuffer;
 }
 
-int32_t											nwol::getASCIIBackBuffer			(::nwol::SASCIITarget& target)											{
+int32_t											nwol::getASCIIBackBuffer			(::nwol::SASCIITarget_old& target)											{
 	if( 0 == __g_ASCIIScreen.ASCIIBackBuffer )
 		::nwol::clearASCIIBackBuffer(' ', COLOR_WHITE);
 	target.Text										= __g_ASCIIScreen.ASCIIBackBuffer ? ::nwol::grid_view<char_t	>(__g_ASCIIScreen.ASCIIBackBuffer, ::nwol::getASCIIBackBufferWidth(), getASCIIBackBufferHeight()) : ::nwol::grid_view<char_t	>{};
@@ -83,7 +84,7 @@ int32_t											nwol::getASCIIBackBuffer			(::nwol::SASCIITarget& target)					
 	return __g_ASCIIScreen.bCreated ? 0 : -1;
 }
 
-int32_t											nwol::getASCIIFrontBuffer			(::nwol::SASCIITarget& target)											{
+int32_t											nwol::getASCIIFrontBuffer			(::nwol::SASCIITarget_old& target)											{
 	target.Text										= __g_ASCIIScreen.ASCIIFrontBuffer ? ::nwol::grid_view<char_t	>(__g_ASCIIScreen.ASCIIFrontBuffer, ::nwol::getASCIIBackBufferWidth(), getASCIIBackBufferHeight()) : ::nwol::grid_view<char_t	>{};
 	target.Attributes								= __g_ASCIIScreen.ColorFrontBuffer ? ::nwol::grid_view<uint16_t	>(__g_ASCIIScreen.ColorFrontBuffer, ::nwol::getASCIIBackBufferWidth(), getASCIIBackBufferHeight()) : ::nwol::grid_view<uint16_t	>{};
 	return 0;
@@ -91,7 +92,7 @@ int32_t											nwol::getASCIIFrontBuffer			(::nwol::SASCIITarget& target)				
 
 void											nwol::setASCIIScreenTitle			(const char_t* title)													{ 
 #if defined(__WINDOWS__)
-	SetConsoleTitle(title);				
+	SetConsoleTitleA(title);				
 #elif defined(__ANDROID__)
 #else
 #	error "Not implemented."
@@ -119,8 +120,8 @@ void											nwol::presentASCIIBackBuffer		()																		{
 }
 
 void											nwol::presentASCIIFrontBuffer		()																		{
-	int32_t												screenSize							= __g_ASCIIScreen.BackBufferWidth*__g_ASCIIScreen.BackBufferHeight;
-	screenSize = (screenSize > 4) ? screenSize : 4;
+	int32_t												screenSize							= __g_ASCIIScreen.BackBufferWidth * __g_ASCIIScreen.BackBufferHeight;
+	screenSize										= (screenSize > 1) ? screenSize : 1;
 #if defined(__WINDOWS__)
 	const ::HANDLE										hConsoleOut							= GetStdHandle( STD_OUTPUT_HANDLE );
 	::CONSOLE_SCREEN_BUFFER_INFO						csbiInfo							= {};
@@ -169,7 +170,7 @@ void											nwol::clearASCIIBackBuffer			(char_t value, uint16_t colorValue)	
 			__g_ASCIIScreen.ColorBackBuffer[i]				= colorValue;
 }
 	
-void											consoleCreate						()																		{
+void											asciiDisplayCreate						()																		{
 #if defined(__WINDOWS__)
 	::AllocConsole();
 	::AttachConsole(GetCurrentProcessId());
@@ -187,8 +188,9 @@ void											consoleCreate						()																		{
 }
 
 void											nwol::initASCIIScreen				(uint32_t width, uint32_t height)										{
+	
 	if(false == __g_ASCIIScreen.bCreated)
-		::consoleCreate();
+		::asciiDisplayCreate();
 
 	__g_ASCIIScreen.BackBufferWidth 				= width;
 	__g_ASCIIScreen.BackBufferHeight				= height;

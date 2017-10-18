@@ -4,29 +4,31 @@ extern	::nwor::SRuntimeState								* g_RuntimeState;
 
 static	int32_t												loadPlatformValues				(::nwol::SRuntimeValues& runtimeValues, const char* filenameApplication, char** args, uint32_t _argCount)	{
 	if(args) {
-		runtimeValues.CommandLine									= args[0];
+		runtimeValues.CommandLine									= {args[0], (uint32_t)strlen(args[0])};
 
-		int32_t															filenameStart					= (int32_t)strlen(runtimeValues.CommandLine)-1;
+		int32_t															filenameStart					= (int32_t)runtimeValues.CommandLine.size() - 1;
 
 		do --filenameStart;
 		while(filenameStart >= 0 && runtimeValues.CommandLine[filenameStart] != '\\' && runtimeValues.CommandLine[filenameStart] != '/');
 
 		++filenameStart;	// we need to skip the bar character or fix the invalid index if no bar character found.
 
-		runtimeValues.FileNameRuntime								= &runtimeValues.CommandLine[filenameStart];
-		runtimeValues.CommandLineArgCount							= _argCount - 1;
-		runtimeValues.CommandLineArgCount							= (runtimeValues.CommandLineArgCount >= ::nwol::size(runtimeValues.CommandLineArgList)) ? ::nwol::size(runtimeValues.CommandLineArgList) : runtimeValues.CommandLineArgCount;
-		for(uint32_t iArg = 0, argCount = runtimeValues.CommandLineArgCount; iArg<argCount; ++iArg)
-			runtimeValues.CommandLineArgList[iArg]						= args[iArg+1];
+		runtimeValues.FileNameRuntime								= {&runtimeValues.CommandLine[filenameStart], (uint32_t)strlen(&runtimeValues.CommandLine[filenameStart])};
+		runtimeValues.CommandLineArguments.resize(_argCount);
+		for(uint32_t iArg = 0; iArg < _argCount; ++iArg) 
+			runtimeValues.CommandLineArguments[iArg]					= {args[iArg], (uint32_t)strlen(args[iArg])};
 	} 
 	else {
-		runtimeValues.FileNameRuntime								= 0;
-		runtimeValues.CommandLineArgCount							= 0;
-		runtimeValues.CommandLine									= 0;
-		memset(runtimeValues.CommandLineArgList, 0, sizeof(const char_t*)*::nwol::size(runtimeValues.CommandLineArgList));
+		runtimeValues.FileNameRuntime								= {};
+		runtimeValues.CommandLine									= {};
+		runtimeValues.CommandLineArguments							= {};
 	}
 
-	runtimeValues.FileNameApplication							= runtimeValues.CommandLineArgCount ? runtimeValues.CommandLineArgList[0] : filenameApplication;
+	runtimeValues.FileNameApplication							
+		= runtimeValues.CommandLineArguments.size() > 1 ? runtimeValues.CommandLineArguments[1]
+		: runtimeValues.CommandLineArguments.size() > 0 ? runtimeValues.CommandLineArguments[0]
+		: ::nwol::view_const_string{filenameApplication, (uint32_t)strlen(filenameApplication)}
+		;
 	return 0;
 }
 
@@ -62,8 +64,8 @@ static	int32_t												loadPlatformValues				(::nwol::SRuntimeValues& runtime
 
 	static const char_t												defaultModuleName[]				= "modules/nwor_selector." DYNAMIC_LIBRARY_EXTENSION;
 	::nwol::error_t													errMy							= 0;
-	retval_error_if(EXIT_FAILURE, errored(errMy = ::loadPlatformValues(runtimeValues, defaultModuleName, argv, argc)	), "%Error code: 0x%X.", errMy	);  
-	retval_error_if(EXIT_FAILURE, errored(errMy = ::nwor::rtMain(runtimeState)											), "%Error code: 0x%X.", errMy	);  
+	rve_if(EXIT_FAILURE, errored(errMy = ::loadPlatformValues(runtimeValues, defaultModuleName, argv, argc)	), "%Error code: 0x%X.", errMy	);  
+	rve_if(EXIT_FAILURE, errored(errMy = ::nwor::rtMain(runtimeState)										), "%Error code: 0x%X.", errMy	);  
 	return 0;
 }
 
@@ -78,10 +80,10 @@ static	int32_t												loadPlatformValues				(::nwol::SRuntimeValues& runtime
 	SetConsoleTitle("No Workflow Overhead Runtime");
 	::nwor::SRuntimeState											runtimeState					= {};	
 	::nwol::SRuntimeValues											& runtimeValues					= runtimeState.RuntimeValues;
-	runtimeValues.PlatformDetail.hInstance						=  hInstance		;
-	runtimeValues.PlatformDetail.hPrevInstance					=  hPrevInstance	;
-	runtimeValues.PlatformDetail.lpCmdLine						=  lpCmdLine		;
-	runtimeValues.PlatformDetail.nShowCmd						=  nShowCmd			;
+	runtimeValues.PlatformDetail.hInstance						= hInstance		;
+	runtimeValues.PlatformDetail.hPrevInstance					= hPrevInstance	;
+	runtimeValues.PlatformDetail.lpCmdLine						= lpCmdLine		;
+	runtimeValues.PlatformDetail.nShowCmd						= nShowCmd		;
 
 	g_RuntimeState												= &runtimeState;
 

@@ -1,6 +1,6 @@
 /// Copyright 2016-2017 - asm128
 #include "nwol_array.h"
-#include "multithread.h"
+#include "nwol_multithread.h"
 #include "nwol_error.h"
 
 #include <memory>
@@ -81,7 +81,7 @@ namespace nwol
 				// We assume the block array has enough size now, so create the new block and set its members.
 				::nwol::auto_nwol_free								autoBlock					;
 				TBlock												* newBlock					= (TBlock*)(autoBlock.Handle = ::nwol::nwol_malloc(sizeof(TBlock)));
-				reterr_error_if(0 == newBlock, "Failed to allocate new data block. Out of memory?");
+				ree_if(0 == newBlock, "Failed to allocate new data block. Out of memory?");
 				//memset(newBlock, 0, sizeof(SBlock));
 				bool												failed						= false;
 				if(!errored(RemainingBlockSpace.push_back(_BlockSize))) {
@@ -92,7 +92,7 @@ namespace nwol
 				}
 				else 
 					failed											= true;
-				reterr_error_if(failed, "Failed to push new data block. Out of memory?");
+				ree_if(failed, "Failed to push new data block. Out of memory?");
 				autoBlock.Handle									= nullptr;
 				dataCoords.DataOffset								= 0;
 			}
@@ -176,7 +176,7 @@ namespace nwol
 				*itemIndex										= -1;
 			const int32_t										newItemIndex				= ItemOffsets	.push_back(itemOffset);	// This is for the user.
 			const int32_t										newSizesIndex				= ItemSizes		.push_back(itemSize); 
-			reterr_error_if(newItemIndex != newSizesIndex || newItemIndex == -1, "%s", "Indices don't match. newItemIndex: %u, newSizesIndex: %u.", newItemIndex, newSizesIndex);
+			ree_if(newItemIndex != newSizesIndex || newItemIndex == -1, "%s", "Indices don't match. newItemIndex: %u, newSizesIndex: %u.", newItemIndex, newSizesIndex);
 			if(itemIndex)
 				*itemIndex										= (int32_t)newItemIndex;
 			return newItemIndex;
@@ -187,7 +187,7 @@ namespace nwol
 				return 0;
 			nwol_necall(pushItemRange(0, 0, 0), "%s", "Failed to allocate item array!");
 			TBlock												*firstBlock					= (TBlock*)::nwol::nwol_malloc(sizeof(TBlock));	
-			reterr_error_if(0 == firstBlock, "%s", "Failed to allocate initial block! Out of memory?");
+			ree_if(0 == firstBlock, "%s", "Failed to allocate initial block! Out of memory?");
 			firstBlock->Data[0]								= (_tBase)0;
 			const int32_t										blockIndex					= this->BlockArray			.push_back(firstBlock);
 			const int32_t										blockSpaceIndex				= this->RemainingBlockSpace	.push_back(_BlockSize - 1);
@@ -246,7 +246,7 @@ namespace nwol
 
 		// Pushes an item into the container.
 		::nwol::error_t									push_back					(const _tBase* data, uint32_t readCount, int32_t* itemIndex, ::nwol::array_view<const _tBase>& arrayView)									{
-			reterr_error_if(0 == data, "Cannot read from null address.");
+			ree_if(0 == data, "Cannot read from null address.");
 
 			if(itemIndex)
 				*itemIndex										= 0;	// return item 0 for the next two if statements.

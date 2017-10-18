@@ -1,7 +1,7 @@
 /// Copyright 2013-2017 - asm128
-#include "multithread.h"
+#include "nwol_multithread.h"
 #include "nwol_debug.h"
-#include "typeint.h"
+#include "nwol_typeint.h"
 
 #ifndef NWOL_NOISE_H__92374092374021784309287349023874
 #define NWOL_NOISE_H__92374092374021784309287349023874

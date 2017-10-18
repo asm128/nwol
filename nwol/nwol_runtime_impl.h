@@ -16,9 +16,9 @@
 }
 
 #define DEFINE_RUNTIME_INTERFACE_VERSION(_yourCustomClass, _versionMajor, _versionMinor)																				\
-::nwol::error_t	NWOL_STDCALL			::nwol_moduleVersion			(uint16_t* version)													noexcept		{			\
+::nwol::error_t	NWOL_STDCALL			::nwol_moduleVersion			(uint32_t* version)													noexcept		{			\
 	ree_if(0 == version, "Invalid parameter.");																															\
-	static constexpr const uint16_t				_nwol_module_version			= ((_versionMinor & 0xFF)<<8) | (_versionMajor & 0xFF);									\
+	static constexpr const uint16_t				_nwol_module_version			= ((_versionMinor & 0xFF) << 0) | ((_versionMajor & 0xFF) << 8);						\
 	*version								= _nwol_module_version;																										\
 	return 0; 																																							\
 }

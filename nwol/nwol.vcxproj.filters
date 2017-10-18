@@ -39,44 +39,14 @@
     <ClInclude Include="nwol_string.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="typeint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="nwol_io.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="unshrinkable_block_container.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="label.h">
-      <Filter>glabel</Filter>
-    </ClInclude>
-    <ClInclude Include="descriptor.h">
-      <Filter>gdescriptor</Filter>
-    </ClInclude>
-    <ClInclude Include="fill.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="array_view.h">
-      <Filter>array</Filter>
     </ClInclude>
     <ClInclude Include="gui.h">
       <Filter>gui</Filter>
     </ClInclude>
-    <ClInclude Include="datausage.h">
-      <Filter>datatype</Filter>
-    </ClInclude>
-    <ClInclude Include="datatype.h">
-      <Filter>datatype</Filter>
-    </ClInclude>
-    <ClInclude Include="grid_view.h">
-      <Filter>array</Filter>
-    </ClInclude>
     <ClInclude Include="nwol_math.h">
       <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="multithread.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="nwol_mutex.h">
       <Filter>Header Files</Filter>
@@ -87,29 +57,14 @@
     <ClInclude Include="ascii_screen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="storage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="label_manager.h">
-      <Filter>glabel</Filter>
-    </ClInclude>
-    <ClInclude Include="descriptor_manager.h">
-      <Filter>gdescriptor</Filter>
-    </ClInclude>
     <ClInclude Include="nwol_debug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="nwol_error.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="platform_globals.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="nwol_bit.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="grid.h">
-      <Filter>array</Filter>
     </ClInclude>
     <ClInclude Include="nwol_memory.h">
       <Filter>Header Files</Filter>
@@ -123,19 +78,10 @@
     <ClInclude Include="nwol_color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="type_registry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="type_identifier.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gcore_ref.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="struct_generator_pod.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="member_registry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ascii_target.h">
@@ -192,17 +138,11 @@
     <ClInclude Include="nwol_safe.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="platform_handle_wrapper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="nwol_runtime.h">
       <Filter>runtime</Filter>
     </ClInclude>
     <ClInclude Include="nwol_runtime_impl.h">
       <Filter>runtime</Filter>
-    </ClInclude>
-    <ClInclude Include="array_view_bit.h">
-      <Filter>array</Filter>
     </ClInclude>
     <ClInclude Include="nwol_text.h">
       <Filter>Header Files</Filter>
@@ -210,19 +150,91 @@
     <ClInclude Include="nwol_evaluation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="nwol_sleep.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_com_ptr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_ptr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_platform_globals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_platform_handle_wrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_storage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_multithread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_member_registry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_fill.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_type_registry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_type_identifier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_grid.h">
+      <Filter>array</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_grid_view.h">
+      <Filter>array</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_array_view_bit.h">
+      <Filter>array</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_array_view.h">
+      <Filter>array</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_datatype.h">
+      <Filter>datatype</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_datausage.h">
+      <Filter>datatype</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_typeint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_unshrinkable_block_container.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_label.h">
+      <Filter>glabel</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_label_manager.h">
+      <Filter>glabel</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_descriptor_manager.h">
+      <Filter>gdescriptor</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_descriptor.h">
+      <Filter>gdescriptor</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_json.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_ascii_target.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_ascii_console.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="label.cpp">
-      <Filter>glabel</Filter>
-    </ClCompile>
     <ClCompile Include="descriptor.cpp">
       <Filter>gdescriptor</Filter>
     </ClCompile>
     <ClCompile Include="gui.cpp">
       <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="datatype.cpp">
-      <Filter>datatype</Filter>
     </ClCompile>
     <ClCompile Include="input.cpp">
       <Filter>Source Files</Filter>
@@ -255,6 +267,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="text.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nwol_datatype.cpp">
+      <Filter>datatype</Filter>
+    </ClCompile>
+    <ClCompile Include="label.cpp">
+      <Filter>glabel</Filter>
+    </ClCompile>
+    <ClCompile Include="nwol_json.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ascii_target.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ascii_console.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

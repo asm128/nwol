@@ -15,6 +15,7 @@ namespace nwor
 		::nwol::SRuntimeValues										RuntimeValues							= {}		;	// 
 		bool														Quit									= false		;	// turn to true when quit has been requested
 		bool														Processing								= true		;	// 
+		bool														Idle									= false		;	// 
 	};
 
 	int															rtMain									(::nwor::SRuntimeState& runtimeState);

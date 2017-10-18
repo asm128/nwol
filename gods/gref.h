@@ -8,7 +8,7 @@
 #include "gcore_ref.h"
 #include "gref_manager.h"
 
-#include "type_registry.h"
+#include "nwol_type_registry.h"
 #include "nwol_memory.h"
 
 #ifndef GREF_H_2398429385492835498234

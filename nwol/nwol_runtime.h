@@ -3,6 +3,7 @@
 #include "nwol_screen.h"
 #include "nwol_module.h"
 #include "nwol_enum.h"
+#include "nwol_ptr.h"
 
 #if defined(__WINDOWS__)
 
@@ -21,7 +22,7 @@ namespace nwol {
 #define NWOL_MODULE_EXPORT_NAME(functionToken)		nwol_module##functionToken
 
 NWOL_DECLARE_MODULE_FUNCTION(nwol_moduleTitle	, char_t* outputBuffer, uint8_t* outputBufferLenght					);
-NWOL_DECLARE_MODULE_FUNCTION(nwol_moduleVersion	, uint16_t* version													);
+NWOL_DECLARE_MODULE_FUNCTION(nwol_moduleVersion	, uint32_t* version													);
 NWOL_DECLARE_MODULE_FUNCTION(nwol_moduleCreate	, void** customApplication, ::nwol::SRuntimeValues* runtimeValues	);
 NWOL_DECLARE_MODULE_FUNCTION(nwol_moduleDelete	, void** customApplication											);
 NWOL_DECLARE_MODULE_FUNCTION(nwol_moduleSetup	, void*	 customApplication											);
@@ -78,10 +79,11 @@ namespace nwol
 			,	NWOM_NAME(ModuleTitle			)
 			);
 
-		inline	uint8_t												VersionMajor					()										const	noexcept	{ const uint16_t version = Version(); return (uint8_t)(version & 0x00FF);					}
-		inline	uint8_t												VersionMinor					()										const	noexcept	{ const uint16_t version = Version(); return (uint8_t)((version & 0xFF00) >> 8);			}
+		inline	uint8_t												VersionMajor					()										const	noexcept	{ const uint32_t version = Version(); return (uint8_t)((version & 0x00FF) >> 8); }
+		inline	uint8_t												VersionMinor					()										const	noexcept	{ const uint32_t version = Version(); return (uint8_t)((version & 0x00FF) >> 0); }
+
 				const char_t*										Title							()										const				{ retval_error_if(nullptr	,							0 == nwol_moduleTitle	, formatModuleFunctionPtrNull, "moduleTitle"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); char		title [240]	= {}; uint8_t titleLen = (uint8_t)::nwol::size(title); nwol_moduleTitle(title, &titleLen); return ::nwol::glabel(title, titleLen).c_str();	}
-		inline	uint16_t											Version							()										const				{ retval_error_if(0xFF		,							0 == nwol_moduleVersion	, formatModuleFunctionPtrNull, "moduleVersion"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); uint16_t moduleVer	=  0; retnul_error_if(errored(nwol_moduleVersion(&moduleVer)), "Failed to get module version.");	return moduleVer;							}
+		inline	uint32_t											Version							()										const				{ retval_error_if(0xFFFFFFFF,							0 == nwol_moduleVersion	, formatModuleFunctionPtrNull, "moduleVersion"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); uint32_t moduleVer	=  0; retnul_error_if(errored(nwol_moduleVersion(&moduleVer)), "Failed to get module version."); return moduleVer;								}
 		inline	::nwol::error_t										Create							()															{ retval_error_if(-1,									0 == nwol_moduleCreate	, formatModuleFunctionPtrNull, "moduleCreate"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); return nwol_moduleCreate								(&ClientInstance, RuntimeValues);																			}
 		inline	::nwol::error_t										Delete							()															{ retval_error_if(-1,									0 == nwol_moduleDelete	, formatModuleFunctionPtrNull, "moduleDelete"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); return nwol_moduleDelete								(&ClientInstance);																							}
 		inline	::nwol::error_t										Setup							()										const				{ retval_error_if(-1,									0 == nwol_moduleSetup	, formatModuleFunctionPtrNull, "moduleSetup"	, ModuleTitle ? ModuleTitle : FilenameOriginal.c_str()); return nwol_moduleSetup								(ClientInstance	);																							}
@@ -105,7 +107,7 @@ namespace nwol
 
 	 
 	typedef			::nwol::SDeviceDriverModule					SApplicationModule;
-	static inline	::nwol::error_t								applicationModuleUnload				(::nwol::SApplicationModule& containerForCallbacks)			{ return ::nwol::moduleUnload(containerForCallbacks);										}
+	static inline	::nwol::error_t								applicationModuleUnload				(::nwol::SApplicationModule& containerForCallbacks)																		{ return ::nwol::moduleUnload(containerForCallbacks); }
 					::nwol::error_t								applicationModuleLoad				(::nwol::SRuntimeValues& runtimeValues, ::nwol::SApplicationModule& containerForCallbacks, const char_t* moduleName);
 
 					void										printErasedModuleInterfacePointers	(::nwol::RUNTIME_CALLBACK_ID erasedCallbacks, const char_t* errorFormat);
@@ -134,28 +136,27 @@ namespace nwol
 	};
 
 	struct SRuntimeValues {	
-				SRuntimeValuesDetail								PlatformDetail						= {};
-				const char_t										* CommandLine						= nullptr;
-				uint32_t											CommandLineArgCount					= 0;
-				const char_t*										CommandLineArgList[64]				= {};
-				const char_t										* FileNameApplication				= nullptr;
-				const char_t										* FileNameRuntime					= nullptr;
-				::nwol::SScreen										Screen								= {};
-				::nwol::array_pod<::nwol::SApplicationModule>		Modules								= {};
+				SRuntimeValuesDetail											PlatformDetail						= {};
+				::nwol::view_const_string										CommandLine							= {};
+				::nwol::array_obj<::nwol::view_const_string>					CommandLineArguments				= {};
+				::nwol::view_const_string										FileNameApplication					= {};
+				::nwol::view_const_string										FileNameRuntime						= {};
+				::nwol::SScreen													Screen								= {};
+				::nwol::array_obj<::nwol::ptr_nco<::nwol::SApplicationModule>>	Modules								= {};
 
 				// Returns -1 on error or the index of the loaded module.
-				::nwol::error_t										ModuleLoad							(const char_t* moduleName)	{
+				::nwol::error_t													ModuleLoad							(const char_t* moduleName)	{
 			for(uint32_t i=0; i<Modules.size(); ++i) 
-				if(0 == strcmp(Modules[i].FilenameOriginal.c_str(), moduleName)) 
+				if(0 == strcmp(Modules[i]->FilenameOriginal.c_str(), moduleName)) 
 					return i; 
 
-			::nwol::SApplicationModule								moduleInstance; 
-			nwol_necall(::nwol::applicationModuleLoad(*this, moduleInstance, moduleName), "Module not loaded: %s.", moduleName); 
+			::nwol::ptr_obj<::nwol::SApplicationModule>									moduleInstance; 
+			moduleInstance.create();
+			nwol_necall(::nwol::applicationModuleLoad(*this, *moduleInstance, moduleName), "Module not loaded: %s.", moduleName); 
 			return Modules.push_back(moduleInstance); 
 		}
 	};	// struct
 }	// namespace
 
-
-
 #endif // RUNTIME_H__29834908347
+

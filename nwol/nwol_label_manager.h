@@ -1,5 +1,5 @@
 /// Copyright 2016-2017 - asm128
-#include "unshrinkable_block_container.h"
+#include "nwol_unshrinkable_block_container.h"
 
 #ifndef NWOL_GLABELMANAGER_H_61596898798741996481968498
 #define NWOL_GLABELMANAGER_H_61596898798741996481968498

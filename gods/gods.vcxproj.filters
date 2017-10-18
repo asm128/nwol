@@ -69,13 +69,7 @@
     <ClInclude Include="gref_manager_obj.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="application.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gref_manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gscreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="parse_number.h">

@@ -1,7 +1,8 @@
 #include "nwor.h"
 
-#include "multithread.h"
+#include "nwol_multithread.h"
 #include "nwol_enum.h"
+#include "nwol_sleep.h"
 
 #if defined(__ANDROID__)
 #	include <android/native_activity.h>
@@ -49,7 +50,7 @@ void																renderThread							(void* pStateRuntime)																				
 	info_printf("Render loop exited.");
 }
 
-int32_t																launchRenderThread						(::nwor::SRuntimeState& runtimeState)																					{
+::nwol::error_t														launchRenderThread						(::nwor::SRuntimeState& runtimeState)																					{
 #if defined(__WINDOWS__)
 	_beginthread(renderThread, 0, &runtimeState);
 #else
@@ -115,7 +116,7 @@ LRESULT	WINAPI														mainWndProc								(HWND hWnd, UINT uMsg, WPARAM wPa
 	return DefWindowProc( hWnd, uMsg, wParam, lParam );
 }
 
-int32_t																mainLoop								(::nwor::SRuntimeState & runtimeState, ::nwol::SApplicationModule& containerForCallbacks)								{
+::nwol::error_t														mainLoop								(::nwor::SRuntimeState & runtimeState, ::nwol::SApplicationModule& containerForCallbacks)								{
 	typedef				uint8_t												RUNTIME_FLAG;
 	static constexpr	const RUNTIME_FLAG									RUNTIME_FLAG_RUNNING					= 1;
 	static constexpr	const RUNTIME_FLAG									RUNTIME_FLAG_NOT_YET_REQUESTED			= 2;
@@ -128,13 +129,13 @@ int32_t																mainLoop								(::nwor::SRuntimeState & runtimeState, ::
 	MSG																		windowMessage							= {};
 	HWND																	mainWindow								= runtimeState.RuntimeValues.Screen.PlatformDetail.hWnd;
 	while(executionState & RUNTIME_FLAG_RUNNING) {
-		while(PeekMessageA(&windowMessage, mainWindow, 0, 0, PM_REMOVE)) {
+		while(PeekMessage(&windowMessage, mainWindow, 0, 0, PM_REMOVE)) {
 			TranslateMessage( &windowMessage );
-			DispatchMessage	( &windowMessage );
+			DispatchMessage( &windowMessage );
 		}
-		while(PeekMessageA(&windowMessage, 0, 0, 0, PM_REMOVE)) {
+		while(PeekMessage(&windowMessage, 0, 0, 0, PM_REMOVE)) {
 			TranslateMessage( &windowMessage );
-			DispatchMessage	( &windowMessage );
+			DispatchMessage( &windowMessage );
 		}
 		::nwol::APPLICATION_STATE												errUpdate								= containerForCallbacks.Update(runtimeState.Quit || runtimeState.RuntimeValues.Screen.State.Closed); 
 		runtimeState.RuntimeValues.Screen.State.Closed						= false;
@@ -186,6 +187,8 @@ int32_t																mainLoop								(::nwor::SRuntimeState & runtimeState, ::
 	return errLoop;
 }
 
+static constexpr const TCHAR										runtimeWindowClassName[]				= TEXT("nwor_screen");
+
 WNDCLASSEX															initWndClass							(HINSTANCE hInstance)																									{
 	WNDCLASSEX																windowClass									;
 	windowClass.cbSize													= sizeof(WNDCLASSEX)							;
@@ -198,20 +201,20 @@ WNDCLASSEX															initWndClass							(HINSTANCE hInstance)															
 	windowClass.hCursor													= LoadCursor(0, IDC_ARROW)						;
 	windowClass.hbrBackground											= CreateSolidBrush(GetSysColor(COLOR_3DFACE))	;
 	windowClass.lpszMenuName											= 0												;
-	windowClass.lpszClassName											= "nwor_screen"									;
+	windowClass.lpszClassName											= runtimeWindowClassName						;
 	windowClass.hIconSm													= LoadIcon(0, IDI_WINLOGO)						;
 	return windowClass;
 }
 
-int32_t																setupScreen								(::nwol::SRuntimeValues& runtimeValues, const char_t* windowTitle)														{ 
+::nwol::error_t														setupScreen								(::nwol::SRuntimeValues& runtimeValues, const char_t* windowTitle)														{ 
 #if defined(__WINDOWS__)
 	static	const WNDCLASSEX												windowClass								= runtimeValues.PlatformDetail.MainWindowClass = initWndClass(runtimeValues.PlatformDetail.hInstance);
-	reterr_error_if(0 == RegisterClassExA(&runtimeValues.PlatformDetail.MainWindowClass), "Failed to register WNDCLASS \"%s\".", windowClass.lpszClassName);
+	ree_if(0 == RegisterClassEx(&runtimeValues.PlatformDetail.MainWindowClass), "Failed to register WNDCLASS \"%s\".", windowClass.lpszClassName);
 
 	DWORD																	dwStyle									= WS_OVERLAPPED | WS_THICKFRAME | WS_BORDER | WS_MAXIMIZEBOX | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX;
-	HWND																	newWindow								= CreateWindowExA
+	HWND																	newWindow								= CreateWindowEx
 		(	0L
-		,	"nwor_screen"
+		,	runtimeWindowClassName
 		,	windowTitle
 		,	dwStyle
 		,	runtimeValues.Screen.Metrics.Position.x
@@ -220,20 +223,19 @@ int32_t																setupScreen								(::nwol::SRuntimeValues& runtimeValues
 		,	runtimeValues.Screen.Metrics.Size.y + GetSystemMetrics( SM_CYFRAME ) * 2 + GetSystemMetrics( SM_CYCAPTION )
 		,	0, 0, windowClass.hInstance, 0
 		); 
-	reterr_error_if(0 == newWindow, "CreateWindow FAILED!");
+	ree_if(0 == newWindow, "CreateWindow FAILED!");
 
 	runtimeValues.Screen.PlatformDetail	.pWindowClass					= &runtimeValues.PlatformDetail.MainWindowClass;
 	runtimeValues.Screen.PlatformDetail	.hWnd							= newWindow;
 	runtimeValues.PlatformDetail		.MainWindowStyle				= dwStyle;
-	ShowWindow(newWindow, SW_SHOW);
+	ShowWindow(newWindow, SW_SHOWNORMAL);
 #else
 #	error "Not implemented"
 #endif
 	return 0;
 }
 
-int32_t																shutdownScreen							(::nwor::SRuntimeState& instanceApp)																					{ 
-	::nwol::SRuntimeValues													& runtimeValues							= instanceApp.RuntimeValues;
+::nwol::error_t														shutdownScreen							(::nwol::SRuntimeValues & runtimeValues)																				{ 
 	::nwol::SScreenDetail													& screenDetail							= runtimeValues.Screen.PlatformDetail;
 	if( screenDetail.hWnd ) {
 		::nwol::SScreenState													& screenState							= runtimeValues.Screen.State;
@@ -243,19 +245,19 @@ int32_t																shutdownScreen							(::nwor::SRuntimeState& instanceApp)
 		MSG																		windowMessage;
 		info_printf("Calling DestroyWindow().");
 		DestroyWindow( oldWindow );
-		while(PeekMessageA(&windowMessage, oldWindow, 0, 0, PM_REMOVE)) {
+		while(PeekMessage(&windowMessage, oldWindow, 0, 0, PM_REMOVE)) {
 			TranslateMessage( &windowMessage );
-			DispatchMessageA( &windowMessage );
+			DispatchMessage( &windowMessage );
 		}
 		WNDCLASSEX																& mainWindowClass						= runtimeValues.PlatformDetail.MainWindowClass;
 		bool_t																	bClassUnregistered						= (UnregisterClass(mainWindowClass.lpszClassName, mainWindowClass.hInstance) != 0) ? true : false;
 		std::string																windowsError							= ::nwol::getWindowsErrorAsString(GetLastError());
-		reterr_error_if(!bClassUnregistered, "Failed to unregister WNDCLASS \"%s\". \"%s\"", mainWindowClass.lpszClassName, windowsError.c_str());
+		ree_if(!bClassUnregistered, "Failed to unregister WNDCLASS \"%s\". \"%s\"", mainWindowClass.lpszClassName, windowsError.c_str());
 	}
 	return 0;
 }
 
-int																	nwor::rtMain							(::nwor::SRuntimeState& runtimeState)																					{
+::nwol::error_t														nwor::rtMain							(::nwor::SRuntimeState& runtimeState)																					{
 #if defined(__WINDOWS__) && defined(NWOL_DEBUG_ENABLED)
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_DELAY_FREE_MEM_DF );	// Enable run-time memory check for debug builds.
 	//_CrtSetBreakAlloc( 322 );
@@ -264,12 +266,12 @@ int																	nwor::rtMain							(::nwor::SRuntimeState& runtimeState)				
 	::nwol::SRuntimeValues													& runtimeValues							= runtimeState.RuntimeValues;
 	::nwol::SApplicationModule												preContainerForCallbacks				= {};
 	preContainerForCallbacks.RuntimeValues								= &runtimeValues;
-	nwol_necall(::nwol::applicationModuleLoad(runtimeValues, preContainerForCallbacks, runtimeValues.FileNameApplication), "Failed to load module %s.", runtimeValues.FileNameApplication);
+	nwol_necall(::nwol::applicationModuleLoad(runtimeValues, preContainerForCallbacks, runtimeValues.FileNameApplication.begin()), "Failed to load module %s.", runtimeValues.FileNameApplication.begin());
 	
 	::nwol::SApplicationModule												& containerForCallbacks					= runtimeState.MainModule	= preContainerForCallbacks;
 	char																	windowTitle[512]						= {};
 	sprintf_s(windowTitle, "%s v%u.%u", containerForCallbacks.ModuleTitle, containerForCallbacks.VersionMajor(), containerForCallbacks.VersionMinor());
-	reterr_error_if(0 > ::setupScreen(runtimeValues, windowTitle), "Failed to create main window.");
+	ree_if(0 > ::setupScreen(runtimeValues, windowTitle), "Failed to create main window.");
 
 	static constexpr const char												errorFormat1	[]						= "Dynamically loaded function is null, maybe due to a buffer overrun which erased the pointers: %s.";
 	static constexpr const char												errorFormat2	[]						= "Module function failed with code 0x%x: %s.";
@@ -303,7 +305,7 @@ int																	nwor::rtMain							(::nwor::SRuntimeState& runtimeState)				
 					always_printf("Main loop exited with code %u.", (uint32_t)errLoop); 
 
 					while(INTERLOCKED_COMPARE_EXCHANGE(runtimeState.RenderThreadUsers, 0, 1))
-						::std::this_thread::sleep_for(::std::chrono::milliseconds(1));;
+						::nwol::sleep(1);
 						
  					::nwol::error_t															errCleanup								= containerForCallbacks.Cleanup(); 
 					if(0 > errCleanup) { 
@@ -323,11 +325,11 @@ int																	nwor::rtMain							(::nwor::SRuntimeState& runtimeState)				
 #if defined(__WINDOWS__)
 		PostQuitMessage(0);
 		MSG																		windowMessage							= {};
-		while(WM_QUIT != windowMessage.message) 
-			while(PeekMessageA(&windowMessage, 0, 0, 0, PM_REMOVE)) {
-				TranslateMessage( &windowMessage );
-				DispatchMessage	( &windowMessage );
-			}
+		//while(WM_QUIT != windowMessage.message) 
+		//	while(PeekMessage(&windowMessage, 0, 0, 0, PM_REMOVE)) {
+		//		TranslateMessage( &windowMessage );
+		//		DispatchMessage	( &windowMessage );
+		//	}
 #endif
 		::nwol::error_t															errDelete								= containerForCallbacks.Delete(); 
 		error_if(errored(errDelete), errorFormat2, errDelete, "moduleDelete()"); 
@@ -338,7 +340,7 @@ int																	nwor::rtMain							(::nwor::SRuntimeState& runtimeState)				
 			runtimeState.Quit													= true; 
 		}
 	}
-	nwol_necall(::nwol::moduleUnload(containerForCallbacks)	, "Error unloading main module.");
-	nwol_necall(::shutdownScreen(runtimeState)				, "Failed to shut down main screen/window.");
+	nwol_necall(::nwol::moduleUnload(containerForCallbacks)		, "Error unloading main module.");
+	nwol_necall(::shutdownScreen(runtimeState.RuntimeValues)	, "Failed to shut down main screen/window.");
 	return 0;
 }

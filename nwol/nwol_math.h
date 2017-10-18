@@ -1,6 +1,6 @@
 /// Copyright 2010-2017 - asm128
 #include "nwol_evaluation.h"
-#include "typeint.h"
+#include "nwol_typeint.h"
 #include <cmath>
 
 #ifndef NWOL_MATH_H__92836409283642038462309846

@@ -6,7 +6,7 @@
 #ifndef NWOL_GGRAPH_H_65646523463425211289347491238419
 #define NWOL_GGRAPH_H_65646523463425211289347491238419
 
-namespace nwol
+namespace gods
 {
 	// 0 input 1 output 
 	struct CGraphNode												{ ::nwol::gaindex32			Attributes[2]; };
@@ -38,12 +38,12 @@ namespace nwol
 								SAttributeId						AttributeB;
 		};
 #pragma pack(pop)
-		typedef	gbuffer<SNodeRelationship	, GTYPEID_DATA_MAKE(SNodeRelationship)		, ::nwol::GUSAGE_INDEX>		TParentshipRegistry;
-		typedef	gbuffer<SAttributeConnection, GTYPEID_DATA_MAKE(SAttributeConnection)	, ::nwol::GUSAGE_INDEX>		TConnectionRegistry;
+		typedef	::nwol::gbuffer<SNodeRelationship	, GTYPEID_DATA_MAKE(SNodeRelationship)		, ::nwol::GUSAGE_INDEX>		TParentshipRegistry;
+		typedef	::nwol::gbuffer<SAttributeConnection, GTYPEID_DATA_MAKE(SAttributeConnection)	, ::nwol::GUSAGE_INDEX>		TConnectionRegistry;
 
 								TParentshipRegistry					NodeParentshipRegistry;
 								TConnectionRegistry					AttributeBindings		[2];
-								CReferenceContainer					Attributes				[2];
+								::nwol::CReferenceContainer			Attributes				[2];
 								GListObj(CGraphNode)				NodeInstances;
 								::nwol::array_obj<::nwol::glabel>	NodeLabels;
 
@@ -55,14 +55,14 @@ namespace nwol
 								::nwol::error_t						Save						(char* out_pMemoryBuffer, uint32_t* inout_bytesWritten)				const;	// Returns the amount of bytes written
 
 								::nwol::error_t						CreateNode					(::nwol::id_t* index, const ::nwol::glabel& nodeLabel);
-								::nwol::error_t						GetNodeLabel				(::nwol::id_t nodeIndex		, ::nwol::glabel& output)																{ reterr_error_if(errored(validateNodeIndex(nodeIndex)), "invalid node index: '%u'", (uint32_t)nodeIndex); output		= NodeLabels[nodeIndex];							return 0;	}
-								::nwol::error_t						GetNodeAttributes			(::nwol::id_t nodeIndex		, ::nwol::DATA_DIRECTION direction, ::nwol::gaindex32& attributes)						{ reterr_error_if(errored(validateNodeIndex(nodeIndex)), "invalid node index: '%u'", (uint32_t)nodeIndex); attributes	= NodeInstances[nodeIndex]->Attributes[direction];	return 0;	}
+								::nwol::error_t						GetNodeLabel				(::nwol::id_t nodeIndex		, ::nwol::glabel& output)																{ ree_if(errored(validateNodeIndex(nodeIndex)), "invalid node index: '%u'", (uint32_t)nodeIndex); output		= NodeLabels[nodeIndex];							return 0;	}
+								::nwol::error_t						GetNodeAttributes			(::nwol::id_t nodeIndex		, ::gods::DATA_DIRECTION direction, ::nwol::gaindex32& attributes)						{ ree_if(errored(validateNodeIndex(nodeIndex)), "invalid node index: '%u'", (uint32_t)nodeIndex); attributes	= NodeInstances[nodeIndex]->Attributes[direction];	return 0;	}
 								::nwol::error_t						GetAttributeLabel			(::nwol::id_t attributeId	, ::nwol::glabel& output)																{ SAttributeId attrId = attributeId; return Attributes[attrId.dir].GetDescription	(attrId.pos, output);	}
 								::nwol::error_t						GetAttributeType			(::nwol::id_t attributeId	, ::nwol::glabel& output)																{ SAttributeId attrId = attributeId; return Attributes[attrId.dir].GetTypeName		(attrId.pos, output);	}
 		
 		template<typename _tRef>
-								::nwol::error_t						GetAttribute				(::nwol::id_t nodeIndex, ::nwol::id_t attributeIndex, ::nwol::DATA_DIRECTION direction, ::nwol::gptr_nco<_tRef>& attributeStruct)										{
-			reterr_error_if(validateNodeIndex(nodeIndex), "invalid node index: '%u'", (uint32_t)nodeIndex);
+								::nwol::error_t						GetAttribute				(::nwol::id_t nodeIndex, ::nwol::id_t attributeIndex, ::gods::DATA_DIRECTION direction, ::nwol::gptr_nco<_tRef>& attributeStruct)										{
+			ree_if(validateNodeIndex(nodeIndex), "invalid node index: '%u'", (uint32_t)nodeIndex);
 
 			CGraphNode														* pNode						= NodeInstances[nodeIndex];
 			SAttributeId													attrId						= pNode->Attributes[direction][attributeIndex];
@@ -71,9 +71,9 @@ namespace nwol
 		}
 
 		template<typename _tRef>
-								::nwol::error_t						PushAttribute				(::nwol::id_t nodeIndex, ::nwol::DATA_DIRECTION direction, ::nwol::gptr_nco<_tRef>& attributeStruct, ::nwol::id_t* _attributeIndex, const ::nwol::glabel& description)	{
-			reterr_error_if(validateNodeIndex(nodeIndex), "invalid node index: '%u'", (uint32_t)nodeIndex);
-			reterr_error_if(0 == _attributeIndex, "%s", "Output attribute index pointer must be something other than null.");
+								::nwol::error_t						PushAttribute				(::nwol::id_t nodeIndex, ::gods::DATA_DIRECTION direction, ::nwol::gptr_nco<_tRef>& attributeStruct, ::nwol::id_t* _attributeIndex, const ::nwol::glabel& description)	{
+			ree_if(validateNodeIndex(nodeIndex), "invalid node index: '%u'", (uint32_t)nodeIndex);
+			ree_if(0 == _attributeIndex, "%s", "Output attribute index pointer must be something other than null.");
 
 			::nwol::id_t													attributePos				= -1;
 			nwol_necall(Attributes[direction].PushReference(attributeStruct, &attributePos, description)

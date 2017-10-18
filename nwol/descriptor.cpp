@@ -1,7 +1,7 @@
 /// Copyright 2016-2017 - asm128
-#include "descriptor.h"
+#include "nwol_descriptor.h"
 
-#include "descriptor_manager.h"
+#include "nwol_descriptor_manager.h"
 #include "stype.h"
 
 												nwol::gdescriptor::gdescriptor			(const ::nwol::GDATA_TYPE* descriptor, uint32_t size)							: DescriptorManager(getDescriptorManager())	{ throw_if(errored(DescriptorManager->AddDescriptor(descriptor, size, *this)), ::std::exception("Out of range - Out of memory."), "Failed to store descriptor! Descriptor size: %u", size); }
@@ -25,7 +25,7 @@ uint32_t										nwol::gdescriptor::save					(char* out_pMemoryBuffer)									
 }
 
 ::nwol::error_t									nwol::gdescriptor::load					(const char* in_pMemoryBuffer)													{
-	reterr_error_if(0 == in_pMemoryBuffer, "Cannot load label from a null pointer!");
+	ree_if(0 == in_pMemoryBuffer, "Cannot load label from a null pointer!");
 	static constexpr	const uint32_t					headerBytes								= (uint32_t)sizeof(uint32_t);
 						const uint32_t					descriptorSize							= *(const uint32_t*)in_pMemoryBuffer;
 	*this											= descriptorSize ? ::nwol::gdescriptor((const ::nwol::GDATA_TYPE*)&in_pMemoryBuffer[headerBytes], descriptorSize) : ::nwol::gdescriptor();

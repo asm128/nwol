@@ -1,9 +1,9 @@
 /// Copyright 2010-2017 - asm128
 #include "gcore_ref_globals.h"
 
-#include "label.h"
-#include "descriptor.h"
-#include "multithread.h"
+#include "nwol_label.h"
+#include "nwol_descriptor.h"
+#include "nwol_multithread.h"
 
 #ifndef NWOL_REF_H__9823479023649023642890734__
 #define NWOL_REF_H__9823479023649023642890734__
@@ -23,7 +23,7 @@ namespace nwol
 #if defined (NWOL_DEBUG_ENABLED)				
 									uint64_t								AllocID; 
 									uint32_t								Column;
-		static						uint64_t								__breakAllocID;
+		static						uint64_t								BreakAllocID;
 #endif	
 		inline						TRef*									acquire						()										{ 
 			int64_t																	finalCount;
@@ -38,7 +38,7 @@ namespace nwol
 		inline constexpr			const bool								shared						()					const	noexcept	{ return ReferenceCount > 1;							}
 
 		// static members
-		static						const ::nwol::cue_t						__kCue;	
+		static						const ::nwol::cue_t						CUE;	
 
 		// static accessors
 		static inline				const ::nwol::gdescriptor&				get_type_descriptor			()										{
@@ -49,7 +49,7 @@ namespace nwol
 		}			
 
 		static inline				const ::nwol::gsyslabel&				get_type_name				()										{
-			static	const ::nwol::gsyslabel											typeName					= ::nwol::gsyslabel(__kCue, ~0U);
+			static	const ::nwol::gsyslabel											typeName					= ::nwol::gsyslabel(CUE, ~0U);
 			return typeName;																									
 		}
 	}; // template struct

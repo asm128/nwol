@@ -1,5 +1,5 @@
 /// Copyright 2016-2017 - asm128
-#include "array_view.h"
+#include "nwol_array_view.h"
 
 #ifndef NWOL_GRID_VIEW_H_926340923746098743230948
 #define NWOL_GRID_VIEW_H_926340923746098743230948

@@ -1,5 +1,5 @@
 /// Copyright 2016-2017 - asm128
-#include "storage.h"
+#include "nwol_storage.h"
 
 #if defined(__WINDOWS__)
 #include <Windows.h>
@@ -15,13 +15,13 @@ int32_t											nwol::listFiles								(const char* directory, ::nwol::array_o
     sprintf_s(sPath, "%s\\*.*", ::nwol::glabel(directory, ~0U).c_str());	//Specify a file mask. *.* = We want everything!
 
 	hFind											= FindFirstFile(sPath, &fdFile);
-	reterr_error_if(hFind == INVALID_HANDLE_VALUE, "Path not found: [%s]", directory);
+	ree_if(hFind == INVALID_HANDLE_VALUE, "Path not found: [%s]", directory);
 
 	::nwol::SPathContents								folder;
     do { // Find first file will always return "." and ".." as the first two directories.
-        if	(	0 != strcmp(fdFile.cFileName,  ".")
-			&&	0 != strcmp(fdFile.cFileName, "..")
-			)
+        if(	0 != strcmp(fdFile.cFileName,  ".")
+		 &&	0 != strcmp(fdFile.cFileName, "..")
+		 )
         {
             sprintf_s(sPath, "%s\\%s", directory, fdFile.cFileName);	// Build up our file path using the passed in [directory] and the file/foldername we just found.
 

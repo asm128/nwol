@@ -1,5 +1,5 @@
 /// Copyright 2017 - asm128
-#include "label.h"
+#include "nwol_label.h"
 #include "nwol_array.h"
 
 #ifndef NWOL_STORAGE_H_98234687

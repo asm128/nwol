@@ -24,7 +24,7 @@ namespace nwol
 
 	template<typename _tElement>
 															::nwol::error_t			sequence_find			(const _tElement* source, uint32_t offset, uint32_t sourceSize, const _tElement* sequenceToFind, uint32_t sequenceLength)	noexcept	{
-		const uint32_t																		indexStop				= sourceSize - sequenceLength;
+		const uint32_t																		indexStop				= sourceSize - sequenceLength + 1;
 		for(; offset < indexStop; ++offset) {
 			if(0 == ::nwol::sequence_compare(&source[offset], sequenceToFind, sequenceLength))
 				return offset;

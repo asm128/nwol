@@ -1,5 +1,5 @@
 /// Copyright 2016-2017 - asm128
-#include "member_registry.h"
+#include "nwol_member_registry.h"
 
 #if defined(__WINDOWS__)
 #	define WIN32_LEAN_AND_MEAN
@@ -49,7 +49,7 @@ namespace nwol {
 		newModuleInstance.FilenameOriginal							= 
 		newModuleInstance.FilenameImage								= ::nwol::glabel(moduleName, 2048);
 
-		reterr_error_if(0 == (newModuleInstance.Handle = NWOL_PLATFORM_LOAD_MODULE(moduleName)), "Failed to load library: %s.", moduleName); 
+		ree_if(0 == (newModuleInstance.Handle = NWOL_PLATFORM_LOAD_MODULE(moduleName)), "Failed to load library: %s.", moduleName); 
 		info_printf("Library loaded successfully: '%s'.", moduleName);
 
 		const _tModule::TRegistry										& memberRegistry								= NWOM_GET_MEMBER_REGISTRY(_tModule); 

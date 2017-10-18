@@ -1,5 +1,5 @@
 /// Copyright 2016-2017 - asm128
-#include "typeint.h"
+#include "nwol_typeint.h"
 
 #ifndef NWOL_SIZE_H_982340928374923
 #define NWOL_SIZE_H_982340928374923

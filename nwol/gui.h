@@ -4,6 +4,7 @@
 #include "nwol_coord.h"
 #include "ascii_color.h"
 #include "ascii_target.h"
+#include "nwol_ascii_target.h"
 
 #ifndef NWOL_GUI_H_92834992384223849732
 #define NWOL_GUI_H_92834992384223849732
@@ -117,14 +118,16 @@ namespace nwol
 	};
 #pragma pack(pop)
 				// Controls
-				::nwol::error_t												getControl						(::nwol::SGUI& guiSystem, ::nwol::SGUIControl		& definition	);
-				::nwol::error_t												createControl					(::nwol::SGUI& guiSystem, const ::nwol::SGUIControl	& definition	);
+					::nwol::error_t												getControl						(::nwol::SGUI& guiSystem, ::nwol::SGUIControl		& definition	);
+					::nwol::error_t												createControl					(::nwol::SGUI& guiSystem, const ::nwol::SGUIControl	& definition	);
 
 				// Update/Render
-				::nwol::error_t												updateGUI						(::nwol::SGUI& guiSystem, const ::nwol::SInput		& inputSystem	);
-				::nwol::error_t												renderGUIASCII					(char* bbText, uint16_t* bbColor, const ::nwol::SGUI& guiSystem		);
-				::nwol::error_t												renderGUIASCII					(::nwol::SASCIITarget& target	, const ::nwol::SGUI& guiSystem		);
-				::nwol::error_t												renderGUIBitmap					(uint32_t* bitmap, uint32_t width, uint32_t height, const ::nwol::SGUI& guiSystem);
+					::nwol::error_t												updateGUI						(::nwol::SGUI& guiSystem, const ::nwol::SInput		& inputSystem	);
+					::nwol::error_t												renderGUIASCII					(char* bbText, uint16_t* bbColor, const ::nwol::SGUI& guiSystem		);
+					::nwol::error_t												renderGUIBitmap					(uint32_t* bitmap, uint32_t width, uint32_t height, const ::nwol::SGUI& guiSystem);
+
+	static inline	::nwol::error_t												renderGUIASCII					(::nwol::SASCIITarget_old& targetAscii	, const ::nwol::SGUI& guiSystem)	{ return renderGUIASCII(targetAscii.Text.begin(), targetAscii.Attributes.begin(), guiSystem); }
+	static inline	::nwol::error_t												renderGUIASCII					(::nwol::SASCIITarget& targetAscii, const ::nwol::SGUI& guiSystem)			{ return renderGUIASCII((char_t*)targetAscii.Characters.begin(), targetAscii.Colors.begin(), guiSystem); }
 }//namespace
 
 #endif // NWOL_GUI_H_92834992384223849732

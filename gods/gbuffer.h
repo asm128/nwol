@@ -69,7 +69,7 @@ namespace nwol
 		inline constexpr		const _tBase&							get_value			( uint32_t index )													const				{ return this->Data[index];						}
 								::nwol::error_t							set_value			( uint32_t index, const _tBase& value )
 		{
-			reterr_error_if(index >= this->size(), "Invalid index: #%u!", index);
+			ree_if(index >= this->size(), "Invalid index: #%u!", index);
 			if(m_ArrayBuffer.writable()) {
 				this->Data[index]												= value;
 				return 0;
@@ -158,7 +158,7 @@ namespace nwol
 				else {
 					GPNCO(::nwol, SBuffer)												newArray;
 					nwol_necall(cloneBuffer(&newArray, m_ArrayBuffer), "Unknown error.");
-					reterr_error_if(0 == newArray || 0 == newArray->pByteArray, "Failed to allocate new buffer.");
+					ree_if(0 == newArray || 0 == newArray->pByteArray, "Failed to allocate new buffer.");
 					((_tBase*)newArray->pByteArray)[iLast]							= newValue;
 					set(newArray);
 				}
@@ -264,7 +264,7 @@ namespace nwol
 		}
 
 								::nwol::error_t							insert					(uint32_t nIndex, const _tBase& value)													{
-			reterr_error_if(nIndex >= this->size(), "Invalid index! Index=%u. Max index=%u", nIndex, this->size()-1);
+			ree_if(nIndex >= this->size(), "Invalid index! Index=%u. Max index=%u", nIndex, this->size()-1);
 			uint32_t															nOldSize				= this->Count;
 			uint32_t															newSize					= this->Count+1;
 
@@ -300,7 +300,7 @@ namespace nwol
 		}
 
 								::nwol::error_t							remove					(uint32_t nIndex)																		{
-			reterr_error_if(nIndex >= this->size(), "Invalid index! Index=%u. Max index=%llu", nIndex, (uint64_t)this->size()-1);
+			ree_if(nIndex >= this->size(), "Invalid index! Index=%u. Max index=%llu", nIndex, (uint64_t)this->size()-1);
 
 			uint32_t															newSize					= this->Count-1;
 			static constexpr const bool											bIsText					= _USAGE == GUSAGE_TEXT;
@@ -338,8 +338,8 @@ namespace nwol
 				_tBase																temp; 
 				bool																isOdd					= true_if(this->Count % 2);
 					
-				for( uint32_t iElement=0, nCount=(isOdd ? this->Count-1 : this->Count) / 2; iElement<nCount; iElement++ ) {
-					uint32_t															rightIndex				= this->Count-1-iElement;
+				for(uint32_t iElement = 0, nCount = (isOdd ? this->Count - 1 : this->Count) / 2; iElement < nCount; ++iElement) {
+					uint32_t															rightIndex				= this->Count - 1 - iElement;
 					temp															= this->Data[iElement];
 					this->Data[iElement]											= this->Data[rightIndex];
 					this->Data[rightIndex]											= temp;
@@ -351,7 +351,7 @@ namespace nwol
 
 				_tBase																* newData				= (_tBase*)newListBuffer->pByteArray;
 				for( uint32_t iElement=0; iElement<this->Count; iElement++ )
-					newData[iElement]												= this->Data[this->Count-1-iElement];
+					newData[iElement]												= this->Data[this->Count - 1 - iElement];
 
 				set(newListBuffer);
 			}

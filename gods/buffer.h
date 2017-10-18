@@ -1,7 +1,7 @@
 /// This file is part of the EX-Game Object Data System - now known as the No Workflow Overhead Library
 /// 2011 (c) Pablo Ariel Zorrilla Cepeda
 #include "gref.h"
-#include "datausage.h"
+#include "nwol_datausage.h"
 #include <cstdio>
 
 #ifndef NWOL_BUFFER_H_23984723094

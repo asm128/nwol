@@ -1,5 +1,5 @@
 /// Copyright 2017 - asm128
-#include "label.h"
+#include "nwol_label.h"
 
 #ifndef NWOL_TYPE_IDENTIFIER_H_02397492873498
 #define NWOL_TYPE_IDENTIFIER_H_02397492873498

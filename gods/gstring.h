@@ -59,7 +59,7 @@ namespace nwol
 			else {
 				GPNCO(::nwol, SBuffer)												newListBuffer;
 				uint32_t															newSize				= _ASize+_BSize+1;
-				reterr_error_if(0 > ::nwol::createBuffer(_F, ::nwol::GUSAGE_TEXT, newSize, &newListBuffer), "Failed to create buffer for array! Out of memory? Element count requested: %u", (uint32_t)newSize);
+				ree_if(0 > ::nwol::createBuffer(_F, ::nwol::GUSAGE_TEXT, newSize, &newListBuffer), "Failed to create buffer for array! Out of memory? Element count requested: %u", (uint32_t)newSize);
 	
 				_tBase																* newBaseArray		= ((_tBase*)newListBuffer->pByteArray);
 
@@ -110,7 +110,7 @@ namespace nwol
 			else if( leftIsEmpty	)			*this							= _B;
 			else if( rightIsEmpty	)			*this							= _A;
 			else
-				return join( _A, _S, _B.get_pointer(), _B.size() );
+				return join( _A, _S, _B.begin(), _B.size() );
 			return 0;
 		}
 		template <size_t _S1, size_t _S2>	::nwol::error_t				join				( const _tBase (&_A)[_S1], const _tBase (&_B)[_S2] )										{

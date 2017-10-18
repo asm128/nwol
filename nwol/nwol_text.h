@@ -1,7 +1,8 @@
 /// Copyright 2016-2017 - asm128
 #include "nwol_misc.h"
-#include "label.h"
+#include "nwol_label.h"
 #include "ascii_target.h"
+#include "nwol_ascii_target.h"
 #include "nwol_array.h"
 
 #include <cstring>
@@ -45,12 +46,17 @@ namespace nwol
 		return actualX;
 	}
 
-
-	static inline				int32_t	lineToRectColored		(SASCIITarget& target, uint16_t messageColor, int32_t offsetLine, int32_t offsetColumn, nwol::ALIGN_SCREEN align, const char* text, uint32_t charCount = 0xFFFFFFFF)		{
+	static inline				int32_t	lineToRectColored		(SASCIITarget_old& target, uint16_t messageColor, int32_t offsetLine, int32_t offsetColumn, nwol::ALIGN_SCREEN align, const char* text, uint32_t charCount = 0xFFFFFFFF)		{
 		return lineToRectColored	(target.Text.begin(), target.Width(), target.Height(), target.Attributes.begin(), messageColor, offsetLine, offsetColumn, align, text, charCount);
 	}
-	template<typename... _Args>	int32_t	printfToRectColored		(SASCIITarget& target, uint16_t messageColor, int32_t offsetLine, int32_t offsetColumn, nwol::ALIGN_SCREEN align, const char* format, _Args&&... args)						{
+	static inline				int32_t	lineToRectColored		(SASCIITarget& target, uint16_t messageColor, int32_t offsetLine, int32_t offsetColumn, nwol::ALIGN_SCREEN align, const char* text, uint32_t charCount = 0xFFFFFFFF)		{
+		return lineToRectColored	((char_t*)target.Characters.begin(), target.Width(), target.Height(), target.Colors.begin(), messageColor, offsetLine, offsetColumn, align, text, charCount);
+	}
+	template<typename... _Args>	int32_t	printfToRectColored		(SASCIITarget_old& target, uint16_t messageColor, int32_t offsetLine, int32_t offsetColumn, nwol::ALIGN_SCREEN align, const char* format, _Args&&... args)						{
 		return printfToRectColored	(target.Text.begin(), target.Width(), target.Height(), target.Attributes.begin(), messageColor, offsetLine, offsetColumn, align, format, args...);
+	}
+	template<typename... _Args>	int32_t	printfToRectColored		(SASCIITarget& target, uint16_t messageColor, int32_t offsetLine, int32_t offsetColumn, nwol::ALIGN_SCREEN align, const char* format, _Args&&... args)						{
+		return printfToRectColored	((char_t*)target.Characters.begin(), target.Width(), target.Height(), target.Colors.begin(), messageColor, offsetLine, offsetColumn, align, format, args...);
 	}
 	template <size_t _Size>		void	resetCursorString		(char (&textContainer)[_Size])																																				{ textContainer[textContainer[1] = 0] = '_';	}
 	template <size_t _Size> 	bool	getMessageSlow			(char (&message)[_Size], const char* textToPrint, uint32_t sizeToPrint, double lastFrameSeconds, double limit = 0.025f)														{

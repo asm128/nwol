@@ -1,7 +1,7 @@
 /// Copyright 2016-2017 - asm128
-#include "type_identifier.h"
+#include "nwol_type_identifier.h"
 #include "nwol_array.h"
-#include "datatype.h"
+#include "nwol_datatype.h"
 
 
 #ifndef NWOL_TYPE_REGISTRY_H_92874982742

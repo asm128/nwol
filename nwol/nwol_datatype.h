@@ -1,7 +1,7 @@
 /// This file is part of the Game Object Data System
 /// Copyright © 2011-2016: Pablo Ariel Zorrilla Cepeda
 #include "nwol_evaluation.h"
-#include "typeint.h"
+//#include "nwol_typeint.h"
 
 // --------------------------------------------------------------- GDATA_TYPE ---------------------------------------------------------------
 #ifndef NWOL_DATATYPE_H_263544625434625344652434321

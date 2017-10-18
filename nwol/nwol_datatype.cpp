@@ -1,5 +1,5 @@
 /// Copyright 2011-2017 - asm128
-#include "datatype.h"
+#include "nwol_datatype.h"
 #include "nwol_evaluation.h"
 
 #include "nwol_io.h"

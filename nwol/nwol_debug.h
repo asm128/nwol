@@ -1,5 +1,5 @@
 /// Copyright 2010-2017 - asm128
-#include "platform_globals.h"
+#include "nwol_platform_globals.h"
 
 #ifndef NWOL_DEBUG_H__97826389432__
 #define NWOL_DEBUG_H__97826389432__

@@ -9,7 +9,7 @@ namespace nwol
 {
 	// the following functions are not switable for concurrency:
 	// size()
-	// get_pointer()
+	// get_core_ref()
 	// get_valid_element_count()
 	// release()
 	template <typename _tRef, ::nwol::GDATA_TYPE m_DataType = GTYPEID_POINTER_MAKE(_tRef), int32_t m_DataBytes = GTYPEID_TOTALBYTES(GTYPEID_POINTER_MAKE(_tRef))> class glist_base : public ::nwol::array_view<_tRef*>
@@ -103,7 +103,7 @@ namespace nwol
 			else {
 				if(this->Count) {
 					::nwol::error_t												errMy					= ::nwol::createBuffer(m_DataType, GUSAGE_POINTER, this->Count, m_BufferData->nColumnCount, m_BufferData->nSliceCount, &newListBuffer);
-					reterr_error_if(0 > errMy, "%s", "Failed to allocate list buffer! Out of memory?");
+					ree_if(0 > errMy, "%s", "Failed to allocate list buffer! Out of memory?");
 					memset(newListBuffer->pByteArray, 0, m_DataBytes*this->Count);
 				}
 				this->SetBufferData(newListBuffer);
@@ -111,7 +111,7 @@ namespace nwol
 			return 0;
 		}
 							::nwol::error_t						set						(_tRef* CoreInstance, uint32_t nIndex)						{
-			reterr_error_if (nIndex >= this->Count, "Invalid index! Index=%u.", nIndex);
+			ree_if(nIndex >= this->Count, "Invalid index! Index=%u.", nIndex);
 			if(m_BufferData.writable()) {
 				_tRef														* oldInstance			= ((_tRef**)m_BufferData->pByteArray)[nIndex];
 				if (oldInstance != CoreInstance) {
@@ -122,7 +122,7 @@ namespace nwol
 			else {
 				GPNCO(::nwol, SBuffer)										newBuffer;
 				error_t														errMy					= ::nwol::createBuffer(m_DataType, GUSAGE_POINTER, this->Count, m_BufferData->nColumnCount, m_BufferData->nSliceCount, &newBuffer );
-				reterr_error_if(errored(errMy), "%s", "Failed to create buffer for storing new list!");
+				ree_if(errored(errMy), "%s", "Failed to create buffer for storing new list!");
 				for( uint32_t iRef=0; iRef < this->Count; iRef++ )
 					((_tRef**)newBuffer->pByteArray)[iRef]					= ::nwol::acquire( ((_tRef**)m_BufferData->pByteArray)[iRef] );
 

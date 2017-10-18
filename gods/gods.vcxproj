@@ -177,7 +177,6 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="application.h" />
     <ClInclude Include="buffer.h" />
     <ClInclude Include="gbuffer.h" />
     <ClInclude Include="glist.h" />
@@ -194,7 +193,6 @@
     <ClInclude Include="gref_manager_pod.h" />
     <ClInclude Include="gref_ptr.h" />
     <ClInclude Include="gref_serializer_pod.h" />
-    <ClInclude Include="gscreen.h" />
     <ClInclude Include="gstring.h" />
     <ClInclude Include="parse_number.h" />
     <ClInclude Include="reference_registry.h" />

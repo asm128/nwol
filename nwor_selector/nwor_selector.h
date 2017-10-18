@@ -11,7 +11,7 @@ GDEFINE_ENUM_VALUE(SELECTOR_STATE, LOADING_SELECTION	, 3);
 GDEFINE_ENUM_VALUE(SELECTOR_STATE, RUNNING_SELECTION	, 4);
 GDEFINE_ENUM_VALUE(SELECTOR_STATE, CLOSING				, 5);
 
-struct SApplication : public ::nwol::SFramework {
+struct SApplication : public ::gddm::SFramework {
 	::nwol::refcount_t									RenderSemaphore					= 0;
 	::SELECTOR_STATE									SelectorState					= SELECTOR_STATE_START;
 	int32_t												ApplicationModuleSelected		= -1;

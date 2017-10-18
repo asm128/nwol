@@ -1,5 +1,5 @@
 /// Copyright 2016-2017 - asm128
-#include "array_view.h"
+#include "nwol_array_view.h"
 #include "nwol_memory.h"
 
 #ifndef ARRAY_H_652434654236655143465
@@ -15,14 +15,14 @@ namespace nwol
 	struct array_static : public ::nwol::array_view<_tBase>, public ::nwol::array_static_base<_tBase, _arraySize> {
 		typedef ::nwol::array_static_base<_tBase, _arraySize>	_ArrayStaticBase;
 	public:
-		using				_ArrayStaticBase	::		Block									;
-		using				array_view<_tBase>	::		Data									;
-		using				array_view<_tBase>	::		Count									;
+		using				_ArrayStaticBase	::		Block										;
+		using				array_view<_tBase>	::		Data										;
+		using				array_view<_tBase>	::		Count										;
 		typedef				array_view<_tBase>			_TArrayView;
 
-		inline constexpr								array_static							()																							: array_view<_tBase>(Block)													{}
+		inline constexpr								array_static								()																						: array_view<_tBase>(Block)													{}
 		template<size_t _arraySizeOther>
-		inline											array_static							(const _tBase (&sourceData)[_arraySizeOther])												: array_view<_tBase>(Block)													{
+		inline											array_static								(const _tBase (&sourceData)[_arraySizeOther])											: array_view<_tBase>(Block)													{
 			Count											= 0;
 			for(const uint32_t maxCount = (uint32_t)::nwol::min(_arraySize, _arraySizeOther); Count < maxCount; ++Count)
 				Block[Count]									= sourceData[Count];
@@ -43,7 +43,7 @@ namespace nwol
 							array_base<_tBase>&			operator =									(const array_base<_tBase>&		other)													= delete;
 							array_base<_tBase>&			operator =									(const array_base<_tBase>&&	other)														= delete;
 		// This helper method is used to prevent redundancies. It returns a safe integer of the same or a higher value than the one passed as argument.
-		inline constexpr	uint32_t					calc_reserve_size							(const uint32_t newSize)											const	noexcept	{ return ::nwol::max(newSize, newSize + nwol::max(newSize>>1, 4U));						}
+		inline constexpr	uint32_t					calc_reserve_size							(const uint32_t newSize)											const	noexcept	{ return ::nwol::max(newSize, newSize + ::nwol::max(newSize >> 1, 4U));						}
 		inline constexpr	uint32_t					calc_malloc_size							(const uint32_t newSize)											const	noexcept	{ return ::nwol::max(newSize*(uint32_t)sizeof(_tBase), Count*(uint32_t)sizeof(_tBase));	}
 	}; // array_base
 
@@ -226,8 +226,8 @@ namespace nwol
 		}
 
 		// returns the new size of the list or -1 on failure.
-		template<size_t _Length>
-		inline				int32_t						insert										(uint32_t index, const _tPOD* (&chainToInsert)[_Length])								{ return insert(index, chainToInsert, _Length); }
+		template<size_t _chainLength>
+		inline				int32_t						insert										(uint32_t index, const _tPOD* (&chainToInsert)[_chainLength])							{ return insert(index, chainToInsert, _chainLength); }
 							int32_t						insert										(uint32_t index, const _tPOD* chainToInsert, uint32_t chainLength)						{
 			ree_if(index >= Count, "Invalid index: %u.", index);
 
@@ -283,7 +283,7 @@ namespace nwol
 			}
 
 			::nwol::array_view<_tPOD>							newStorage									= {(_tPOD*)::nwol::nwol_malloc(sizeof(_tPOD) * elementsToRead), elementsToRead};
-			ree_if(0 == newStorage.begin(), "Failed to allocate array for ");
+			ree_if(0 == newStorage.begin(), "Failed to allocate array for storing read elements.");
 			if(0 == input) {
 				for(uint32_t i = 0; i < Count; ++i) 
 					*inout_bytesRead								+= sizeof(_tPOD);
@@ -300,6 +300,7 @@ namespace nwol
 			_tPOD											* old											= Data;
 			Data											= newStorage.begin();
 			::nwol::safe_nwol_free(old);
+			return 0;
 		}
 
 		inline				::nwol::error_t				write										(byte_t* input, uint32_t* inout_bytesWritten)						const				{

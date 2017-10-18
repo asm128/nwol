@@ -1,6 +1,6 @@
 /// Copyright 2016-2017 - asm128
-#include "unshrinkable_block_container.h"
-#include "datatype.h"
+#include "nwol_unshrinkable_block_container.h"
+#include "nwol_datatype.h"
 
 #ifndef NWOL_DESCRIPTORMANAGER_H_61596898798741996481968498
 #define NWOL_DESCRIPTORMANAGER_H_61596898798741996481968498

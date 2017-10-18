@@ -1,6 +1,6 @@
 /// Copyright 2016-2017 - asm128
-#include "type_identifier.h"
-#include "datatype.h"
+#include "nwol_type_identifier.h"
+#include "nwol_datatype.h"
 
 #ifndef NWOL_MEMBER_REGISTRY_H_9214982364982734
 #define NWOL_MEMBER_REGISTRY_H_9214982364982734

@@ -16,8 +16,8 @@ namespace nwol
 	char*			getASCIIBackBuffer				();
 	const char*		getASCIIFrontBuffer				();
 
-	int32_t			getASCIIBackBuffer				(SASCIITarget& target);
-	int32_t			getASCIIFrontBuffer				(SASCIITarget& target);
+	int32_t			getASCIIBackBuffer				(SASCIITarget_old& target);
+	int32_t			getASCIIFrontBuffer				(SASCIITarget_old& target);
 
 	uint16_t*		getASCIIColorBackBuffer			();
 	const uint16_t*	getASCIIColorFrontBuffer		();

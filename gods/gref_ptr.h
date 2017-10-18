@@ -1,5 +1,5 @@
-#include "label.h"
-#include "descriptor.h"
+#include "nwol_label.h"
+#include "nwol_descriptor.h"
 #include "gcore_ref.h"
 #include "nwol_memory.h"
 
@@ -61,7 +61,7 @@ namespace nwol
 		inline					const _tBase*					get_address				()																			const				{ return InstanceRef ? InstanceRef->get() : 0;		}
 		// inline constexpr		methods
 		inline constexpr		bool							valid					()																			const	noexcept	{ return 0 != InstanceRef;											}
-		inline constexpr		_tRef*							get_pointer				()																			const	noexcept	{ return InstanceRef;												}
+		inline constexpr		_tRef*							get_core_ref			()																			const	noexcept	{ return InstanceRef;												}
 		inline constexpr		bool							am_I_owning				()																			const	noexcept	{ return InstanceRef == 0	|| InstanceRef->ReferenceCount == 1;	}
 		inline constexpr		bool							writable				()																			const	noexcept	{ return InstanceRef		&& InstanceRef->ReferenceCount == 1;	}
 		inline constexpr		_tRef*							acquire					()																			const	noexcept	{ return InstanceRef		 ? InstanceRef->acquire() : nullptr;	}

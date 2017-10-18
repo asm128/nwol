@@ -9,17 +9,17 @@
 //#	define					safe_free(p)								if(p)						{ free		(p); (p) = 0; }
 //#endif 
 #ifndef safe_delete
-#	define					safe_delete(p)								if(p)						{ delete	(p); (p) = 0; }
+#	define					safe_delete(p)								if(p)						{ delete(p); (p) = 0; }
 #endif 
 #ifndef safe_fclose
-#	define					safe_fclose(p)								if(p)						{ fclose	(p); (p) = 0; }
+#	define					safe_fclose(p)								if(p)						{ fclose(p); (p) = 0; }
 #endif 
 // ------------------------------------------
 #ifndef safe_closesocket
 #	if defined(__WINDOWS__)
-#		define					safe_closesocket(p)							if((p) != INVALID_SOCKET)	{ closesocket		(p); (p) = INVALID_SOCKET; }
+#		define					safe_closesocket(p)							if((p) != INVALID_SOCKET)	{ SOCKET _oldpsocket = (p); (p) = INVALID_SOCKET; closesocket(_oldpsocket);	}
 #	else
-#		define					safe_closesocket(p)							if((p) != INVALID_SOCKET)	{ close				(p); (p) = INVALID_SOCKET; }
+#		define					safe_closesocket(p)							if((p) != INVALID_SOCKET)	{ SOCKET _oldpsocket = (p); (p) = INVALID_SOCKET; close(_oldpsocket);		}
 #	endif
 #endif 
 // ------------------------------------------

@@ -17,7 +17,7 @@ namespace nwol
 															glist_nco				(uint32_t nInitialSize)																										{	resize(nInitialSize);	}
 		//
 		virtual			::nwol::error_t						create					(_tRef** in_lstCoreInstances, uint32_t nInstanceCount)																		{
-			reterr_error_if(nInstanceCount && 0 == in_lstCoreInstances, "%s", "Cannot create list from a null address!");
+			ree_if(nInstanceCount && 0 == in_lstCoreInstances, "%s", "Cannot create list from a null address!");
 
 			 if( this->m_BufferData.writable()
 			 &&	(this->Count >= nInstanceCount || this->m_BufferData->nSizeInBytes >= (nInstanceCount*m_DataBytes)) 
@@ -45,7 +45,7 @@ namespace nwol
 		}
 		//
 		virtual			::nwol::error_t						create					(::nwol::gptr_nco<_tRef>* in_lstCoreInstances, uint32_t nInstanceCount)														{
-			reterr_error_if(nInstanceCount && 0 == in_lstCoreInstances, "%s", "Cannot create list from a null address!");
+			ree_if(nInstanceCount && 0 == in_lstCoreInstances, "%s", "Cannot create list from a null address!");
 
 			GPNCO(::nwol, SBuffer)										newListBuffer;
 			nwol_necall(::nwol::createBuffer(m_DataType, GUSAGE_POINTER, nInstanceCount, &newListBuffer), "Cannot create buffer for pointer list of size %u! Out of memory?", nInstanceCount);
@@ -114,8 +114,8 @@ namespace nwol
 		}
 		
 						::nwol::error_t						pop						(_tRef** out_pElement = 0)																									{
-			reterr_error_if(0 == this->Count	, "%s", "Cannot pop elements from an empty list.");
-			reterr_error_if(!this->m_BufferData	, "%s", "Invalid buffer data.");
+			ree_if(0 == this->Count	, "%s", "Cannot pop elements from an empty list.");
+			ree_if(!this->m_BufferData	, "%s", "Invalid buffer data.");
 
 			_tRef													* oldElement			= 0;
 			if (this->m_BufferData.am_I_owning()) {
@@ -143,7 +143,7 @@ namespace nwol
 			return 0;
 		}
 						::nwol::error_t						insert					(_tRef* CoreInstance, uint32_t nIndex)																						{
-			reterr_error_if(nIndex >= this->Count, "Invalid index! Index=%u. Max index=%u", nIndex, this->Count - 1);
+			ree_if(nIndex >= this->Count, "Invalid index! Index=%u. Max index=%u", nIndex, this->Count - 1);
 
 			uint32_t												oldSize					= this->Count;
 			uint32_t												newSize					= this->Count + 1;
@@ -195,7 +195,7 @@ namespace nwol
 		//
 		using				base_list_type::				create;
 		virtual				::nwol::error_t					create					(const _tBase* in_lstCoreInstances, uint32_t nInstanceCount)																{
-			reterr_error_if(nInstanceCount && 0 == in_lstCoreInstances, "%s", "Cannot create list from a null address!");
+			ree_if(nInstanceCount && 0 == in_lstCoreInstances, "%s", "Cannot create list from a null address!");
 
 			if (this->m_BufferData.writable()
 				&& (this->Count >= nInstanceCount || this->m_BufferData->nSizeInBytes >= (nInstanceCount*m_DataBytes)))
@@ -220,7 +220,7 @@ namespace nwol
 				gcreateAll((_tRef**)this->m_BufferData->pByteArray, this->Count);
 			else {
 				if(this->Count) {
-					reterr_error_if(0 > ::nwol::createBuffer(m_DataType, GUSAGE_POINTER, this->Count, this->m_BufferData->nColumnCount, this->m_BufferData->nSliceCount, &newListBuffer), "Cannot create buffer for pointer list of size %u! Out of memory?", this->Count);
+					ree_if(0 > ::nwol::createBuffer(m_DataType, GUSAGE_POINTER, this->Count, this->m_BufferData->nColumnCount, this->m_BufferData->nSliceCount, &newListBuffer), "Cannot create buffer for pointer list of size %u! Out of memory?", this->Count);
 					memset(newListBuffer->pByteArray, 0, m_DataBytes*this->Count);
 					gcreateAll((_tRef**)newListBuffer->pByteArray, this->Count);
 				}
@@ -240,24 +240,24 @@ namespace nwol
 		typedef				typename _tRef::TBase			_tBase;
 		//----------------------------------				-------------
 		virtual				::nwol::error_t					serialize				(FILE* fp)																			const									{
-			reterr_error_if(0 == fp, "%s", "A null pointer is not a valid file handler!");
+			ree_if(0 == fp, "%s", "A null pointer is not a valid file handler!");
 
 			uint32_t												nSize					= this->Count;
-			reterr_error_if(1 != fwrite(&nSize, sizeof(uint32_t), 1, fp), "%s", "Failed to write to file!");
+			ree_if(1 != fwrite(&nSize, sizeof(uint32_t), 1, fp), "%s", "Failed to write to file!");
 
 			if (0 == nSize)
 				return 0;
 			uint32_t												nInstancesWritten		= fileSerializeData(this->Data, nSize, fp);
-			reterr_error_if(nSize != nInstancesWritten, "Failed to serialize the requested instances! %u requested to be written, %u actually written.", nSize, nInstancesWritten);
+			ree_if(nSize != nInstancesWritten, "Failed to serialize the requested instances! %u requested to be written, %u actually written.", nSize, nInstancesWritten);
 			return 0;
 		}
 		virtual				::nwol::error_t					deserialize				(FILE* fp)																													{
-			reterr_error_if(0 == fp, "%s", "A null pointer is not a valid file handler!");
+			ree_if(0 == fp, "%s", "A null pointer is not a valid file handler!");
 
 			this->SetBufferData(0);
 
 			uint32_t												nSize					= 0;
-			reterr_error_if(1 != fread(&nSize, sizeof(uint32_t), 1, fp), "%s", "Failed to read list from file!");
+			ree_if(1 != fread(&nSize, sizeof(uint32_t), 1, fp), "%s", "Failed to read list from file!");
 			if (nSize == 0)
 				return 0;
 
@@ -266,7 +266,7 @@ namespace nwol
 			memset(newListBuffer->pByteArray, 0, m_DataBytes*nSize);
 
 			uint32_t												instancesRead			= fileDeserializeData((_tRef**)newListBuffer->pByteArray, nSize, fp);
-			reterr_error_if(nSize != instancesRead, "Failed to read the requested instances! %u requested to be read, %u actually read.", nSize, instancesRead);
+			ree_if(nSize != instancesRead, "Failed to read the requested instances! %u requested to be read, %u actually read.", nSize, instancesRead);
 
 			this->SetBufferData(newListBuffer);
 			return 0;
@@ -307,31 +307,31 @@ namespace nwol
 			return bytesRead;
 		}
 		virtual				::nwol::error_t					write					(FILE* fp, const _tBase* defaultData = 0)											const									{
-			reterr_error_if(0 == fp, "%s", "A null pointer is not a valid file handler!");
+			ree_if(0 == fp, "%s", "A null pointer is not a valid file handler!");
 
 			uint32_t												nSize					= this->Count;
-			reterr_error_if(1 != fwrite(&nSize, sizeof(uint32_t), 1, fp), "%s", "Failed to write to file!");
+			ree_if(1 != fwrite(&nSize, sizeof(uint32_t), 1, fp), "%s", "Failed to write to file!");
 
 			uint32_t												nInstancesWritten	= fileWriteData(this->Data, nSize, fp, defaultData);
-			reterr_error_if(nSize != nInstancesWritten, "Failed to write the requested instances! %u requested to be written, %u actually written.", nSize, nInstancesWritten);
+			ree_if(nSize != nInstancesWritten, "Failed to write the requested instances! %u requested to be written, %u actually written.", nSize, nInstancesWritten);
 			return 0;
 		}
 		virtual				::nwol::error_t					read					(FILE* fp)																													{
-			reterr_error_if(0 == fp, "%s", "A null pointer is not a valid file handler!");
+			ree_if(0 == fp, "%s", "A null pointer is not a valid file handler!");
 
 			this->SetBufferData(0);
 
 			uint32_t												nSize					= ~0U;
-			reterr_error_if(1 != fread(&nSize, sizeof(uint32_t), 1, fp), "%s", "Failed to read list from file!");
+			ree_if(1 != fread(&nSize, sizeof(uint32_t), 1, fp), "%s", "Failed to read list from file!");
 			if (nSize == 0)
 				return 0;
 
 			GPNCO(::nwol, SBuffer)									newListBuffer;
-			reterr_error_if(errored(::nwol::createBuffer(m_DataType, GUSAGE_POINTER, nSize, &newListBuffer)), "Cannot create buffer for pointer list of size %u! Out of memory?", nSize);
+			ree_if(errored(::nwol::createBuffer(m_DataType, GUSAGE_POINTER, nSize, &newListBuffer)), "Cannot create buffer for pointer list of size %u! Out of memory?", nSize);
 
 			memset(newListBuffer->pByteArray, 0, m_DataBytes*nSize);
 			uint32_t												instancesRead			= fileReadData((_tRef**)newListBuffer->pByteArray, nSize, fp);
-			reterr_error_if(nSize != instancesRead, "Failed to read the requested instances! %u requested to be read, %u actually read.", nSize, instancesRead);
+			ree_if(nSize != instancesRead, "Failed to read the requested instances! %u requested to be read, %u actually read.", nSize, instancesRead);
 			this->SetBufferData(newListBuffer);
 			return 0;
 		}
