@@ -20,24 +20,24 @@ namespace nwol
 		};
 
 	struct SJSONObject {
-						int32_t											ParentIndex;
-						JSON_OBJECT_TYPE								Type;
-						::nwol::SSpan<uint32_t>							Span;
+						int32_t												ParentIndex;
+						JSON_OBJECT_TYPE									Type;
+						::nwol::SSpan<uint32_t>								Span;
 	};
 
 	struct SJSONNode {
-						SJSONObject										* Object;
-						SJSONNode										* Parent;
-						::nwol::array_obj<::nwol::ptr_obj<SJSONNode>>	Children;
+						SJSONObject											* Object;
+						SJSONNode											* Parent;
+						::nwol::array_obj<::nwol::ptr_obj<SJSONNode>>		Children;
 	};
 
 	struct SJSONDocument {
-						::nwol::array_obj<::nwol::SJSONObject>			Object;
+						::nwol::array_obj<::nwol::SJSONObject>				Object;
 	};
 
-					::nwol::error_t									jsonRead							(::nwol::SJSONDocument& document, ::nwol::SJSONNode& jsonTree, const char* jsonAsString, uint32_t jsonLength);
-	static inline	::nwol::error_t									jsonRead							(::nwol::SJSONDocument& document, ::nwol::SJSONNode& jsonTree, const ::nwol::view_const_string& jsonAsString)			{ return jsonRead(document, jsonTree, jsonAsString.begin(), jsonAsString.size());			}
-	static inline	::nwol::error_t									jsonRead							(::nwol::SJSONDocument& document, ::nwol::SJSONNode& jsonTree, const ::std::string& jsonAsString)						{ return jsonRead(document, jsonTree, jsonAsString.data (), (uint32_t)jsonAsString.size());	}
+					::nwol::error_t										jsonRead							(::nwol::SJSONDocument& document, ::nwol::SJSONNode& jsonTree, const char* jsonAsString, uint32_t jsonLength);
+	static inline	::nwol::error_t										jsonRead							(::nwol::SJSONDocument& document, ::nwol::SJSONNode& jsonTree, const ::nwol::view_const_string& jsonAsString)			{ return jsonRead(document, jsonTree, jsonAsString.begin(), jsonAsString.size());			}
+	static inline	::nwol::error_t										jsonRead							(::nwol::SJSONDocument& document, ::nwol::SJSONNode& jsonTree, const ::std::string& jsonAsString)						{ return jsonRead(document, jsonTree, jsonAsString.data (), (uint32_t)jsonAsString.size());	}
 #pragma pack(pop)
 }
 

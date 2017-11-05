@@ -34,6 +34,9 @@
     <Filter Include="runtime">
       <UniqueIdentifier>{5afff5f1-1613-47d5-88cc-2531e709aa59}</UniqueIdentifier>
     </Filter>
+    <Filter Include="display">
+      <UniqueIdentifier>{de0366b0-7761-4d18-8d75-bf2d26a97581}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="nwol_string.h">
@@ -52,9 +55,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ascii_reference.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ascii_screen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="nwol_debug.h">
@@ -82,9 +82,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="struct_generator_pod.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ascii_target.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="stype.h">
@@ -127,9 +124,6 @@
       <Filter>math</Filter>
     </ClInclude>
     <ClInclude Include="gcore_ref_globals.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="nwol_screen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="nwol_module.h">
@@ -222,11 +216,20 @@
     <ClInclude Include="nwol_json.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="nwol_ascii_target.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="nwol_display.h">
+      <Filter>display</Filter>
     </ClInclude>
-    <ClInclude Include="nwol_ascii_console.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="nwol_display_graphics.h">
+      <Filter>display</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_ascii_display.h">
+      <Filter>display</Filter>
+    </ClInclude>
+    <ClInclude Include="ascii_target.h">
+      <Filter>display</Filter>
+    </ClInclude>
+    <ClInclude Include="nwol_ascii_target.h">
+      <Filter>display</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -245,9 +248,6 @@
     <ClCompile Include="log.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ascii_screen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="storage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -259,9 +259,6 @@
     </ClCompile>
     <ClCompile Include="runtime_module.cpp">
       <Filter>runtime</Filter>
-    </ClCompile>
-    <ClCompile Include="nwol_screen.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="nwol_error.cpp">
       <Filter>Source Files</Filter>
@@ -278,11 +275,17 @@
     <ClCompile Include="nwol_json.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ascii_target.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="nwol_ascii_display.cpp">
+      <Filter>display</Filter>
     </ClCompile>
-    <ClCompile Include="ascii_console.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="nwol_display.cpp">
+      <Filter>display</Filter>
+    </ClCompile>
+    <ClCompile Include="nwol_display_graphics.cpp">
+      <Filter>display</Filter>
+    </ClCompile>
+    <ClCompile Include="nwol_ascii_target.cpp">
+      <Filter>display</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

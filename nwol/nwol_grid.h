@@ -13,32 +13,32 @@ namespace nwol
 
 	template<typename _tCell, size_t _sizeWidth, size_t _sizeDepth>
 	struct SGrid : public grid_view<_tCell> {
-							typedef						_tCell									TCell;
+							typedef										_tCell									TCell;
 
-		static constexpr	const uint32_t				Width									= (uint32_t)_sizeWidth;
-		static constexpr	const uint32_t				Depth									= (uint32_t)_sizeDepth;
+		static constexpr	const uint32_t								Width									= (uint32_t)_sizeWidth;
+		static constexpr	const uint32_t								Depth									= (uint32_t)_sizeDepth;
 
-							TCell						Cells[_sizeDepth][_sizeWidth]			= {};
+							TCell										Cells[_sizeDepth][_sizeWidth]			= {};
 
-		inline constexpr								SGrid									()						: grid_view(&Cells[0][0], _sizeWidth, _sizeDepth)									{}
+		inline constexpr												SGrid									()																		: grid_view(&Cells[0][0], _sizeWidth, _sizeDepth)	{}
 	};
 
 	template<typename _tCell, size_t _sizeWidth, size_t _sizeDepth>
 	struct grid_static : public grid_view<_tCell> {
-							typedef						_tCell									TCell;
-							typedef						grid_view<_tCell>						TGridView;
+							typedef										_tCell									TCell;
+							typedef										grid_view<_tCell>						TGridView;
 
-		static constexpr	const uint32_t				Width									= (uint32_t)_sizeWidth;
-		static constexpr	const uint32_t				Depth									= (uint32_t)_sizeDepth;
+		static constexpr	const ::nwol::SCoord2<uint32_t>				Width									= (uint32_t)_sizeWidth;
+		static constexpr	const uint32_t								Depth									= (uint32_t)_sizeDepth;
 
-							TCell						Cells[_sizeDepth][_sizeWidth]			= {};
+							TCell										Cells[_sizeDepth][_sizeWidth]			= {};
 
-		inline constexpr								grid_static								()						: grid_view(&Cells[0][0], _sizeWidth, _sizeDepth)									{}
+		inline constexpr												grid_static								()																		: grid_view(&Cells[0][0], _sizeWidth, _sizeDepth)	{}
 
-		inline				::nwol::error_t				read															(const byte_t* input, uint32_t* inout_bytesRead)									{
+		inline				::nwol::error_t								read									(const byte_t* input, uint32_t* inout_bytesRead)						{
 			ree_if(0 == input, "Invalid input pointer!");
-			TGridView											inputGrid														= {(_tCell*)input, Width, Depth};
-			*inout_bytesRead								+= sizeof(_tCell) * size();
+			TGridView															inputGrid								= {(_tCell*)input, Width, Depth};
+			*inout_bytesRead												+= sizeof(_tCell) * size();
 			for(uint32_t y = 0; y < Depth; ++y) {
 				for(uint32_t x = 0; x < Width; ++x)
 					::nwol::podcpy(&Cells[y][x], inputGrid[y][x]);
@@ -46,15 +46,15 @@ namespace nwol
 			return 0;
 		}
 
-		inline				::nwol::error_t				write															(byte_t* input, uint32_t* inout_bytesWritten)					const				{
+		inline				::nwol::error_t								write									(byte_t* input, uint32_t* inout_bytesWritten)		const				{
 			ree_if(0 == input && 0 == inout_bytesWritten, "Invalid input!");
 			if(0 != inout_bytesWritten)
-				*inout_bytesWritten								+= sizeof(_tCell) * size();	// Just return the size required to store this.
+				*inout_bytesWritten												+= sizeof(_tCell) * size();	// Just return the size required to store this.
 
 			if(0 == input) 
 				return 0;
 
-			TGridView											newStorage														= {(_tCell*)input, Width, Depth};
+			TGridView															newStorage								= {(_tCell*)input, Width, Depth};
 			for(uint32_t y = 0; y < Depth; ++y) {
 				for(uint32_t x = 0; x < Width; ++x)
 					::nwol::podcpy(&newStorage[i], &Data[i]);
@@ -64,32 +64,32 @@ namespace nwol
 	};
 
 	template<typename _tCell>
-	void											fillCellsFromNoise				(::nwol::grid_view<_tCell>& grid, const _tCell& value, int64_t seed, const _tCell& clearValue = ' ', int32_t diceFaces=10)														{
-		_tCell												* cells							= grid.begin();
+	void																fillCellsFromNoise						(::nwol::grid_view<_tCell>& grid, const _tCell& value, int64_t seed, const _tCell& clearValue = ' ', int32_t diceFaces=10)														{
+		_tCell																	* cells									= grid.begin();
 		for(uint32_t i = 0, count = grid.size();  i < count; ++i) {
-			double												noise							= ::nwol::noiseNormal1D(i + 1, seed);
-			int32_t												dice							= int32_t(noise * diceFaces);
+			double																	noise									= ::nwol::noiseNormal1D(i + 1, seed);
+			int32_t																	dice									= int32_t(noise * diceFaces);
 			if(0 == dice)
-				cells[i]										= value;
+				cells[i]															= value;
 		}
 	}
 
 	template<typename _tCell>
-	void											clearGrid						(::nwol::grid_view<_tCell>& grid, const _tCell& clearValue = ' ')																												{
-		_tCell												* cells							= grid.begin();
+	void																clearGrid								(::nwol::grid_view<_tCell>& grid, const _tCell& clearValue = ' ')																												{
+		_tCell																	* cells									= grid.begin();
 		for(uint32_t i = 0, count = grid.size(); i < count; ++i )
-			cells[i]										= clearValue;
+			cells[i]															= clearValue;
 	}
 
 	template<typename _tCell>
-	void											drawGridBorders					( ::nwol::grid_view<_tCell>& grid, const _tCell& value)																												{
+	void																drawGridBorders							( ::nwol::grid_view<_tCell>& grid, const _tCell& value)																												{
 		for(uint32_t z = 0, maxZ = grid.height(); z < maxZ; ++z) {
-			grid[z][0]										= value; 
-			grid[z][grid.width() - 1]						= value; 
+			grid[z][0]															= value; 
+			grid[z][grid.width() - 1]											= value; 
 		}
 		for(uint32_t x=0, maxX = grid.width() ; x < maxX; ++x) {
-			grid[0][x]										= value; 
-			grid[grid.height() - 1][x]						= value; 
+			grid[0][x]															= value; 
+			grid[grid.height() - 1][x]											= value; 
 		}
 	}
 

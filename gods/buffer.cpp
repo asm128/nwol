@@ -4,25 +4,6 @@
 #include "gref_definition.h"
 #include "gref_ptr.h"
 
-GDEFINE_PRINTPOD( nwol, SBuffer,
-	"{'DataFormat': 0x%X,\n"
-	" 'Usage': 0x%X,\n"
-	" 'nElementCount': %u,\n"
-	" 'nColumnCount': %u,\n"
-	" 'nSliceCount': %u,\n"
-	" 'nSizeInBytes': %u,\n"
-	" 'pByteArray': 0x%p}"
-	" '__pBlock': 0x%p}"
-	, (unsigned int)Data->DataFormat
-	, (unsigned int)Data->Usage
-	, (unsigned int)Data->nElementCount
-	, (unsigned int)Data->nColumnCount
-	, (unsigned int)Data->nSliceCount
-	, (unsigned int)Data->nSizeInBytes
-	, Data->pByteArray
-	, Data->__pBlock
-	);
-
 // the following functions discards comparing the void* address if all other data and void* contents match. 
 int32_t										nwol::gcompare											(const GREF(SBuffer)* BufferA, const GREF(SBuffer)* BufferB) {
 	if (BufferA == BufferB)		// If pointers are the same, return equal

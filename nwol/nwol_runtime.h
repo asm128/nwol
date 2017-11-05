@@ -1,6 +1,6 @@
 // These sources are best viewed in Visual Studio 2017 with a screen of at least 1920x1080 screen and the zoom set to 81 %.
 // Pablo Ariel Zorrilla Cepeda (asm128) Copyright (c) 2010-2017 - Distributed under the MIT License.
-#include "nwol_screen.h"
+#include "nwol_display.h"
 #include "nwol_module.h"
 #include "nwol_enum.h"
 #include "nwol_ptr.h"
@@ -115,21 +115,22 @@ namespace nwol
 
 namespace nwol
 {
+#if defined(__WINDOWS__)
+	struct SWindowsEntryPointArgs {
+				HINSTANCE														hInstance							= {};
+				HINSTANCE														hPrevInstance						= {};
+				LPSTR															lpCmdLine							= {};
+				int																nShowCmd							= {};
+	};
+#endif
+
 	struct SRuntimeValuesDetail {	
 #if defined(__ANDROID__)
-				ANativeActivity										* Activity							= nullptr;
-				void												* SavedState						= nullptr;
-				size_t												SavedStateSize						= 0;
+				ANativeActivity													* Activity							= nullptr;
+				void															* SavedState						= nullptr;
+				size_t															SavedStateSize						= 0;
 #elif defined(__WINDOWS__)
-				HINSTANCE											hInstance							= NULL;
-				HINSTANCE											hPrevInstance						= NULL;
-				LPSTR												lpCmdLine							= NULL;
-				int													nShowCmd							= 0;
-
-				// We need to add the window management in this abstraction level because in some systems we can't control the creation of the window and 
-				// we require to mimic that situation from the beginning in order to keep platform compatibility.
-				WNDCLASSEX											MainWindowClass						= {};
-				DWORD												MainWindowStyle						= WS_OVERLAPPED | WS_THICKFRAME | WS_BORDER | WS_MAXIMIZEBOX | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX;
+				SWindowsEntryPointArgs											EntryPointArgs						= {};
 #else
 #	error "Not implemented."
 #endif
@@ -141,7 +142,7 @@ namespace nwol
 				::nwol::array_obj<::nwol::view_const_string>					CommandLineArguments				= {};
 				::nwol::view_const_string										FileNameApplication					= {};
 				::nwol::view_const_string										FileNameRuntime						= {};
-				::nwol::SScreen													Screen								= {};
+				::nwol::SDisplay												Screen								= {};
 				::nwol::array_obj<::nwol::ptr_nco<::nwol::SApplicationModule>>	Modules								= {};
 
 				// Returns -1 on error or the index of the loaded module.

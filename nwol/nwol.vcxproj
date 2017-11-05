@@ -183,15 +183,15 @@
     <ClInclude Include="ascii_target.h" />
     <ClInclude Include="gcore_ref.h" />
     <ClInclude Include="gcore_ref_globals.h" />
-    <ClInclude Include="nwol_ascii_console.h" />
+    <ClInclude Include="nwol_ascii_display.h" />
     <ClInclude Include="nwol_ascii_target.h" />
+    <ClInclude Include="nwol_display_graphics.h" />
     <ClInclude Include="nwol_json.h" />
     <ClInclude Include="nwol_member_registry.h" />
     <ClInclude Include="nwol_bool.h" />
     <ClInclude Include="nwol_color.h" />
     <ClInclude Include="nwol_array.h" />
     <ClInclude Include="nwol_array_view.h" />
-    <ClInclude Include="ascii_screen.h" />
     <ClInclude Include="ascii_reference.h" />
     <ClInclude Include="nwol_choice.h" />
     <ClInclude Include="ascii_color.h" />
@@ -225,7 +225,7 @@
     <ClInclude Include="nwol_mutex.h" />
     <ClInclude Include="nwol_ptr.h" />
     <ClInclude Include="nwol_safe.h" />
-    <ClInclude Include="nwol_screen.h" />
+    <ClInclude Include="nwol_display.h" />
     <ClInclude Include="nwol_sleep.h" />
     <ClInclude Include="nwol_string.h" />
     <ClInclude Include="nwol_value.h" />
@@ -245,9 +245,8 @@
     <ClInclude Include="nwol_unshrinkable_block_container.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ascii_console.cpp" />
-    <ClCompile Include="ascii_screen.cpp" />
-    <ClCompile Include="ascii_target.cpp" />
+    <ClCompile Include="nwol_ascii_display.cpp" />
+    <ClCompile Include="nwol_ascii_target.cpp" />
     <ClCompile Include="nwol_datatype.cpp" />
     <ClCompile Include="descriptor.cpp" />
     <ClCompile Include="descriptor_manager.cpp" />
@@ -256,9 +255,10 @@
     <ClCompile Include="label.cpp" />
     <ClCompile Include="label_manager.cpp" />
     <ClCompile Include="log.cpp" />
+    <ClCompile Include="nwol_display_graphics.cpp" />
     <ClCompile Include="nwol_error.cpp" />
     <ClCompile Include="nwol_json.cpp" />
-    <ClCompile Include="nwol_screen.cpp" />
+    <ClCompile Include="nwol_display.cpp" />
     <ClCompile Include="runtime_module.cpp" />
     <ClCompile Include="storage.cpp" />
     <ClCompile Include="text.cpp" />

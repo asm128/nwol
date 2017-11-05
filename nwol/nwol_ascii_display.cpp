@@ -1,4 +1,4 @@
-#include "nwol_ascii_console.h"
+#include "nwol_ascii_display.h"
 #include "ascii_color.h"
 
 #if defined(__WINDOWS__)
@@ -109,14 +109,14 @@ static constexpr	const ::nwol::SColorRGBA			g_DefaultPalette	[]							=
 	    , MF_BYCOMMAND | MF_GRAYED 
 		);
 	const HANDLE												hConsoleIn										= ::GetStdHandle(STD_INPUT_HANDLE);
-    DWORD														mode;
+    DWORD														mode											= 0;
     ::GetConsoleMode(hConsoleIn, &mode);
     mode													&= ~(DWORD)ENABLE_QUICK_EDIT_MODE;
     ::SetConsoleMode(hConsoleIn, mode);
 
 	FILE*												
-	stream															= 0;	::freopen_s(&stream, "CONOUT$", "w+", stdout);
-	stream															= 0;	::freopen_s(&stream, "CONIN$", "r+", stdin);
+	stream													= 0;	::freopen_s(&stream, "CONOUT$", "w+", stdout);
+	stream													= 0;	::freopen_s(&stream, "CONIN$", "r+", stdin);
 
 	SetConsoleTitle("No Workflow Overhead Console");
 	::SetConsoleCtrlHandler(::handlerConsoleRoutine, TRUE);
@@ -130,13 +130,9 @@ static constexpr	const ::nwol::SColorRGBA			g_DefaultPalette	[]							=
 	g_ConsoleInfo.InfoFontCurrent							= g_ConsoleInfo.InfoFontOriginal			;
 	g_ConsoleInfo.InfoScreenBufferCurrent					= g_ConsoleInfo.InfoScreenBufferOriginal	;
 
-	::CONSOLE_FONT_INFOEX										infoFont;
-	infoFont.cbSize											= sizeof(::CONSOLE_FONT_INFOEX);
+	::CONSOLE_FONT_INFOEX										infoFont										= {sizeof(::CONSOLE_FONT_INFOEX)};
 	infoFont.dwFontSize.X									= 8;
 	infoFont.dwFontSize.Y									= 12;
-	infoFont.FontFamily										= 0;
-	infoFont.FontWeight										= 0;
-	infoFont.nFont											= 0;
 	::wcscpy_s(infoFont.FaceName, L"Terminal");
 	::SetCurrentConsoleFontEx(hConsoleOut, FALSE, &infoFont);
 

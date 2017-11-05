@@ -10,10 +10,11 @@ namespace nwol
 	class com_ptr {
 		typedef				com_ptr<_tCOM>					TCOMPtr;
 #if defined(__WINDOWS__)
-							_tCOM*							Instance							= 0;
+							_tCOM							* Instance							= 0;
 #endif
 	public:
 		inline												~com_ptr							()									noexcept	{ if(Instance) Instance->Release();								}
+
 		inline constexpr									com_ptr								()									noexcept	= default;
 		inline												com_ptr								(const TCOMPtr& other)				noexcept	{ Instance = other.Instance; if(Instance) Instance->AddRef();	}
 		inline constexpr									com_ptr								(TCOMPtr&& other)					noexcept	{ Instance = other.Instance; other.Instance = 0;				}
@@ -32,15 +33,16 @@ namespace nwol
 		inline				::nwol::error_t					as									(_tCOMOther** other)				noexcept	{ nwol_hrcall(Instance->QueryInterface(__uuidof(_tCOMOther), (void**)other)); return 0; }
 		inline				_tCOM*							acquire								()									noexcept	{ if(Instance) Instance->AddRef(); return Instance; }
 
-		_Check_return_		::nwol::error_t					CoCreateInstance					(_In_ const IID& rclsid, _Inout_opt_ LPUNKNOWN pUnkOuter = NULL, _In_ DWORD dwClsContext = CLSCTX_ALL)		{
+							::nwol::error_t					CoCreateInstance					(const IID& rclsid, LPUNKNOWN pUnkOuter = NULL, DWORD dwClsContext = CLSCTX_ALL)	{
 			_tCOM													* oldInstance						= Instance;
 			nwol_hrcall(::CoCreateInstance(rclsid, pUnkOuter, dwClsContext, __uuidof(_tCOM), (void**)&Instance));
 			if(oldInstance)
 				oldInstance->Release();
 			return 0;
 		}
+
 #ifdef _ATL_USE_WINAPI_FAMILY_DESKTOP_APP
-		_Check_return_		::nwol::error_t					CoCreateInstance					(_In_z_ LPCOLESTR szProgID, _Inout_opt_ LPUNKNOWN pUnkOuter = NULL, _In_ DWORD dwClsContext = CLSCTX_ALL)	{
+							::nwol::error_t					CoCreateInstance					(LPCOLESTR szProgID, _Inout_opt_ pUnkOuter = NULL, DWORD dwClsContext = CLSCTX_ALL)	{
 			CLSID													clsid								= {};
 			nwol_hrcall(::CLSIDFromProgID(szProgID, &clsid));
 			nwol_hrcall(::CoCreateInstance(clsid, pUnkOuter, dwClsContext, __uuidof(_tCOM), (void**)&p));

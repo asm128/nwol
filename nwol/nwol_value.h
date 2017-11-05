@@ -26,33 +26,37 @@ namespace nwol
 
 		return -1;
 	}
-	template<typename _tValue, size_t _Size>		static inline _tValue*			array_copy					( _tValue (&targetArray)[_Size], _tValue (&sourceArray)[_Size] )				{																								
+	template<typename _tValue, size_t _Size>		static inline _tValue*			array_copy					( _tValue (&targetArray)[_Size], const _tValue (&sourceArray)[_Size] )				{																								
 		for( uint32_t i=0; i < _Size; ++i	)											
 			targetArray[i]																	= sourceArray[i];																		
 
 		return targetArray;																				
 	}
-	template<typename _tValue, size_t _Size>		static inline _tValue*			grid_copy					( _tValue (&targetGrid)[_Size][_Size], _tValue (&sourceGrid)[_Size][_Size] )	{																								
+	template<typename _tValue, size_t _Size>		static inline _tValue*			grid_copy					( _tValue (&targetGrid)[_Size][_Size], const _tValue (&sourceGrid)[_Size][_Size] )	{																								
 		for( uint32_t z=0; z < _Size; ++z	)											
 			for( uint32_t x=0; x < _Size; ++x	)											
 				targetGrid[z][x]																= sourceGrid[z][x];																		
 
 		return &targetGrid[0][0];																				
 	}
-	template<typename _tValue, size_t _Size>		static inline _tValue*			grid_transpose				( _tValue (&targetGrid)[_Size][_Size], _tValue (&sourceGrid)[_Size][_Size] )	{
-		for( uint32_t z=0; z < _Size; z++ )
-			for( uint32_t x=0; x < _Size; x++ )
-				targetGrid[x][z]																= sourceGrid[z][x];
-
-		return &targetGrid[0][0];																		
-	}
-	template<typename _tValue, size_t _Size>		static inline _tValue*			grid_transpose				( _tValue (&targetGrid)[_Size][_Size] )											{
+	template<typename _tValue, size_t _Size>		static inline _tValue*			grid_transpose				( _tValue (&targetGrid)[_Size][_Size] )												{
 		for( uint32_t z=0; z < _Size; ++z )
 			for( uint32_t x=z+1; x < _Size; ++x ) {
 				_tValue																				otherValue					= targetGrid[x][z];
 				targetGrid[x][z]																= targetGrid[z][x];
 				targetGrid[z][x]																= otherValue;
 			}
+		return &targetGrid[0][0];																		
+	}
+
+	template<typename _tValue, size_t _Size>		static inline _tValue*			grid_transpose				( _tValue (&targetGrid)[_Size][_Size], const _tValue (&sourceGrid)[_Size][_Size] )	{
+		if((&targetGrid) == (&sourceGrid))
+			return grid_transpose(targetGrid);
+
+		for( uint32_t z=0; z < _Size; z++ )
+			for( uint32_t x=0; x < _Size; x++ )
+				targetGrid[x][z]																= sourceGrid[z][x];
+
 		return &targetGrid[0][0];																		
 	}
 }

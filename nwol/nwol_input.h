@@ -1,6 +1,6 @@
 /// Copyright 2016-2017 - asm128
 #include "nwol_enum.h"
-#include "nwol_screen.h"
+#include "nwol_display.h"
 
 #if defined(__WINDOWS__)
 #	define DIRECTINPUT_VERSION 0x0800
@@ -66,7 +66,7 @@ namespace nwol
 								::nwol::com_ptr<IDirectInput8		>		DirectInputContext						= {};	
 								::nwol::com_ptr<IDirectInputDevice8	>		DirectInputKeyboard						= {};	// For now we just support the basics and further we should move to xinput or similar.
 								::nwol::com_ptr<IDirectInputDevice8	>		DirectInputMouse						= {};	
-								::nwol::array_pod<::nwol::SScreen>			WindowList								= {};
+								::nwol::array_pod<::nwol::SDisplay>			WindowList								= {};
 	#else
 								void										(*handleAppInput)						()															= nullptr;
 	#endif
@@ -80,7 +80,7 @@ namespace nwol
 			}
 		};
 		
-	struct SScreenInput	: public ::nwol::SInput {
+	struct SDisplayInput	: public ::nwol::SInput {
 		//using					::nwol::SInput::							KeyCount								;
 		//using					::nwol::SInput::							ButtonCount								;
 		//using					::nwol::SInput::							HandlersKeyboard						;
@@ -119,9 +119,9 @@ namespace nwol
 							::nwol::error_t								unregisterHandler						(::nwol::SInput& input, ::nwol::IHandlerKeyboard	* handler);
 							::nwol::error_t								unregisterHandler						(::nwol::SInput& input, ::nwol::IHandlerMouse		* handler);
 
-							::nwol::error_t								pollInput								(::nwol::SScreenInput& input		, ::nwol::SScreenDetail boundScreen);
-							::nwol::error_t								setCooperativeLevels					(::nwol::SScreenDetail& screenDetail, ::nwol::SScreenInput& input);
-							::nwol::error_t								unacquireInput							(::nwol::SScreenInput& input);
-							::nwol::error_t								acquireInput							(::nwol::SScreenInput& input);
+							::nwol::error_t								pollInput								(::nwol::SDisplayInput& input		, ::nwol::SDisplayDetail boundScreen);
+							::nwol::error_t								setCooperativeLevels					(::nwol::SDisplayDetail& screenDetail, ::nwol::SDisplayInput& input);
+							::nwol::error_t								unacquireInput							(::nwol::SDisplayInput& input);
+							::nwol::error_t								acquireInput							(::nwol::SDisplayInput& input);
 } // namespace
 #endif // NWOL_INPUT_H_7236498723649213640918273098

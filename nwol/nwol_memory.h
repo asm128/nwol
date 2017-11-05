@@ -11,9 +11,9 @@
 #define NWOL_MALLOC_CUSTOM_ALIGN			16
 
 #ifdef GREF_CUSTOM_ALIGN
-#define BASETYPE_ALIGN						GREF_CUSTOM_ALIGN
+#	define BASETYPE_ALIGN						GREF_CUSTOM_ALIGN
 #else
-#define BASETYPE_ALIGN						sizeof(void*)
+#	define BASETYPE_ALIGN						sizeof(void*)
 #endif
 
 #define calc_align_address(alignment, address)	((alignment - ((alignment - 1) & (uintptr_t)address)) & (alignment - 1))	// returns the difference between an origin address and the next aligned addres. The alignment must always be a power of two.

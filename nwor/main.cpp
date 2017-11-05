@@ -80,10 +80,11 @@ static	int32_t												loadPlatformValues				(::nwol::SRuntimeValues& runtime
 	SetConsoleTitle("No Workflow Overhead Runtime");
 	::nwor::SRuntimeState											runtimeState					= {};	
 	::nwol::SRuntimeValues											& runtimeValues					= runtimeState.RuntimeValues;
-	runtimeValues.PlatformDetail.hInstance						= hInstance		;
-	runtimeValues.PlatformDetail.hPrevInstance					= hPrevInstance	;
-	runtimeValues.PlatformDetail.lpCmdLine						= lpCmdLine		;
-	runtimeValues.PlatformDetail.nShowCmd						= nShowCmd		;
+	::nwol::SWindowsEntryPointArgs									& entryPointArgs				= runtimeValues.PlatformDetail.EntryPointArgs;
+	entryPointArgs.hInstance									= hInstance		;
+	entryPointArgs.hPrevInstance								= hPrevInstance	;
+	entryPointArgs.lpCmdLine									= lpCmdLine		;
+	entryPointArgs.nShowCmd										= nShowCmd		;
 
 	g_RuntimeState												= &runtimeState;
 

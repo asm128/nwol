@@ -3,32 +3,6 @@
 #ifndef NWOL_GREF_SERIALIZER_POD_H_886465456489
 #define NWOL_GREF_SERIALIZER_POD_H_886465456489
 
-#define GDEFINE_PRINTGENERIC( baseType, refType, format, ... )																																		\
-void printInfoString	( const refType* in_CoreInstance )													{	printInfoString( in_CoreInstance ? in_CoreInstance->get() : 0 );							}	\
-void getInfoString		( char		* pOutputBuffer, uint32_t nBufferSize, const refType* in_CoreInstance )	{	getInfoString(pOutputBuffer, nBufferSize, in_CoreInstance ? in_CoreInstance->get() : 0);	}	\
-void printInfoString	( const baseType* Data )															{																									\
-	if( 0 == Data )	{																																															\
-		warning_printf("[<"#baseType"*>=NULL]");																																								\
-		return;																																																	\
-	}																																																			\
-	data_printf("[<"#baseType"*>=0x%p]:\n" format																																								\
-		, Data																																																	\
-		, __VA_ARGS__																																															\
-	);																																																			\
-}																																																				\
-void getInfoString( char* pOutputBuffer, uint32_t nBufferSize, const baseType* Data ) {		\
-	if( 0 == Data )	{																		\
-		sprintf_s( pOutputBuffer, nBufferSize, "%s\n", "[<"#baseType"*>=NULL]" );			\
-		return;																				\
-	}																						\
-	sprintf_s( pOutputBuffer, nBufferSize, format "\n", __VA_ARGS__	);						\
-}
-
-#define GDEFINE_PRINTPOD( NameSpace, baseType, format, ... )	namespace NameSpace{ GDEFINE_PRINTGENERIC( baseType, GREF(baseType), format,   __VA_ARGS__ )	}
-#define GDEFINE_PRINTOBJ( NameSpace, baseType, format, ... )	namespace NameSpace{ GDEFINE_PRINTGENERIC( baseType, GREF(baseType), format, __VA_ARGS__ )		}
-#define GDEFINE_PRINTPOD_NONS( baseType, format, ... )			GDEFINE_PRINTGENERIC( baseType, GREF(baseType), format,   __VA_ARGS__ )
-#define GDEFINE_PRINTOBJ_NONS( baseType, format, ... )			GDEFINE_PRINTGENERIC( baseType, GREF(baseType), format, __VA_ARGS__ )
-
 #define __GDEFINE_POD_MEMWRITE( baseType )			uint32_t memWriteData			( GREF(baseType)* const* in_DefinitionList, uint32_t nDefinitionCount, void* out_pMemoryBuffer, const baseType* in_DefaultData )	{ return __g_##baseType##Serializer.memWriteData		( in_DefinitionList, nDefinitionCount, out_pMemoryBuffer, in_DefaultData );	}
 #define __GDEFINE_POD_MEMREAD( baseType )			uint32_t memReadData			( GREF(baseType)** out_DefinitionList, uint32_t nDefinitionCount, const void* in_pMemoryBuffer )									{ return __g_##baseType##Serializer.memReadData			( out_DefinitionList, nDefinitionCount, in_pMemoryBuffer );					}
 #define __GDEFINE_POD_MEMSERIALIZE( baseType )		uint32_t memSerializeData		( GREF(baseType)* const* in_DefinitionList, uint32_t nDefinitionCount, void* out_pMemoryBuffer )									{ return __g_##baseType##Serializer.memSerializeData	( in_DefinitionList, nDefinitionCount, out_pMemoryBuffer );					}

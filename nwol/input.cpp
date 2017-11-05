@@ -95,12 +95,12 @@ void														handleMouseChanges							(const ::nwol::SInput& input)								
 	//------------------------------------------------
 }
 
-void														handleInputChanges							(const ::nwol::SInput& input)												{
+void														handleInputChanges								(const ::nwol::SInput& input)												{
 	::handleKeyboardChanges	(input);
 	::handleMouseChanges	(input);
 }
 
-static	::nwol::error_t										createKeyboardDevice						(IDirectInput8* pDirectInput, IDirectInputDevice8** pDirectInputKeyboard)	{
+static	::nwol::error_t										createKeyboardDevice							(IDirectInput8* pDirectInput, IDirectInputDevice8** pDirectInputKeyboard)	{
 #if defined(__WINDOWS__)
 	nwol_hrecall(pDirectInput->CreateDevice(GUID_SysKeyboard, pDirectInputKeyboard, NULL)	, "Failed to obtain an interface to the system keyboard device: "	);
 	nwol_hrecall((*pDirectInputKeyboard)->SetDataFormat(&c_dfDIKeyboard)					, "Failed to set input data format: "								);	// Set the data format to "Keyboard format" - a predefined data format. A data format specifies which controls on a device we are interested in, and how they should be reported. This tells DirectInput that we will be passing an array of 256 bytes to IDirectInputDevice::GetDeviceState.
@@ -110,7 +110,7 @@ static	::nwol::error_t										createKeyboardDevice						(IDirectInput8* pDirec
 	return 0;
 }
 
-static	::nwol::error_t										createMouseDevice							(IDirectInput8* pDirectInput, IDirectInputDevice8** pDirectInputMouse)		{
+static	::nwol::error_t										createMouseDevice								(IDirectInput8* pDirectInput, IDirectInputDevice8** pDirectInputMouse)		{
 #if defined(__WINDOWS__)
 	nwol_hrecall(pDirectInput->CreateDevice(GUID_SysMouse, pDirectInputMouse, NULL)	, "Failed to obtain an interface to the system mouse device. "	);
 	nwol_hrecall((*pDirectInputMouse)->SetDataFormat(&c_dfDIMouse2)					, "Failed to set input data format. "							);	// Set the data format to "Keyboard format" - a predefined data format. A data format specifies which controls on a device we are interested in, and how they should be reported. This tells DirectInput that we will be passing an array of 256 bytes to IDirectInputDevice::GetDeviceState.
@@ -121,7 +121,7 @@ static	::nwol::error_t										createMouseDevice							(IDirectInput8* pDirectI
 }
 
 //struct auto_com_release : public ::nwol::platform_handle_wrapper<IUnknown*, 0>					{ using TWrapper::platform_handle_wrapper; inline ~auto_com_release() { close(); } inline void close() { safe_com_release(Handle); } };
-::nwol::error_t												inputInitialize									(::nwol::SScreenInput& input, ::nwol::SScreenDetail& screenDetail)														{
+::nwol::error_t												inputInitialize									(::nwol::SDisplayInput& input, ::nwol::SDisplayDetail& screenDetail)		{
 	::nwol::SInputDetail											& inputDetail									= input.PlatformDetail;
 #if defined(__WINDOWS__)
 	if(0 == inputDetail.DirectInputContext) {
@@ -152,7 +152,7 @@ static	::nwol::error_t										createMouseDevice							(IDirectInput8* pDirectI
 	return 0;
 }
 
-::nwol::error_t												nwol::setCooperativeLevels						(::nwol::SScreenDetail& screenDetail, ::nwol::SScreenInput& input)		{
+::nwol::error_t												nwol::setCooperativeLevels						(::nwol::SDisplayDetail& screenDetail, ::nwol::SDisplayInput& input)		{
 	::nwol::SInputDetail											& inputDetail									= input.PlatformDetail;
 	HRESULT															hr												= 0;
 	::nwol::error_t													finalError										= 0;
@@ -246,7 +246,7 @@ static	::nwol::error_t										createMouseDevice							(IDirectInput8* pDirectI
 	return 0;
 }
 
-				::nwol::error_t								nwol::unacquireInput							(::nwol::SScreenInput& input)											{
+				::nwol::error_t								nwol::unacquireInput							(::nwol::SDisplayInput& input)											{
 	::nwol::SInputDetail											& inputDetail									= input.PlatformDetail;
 	HRESULT															hr;
 
@@ -277,7 +277,7 @@ static	::nwol::error_t										createMouseDevice							(IDirectInput8* pDirectI
 		warning_printf("DirectInput device is already unacquired for mouse input.");
 	return 0;
 }
-				::nwol::error_t								nwol::acquireInput								(::nwol::SScreenInput& input)											{
+				::nwol::error_t								nwol::acquireInput								(::nwol::SDisplayInput& input)											{
 	::nwol::SInputDetail											& inputDetail									= input.PlatformDetail;
 	HRESULT															hr;
 	error_if(0 == inputDetail.DirectInputKeyboard, "No DirectInput device for keyboard input.")
@@ -308,7 +308,7 @@ static	::nwol::error_t										createMouseDevice							(IDirectInput8* pDirectI
 	return 0;
 }
 
-::nwol::error_t												nwol::pollInput									(::nwol::SScreenInput& input, ::nwol::SScreenDetail boundScreen)		{
+::nwol::error_t												nwol::pollInput									(::nwol::SDisplayInput& input, ::nwol::SDisplayDetail boundScreen)		{
 	static constexpr	const uint32_t								keyCount										= ::nwol::SInput::KeyCount;
 	static constexpr	const uint32_t								buttonCount										= ::nwol::SInput::ButtonCount;
 

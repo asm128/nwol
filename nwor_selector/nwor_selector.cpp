@@ -3,7 +3,7 @@
 #include "nwor_selector.h"
 
 #include "nwol_input.h"
-#include "nwol_ascii_console.h"
+#include "nwol_ascii_display.h"
 #include "ascii_color.h"
 #include "gui.h"
 #include "nwol_storage.h"
@@ -22,8 +22,8 @@ DEFINE_RUNTIME_INTERFACE_FUNCTIONS(SApplication, "Application Selector", 0, 1);
 int32_t											cleanup											(::SApplication& instanceApp)																									{ 
 	for(uint32_t iModule = 0, moduleCount = instanceApp.ApplicationModulesHandle.size(); iModule < moduleCount; ++iModule)
 		error_if(::nwol::moduleUnload(instanceApp.ApplicationModulesHandle[iModule]), "Failed to unload module. Maybe the module wasn't actually loaded?");
-	::nwol::asciiDisplayDestroy();
-	::nwol::asciiTargetDestroy(instanceApp.ASCIITarget);
+	error_if(::nwol::asciiDisplayDestroy(), "This could happen if the display wasn't successfully created in the first place.");
+	error_if(::nwol::asciiTargetDestroy(instanceApp.ASCIITarget), "");
 	return 0; 
 }
 

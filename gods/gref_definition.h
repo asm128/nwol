@@ -32,7 +32,7 @@
 		__GDEFINE_POD_FUNCTIONS_BUT_CREATEDATA_AND_INITTYPE(baseType)	\
 		__GDEFINE_CREATEDATA(baseType);	
 
-#define GDEFINE_POD_COMMON(NameSpace, baseType)					\
+#define GDEFINE_POD(NameSpace, baseType)					\
 	namespace NameSpace{										\
 		void grelease(GREF(baseType)** _p);						\
 	}															\
@@ -41,26 +41,10 @@
 		__GDEFINE_POD_FUNCTIONS(baseType);						\
 	}
 
-#define GDEFINE_POD_NONS_COMMON(baseType)			\
+#define GDEFINE_POD_NONS(baseType)			\
 	void grelease(GREF(baseType)** _p);				\
 	__GCORE_REF_INIT_STATIC_MEMBERS_NONS(baseType)	\
 	__GDEFINE_POD_FUNCTIONS(baseType);
-
-#define GDEFINE_POD_CUSTOMSTRING(NameSpace, baseType, format, ...)	\
-	GDEFINE_POD_COMMON(NameSpace, baseType)							\
-	GDEFINE_PRINTPOD(NameSpace, baseType, format, __VA_ARGS__)
-
-#define GDEFINE_POD_NONS_CUSTOMSTRING(baseType, format, ...)	\
-	GDEFINE_POD_NONS_COMMON(baseType)							\
-	GDEFINE_PRINTPOD_NONS(baseType, format, __VA_ARGS__)
-
-#define GDEFINE_POD(NameSpace, baseType)		\
-	GDEFINE_POD_COMMON(NameSpace, baseType)		\
-	GDEFINE_PRINTPOD(NameSpace, baseType, "{%s}", "")
-
-#define GDEFINE_POD_NONS(baseType)				\
-	GDEFINE_POD_NONS_COMMON(baseType)			\
-	GDEFINE_PRINTPOD_NONS(baseType, "{%s}", "")	
 
 //-------------------------------------------------------------// GDEFINE_NCO() //------------------------------------------------------------------------// 
 #define GDEFINE_NCO_FUNCTIONS_NONS(baseType)																						\
@@ -69,7 +53,7 @@
 	__GDEFINE_RELEASE(baseType);																						\
 	__GDEFINE_ALLOC(baseType)
 
-#define GDEFINE_NCO_CUSTOMCLEANUP_CUSTOMPAGE(NameSpace, baseType)	\
+#define GDEFINE_NCO(NameSpace, baseType)	\
 	namespace NameSpace{											\
 		void grelease(GREF(baseType)** _p);							\
 	}																\
@@ -78,30 +62,10 @@
 		GDEFINE_NCO_FUNCTIONS_NONS(baseType)						\
 	}
 
-#define GDEFINE_NCO_CUSTOMCLEANUP_CUSTOMPAGE_NONS(baseType)	\
+#define GDEFINE_NCO_NONS(baseType)	\
 	void grelease(GREF(baseType)** _p);						\
 	__GCORE_REF_INIT_STATIC_MEMBERS_NONS(baseType)			\
 	GDEFINE_NCO_FUNCTIONS_NONS(baseType)
-
-#define GDEFINE_NCO_CUSTOMSTRING(NameSpace, baseType, format, ...)	\
-	GDEFINE_NCO_CUSTOMCLEANUP_CUSTOMPAGE(NameSpace, baseType)		\
-	GDEFINE_PRINTOBJ(NameSpace, baseType, format, __VA_ARGS__)	
-	
-#define GDEFINE_NCO_CUSTOMPAGE(NameSpace, baseType)				\
-	GDEFINE_NCO_CUSTOMCLEANUP_CUSTOMPAGE(NameSpace, baseType)	\
-	GDEFINE_PRINTOBJ(NameSpace, baseType, "{%s}", "")
-
-#define GDEFINE_NCO_CUSTOMPAGE_NONS(baseType, pageSize)				\
-	GDEFINE_NCO_CUSTOMCLEANUP_CUSTOMPAGE_NONS(baseType, pageSize)	\
-	GDEFINE_PRINTOBJ_NONS(baseType, "{%s}", "")	
-
-#define GDEFINE_NCO(NameSpace, baseType)						\
-	GDEFINE_NCO_CUSTOMCLEANUP_CUSTOMPAGE(NameSpace, baseType)	\
-	GDEFINE_PRINTOBJ(NameSpace, baseType, "{%s}", "")
-
-#define GDEFINE_NCO_NONS(baseType)						\
-	GDEFINE_NCO_CUSTOMCLEANUP_CUSTOMPAGE_NONS(baseType)	\
-	GDEFINE_PRINTOBJ_NONS(baseType, "{%s}", "")	
 
 //-------------------------------------------------------------// GDEFINE_OBJ() //------------------------------------------------------------------------// 
 #define GDEFINE_OBJ_FUNCTIONS_NONS(baseType)											\
@@ -111,7 +75,7 @@
 	__GDEFINE_CREATEOBJECT(baseType);													\
 	__GDEFINE_ALLOC(baseType);
 
-#define GDEFINE_OBJ_CUSTOMPAGE(NameSpace, baseType)			\
+#define GDEFINE_OBJ(NameSpace, baseType)			\
 	namespace NameSpace{									\
 		void grelease(GREF(baseType)** _p);					\
 	}														\
@@ -120,57 +84,13 @@
 		GDEFINE_OBJ_FUNCTIONS_NONS(baseType);				\
 	}
 
-#define GDEFINE_OBJ_CUSTOMPAGE_NONS(baseType)		\
+#define GDEFINE_OBJ_NONS(baseType)		\
 	void grelease(GREF(baseType)** _p);				\
 	__GCORE_REF_INIT_STATIC_MEMBERS_NONS(baseType)	\
 	GDEFINE_OBJ_FUNCTIONS_NONS(baseType)	
 
-#define GDEFINE_OBJ_CUSTOMSTRING(NameSpace, baseType, format, ...)	\
-	GDEFINE_OBJ_CUSTOMPAGE(NameSpace, baseType)						\
-	GDEFINE_PRINTOBJ(NameSpace, baseType, format, __VA_ARGS__)
-
-#define GDEFINE_OBJ_CUSTOMSTRING_NONS(baseType, format, ...)	\
-	GDEFINE_OBJ_CUSTOMPAGE_NONS(baseType)						\
-	GDEFINE_PRINTOBJ(baseType, format, __VA_ARGS__)	
-
-#define GDEFINE_OBJ(NameSpace, baseType)				\
-	GDEFINE_OBJ_CUSTOMPAGE(NameSpace, baseType)			\
-	GDEFINE_PRINTOBJ(NameSpace, baseType, "{%s}", "")
-
-#define GDEFINE_OBJ_NONS(baseType)			\
-	GDEFINE_OBJ_CUSTOMPAGE_NONS(baseType)	\
-	GDEFINE_PRINTOBJ_NONS(baseType, "{%s}", "")				
-
 //-------------------------------------------------------------// GDEFINE_PURE() //------------------------------------------------------------------------// 
-#define GDEFINE_PURE_NOPRINT(NameSpace, baseType)			\
-	__GCORE_REF_INIT_GCORE_REF_MEMBERS(NameSpace, baseType)	\
-
-#define GDEFINE_PURE_NOPRINT_NONS(baseType)				\
-	__GCORE_REF_INIT_GCORE_REF_MEMBERS_NONS(baseType)	\
-
-#define GDEFINE_PURE_CUSTOMSTRING(NameSpace, baseType, format, ...)		\
-	GDEFINE_PURE_NOPRINT(NameSpace, baseType)							\
-	GDEFINE_PRINTOBJ(NameSpace, baseType, format, __VA_ARGS__)
-
-#define GDEFINE_PURE_CUSTOMSTRING_NONS(NameSpace, baseType, format, ...)	\
-	GDEFINE_PURE_NOPRINT_NONS(NameSpace, baseType)							\
-	GDEFINE_PRINTOBJ_NONS(NameSpace, baseType, format, __VA_ARGS__)	
-
-#define GDEFINE_PURE(NameSpace, baseType)				\
-	GDEFINE_PURE_NOPRINT(NameSpace, baseType)			\
-	GDEFINE_PRINTOBJ(NameSpace, baseType, "{%s}", "")
-
-#define GDEFINE_PURE_NONS(baseType)				\
-	GDEFINE_PURE_NOPRINT_NONS(baseType)			\
-	GDEFINE_PRINTOBJ_NONS(baseType, "{%s}", "")
-
-// ---- garbage ----
-
-static const char* STRING_BOOL_TRUE		= "true";
-static const char* STRING_BOOL_FALSE	= "false";
-
-inline static const char* G_CSTRING_FROM_BOOL(bool b) {
-  return b ? STRING_BOOL_TRUE : STRING_BOOL_FALSE;
-}
+#define GDEFINE_PURE(NameSpace, baseType)	__GCORE_REF_INIT_GCORE_REF_MEMBERS(NameSpace, baseType)	
+#define GDEFINE_PURE_NONS(baseType)			__GCORE_REF_INIT_GCORE_REF_MEMBERS_NONS(baseType)	
 
 #endif // NWOL_GREF_DEFINITION_H_20347892374

@@ -75,16 +75,16 @@ namespace nwol
 				SBufferManagerStorage				* pStorage = Storage[iBigEndian][iNorm][iFloat][iSigned][iElementBytes][iTotalBytes];
 				if( pStorage ) {
 					info_printf("Deleting SBuffer* storage:\n"
-						"isBigEndian:%s\n"
-						"isNorm:%s\n"
-						"isFloat:%s\n"
-						"isSigned:%s\n"
-						"ElementBytes:%u\n"
-						"TotalBytes:%u\n"
-						, G_CSTRING_FROM_BOOL(true_if(iBigEndian)	)
-						, G_CSTRING_FROM_BOOL(true_if(iNorm)		)
-						, G_CSTRING_FROM_BOOL(true_if(iFloat)		)
-						, G_CSTRING_FROM_BOOL(true_if(iSigned)		)
+						"isBigEndian  :%s\n"
+						"isNorm       :%s\n"
+						"isFloat      :%s\n"
+						"isSigned     :%s\n"
+						"ElementBytes :%u\n"
+						"TotalBytes   :%u\n"
+						, iBigEndian	? "true" : "false"
+						, iNorm			? "true" : "false"
+						, iFloat		? "true" : "false"
+						, iSigned		? "true" : "false"
 						, iElementBytes
 						, iTotalBytes
 						);

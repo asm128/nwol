@@ -21,25 +21,13 @@
 	void		gcreateAll				(GREF(baseType)** inout_pCoreInstance, uint32_t nCount);						\
 	void		gcreateAll				(GREF(baseType)** p2, const baseType* lstInstances, uint32_t nCount);			\
 
-// This macro declares functions to retrieve formatted informative text about the structures. These must be coded individually for each structure 
-#define __GDECLARE_COMMON_DEBUG_STRING_FUNCTIONS(baseType)																\
-	void		printInfoString			(const baseType* in_Data);														\
-	void		printInfoString			(const GREF(baseType)* in_Data);												\
-	void		getInfoString			(char* dst_pOutputBuffer, uint32_t nBufferSize,	const GREF(baseType)* in_Data);	\
-	void		getInfoString			(char* dst_pOutputBuffer, uint32_t nBufferSize,	const baseType* in_Data);
-
 //-----------------------------------------------------------------------------// //--------------------------------------------------------------------------//
-#define GDECLARE_PURE_NO_TYPEDEFS(baseType)					\
-	__GDECLARE_COMMON_DEBUG_STRING_FUNCTIONS(baseType);	
-
 #define GDECLARE_NCO_NO_TYPEDEFS(baseType)					\
-	__GDECLARE_COMMON_DEBUG_STRING_FUNCTIONS(baseType);		\
 	void galloc(GREF(baseType)** inout_pCoreInstance);		\
 	void gallocAll(GREF(baseType)** inout_pCoreInstance, uint32_t nCount);
 
 #define GDECLARE_PURE(baseType)						\
 	GDECLARE_REF(baseType, (::nwol::GDATA_TYPE)0);	\
-	GDECLARE_PURE_NO_TYPEDEFS(baseType);
 
 #define GDECLARE_NCO(baseType)																					\
 	GDECLARE_REF(baseType, ::nwol::GDATA_TYPE_GNCO);															\
@@ -77,7 +65,6 @@
 	__GDECLARE_POD_MEMORY_FUNCTIONS				(baseType);	\
 	__GDECLARE_POD_STREAMING_FUNCTIONS			(baseType);	\
 	__GDECLARE_POD_SERIALIZATION_FUNCTIONS		(baseType);	\
-	__GDECLARE_COMMON_DEBUG_STRING_FUNCTIONS	(baseType);	\
 	static inline	void	onCreateDefault##baseType	(baseType* stuff)	{ *stuff = {}; }
 
 #define GDECLARE_POD(baseType, ...)			\
