@@ -1,5 +1,5 @@
 /// Copyright 2013-2017 - asm128
-#include "nwol_multithread.h"
+#include "nwol_sync.h"
 #include "nwol_debug.h"
 #include "nwol_typeint.h"
 
@@ -36,7 +36,7 @@ namespace nwol
 
 		inline	double						Next				()						{
 #if defined(NWOL_MTSUPPORT)
-			return Value						= ::nwol::noiseNormal1D(NWOL_INTERLOCKED_INCREMENT(Position), Seed);
+			return Value						= ::nwol::noiseNormal1D(nwol_sync_increment(Position), Seed);
 #else
 			return Value						= ::nwol::noiseNormal1D(++Position, Seed);
 #endif

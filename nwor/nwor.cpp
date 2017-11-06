@@ -1,6 +1,6 @@
 #include "nwor.h"
 
-#include "nwol_multithread.h"
+#include "nwol_sync.h"
 #include "nwol_enum.h"
 #include "nwol_sleep.h"
 
@@ -43,9 +43,9 @@ void																renderThread							(void* pStateRuntime)																				
 	info_printf("Render thread started.");
 
 	::nwor::SRuntimeState													& stateRuntime							= *(::nwor::SRuntimeState*)pStateRuntime;
-	INTERLOCKED_INCREMENT	(stateRuntime.RenderThreadUsers);
+	sync_increment	(stateRuntime.RenderThreadUsers);
 	::renderLoop			(stateRuntime);
-	INTERLOCKED_DECREMENT	(stateRuntime.RenderThreadUsers);
+	sync_decrement	(stateRuntime.RenderThreadUsers);
 	info_printf("Render loop exited.");
 }
 
@@ -236,12 +236,12 @@ WNDCLASSEX															initWndClass							(HINSTANCE hInstance)															
 					runtimeState.Quit													= true; 
 				}
 				else {
-					INTERLOCKED_INCREMENT(runtimeState.RenderThreadUsers);
+					sync_increment(runtimeState.RenderThreadUsers);
 
 					::nwol::error_t															errLoop									= mainLoop(runtimeState, containerForCallbacks);
 					always_printf("Main loop exited with code %u.", (uint32_t)errLoop); 
 
-					while(INTERLOCKED_COMPARE_EXCHANGE(runtimeState.RenderThreadUsers, 0, 1))
+					while(sync_compare_exchange(runtimeState.RenderThreadUsers, 0, 1))
 						::nwol::sleep(1);
 						
  					::nwol::error_t															errCleanup								= containerForCallbacks.Cleanup(); 

@@ -1,5 +1,5 @@
 /// Copyright 2015-2017 - asm128
-#include "nwol_multithread.h"
+#include "nwol_sync.h"
 
 #if defined(__ANDROID__) || defined(__LINUX__)
 #elif defined(__WINDOWS__)

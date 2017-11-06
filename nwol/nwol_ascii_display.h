@@ -6,14 +6,14 @@
 namespace nwol
 {
 	struct SASCIIDisplayInfo {
-						uint32_t										PaletteSize			;			// The amount of colors that can be stored in the palette. At the time of writing this comment, a maximum of 64k colors is supported.
-						uint32_t										ColorWidth			;			// The color width in bytes.
 						::nwol::SCoord2<uint32_t>						DisplaySizeMax		;			// In character units.
 						::nwol::SCoord2<uint32_t>						DisplaySizeCurrent	;			// In character units.
-						bool											Resize				;		
-						bool											PaletteSet			;		
-						bool											PaletteReset		;		
-						bool											TitleSet			;
+						uint32_t										ColorWidth			;			// The color width in bytes.
+						uint32_t										PaletteSize			;			// The amount of colors that can be stored in the palette. At the time of writing this comment, a maximum of 64k colors is supported.
+						bool											PaletteSet			: 1;		
+						bool											PaletteReset		: 1;		
+						bool											TitleSet			: 1;
+						bool											Resize				: 1;		
 	};
 //
 //					::nwol::error_t									asciiDisplayPresentBGRA				(const ::nwol::array_view<const uint8_t>& characters, const ::nwol::array_view<const uint32_t>& colors);
@@ -21,7 +21,7 @@ namespace nwol
 					::nwol::error_t									asciiDisplayCreate					(uint32_t frontBufferWidth, uint32_t frontBufferHeight);
 					::nwol::error_t									asciiDisplayDestroy					();
 					::nwol::error_t									asciiDisplayPresent					(const ::nwol::array_view<const uint8_t>& characters, const ::nwol::array_view<const uint16_t>& colorRefs);
-					::nwol::error_t									asciiDisplayClear					(uint8_t character, uint16_t colorRef);
+					::nwol::error_t									asciiDisplayClear					(uint8_t character = ' ', uint16_t colorRef = ASCII_COLOR_INDEX_WHITE);
 					::nwol::error_t									asciiDisplaySize					(SCoord2<uint32_t>& size);
 
 					::nwol::error_t									asciiDisplayResize					(uint32_t frontBufferWidth, uint32_t frontBufferHeight);

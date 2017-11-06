@@ -3,7 +3,7 @@
 
 #include "nwol_label.h"
 #include "nwol_descriptor.h"
-#include "nwol_multithread.h"
+#include "nwol_sync.h"
 
 #ifndef NWOL_REF_H__9823479023649023642890734__
 #define NWOL_REF_H__9823479023649023642890734__
@@ -27,7 +27,7 @@ namespace nwol
 #endif	
 		inline						TRef*									acquire						()										{ 
 			int64_t																	finalCount;
-			if( 1 >= (finalCount = (int64_t)NWOL_INTERLOCKED_INCREMENT(ReferenceCount)) )	{															
+			if( 1 >= (finalCount = (int64_t)nwol_sync_increment(ReferenceCount)) )	{															
 				error_printf("Invalid reference count: %llu. Instance type: '%s'.", finalCount, get_type_name().begin());			
 				PLATFORM_CRT_BREAKPOINT();											
 			}			

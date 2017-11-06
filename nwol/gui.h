@@ -3,7 +3,6 @@
 #include "nwol_input.h"
 #include "nwol_coord.h"
 #include "ascii_color.h"
-#include "ascii_target.h"
 #include "nwol_ascii_target.h"
 
 #ifndef NWOL_GUI_H_92834992384223849732
@@ -126,7 +125,6 @@ namespace nwol
 					::nwol::error_t												renderGUIASCII					(char* bbText, uint16_t* bbColor, const ::nwol::SGUI& guiSystem		);
 					::nwol::error_t												renderGUIBitmap					(uint32_t* bitmap, uint32_t width, uint32_t height, const ::nwol::SGUI& guiSystem);
 
-	static inline	::nwol::error_t												renderGUIASCII					(::nwol::SASCIITarget_old& targetAscii	, const ::nwol::SGUI& guiSystem)	{ return renderGUIASCII(targetAscii.Text.begin(), targetAscii.Attributes.begin(), guiSystem); }
 	static inline	::nwol::error_t												renderGUIASCII					(::nwol::SASCIITarget& targetAscii, const ::nwol::SGUI& guiSystem)			{ return renderGUIASCII((char_t*)targetAscii.Characters.begin(), targetAscii.Colors.begin(), guiSystem); }
 }//namespace
 

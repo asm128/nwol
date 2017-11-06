@@ -22,35 +22,11 @@ namespace nwol
 #if defined(__WINDOWS__)
 							::nwol::com_ptr<::IDXGISwapChain1>					SwapChain										= {};
 							::nwol::com_ptr<::ID3D11RenderTargetView>			RenderTargetView								= {};
-#endif
-	};
-
-	struct SSwapChain {
-							::nwol::SSwapChainDetail							PlatformDetail									= {};
-							::nwol::SDisplay									* Display										= {};
-	};
-
-#if defined(__WINDOWS__)
-	struct SD3D11 {
-		// --- DirectX Core Objects. Required for 2D and 3D.
-							::nwol::com_ptr<::ID3D11Device2>					Device											= {};
-							::nwol::com_ptr<::ID3D11DeviceContext2>				Context											= {};
-							::nwol::com_ptr<::IDXGISwapChain1>					SwapChain										= {};
-							::nwol::com_ptr<::ID3D11RenderTargetView>			RenderTargetView								= {};
-
 		// --- Direct3D Rendering Objects. Required for 3D.
 							::nwol::com_ptr<::ID3D11DepthStencilView>			DepthStencilView								= {};
-
-		// --- Cached renderer properties.
-							::D3D_FEATURE_LEVEL									FeatureLevel									= {};
-							::POINT												RenderTargetSize								= {};
-							::nwol::SRectangle2D<float>							WindowBounds									= {};
-							float												DPINext											= -1.0f;
-							float												DPICurrent										= -1.0f;
-							bool												WindowSizeChangeInProgress						= false;
+							::nwol::com_ptr<::ID3D11DeviceContext2>				DeferredContext									= {};
+#endif
 	};
-
-	typedef	struct		::nwol::SD3D11										SRenderBaseDetail;
 
 	// --- Direct2D Rendering Objects. Required for 2D.
 	struct SD2D11 {
@@ -65,12 +41,36 @@ namespace nwol
 							::nwol::com_ptr<::IDWriteFactory2>					DWriteFactory									= {};
 	};
 
+	struct SSwapChain {
+							::nwol::SDisplay									* Display										= {};
+							::nwol::SCoord2<uint32_t>							RenderTargetSize								= {};
+							::nwol::SSwapChainDetail							PlatformDetail									= {};
+	};
+
+#if defined(__WINDOWS__)
+	struct SD3D11 {
+		// --- DirectX Core Objects. Required for 2D and 3D.
+							::nwol::com_ptr<::ID3D11Device2>					Device											= {};
+							::nwol::com_ptr<::ID3D11DeviceContext2>				Context											= {};
+							::nwol::array_obj<::nwol::ptr_obj<SSwapChain>>		AttachedDisplays								= {};
+
+		// --- Cached renderer properties.
+							::D3D_FEATURE_LEVEL									FeatureLevel									= {};
+							::nwol::SCoord2<uint32_t>							RenderTargetSize								= {};
+							::nwol::SRectangle2D<float>							WindowBounds									= {};
+							float												DPINext											= -1.0f;
+							float												DPICurrent										= -1.0f;
+							bool												WindowSizeChangeInProgress						= false;
+	};
+
+	typedef	struct		::nwol::SD3D11										SRenderBaseDetail;
+
 	struct SDX11 {
 							::nwol::SD3D11										D3D												= {};
 							::nwol::SD2D11										D2D												= {};
 							::nwol::SDWrite										DWrite											= {};
 	};
-						::nwol::error_t										dxInitializeFactories							(::nwol::SDX11& instanceToInitialize);
+						::nwol::error_t										d2dInitializeFactories							(::nwol::SDX11& instanceToInitialize);
 						::nwol::error_t										dxInitializeDevices								(::nwol::SDX11& instanceToInitialize);
 
 	typedef				::nwol::SDX11										SGraphicsDetail;
@@ -82,7 +82,7 @@ namespace nwol
 	};
 
 						::nwol::error_t										graphicsInitialize								(::nwol::SGraphics& instanceToInitialize);
-						::nwol::error_t										graphicsAttach									(::nwol::SGraphics& instanceGraphics, ::nwol::SDisplay& displayToAttachTo);
+						::nwol::error_t										graphicsAttach									(::nwol::SGraphics& instanceGraphics, ::nwol::SDisplay* displayToAttachTo);
 } // namespace
 
 #endif // NWOL_DISPLAY_GRAPHICS_H_29384623423

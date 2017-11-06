@@ -180,12 +180,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="nwol_array_view_bit.h" />
-    <ClInclude Include="ascii_target.h" />
     <ClInclude Include="gcore_ref.h" />
     <ClInclude Include="gcore_ref_globals.h" />
     <ClInclude Include="nwol_ascii_display.h" />
     <ClInclude Include="nwol_ascii_target.h" />
     <ClInclude Include="nwol_display_graphics.h" />
+    <ClInclude Include="nwol_graphics_private.h" />
     <ClInclude Include="nwol_json.h" />
     <ClInclude Include="nwol_member_registry.h" />
     <ClInclude Include="nwol_bool.h" />
@@ -214,7 +214,7 @@
     <ClInclude Include="nwol_matrix.h" />
     <ClInclude Include="nwol_memory.h" />
     <ClInclude Include="nwol_misc.h" />
-    <ClInclude Include="nwol_multithread.h" />
+    <ClInclude Include="nwol_sync.h" />
     <ClInclude Include="nwol_module.h" />
     <ClInclude Include="nwol_noise.h" />
     <ClInclude Include="nwol_bit.h" />

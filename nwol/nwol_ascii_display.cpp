@@ -1,5 +1,6 @@
 #include "nwol_ascii_display.h"
 #include "ascii_color.h"
+#include "nwol_array.h"
 
 #if defined(__WINDOWS__)
 #	include <Windows.h>
@@ -19,6 +20,8 @@ struct SWindowsConsoleInfo {
 						bool								Created											= false;
 };
 
+static				::nwol::array_pod<uint8_t >			g_bufferClearCharacter							= {};
+static				::nwol::array_pod<uint16_t>			g_bufferClearColors								= {};
 static				::SWindowsConsoleInfo				g_ConsoleInfo									= {};
 static constexpr	const ::nwol::SColorRGBA			g_DefaultPalette	[]							= 
 	{ ::nwol::ASCII_COLOR_0							
@@ -65,6 +68,11 @@ static constexpr	const ::nwol::SColorRGBA			g_DefaultPalette	[]							=
 
 	csbiInfo.wAttributes									= ::nwol::ASCII_COLOR_INDEX_WHITE;
 	
+	uint32_t													newClearSize									= width * height;
+	if(newClearSize > g_bufferClearCharacter.size()) {
+		g_bufferClearCharacter	.resize(newClearSize);
+		g_bufferClearColors		.resize(newClearSize);
+	}
 	ree_if(FALSE == ::SetConsoleScreenBufferInfoEx(handleConsoleOut, &csbiInfo), "Failed to set console properties.");
 	return 0;
 }
@@ -76,16 +84,52 @@ static constexpr	const ::nwol::SColorRGBA			g_DefaultPalette	[]							=
 	return ::initWindowsConsoleProperties(g_ConsoleInfo.InfoScreenBufferCurrent.dwSize.X, g_ConsoleInfo.InfoScreenBufferCurrent.dwSize.Y, palette.begin());
 }
 
+					::nwol::error_t						nwol::asciiDisplaySize							(::nwol::SCoord2<uint32_t>& size)																		{
+	const ::CONSOLE_SCREEN_BUFFER_INFOEX						& csbiInfo										= g_ConsoleInfo.InfoScreenBufferCurrent;
+	size													= {(uint32_t)csbiInfo.dwSize.X, (uint32_t)csbiInfo.dwSize.Y};
+	return 0;
+}
+
+					::nwol::error_t						nwol::asciiDisplayClear							(uint8_t character, uint16_t colorRef)																	{
+	ree_if(false == ::g_ConsoleInfo.Created, "Cannot clear console if the console wasn't created!");
+	ree_if(0 == ::g_bufferClearCharacter.size(), "Cannot clear zero-sized console!");
+	if(g_bufferClearCharacter[0] != character)
+		memset(&g_bufferClearCharacter[0], character, g_bufferClearCharacter.size());
+	const uint16_t												colors[4]										= {colorRef, colorRef, colorRef, colorRef};
+	if(g_bufferClearColors[0] != colorRef) {
+		 if(g_bufferClearColors.size() % 4) {
+			for(uint32_t iCell = 0; iCell < g_bufferClearColors.size(); ++iCell)
+				*(uint64_t*)g_bufferClearColors[iCell]						= *(uint64_t*)colors;
+		}
+		else if(g_bufferClearColors.size() % 2) {
+			for(uint32_t iCell = 0; iCell < g_bufferClearColors.size(); ++iCell)
+				*(uint32_t*)g_bufferClearColors[iCell]						= *(uint32_t*)colors;
+		}
+		else {
+			for(uint32_t iCell = 0; iCell < g_bufferClearColors.size(); ++iCell)
+				g_bufferClearColors[iCell]									= colorRef;
+		}
+	}
+
+	const ::CONSOLE_SCREEN_BUFFER_INFOEX						& csbiInfo										= g_ConsoleInfo.InfoScreenBufferCurrent;
+	uint32_t													sizeFrontBuffer									= csbiInfo.dwSize.X * csbiInfo.dwSize.Y;
+	::COORD														offset											= {0, 0};
+	::DWORD														dummy											= 0;
+	const ::HANDLE												handleConsoleOut								= ::GetStdHandle(STD_OUTPUT_HANDLE);	// Get console output handle
+	ree_if(0 == ::WriteConsoleOutputCharacter(handleConsoleOut, (const char*)	g_bufferClearCharacter	.begin(), ::nwol::max(0U, ::nwol::min(g_bufferClearCharacter	.size(), (uint32_t)sizeFrontBuffer)), offset, &dummy ), "How did this happen?");
+	ree_if(0 == ::WriteConsoleOutputAttribute(handleConsoleOut,					g_bufferClearColors		.begin(), ::nwol::max(0U, ::nwol::min(g_bufferClearColors		.size(), (uint32_t)sizeFrontBuffer)), offset, &dummy ), "How did this happen?");
+	return 0;
+}
+
 					::nwol::error_t						nwol::asciiDisplayPresent						(const ::nwol::array_view<const uint8_t>& characters, const ::nwol::array_view<const uint16_t>& colors)	{ 
 	ree_if(false == ::g_ConsoleInfo.Created, "Cannot present console if the console wasn't created!");
 	const ::HANDLE												handleConsoleOut								= ::GetStdHandle( STD_OUTPUT_HANDLE );	// Get console output handle	
 	const ::CONSOLE_SCREEN_BUFFER_INFOEX						& csbiInfo										= g_ConsoleInfo.InfoScreenBufferCurrent;
-
 	uint32_t													sizeFrontBuffer									= csbiInfo.dwSize.X * csbiInfo.dwSize.Y;
 	::COORD														offset											= {0, 0};
 	::DWORD														dummy											= 0;
-	::WriteConsoleOutputCharacter ( handleConsoleOut, (const char*)	characters	.begin(), ::nwol::max(0U, ::nwol::min(characters	.size(), (uint32_t)sizeFrontBuffer)), offset, &dummy );
-	::WriteConsoleOutputAttribute ( handleConsoleOut,				colors		.begin(), ::nwol::max(0U, ::nwol::min(colors		.size(), (uint32_t)sizeFrontBuffer)), offset, &dummy );
+	::WriteConsoleOutputCharacter(handleConsoleOut, (const char*)	characters	.begin(), ::nwol::max(0U, ::nwol::min(characters	.size(), (uint32_t)sizeFrontBuffer)), offset, &dummy );
+	::WriteConsoleOutputAttribute(handleConsoleOut,					colors		.begin(), ::nwol::max(0U, ::nwol::min(colors		.size(), (uint32_t)sizeFrontBuffer)), offset, &dummy );
 	return 0; 
 }
 
@@ -98,6 +142,30 @@ static constexpr	const ::nwol::SColorRGBA			g_DefaultPalette	[]							=
 		return TRUE;
 	}
 }
+
+					::nwol::error_t						nwol::asciiDisplayDestroy						()																									{ 
+	rww_if(false == g_ConsoleInfo.Created, "Redundant destruction of system console.");
+#if defined(__WINDOWS__)
+	::SetConsoleCtrlHandler(::handlerConsoleRoutine, FALSE);
+	const ::HANDLE												hConsoleOut										= ::GetStdHandle( STD_OUTPUT_HANDLE );
+	::SetCurrentConsoleFontEx		(hConsoleOut, FALSE, &g_ConsoleInfo.InfoFontOriginal	);
+	::SetConsoleScreenBufferInfoEx	(hConsoleOut, &g_ConsoleInfo.InfoScreenBufferOriginal	);
+	::FreeConsole();
+	::fclose(stdout);
+	::FILE*										
+	stream													= 0; ::freopen_s	(&stream, "CONIN$", "r+", stdin);
+	stream													= 0; ::fopen_s		(&stream, "CONOUT$", "w+");
+#elif defined(__ANDROID__)
+#else 
+#	error "Not implemented."
+#endif
+	g_ConsoleInfo.Created									= false;
+	return 0; 
+}
+
+#else
+#	error "Not implemented."
+#endif
 
 					::nwol::error_t						nwol::asciiDisplayCreate						(uint32_t frontBufferWidth, uint32_t frontBufferHeight)													{
 #if defined(__WINDOWS__)
@@ -120,10 +188,6 @@ static constexpr	const ::nwol::SColorRGBA			g_DefaultPalette	[]							=
 
 	SetConsoleTitle("No Workflow Overhead Console");
 	::SetConsoleCtrlHandler(::handlerConsoleRoutine, TRUE);
-#elif defined(__ANDROID__)
-#else
-#	error "Not implemented."
-#endif
 	const HANDLE												hConsoleOut										= ::GetStdHandle( STD_OUTPUT_HANDLE );
 	::GetCurrentConsoleFontEx		( hConsoleOut, TRUE	, &g_ConsoleInfo.InfoFontOriginal			);
 	::GetConsoleScreenBufferInfoEx	( hConsoleOut		, &g_ConsoleInfo.InfoScreenBufferOriginal	);
@@ -143,32 +207,9 @@ static constexpr	const ::nwol::SColorRGBA			g_DefaultPalette	[]							=
 	csbiInfo.srWindow.Bottom								= 600;
 	::initWindowsConsoleProperties(frontBufferWidth, frontBufferHeight, g_DefaultPalette);
 	g_ConsoleInfo.Created									= true;
-	return 0; 
-}
-
-					::nwol::error_t						nwol::asciiDisplayDestroy						()																									{ 
-	rww_if(false == g_ConsoleInfo.Created, "Redundant destruction of system console.");
-
-#if defined(__WINDOWS__)
-	::SetConsoleCtrlHandler(::handlerConsoleRoutine, FALSE);
-		
-	const ::HANDLE												hConsoleOut										= ::GetStdHandle( STD_OUTPUT_HANDLE );
-	::SetCurrentConsoleFontEx		(hConsoleOut, FALSE, &g_ConsoleInfo.InfoFontOriginal	);
-	::SetConsoleScreenBufferInfoEx	(hConsoleOut, &g_ConsoleInfo.InfoScreenBufferOriginal	);
-
-	::FreeConsole();
-	::fclose(stdout);
-	::FILE*										
-	stream													= 0; ::freopen_s	(&stream, "CONIN$", "r+", stdin);
-	stream													= 0; ::fopen_s		(&stream, "CONOUT$", "w+");
 #elif defined(__ANDROID__)
-#else 
-#	error "Not implemented."
-#endif
-	g_ConsoleInfo.Created									= false;
-	return 0; 
-}
-
 #else
 #	error "Not implemented."
 #endif
+	return 0; 
+}

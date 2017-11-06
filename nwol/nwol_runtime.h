@@ -50,7 +50,7 @@ namespace nwol
 		,	RUNTIME_CALLBACK_ID_UPDATE							= 0x80
 		};					
 
-	static constexpr	const char								formatModuleFunctionPtrNull[]	= "Function pointer for %s() in module %s is null.";
+	static constexpr	const char								formatModuleFunctionPtrNull[]	= "Function pointer for %s() in module %s is null. Module not loaded or function not exported?";
 	NWOL_BEGIN_MODULE(::nwol, SDeviceDriverModule);
 		NWOM_PFUNC	(::nwol, SDeviceDriverModule									, nwol_moduleTitle		);
 		NWOM_PFUNC	(::nwol, SDeviceDriverModule									, nwol_moduleVersion	);

@@ -1,5 +1,5 @@
 #include "nwol_log.h"
-#include "nwol_multithread.h"
+#include "nwol_sync.h"
 #include "nwol_memory.h"
 
 #ifndef NWOL_PTR_H_293748098237423
@@ -18,7 +18,7 @@ namespace nwol
 	template<typename _tNCO>
 						::nwol::nwol_ref<_tNCO> *		ref_acquire						(::nwol::nwol_ref<_tNCO>* nwol_reference)												{
 		if(nwol_reference)
-			NWOL_INTERLOCKED_INCREMENT(nwol_reference->References);
+			nwol_sync_increment(nwol_reference->References);
 		return nwol_reference;
 	};
 
@@ -28,7 +28,7 @@ namespace nwol
 		TRef													* oldRef							= *nwol_reference;
 		*nwol_reference										= 0;
 		if(oldRef)
-			switch(NWOL_INTERLOCKED_DECREMENT(oldRef->References)) {
+			switch(nwol_sync_decrement(oldRef->References)) {
 			case -1: error_printf("Reference count error!"); return -1;
 			case  0:
 				if(oldRef->Instance)

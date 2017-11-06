@@ -1,0 +1,8 @@
+#include "nwol_display_graphics.h"
+
+
+#ifndef NWOL_GRAPHICS_PRIVATE_H_29384623423
+#define NWOL_GRAPHICS_PRIVATE_H_29384623423
+
+#endif // NWOL_GRAPHICS_PRIVATE_H_29384623423
+

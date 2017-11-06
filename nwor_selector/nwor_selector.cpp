@@ -7,12 +7,9 @@
 #include "ascii_color.h"
 #include "gui.h"
 #include "nwol_storage.h"
-#include "nwol_multithread.h"
+#include "nwol_sync.h"
 
 #include "nwol_runtime_impl.h"
-#include "nwol_datatype.h"
-#include "nwol_datausage.h"
-#include "stype.h"
 #include "gstring.h"
 
 #include "parse_number.h"
@@ -25,6 +22,46 @@ int32_t											cleanup											(::SApplication& instanceApp)															
 	error_if(::nwol::asciiDisplayDestroy(), "This could happen if the display wasn't successfully created in the first place.");
 	error_if(::nwol::asciiTargetDestroy(instanceApp.ASCIITarget), "");
 	return 0; 
+}
+
+int32_t											renderSelectorApp								(::SApplication& instanceApp)																								{
+	::nwol::SASCIITarget								& target										= instanceApp.ASCIITarget;
+	nwol_necall(::nwol::asciiTargetClear(target, ' ', ::nwol::ASCII_COLOR_INDEX_WHITE)	, "Unknown error!");
+	nwol_necall(::nwol::renderGUIASCII(target, instanceApp.GUI)							, "Unknown error!");
+	nwol_necall(::nwol::asciiDisplayPresent(target)										, "Unknown error!");
+	return 0; 
+}
+
+static	const char								errorFormat1[]									= "Dynamically loaded function is null, maybe due to a buffer overrun which erased the pointers: %s.";
+
+int32_t											renderSelection									(const ::SApplication & instanceApp)																							{
+	int32_t												errVal											= 0;
+ 	const ::nwol::SApplicationModule					& moduleInterface								= instanceApp.ApplicationModulesHandle[instanceApp.ApplicationModuleSelected];
+	error_if(errored(errVal = moduleInterface.Render()), "Failed to call module function.");
+
+	::nwol::RUNTIME_CALLBACK_ID							callbackPointersErased							= moduleInterface.TestForNullPointerFunctions();
+	if(callbackPointersErased) { 
+		::nwol::printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
+		errVal											= -1;
+	}
+	return errVal;
+}
+
+int32_t											render											(::SApplication& instanceApp)																									{
+	int32_t												retVal											= 0;
+	// sync here. This is necessary for when the client application requests shutdown but may still be rendering a frame, so we have to wait the render call to finish before deleting the object.
+	if( 1 == sync_increment(instanceApp.RenderSemaphore) ) {
+		switch(instanceApp.SelectorState) {
+		case SELECTOR_STATE_START				:
+		case SELECTOR_STATE_MENU				: retVal = ::renderSelectorApp(instanceApp);												break;
+		case SELECTOR_STATE_LOADING_SELECTION	: break;	// careful because of unique ASCII screen instance. We may be closing ours or the client module creating its own.
+		case SELECTOR_STATE_RUNNING_SELECTION	: error_if(errored(::renderSelection(instanceApp)), "Failed to render client application");	break;
+		default:
+			error_printf("Unrecognized state: %u", (uint32_t)instanceApp.SelectorState);
+		}
+	}
+	sync_decrement(instanceApp.RenderSemaphore);	// desync here
+	return retVal;
 }
 
 int32_t											loadValidModules								(const char* modulesPath, ::nwol::SRuntimeValues* runtimeValues, ::nwol::array_pod<::nwol::SApplicationModule>& loadedModules)	{
@@ -99,7 +136,7 @@ int32_t											refreshModules									(::SApplication& instanceApp)										
 	error_if(errored(::listDLLFiles(modulesPath, possibleModuleNames)), "Failed to load modules from folder: %s", modulesPath);
 	PLATFORM_CRT_CHECK_MEMORY();
 	::nwol::array_pod<::nwol::SApplicationModule>			& loadedModules									= instanceApp.ApplicationModulesHandle;
-	::moduleUnloads(loadedModules);
+	error_if(errored(::moduleUnloads(loadedModules)), "Why would this happen?");
 	uint32_t											maxModuleNameLength								= 0;
 	uint32_t											maxModuleTitleLength							= 0;
 	PLATFORM_CRT_CHECK_MEMORY();
@@ -108,8 +145,7 @@ int32_t											refreshModules									(::SApplication& instanceApp)										
 		info_printf("DLL found: %s.", moduleName.begin());
 		::nwol::SApplicationModule							loadedModule									= {};
 		loadedModule.RuntimeValues						= instanceApp.RuntimeValues;
-		int32_t												errorLoad										= ::nwol::applicationModuleLoad(*instanceApp.RuntimeValues, loadedModule, moduleName.begin());
-		continue_warn_if(errored(errorLoad), "DLL is not a valid module: %s." , moduleName.begin());
+		continue_warn_if(errored(::nwol::applicationModuleLoad(*instanceApp.RuntimeValues, loadedModule, moduleName.begin())), "DLL is not a valid module: %s." , moduleName.begin());
 		const uint32_t										titleLen										= loadedModule.ModuleTitle ? (uint32_t)::strlen(loadedModule.ModuleTitle) : 0;
 		maxModuleNameLength								= (maxModuleNameLength	> moduleName.size())	? maxModuleNameLength	: moduleName.size();
 		maxModuleTitleLength							= (maxModuleTitleLength > titleLen)				? maxModuleTitleLength	: titleLen;
@@ -222,7 +258,6 @@ int32_t											updateSelectorApp								(::SApplication& instanceApp, bool ex
 	return 0;
 }
 
-static	const char								errorFormat1[]									= "Dynamically loaded function is null, maybe due to a buffer overrun which erased the pointers: %s.";
 static	const char								errorFormat2[]									= "Module function failed: %s.";
 
 int32_t											loadSelection									(::SApplication& instanceApp)																									{
@@ -236,7 +271,7 @@ int32_t											loadSelection									(::SApplication& instanceApp)											
 		retVal											= -1;
 	}
 	else  {
-		::nwol::asciiDisplayDestroy();
+		error_if(errored(::nwol::asciiDisplayDestroy()), "Display not initialized?");
 		char												windowTitle[512]								= {};
 		::sprintf_s(windowTitle, "%s v%u.%u", moduleInterface.ModuleTitle, moduleInterface.VersionMajor(), moduleInterface.VersionMinor());
 #if defined(__WINDOWS__)
@@ -266,20 +301,6 @@ int32_t											loadSelection									(::SApplication& instanceApp)											
 	return retVal;
 }
 
-int32_t											renderSelection									(const ::SApplication & instanceApp)																							{
-	int32_t												errVal											= 0;
- 	const ::nwol::SApplicationModule					& moduleInterface								= instanceApp.ApplicationModulesHandle[instanceApp.ApplicationModuleSelected];
-	error_if(errored(errVal = moduleInterface.Render()), "Failed to call module function.");
-
-	::nwol::RUNTIME_CALLBACK_ID							callbackPointersErased							= moduleInterface.TestForNullPointerFunctions();
-	if(callbackPointersErased) { 
-		::nwol::printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
-		errVal											= -1;
-	}
-	return errVal;
-}
-
-
 int32_t											update											(::SApplication & instanceApp, bool exitRequested)																				{
 	::nwol::error_t										errResult										= 0;
 	::nwol::APPLICATION_STATE							updateResult									= ::nwol::APPLICATION_STATE_INVALID;
@@ -297,25 +318,26 @@ int32_t											update											(::SApplication & instanceApp, bool exitReque
 		error_if(errored(updateResult = moduleSelected->Update(exitRequested)), "Module \"%s\" failed to update with error code %u.", moduleTitle, updateResult)
 		else if(updateResult == ::nwol::APPLICATION_STATE_EXIT) {
 			instanceApp.SelectorState						= SELECTOR_STATE_MENU;
-			while(INTERLOCKED_COMPARE_EXCHANGE(instanceApp.RenderSemaphore, 2, 0) == 1)
+			while(sync_compare_exchange(instanceApp.RenderSemaphore, 2, 0) == 1)
 				continue;
+
 			error_if(errored(moduleSelected->Cleanup()), "Failed to clean up module %i ('%s')", moduleTitle)
-			else {
+			else 
 				info_printf("Module cleaned up successfully: '%s'", moduleTitle);
-			}
+
 			callbackPointersErased							= moduleSelected->TestForNullPointerFunctions();
 			if(callbackPointersErased) { 
 				::nwol::printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
 				errResult										= ::nwol::APPLICATION_STATE_INVALID;
 			}
-			else { 
+			else 
 				info_printf("Client application cleanup succeeded."); 
-			}
+
 			::nwol::error_t										errDelete									= 0; 
 			error_if(errored(errDelete = moduleSelected->Delete()), errorFormat2, errDelete, "moduleDelete()")
-			else {
+			else 
 				info_printf("Module deleted successfully: '%s'", moduleTitle);
-			}
+
 			callbackPointersErased							= moduleSelected->TestForNullPointerFunctions();
 			if(callbackPointersErased) { 
 				::nwol::printErasedModuleInterfacePointers(callbackPointersErased, errorFormat1);
@@ -340,35 +362,10 @@ int32_t											update											(::SApplication & instanceApp, bool exitReque
 				error_if(errored(::refreshModules(instanceApp)), "Error refreshing modules.");
 				info_printf("Client application instance deleted successfully."); 
 			}
-			while(INTERLOCKED_COMPARE_EXCHANGE(instanceApp.RenderSemaphore, 0, 2) == 3)
+			while(sync_compare_exchange(instanceApp.RenderSemaphore, 0, 2) == 3)
 				continue;
 		}
 		break;
 	}
 	return errored(errResult) ? -1 : 0; 
-}
-
-int32_t											renderSelectorApp								(::SApplication& instanceApp)																								{
-	::nwol::SASCIITarget								& target										= instanceApp.ASCIITarget;
-	::nwol::asciiTargetClear(target, ' ', COLOR_WHITE);
-	nwol_necall(::nwol::renderGUIASCII(target, instanceApp.GUI)	, "%s", "renderGUIASCII() Failed!");
-	::nwol::asciiDisplayPresent(target);
-	return 0; 
-}
-
-int32_t											render											(::SApplication& instanceApp)																									{
-	int32_t												retVal											= 0;
-	// sync here. This is necessary for when the client application requests shutdown but may still be rendering a frame, so we have to wait the render call to finish before deleting the object.
-	if( 1 == INTERLOCKED_INCREMENT(instanceApp.RenderSemaphore) ) {
-		switch(instanceApp.SelectorState) {
-		case SELECTOR_STATE_START				:
-		case SELECTOR_STATE_MENU				: retVal = ::renderSelectorApp(instanceApp);													break;
-		case SELECTOR_STATE_LOADING_SELECTION	: break;	// careful because of unique ASCII screen instance. We may be closing ours or the client module creating its own.
-		case SELECTOR_STATE_RUNNING_SELECTION	: error_if(errored(::renderSelection(instanceApp)), "Failed to render client application");	break;
-		default:
-			error_printf("Unrecognized state: %u", (uint32_t)instanceApp.SelectorState);
-		}
-	}
-	INTERLOCKED_DECREMENT(instanceApp.RenderSemaphore);	// desync here
-	return retVal;
 }

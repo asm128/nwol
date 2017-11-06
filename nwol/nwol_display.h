@@ -40,7 +40,8 @@ namespace nwol
 	struct SDisplayState {
 		bool												MinOrMaxed					: 1;	// Used to track something about the window resizing operation. Related to WM_RESTORE and WM_SIZE messages (I think).
 		bool												NoDraw						: 1;	// 
-		bool												RequiresResizeWindow		: 1;	
+		bool												Resized						: 1;	
+		bool												Resizing					: 1;	
 		bool												Closed						: 1;	// By closed we mean closed and not hidden or minimized.
 	};
 
@@ -82,7 +83,6 @@ namespace nwol
 		LRESULT												WndProc						(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 #endif
 	};
-
 }
 
 #endif // NWOL_WINDOW_H_9782365897236

@@ -1,7 +1,6 @@
 /// Copyright 2016-2017 - asm128
 #include "nwol_misc.h"
 #include "nwol_label.h"
-#include "ascii_target.h"
 #include "nwol_ascii_target.h"
 #include "nwol_array.h"
 
@@ -20,8 +19,8 @@ namespace nwol
 		return valueToRect(rectangleTopLeft, width, height, offsetLine, offsetColumn, align, text, textLen);
 	}
 
-	template<typename... _Args>
-								int32_t	printfToRect			( char* rectangleTopLeft, uint32_t width, uint32_t height, int32_t offsetLine, int32_t offsetColumn, nwol::ALIGN_SCREEN align, const char* format, _Args&&... args )		{
+	template<typename _tChar, typename... _tArgs>
+								int32_t	printfToRect			( _tChar* rectangleTopLeft, uint32_t width, uint32_t height, int32_t offsetLine, int32_t offsetColumn, nwol::ALIGN_SCREEN align, const char* format, _tArgs&&... args )		{
 		char									precookStr[1024]		= {};
 		int32_t									precookLen				= sprintf_s(precookStr, format, args...);
 		return valueToRect(rectangleTopLeft, width, height, offsetLine, offsetColumn, align, precookStr, precookLen);
@@ -46,14 +45,8 @@ namespace nwol
 		return actualX;
 	}
 
-	static inline				int32_t	lineToRectColored		(SASCIITarget_old& target, uint16_t messageColor, int32_t offsetLine, int32_t offsetColumn, nwol::ALIGN_SCREEN align, const char* text, uint32_t charCount = 0xFFFFFFFF)		{
-		return lineToRectColored	(target.Text.begin(), target.Width(), target.Height(), target.Attributes.begin(), messageColor, offsetLine, offsetColumn, align, text, charCount);
-	}
 	static inline				int32_t	lineToRectColored		(SASCIITarget& target, uint16_t messageColor, int32_t offsetLine, int32_t offsetColumn, nwol::ALIGN_SCREEN align, const char* text, uint32_t charCount = 0xFFFFFFFF)		{
 		return lineToRectColored	((char_t*)target.Characters.begin(), target.Width(), target.Height(), target.Colors.begin(), messageColor, offsetLine, offsetColumn, align, text, charCount);
-	}
-	template<typename... _Args>	int32_t	printfToRectColored		(SASCIITarget_old& target, uint16_t messageColor, int32_t offsetLine, int32_t offsetColumn, nwol::ALIGN_SCREEN align, const char* format, _Args&&... args)						{
-		return printfToRectColored	(target.Text.begin(), target.Width(), target.Height(), target.Attributes.begin(), messageColor, offsetLine, offsetColumn, align, format, args...);
 	}
 	template<typename... _Args>	int32_t	printfToRectColored		(SASCIITarget& target, uint16_t messageColor, int32_t offsetLine, int32_t offsetColumn, nwol::ALIGN_SCREEN align, const char* format, _Args&&... args)						{
 		return printfToRectColored	((char_t*)target.Characters.begin(), target.Width(), target.Height(), target.Colors.begin(), messageColor, offsetLine, offsetColumn, align, format, args...);

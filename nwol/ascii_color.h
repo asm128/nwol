@@ -14,7 +14,7 @@ namespace nwol
 		inline	constexpr	operator												uint8_t				()	const	noexcept	{ return Foreground | (Background << 4);	}	
 	};
 
-	enum ASCII_COLOR 
+	enum ASCII_COLOR : uint32_t
 		{ ASCII_COLOR_0					= 0x000000
 		, ASCII_COLOR_1 				= 0x800000
 		, ASCII_COLOR_2 				= 0x008000

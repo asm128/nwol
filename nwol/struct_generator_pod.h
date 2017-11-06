@@ -1,6 +1,6 @@
 /// Copyright 2017 - asm128
-#include "type_identifier.h"
-#include "datatype.h"
+#include "nwol_type_identifier.h"
+#include "nwol_datatype.h"
 #include "nwol_array.h"
 
 #ifndef NWOL_STRUCT_GENERATOR_POD_H_9287349284928734
@@ -9,7 +9,7 @@
 namespace nwol
 {
 	struct SMember {
-								STypeIdentifier												Type		;
+								::nwol::STypeIdentifier										Type		;
 								::nwol::gsyslabel											Name
 									,														DisplayName
 									,														Description

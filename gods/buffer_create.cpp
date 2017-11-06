@@ -118,7 +118,7 @@ namespace nwol
 				LEAVE_CRITICAL_SECTION(cs);
 				releaseToPageLocked(pStorage, oldBuffer);
 			}
-			NWOL_INTERLOCKED_INCREMENT(Counters.FreedRefs);
+			nwol_sync_increment(Counters.FreedRefs);
 		}
 	
 		::nwol::error_t					createBuffer				(GDATA_TYPE DataFormat, GDATA_USAGE Usage, uint32_t nElementCount, uint32_t nColumnCount, uint32_t nSliceCount, ::nwol::GODS(SBuffer)* out_pBuffer)	{
@@ -168,7 +168,7 @@ namespace nwol
 				}
 			}
 			if( newBuffer )
-				NWOL_INTERLOCKED_INCREMENT(Counters.CreatedRefs);
+				nwol_sync_increment(Counters.CreatedRefs);
 
 			CHECKBUFFEROVERRUNREF(newBuffer);
 			GODS(SBuffer)						old							= *out_pBuffer;
@@ -376,7 +376,7 @@ void nwol::grelease( GODS(SBuffer)* pBufferData ) {
 	if( pBufferInstance->pByteArray )
 		checkBlockBoundaries(pBufferInstance);
 #endif	
-	switch(NWOL_INTERLOCKED_DECREMENT(oldBuffer->ReferenceCount)) {
+	switch(nwol_sync_decrement(oldBuffer->ReferenceCount)) {
 	case ((REFCOUNT_T)0)-1:
 		errmsg_refcountnull();
 		//printInfoString( oldBuffer );

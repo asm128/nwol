@@ -1,6 +1,6 @@
 /// Copyright 2016-2017 - asm128
 #include "nwol_array.h"
-#include "nwol_multithread.h"
+#include "nwol_sync.h"
 #include "nwol_error.h"
 
 #include <memory>

@@ -24,15 +24,6 @@ namespace nwol
 		virtual					void										OnMouseMove								(int32_t x, int32_t y, int32_t z)							= 0;
 	};
 
-	GDEFINE_FLAG_TYPE(WINDOWS_INPUT_STATE_FLAG, int8_t);
-	GDEFINE_FLAG_VALUE(WINDOWS_INPUT_STATE_FLAG, Default			, 0x00);
-	GDEFINE_FLAG_VALUE(WINDOWS_INPUT_STATE_FLAG, Initialized		, 0x01);
-	GDEFINE_FLAG_VALUE(WINDOWS_INPUT_STATE_FLAG, Buffered			, 0x02);
-	GDEFINE_FLAG_VALUE(WINDOWS_INPUT_STATE_FLAG, Exclusive			, 0x04);
-	GDEFINE_FLAG_VALUE(WINDOWS_INPUT_STATE_FLAG, Background			, 0x08);
-	GDEFINE_FLAG_VALUE(WINDOWS_INPUT_STATE_FLAG, DisableWindowsKey	, 0x10);
-	GDEFINE_FLAG_VALUE(WINDOWS_INPUT_STATE_FLAG, Acquired			, 0x20);
-
 	struct SMouseInput {
 								::nwol::SCoord3<int32_t>					Deltas									;
 								uint8_t										Buttons					[16]			;
@@ -57,7 +48,18 @@ namespace nwol
 		inline					bool										ButtonDown								(uint8_t index)							const	noexcept	{ return 0 != Mouse.Buttons	[index] && 0 == PreviousMouse.Buttons	[index]; }
 	};
 
-		struct SInputDetail	{
+#if defined(__WINDOWS__)
+	GDEFINE_FLAG_TYPE(WINDOWS_INPUT_STATE_FLAG, int8_t);
+	GDEFINE_FLAG_VALUE(WINDOWS_INPUT_STATE_FLAG, Default			, 0x00);
+	GDEFINE_FLAG_VALUE(WINDOWS_INPUT_STATE_FLAG, Initialized		, 0x01);
+	GDEFINE_FLAG_VALUE(WINDOWS_INPUT_STATE_FLAG, Buffered			, 0x02);
+	GDEFINE_FLAG_VALUE(WINDOWS_INPUT_STATE_FLAG, Exclusive			, 0x04);
+	GDEFINE_FLAG_VALUE(WINDOWS_INPUT_STATE_FLAG, Background			, 0x08);
+	GDEFINE_FLAG_VALUE(WINDOWS_INPUT_STATE_FLAG, DisableWindowsKey	, 0x10);
+	GDEFINE_FLAG_VALUE(WINDOWS_INPUT_STATE_FLAG, Acquired			, 0x20);
+#endif
+
+	struct SDisplayInputDetail	{
 	#if defined(__ANDROID__)
 								void										(*handleAppInput)						()															= nullptr;
 	#elif defined(__WINDOWS__)
@@ -71,7 +73,7 @@ namespace nwol
 								void										(*handleAppInput)						()															= nullptr;
 	#endif
 
-																			~SInputDetail							()															{ 
+																			~SDisplayInputDetail							()															{ 
 	#if defined(__WINDOWS__)
 				::HRESULT															hr;
 				if(DirectInputMouse		&& gbit_true(DeviceFlagsMouse	, WINDOWS_INPUT_STATE_FLAG_Acquired)) info_if(FAILED(hr = DirectInputMouse		->Unacquire()), "Failed to unacquire device. This is normal when the device was lost before this. " "0x%X '%s'", hr, ::nwol::getWindowsErrorAsString(hr).c_str());
@@ -80,22 +82,9 @@ namespace nwol
 			}
 		};
 		
-	struct SDisplayInput	: public ::nwol::SInput {
-		//using					::nwol::SInput::							KeyCount								;
-		//using					::nwol::SInput::							ButtonCount								;
-		//using					::nwol::SInput::							HandlersKeyboard						;
-		//using					::nwol::SInput::							HandlersMouse							;
-		//using					::nwol::SInput::							Mouse									;
-		//using					::nwol::SInput::							PreviousMouse							;
-		//using					::nwol::SInput::							Keys									;
-		//using					::nwol::SInput::							PreviousKeys							;
-		//
-								::nwol::SInputDetail						PlatformDetail;
-		//
-		//inline					bool										KeyUp									(uint8_t index)							const	noexcept	{ return 0 == Keys			[index] && 0 != PreviousKeys			[index]; }
-		//inline					bool										KeyDown									(uint8_t index)							const	noexcept	{ return 0 != Keys			[index] && 0 == PreviousKeys			[index]; }
-		//inline					bool										ButtonUp								(uint8_t index)							const	noexcept	{ return 0 == Mouse.Buttons	[index] && 0 != PreviousMouse.Buttons	[index]; }
-		//inline					bool										ButtonDown								(uint8_t index)							const	noexcept	{ return 0 != Mouse.Buttons	[index] && 0 == PreviousMouse.Buttons	[index]; }
+	struct SDisplayInput {
+								::nwol::SInput								Input;
+								::nwol::SDisplayInputDetail					PlatformDetail;
 	};
 
 	enum INPUT_EVENT : int8_t 

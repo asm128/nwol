@@ -34,8 +34,8 @@ static const char* __string_table_errors[2]=
 #	define GLOBALSOVERRUNCHECK_END		, BINFIBO	// debug check
 #	define SETREFALLOCID(_newRef)		setRefAllocID(_newRef)
 #	define CHECKBUFFEROVERRUNREF(p_)	::nwol::checkOverrun(p_)
-#	define COUNTERINCREMENTACQUIREDREFS()	NWOL_INTERLOCKED_INCREMENT(Counters.AcquiredRefs)
-#	define COUNTERINCREMENTFREEDREFS()		NWOL_INTERLOCKED_INCREMENT(Counters.FreedRefs)
+#	define COUNTERINCREMENTACQUIREDREFS()	nwol_sync_increment(Counters.AcquiredRefs)
+#	define COUNTERINCREMENTFREEDREFS()		nwol_sync_increment(Counters.FreedRefs)
 #else
 #	define CHECKPRE_MEMBER 
 #	define CHECKPOST_MEMBER
@@ -480,7 +480,7 @@ namespace nwol
 		}
 
 							void											setRefAllocID							(_tRef* newRef)										{																									
-			newRef->AllocID														= NWOL_INTERLOCKED_INCREMENT(Counters.CreatedRefs)-1;								
+			newRef->AllocID														= nwol_sync_increment(Counters.CreatedRefs)-1;								
 #if defined(NWOL_DEBUG_ENABLED)
 			if (newRef->BreakAllocID != (INVALID_ALLOC_ID) && newRef->BreakAllocID == newRef->AllocID) {																								
 				warning_printf("Allocation break triggered.");												
@@ -580,7 +580,7 @@ namespace nwol
 					_printRefCountZero(p);
 #endif
 
-				NWOL_INTERLOCKED_INCREMENT(p->ReferenceCount);
+				nwol_sync_increment(p->ReferenceCount);
 				CHECKBUFFEROVERRUNREF(p);
 				COUNTERINCREMENTACQUIREDREFS();
 			}
@@ -593,7 +593,7 @@ namespace nwol
 			(*_p)																= 0;
 
 			CHECKBUFFEROVERRUNREF(p0);
-			switch (NWOL_INTERLOCKED_DECREMENT(p0->ReferenceCount)) {
+			switch (nwol_sync_decrement(p0->ReferenceCount)) {
 			default:
 				break;
 			case ((REFCOUNT_T)0) - 1:
