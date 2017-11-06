@@ -8,6 +8,7 @@
 	for(uint32_t iObject = 0; iObject < tree.size(); ++iObject) {
 		tree[iObject]->Object													= &document.Object[iObject];
 		tree[iObject]->Parent													= ::nwol::in_range((uint32_t)tree[iObject]->Object->ParentIndex, 0U, tree.size()) ? (nwol::SJSONNode*)tree[tree[iObject]->Object->ParentIndex] : 0;
+		tree[iObject]->ObjectIndex												= iObject;
 	}
 
 	for(uint32_t iObject = 0; iObject < tree.size(); ++iObject) {
@@ -20,11 +21,11 @@
 	return 0;						
 }
 
-						::nwol::error_t									nwol::jsonRead										(::nwol::SJSONDocument& document, ::nwol::SJSONNode& jsonTree, const char* jsonAsString, uint32_t jsonLength)	{
+						::nwol::error_t									nwol::jsonParse										(::nwol::SJSONDocument& document, ::nwol::SJSONNode& jsonTree, const char* jsonAsString, uint32_t jsonLength)	{
 	::nwol::SJSONObject															currentElement										= {};
 	currentElement.ParentIndex												= -1;
 	currentElement.Span														= {0, jsonLength};
-	currentElement.Type														= ::nwol::JSON_OBJECT_TYPE_UNKNOWN;
+	currentElement.Type														= ::nwol::JSON_TYPE_UNKNOWN;
 	
 	int32_t																		elementIndexCurrent									= document.Object.push_back(currentElement);
 	uint32_t																	nestLevel											= 0;
@@ -36,8 +37,8 @@
 		case '\n'	: continue;	// These separator characters mean nothing in json.
 		case ':'	: continue;	// Need to report that we've switched from element name to element value
 		case ','	: continue;	// Need to report that we've switched from an element to the next
-		case '{'	: ++nestLevel; info_printf("opening level %u object"	, nestLevel); currentElement.Type = ::nwol::JSON_OBJECT_TYPE_OBJECT; currentElement.Span = {iDocChar, iDocChar}; currentElement.ParentIndex = elementIndexCurrent; elementIndexCurrent = document.Object.push_back(currentElement); continue;	// Need to report that a block has been entered
-		case '['	: ++nestLevel; info_printf("opening level %u array"		, nestLevel); currentElement.Type = ::nwol::JSON_OBJECT_TYPE_ARRAY ; currentElement.Span = {iDocChar, iDocChar}; currentElement.ParentIndex = elementIndexCurrent; elementIndexCurrent = document.Object.push_back(currentElement); continue;	// Need to report that a list has been entered
+		case '{'	: ++nestLevel; info_printf("opening level %u object"	, nestLevel); currentElement.Type = ::nwol::JSON_TYPE_OBJECT; currentElement.Span = {iDocChar, iDocChar}; currentElement.ParentIndex = elementIndexCurrent; elementIndexCurrent = document.Object.push_back(currentElement); continue;	// Need to report that a block has been entered
+		case '['	: ++nestLevel; info_printf("opening level %u array"		, nestLevel); currentElement.Type = ::nwol::JSON_TYPE_ARRAY ; currentElement.Span = {iDocChar, iDocChar}; currentElement.ParentIndex = elementIndexCurrent; elementIndexCurrent = document.Object.push_back(currentElement); continue;	// Need to report that a list has been entered
 		case '}'	: info_printf("closing level %u object"	, nestLevel); --nestLevel; document.Object[elementIndexCurrent].Span.End = iDocChar + 1; elementIndexCurrent = currentElement.ParentIndex; continue;	// Need to report that a block has been exited
 		case ']'	: info_printf("closing level %u array"	, nestLevel); --nestLevel; document.Object[elementIndexCurrent].Span.End = iDocChar + 1; elementIndexCurrent = currentElement.ParentIndex; continue;	// Need to report that a list has been exited
 		default		: 
@@ -57,7 +58,7 @@
 				break;
 			default		:	// parse text 
 				{
-					::nwol::SSpan<uint32_t>														keywordSpan											= {iDocChar, iDocChar};
+					::nwol::SSlice<uint32_t>													keywordSpan											= {iDocChar, iDocChar};
 					bool																		insideQuotes										= false;
 					while(keywordSpan.End < jsonLength) {
 						if( jsonAsString[keywordSpan.End] == '"' )
