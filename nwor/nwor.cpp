@@ -70,11 +70,11 @@ void																renderThread							(void* pStateRuntime)																				
 	MSG																		windowMessage							= {};
 	HWND																	mainWindow								= runtimeState.RuntimeValues.Screen.PlatformDetail.hWnd;
 	while(executionState & RUNTIME_FLAG_RUNNING) {
-		while(::PeekMessage(&windowMessage, mainWindow, 0, 0, PM_REMOVE)) {
+		if(::PeekMessage(&windowMessage, mainWindow, 0, 0, PM_REMOVE)) {
 			::TranslateMessage( &windowMessage );
 			::DispatchMessage( &windowMessage );
 		}
-		while(::PeekMessage(&windowMessage, 0, 0, 0, PM_REMOVE)) {
+		if(::PeekMessage(&windowMessage, 0, 0, 0, PM_REMOVE)) {
 			::TranslateMessage( &windowMessage );
 			::DispatchMessage( &windowMessage );
 		}

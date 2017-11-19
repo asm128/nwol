@@ -43,7 +43,6 @@ namespace nwol
 		const int32_t														xstart					= ::nwol::max(0, nwol::min(targetWidth	, rect.Offset.x					));
 		const int32_t														ystop					= ::nwol::max(0, nwol::min(targetHeight	, rect.Offset.y + rect.Size.y	));
 		const int32_t														xstop					= ::nwol::max(0, nwol::min(targetWidth	, rect.Offset.x + rect.Size.x	));
-
 		const int32_t														ylastIndex				= rect.Offset.y + rect.Size.y - 1;
 		const int32_t														xlastIndex				= rect.Offset.x + rect.Size.x - 1;
 		if(in_range(rect.Offset.x	, 0, targetWidth	)) { for(int32_t y = rect.Offset.y, ycount = rect.Offset.y + rect.Size.y; y < ycount; ++y) { if(y >= ystop) break; else if(y >= ystart) { const int32_t linearIndex = y * targetWidth + rect.Offset.x	; target[linearIndex] = color; } } }

@@ -8,7 +8,7 @@
 #define NWOL_GREF_MANAGER_NCO_H_287346872
 
 #if defined(ERROR_PRINTF_ENABLED)	// otherwise error_printf() has no effect and these macros resolve into nothing. Removing them reduces warnings from the compiler because of the unused string array.
-static const char* __string_table_errors[2]= 
+static const char				* __string_table_errors		[2]			=
 										{	"Reference counter is zero! This is often because of a gptr_pod being cast to a GODS() type and then released with grelease(). As casting to a reference to GODS doesn't mean the pointer is being copied, the reference counter is not incremented."
 										,	"Failed to allocate! Out of memory?"
 										};		
@@ -21,7 +21,6 @@ static const char* __string_table_errors[2]=
 #endif
 
 #if defined(NWOL_DEBUG_ENABLED)
-
 #	define CHECKBUFFEROVERRUNINSTANCE()													\
 	if( pNextPage->isBufferOverrunInstance(pNextPage->getInstanceEntry(p0->Column)) ) {	\
 		ERROR_PRINTF_ALLOCID(p0);														\
@@ -59,8 +58,7 @@ namespace nwol
 	template<typename _tRef>	void							_nwol_internal_release					(_tRef** refToRelease);
 
 	template <typename _tRef, uint32_t _PageSizeInInstances> 
-	struct SReferencePage : public CMutex
-	{
+	struct SReferencePage : public CMutex {
 		typedef				typename _tRef::TBase				_tBase;
 	
 		struct SInstanceEntry {
@@ -71,9 +69,9 @@ namespace nwol
 
 		static constexpr	uint32_t							getPageBytes							()														{
 			return (uint32_t)
-				(	(sizeof(_tRef*)*_PageSizeInInstances+sizeof(_tRef)*_PageSizeInInstances)	// Stack of unused pointers and reference instance areas.
+				(	(sizeof(_tRef*) * _PageSizeInInstances + sizeof(_tRef) * _PageSizeInInstances)	// Stack of unused pointers and reference instance areas.
 				+	::nwol::get_type_size_padded<SInstanceEntry>(BASETYPE_ALIGN) * _PageSizeInInstances
-				+	BASETYPE_ALIGN*BASETYPE_ALIGN // this last one may be redundant as it may be considered already by the one_if() evaluation
+				+	BASETYPE_ALIGN * BASETYPE_ALIGN // this last one may be redundant as it may be considered already by the one_if() evaluation
 				);
 		}
 		static				bool								isBufferOverrunInstance					(const SInstanceEntry* p)								{																								
@@ -82,26 +80,23 @@ namespace nwol
 				error_printf("Memory was overwritten before the object data. Value: %u. Expected: %u.", (uint32_t)p->NWOL_DEBUG_CHECK_NAME_PRE, (uint32_t)BINFIBO);						
 				r													= true;																				
 			}																							
-
 			if (BINFIBO != p->NWOL_DEBUG_CHECK_NAME_POST) {																							
 				error_printf("Memory was overwritten after the object data. Value: %u. Expected: %u.", (uint32_t)p->NWOL_DEBUG_CHECK_NAME_POST, (uint32_t)BINFIBO);						
 				r													= true;																				
 			}
-
 			if( r ) 			{																							
 				//printInfoString(&p->ActualInstance);													
 				PLATFORM_CRT_BREAKPOINT(); 																		
 			}																							
 			return r;																					
 		}
-
 							::nwol::SReferenceGlobals			Globals									= {};
 							_tRef*								* lstUnusedInstances					= 0;
 							_tRef								* lstReferences							= 0;
 							char								* Instances								= 0;
 							uint32_t							UnusedInstances							= 0;
 							uint32_t							UsedItems								= 0;
-							char								PageBytes[getPageBytes()]				= {};
+							char								PageBytes			[getPageBytes()]	= {};
 #if defined(NWOL_DEBUG_ENABLED)
 		static constexpr	const uint32_t						ActualEntrySize							= sizeof(SInstanceEntry);
 		static constexpr	const uint32_t						ActualSizePadded						= ::nwol::get_type_size_padded<SInstanceEntry>(BASETYPE_ALIGN);
@@ -120,8 +115,7 @@ namespace nwol
 #endif
 		}
 
-																SReferencePage							(const ::nwol::SReferenceGlobals& globals )				: Globals(globals)
-		{
+																SReferencePage							(const ::nwol::SReferenceGlobals& globals )				: Globals(globals)		{
 #if defined(NWOL_DEBUG_ENABLED)
 			const ::nwol::glabel										& typeName								= _tRef::get_type_name();
 				
@@ -137,8 +131,8 @@ namespace nwol
 #endif
 			info_printf("Size of base type: %u. Entry size: %u. Size of entry padded to %u bytes: %u", (uint32_t)sizeof(_tBase), (uint32_t)ActualEntrySize, (uint32_t)BASETYPE_ALIGN, (uint32_t)ActualSizePadded);
 			lstUnusedInstances										= (_tRef**)&PageBytes[0];
-			lstReferences											= (_tRef*)&PageBytes[sizeof(_tRef*)*_PageSizeInInstances];
-			Instances												= &PageBytes[sizeof(_tRef*)*_PageSizeInInstances+sizeof(_tRef)*_PageSizeInInstances];
+			lstReferences											= (_tRef*)&PageBytes[sizeof(_tRef*) * _PageSizeInInstances];
+			Instances												= &PageBytes[sizeof(_tRef*) * _PageSizeInInstances + sizeof(_tRef) * _PageSizeInInstances];
 #if defined(NWOL_DEBUG_ENABLED)
 			Instances												= &Instances[sizeof(SInstanceEntry::NWOL_DEBUG_CHECK_NAME_PRE)];
 #else
@@ -228,7 +222,6 @@ namespace nwol
 		}
 
 	private:
-		//typedef				void											(*customDestructType)					(_tBase*);
 		static				const uint32_t									PageSizeInInstances						= ::nwol::get_page_size<_tBase>();
 
 							::nwol::array_pod<_TPage*>						lstReferencePages						= {};
@@ -334,9 +327,9 @@ namespace nwol
 		// Retrieves pages with full capacity, setting the capacity and unused count to 0 in order to prevent being used by another thread.
 							uint32_t										getFullCapacityPages					(_TPage** outPages, uint32_t nMaxCount)					{
 			ManagerLock.lock();
-			uint32_t																mainPageCount							= (uint32_t)lstReferencePages.size();	// We don't really need more than 0xFFFFFFFF pages. If you do, then your program is mismanaging memory.
+			uint32_t																mainPageCount							= lstReferencePages.size();	// We don't really need more than 0xFFFFFFFF pages. If you do, then your program is mismanaging memory.
 			uint32_t																iOutPage								= 0;
-			for( uint32_t iMainList=0; iOutPage < nMaxCount && iMainList < mainPageCount; iMainList++ ) {
+			for(uint32_t iMainList = 0; iOutPage < nMaxCount && iMainList < mainPageCount; ++iMainList) {
 				_TPage																	* pPage									= lstReferencePages[iMainList];
 				pPage->lock();
 				if(PageSizeInInstances == pPage->getAvailableInstanceCountNoLock()) {
@@ -354,7 +347,7 @@ namespace nwol
 						SETREFALLOCID(newRef);
 					}
 					// set up already existing unused instances 
-					for( uint32_t iRef=0; iRef < unusedCount; iRef++ ) {
+					for( uint32_t iRef = 0; iRef < unusedCount; ++iRef ) {
 						++(newRef = pPage->lstUnusedInstances[iRef])->ReferenceCount;
 						SETREFALLOCID(newRef);
 					}
@@ -371,9 +364,9 @@ namespace nwol
 							void											pushNewPages							(_TPage** lstPages, uint32_t pageCount)					{
 			// Insert new pages into main list so we can finish working with it outside the risky area
 			ManagerLock.lock();
-			uint32_t																pageOffset								= (uint32_t) lstReferencePages.size(); 
-			lstReferencePages.resize(pageOffset+pageCount);
-			for( uint32_t iMainList=pageOffset, iNewPage=0; iNewPage<pageCount; iMainList++, iNewPage++ )
+			uint32_t																pageOffset								= (uint32_t)lstReferencePages.size(); 
+			lstReferencePages.resize(pageOffset + pageCount);
+			for(uint32_t iMainList = pageOffset, iNewPage = 0; iNewPage<pageCount; ++iMainList, ++iNewPage)
 				(lstReferencePages[iMainList] = lstPages[iNewPage])->Globals.Row	= iMainList;
 			ManagerLock.unlock();
 		}
@@ -406,11 +399,11 @@ namespace nwol
 				createNewExhaustedPages( &lstPages.begin()[recycledPages], nFullPageCount-recycledPages);
 
 			// finish page initialization
-			for( uint32_t iNewPage=0; iNewPage<nFullPageCount; iNewPage++ ){
+			for(uint32_t iNewPage = 0; iNewPage<nFullPageCount; ++iNewPage){
 				_TPage																	* pPage									= lstPages.begin()[iNewPage];
-				uint32_t																refOffset								= iNewPage*PageSizeInInstances;
-				for( uint32_t iNewRef=0; iNewRef < PageSizeInInstances; iNewRef++ ) {
-					int32_t																	outIndex								= refOffset+iNewRef;
+				uint32_t																refOffset								= iNewPage * PageSizeInInstances;
+				for(uint32_t iNewRef = 0; iNewRef < PageSizeInInstances; ++iNewRef) {
+					int32_t																	outIndex								= refOffset + iNewRef;
 					_tRef*																	oldObject								= lstRef[outIndex];
 					lstRef[outIndex]													= &pPage->lstReferences[iNewRef];
 					::nwol::release(&oldObject);
@@ -425,7 +418,7 @@ namespace nwol
 				emptyQuickAlloc();
 			uint32_t																prevPos;
 			if( QuickAllocCount && 
-				QuickAllocView[(prevPos = QuickAllocCount-1)]->Instance <
+				QuickAllocView[(prevPos = QuickAllocCount - 1)]->Instance <
 				p1->Instance
 				)
 			{
@@ -448,7 +441,7 @@ namespace nwol
 							void											releaseReferenceListToPage				( _tRef** lstRef, uint32_t nReferenceCount)				{
 			ManagerLock.lock();
 			_TPage																	* pPage									= 0;
-			for( uint32_t iRef=0; iRef<nReferenceCount; iRef++ ) {
+			for( uint32_t iRef = 0; iRef < nReferenceCount; ++iRef ) {
 				_tRef																	* p0									= lstRef[iRef];
 				_TPage																	* pNextPage								= lstReferencePages[p0->Globals->Row];
 				if(0 == pNextPage) {
@@ -464,7 +457,7 @@ namespace nwol
 				}
 				uint32_t																prevPos;
 				if( pPage->UnusedInstances > 0 && 
-					pPage->lstUnusedInstances[prevPos = pPage->UnusedInstances-1]->Instance <
+					pPage->lstUnusedInstances[prevPos = pPage->UnusedInstances - 1]->Instance <
 					p0->Instance
 					)
 				{
@@ -480,7 +473,7 @@ namespace nwol
 		}
 
 							void											setRefAllocID							(_tRef* newRef)										{																									
-			newRef->AllocID														= nwol_sync_increment(Counters.CreatedRefs)-1;								
+			newRef->AllocID														= nwol_sync_increment(Counters.CreatedRefs) - 1;								
 #if defined(NWOL_DEBUG_ENABLED)
 			if (newRef->BreakAllocID != (INVALID_ALLOC_ID) && newRef->BreakAllocID == newRef->AllocID) {																								
 				warning_printf("Allocation break triggered.");												

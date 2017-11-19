@@ -103,38 +103,33 @@ void								drawText					(_tChar* target, int32_t targetWidth, int32_t targetHei
 	::nwol::SGUIControlTable				& controls					= GUISystem.Controls;
 	for(uint32_t iControl=0; iControl < controls.AreasASCII.size(); ++iControl) {
 		::nwol::SRectangle2D<int32_t>			& controlArea				= controls.AreasRealignedASCII[iControl];
-		::nwol::CONTROL_FLAG					& controlFlags				= controls.ControlFlags[iControl];
+		::nwol::CONTROL_STATE					& controlFlags				= controls.ControlFlags[iControl];
 		
 		// EXECUTE only lasts one tick.
-		if(::nwol::bit_true(controlFlags, ::nwol::CONTROL_FLAG_EXECUTE))
-			::nwol::bit_clear(controlFlags, ::nwol::CONTROL_FLAG_EXECUTE);
+		if( ::nwol::bit_true (controlFlags, ::nwol::CONTROL_STATE_EXECUTE))
+			::nwol::bit_clear(controlFlags, ::nwol::CONTROL_STATE_EXECUTE);
 
 		//--------------------
 		if( ::nwol::in_range(mouseX, controlArea.Offset.x, controlArea.Offset.x + controlArea.Size.x) 
 		 &&	::nwol::in_range(mouseY, controlArea.Offset.y, controlArea.Offset.y + controlArea.Size.y)
-		)
-		{
-			if(::nwol::bit_true(controlFlags, ::nwol::CONTROL_FLAG_MOUSE_OVER)) {
-				if(inputSystem.ButtonDown(0) && ::nwol::bit_false(controlFlags, ::nwol::CONTROL_FLAG_PRESSED)) 
-					::nwol::bit_set		(controlFlags, ::nwol::CONTROL_FLAG_PRESSED);
-				else if(inputSystem.ButtonUp(0) && ::nwol::bit_true(controlFlags, ::nwol::CONTROL_FLAG_PRESSED)) {
-					::nwol::bit_set		(controlFlags, ::nwol::CONTROL_FLAG_EXECUTE);
-					::nwol::bit_clear	(controlFlags, ::nwol::CONTROL_FLAG_PRESSED);
+		) {
+			if(::nwol::bit_true(controlFlags, ::nwol::CONTROL_STATE_MOUSE_OVER)) {
+				if(inputSystem.ButtonDown(0) && ::nwol::bit_false(controlFlags, ::nwol::CONTROL_STATE_PRESSED)) 
+					::nwol::bit_set		(controlFlags, ::nwol::CONTROL_STATE_PRESSED);
+				else if(inputSystem.ButtonUp(0) && ::nwol::bit_true(controlFlags, ::nwol::CONTROL_STATE_PRESSED)) {
+					::nwol::bit_set		(controlFlags, ::nwol::CONTROL_STATE_EXECUTE);
+					::nwol::bit_clear	(controlFlags, ::nwol::CONTROL_STATE_PRESSED);
 				}
 			}
-			else {
-				::nwol::bit_set		(controlFlags, ::nwol::CONTROL_FLAG_MOUSE_OVER);
-				::nwol::bit_set		(controlFlags, ::nwol::CONTROL_FLAG_COLOR_INVERT);
-			}
+			else 
+				::nwol::bit_set		(controlFlags, ::nwol::CONTROL_STATE_MOUSE_OVER);
 		}
 		else {
-			if(::nwol::bit_true(controlFlags, ::nwol::CONTROL_FLAG_MOUSE_OVER))
-				::nwol::bit_clear(controlFlags, ::nwol::CONTROL_FLAG_MOUSE_OVER);
+			if( ::nwol::bit_true (controlFlags, ::nwol::CONTROL_STATE_MOUSE_OVER))
+				::nwol::bit_clear(controlFlags, ::nwol::CONTROL_STATE_MOUSE_OVER);
 
-			if(inputSystem.ButtonUp(0) && ::nwol::bit_true(controlFlags, ::nwol::CONTROL_FLAG_PRESSED))
-				::nwol::bit_clear(controlFlags, ::nwol::CONTROL_FLAG_PRESSED);
-			else if(::nwol::bit_true(controlFlags, ::nwol::CONTROL_FLAG_COLOR_INVERT) && ::nwol::bit_false(controlFlags, ::nwol::CONTROL_FLAG_PRESSED))
-				::nwol::bit_clear(controlFlags, ::nwol::CONTROL_FLAG_COLOR_INVERT);
+			if(inputSystem.ButtonUp(0) && ::nwol::bit_true(controlFlags, ::nwol::CONTROL_STATE_PRESSED))
+				::nwol::bit_clear(controlFlags, ::nwol::CONTROL_STATE_PRESSED);
 		}
 	}
 	return 0;
@@ -149,12 +144,12 @@ int32_t								nwol::renderGUIASCII		(char* bbText, uint16_t* bbColor	, const ::
 	for(uint32_t iRect=0; iRect < controls.AreasASCII.size(); ++iRect) {
 		const ::nwol::SRectangle2D<int32_t>		& rectangle					= controls.AreasRealignedASCII	[iRect];
 		::nwol::SControlTextColorASCII			textColor					= controls.TextColorsASCII		[iRect];
-		if(::nwol::bit_true(controls.ControlFlags[iRect], ::nwol::CONTROL_FLAG_COLOR_INVERT)) {
-			uint8_t									color						= ::nwol::bit_true(controls.ControlFlags[iRect], ::nwol::CONTROL_FLAG_PRESSED) ? textColor.ColorPressed.Background : textColor.Color.Background;
-			textColor.Color.Background			= ::nwol::bit_true(controls.ControlFlags[iRect], ::nwol::CONTROL_FLAG_PRESSED) ? textColor.ColorPressed.Foreground : textColor.Color.Foreground;
+		if(::nwol::bit_true(controls.ControlFlags[iRect], ::nwol::CONTROL_STATE_MOUSE_OVER)) {
+			uint8_t									color						= ::nwol::bit_true(controls.ControlFlags[iRect], ::nwol::CONTROL_STATE_PRESSED) ? textColor.ColorPressed.Background : textColor.Color.Background;
+			textColor.Color.Background			= ::nwol::bit_true(controls.ControlFlags[iRect], ::nwol::CONTROL_STATE_PRESSED) ? textColor.ColorPressed.Foreground : textColor.Color.Foreground;
 			textColor.Color.Foreground			= color;
 		}
-		fillRectangle(bbColor, maxSize.x, maxSize.y, (uint16_t)textColor, rectangle);
+		::nwol::fillRectangle(bbColor, maxSize.x, maxSize.y, (uint16_t)textColor, rectangle);
 	}
 
 	// Draw text
@@ -163,8 +158,7 @@ int32_t								nwol::renderGUIASCII		(char* bbText, uint16_t* bbColor	, const ::
 		const ::nwol::SRectangle2D<int32_t>		& rectangle					= controls.AreasRealignedASCII	[iRect];
 		const ::nwol::ALIGN_SCREEN				alignControl				= controls.AlignArea			[iRect];
 		const ::nwol::ALIGN_SCREEN				alignText					= controls.AlignText			[iRect];
-
-		drawText(bbText, maxSize.x, maxSize.y, label.c_str(), label.size(), rectangle, alignText, false);
+		::drawText(bbText, maxSize.x, maxSize.y, label.c_str(), label.size(), rectangle, alignText, false);
 	}
 
 	// Draw mouse cursor

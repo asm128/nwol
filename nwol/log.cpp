@@ -69,13 +69,14 @@ void										nwol::_nwol_print_system_errors					(const char* prefix)							{
 		_nwol_internal_info_printf("\n", 1);
 	}
 #if defined(__WINDOWS__)
-	DWORD											lastWindowsError								= GetLastError();
+	DWORD											lastWindowsError								= ::GetLastError();
 	if(lastWindowsError) {
 		_nwol_internal_info_printf(prefix, _sizePrefix-1);
 		size_t											stringLength									= ::sprintf_s(resultString, "Last Windows error: 0x%X '%s'", lastWindowsError, ::nwol::getWindowsErrorAsString(lastWindowsError).c_str());
 		(void)stringLength;
 		_nwol_internal_info_printf(resultString, stringLength);
 		_nwol_internal_info_printf("\n", 1);
+		::SetLastError(0);
 	}
 #endif
 

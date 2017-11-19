@@ -64,25 +64,25 @@ static ::nwol::error_t										d3dCreateDevice							(::nwol::SD3D11& d3dToInit
 	return 0;
 }
 
-::nwol::error_t												nwol::d2dInitializeFactories			(::nwol::SDX11& instanceToInitialize)															{ 
+::nwol::error_t												nwol::d2dCreateFactories				(::nwol::SDX11& instanceToInitialize)															{ 
 	::D2D1_FACTORY_OPTIONS											options									= {};
 #if defined(_DEBUG)
 	options.debugLevel											= ::D2D1_DEBUG_LEVEL_INFORMATION;	// If the project is in a debug build, enable Direct2D debugging via SDK Layers.
 #endif
-	nwol_hrcall(::D2D1CreateFactory		(::D2D1_FACTORY_TYPE_SINGLE_THREADED	, __uuidof(::ID2D1Factory2		), &options, (void**)&instanceToInitialize.D2D.Factory)			);
-	nwol_hrcall(::DWriteCreateFactory	(::DWRITE_FACTORY_TYPE_SHARED			, __uuidof(::IDWriteFactory2	), (::IUnknown**)&instanceToInitialize.DWrite.DWriteFactory)	);
+	nwol_hrcall(::D2D1CreateFactory		(::D2D1_FACTORY_TYPE_MULTI_THREADED	, __uuidof(::ID2D1Factory2		), &options, (void**)&instanceToInitialize.D2D.Factory)			);
+	nwol_hrcall(::DWriteCreateFactory	(::DWRITE_FACTORY_TYPE_SHARED		, __uuidof(::IDWriteFactory2	), (::IUnknown**)&instanceToInitialize.DWrite.DWriteFactory)	);
 	return 0; 
 }
 
-::nwol::error_t												nwol::dxInitializeDevices				(::nwol::SDX11& instanceToInitialize)															{ 
+::nwol::error_t												nwol::dxCreateDevices					(::nwol::SDX11& instanceToInitialize)															{ 
 	nwol_necall(::d3dCreateDevice			(instanceToInitialize.D3D), "Unknown reason.");
 	nwol_necall(::d2dCreateDeviceAndContext	(instanceToInitialize.D3D, instanceToInitialize.D2D), "Unknown reason.");
 	return 0; 
 }
 
 ::nwol::error_t												nwol::graphicsInitialize				(::nwol::SGraphics& instanceToInitialize)														{
-	nwol_necall(::nwol::d2dInitializeFactories	(instanceToInitialize.PlatformDetail), "Unknown reason");
-	nwol_necall(::nwol::dxInitializeDevices		(instanceToInitialize.PlatformDetail), "Unknown reason");
+	nwol_necall(::nwol::d2dCreateFactories	(instanceToInitialize.PlatformDetail), "Unknown reason");
+	nwol_necall(::nwol::dxCreateDevices		(instanceToInitialize.PlatformDetail), "Unknown reason");
 	return 0;
 }
 
@@ -103,14 +103,12 @@ static ::nwol::error_t										d3dCreateDevice							(::nwol::SD3D11& d3dToInit
 	::nwol::SD2D11													& d2d									= instanceGraphics.PlatformDetail.D2D;
 	if (currentSize.x != d3d.WindowBounds.Size.x 
 	 || currentSize.y != d3d.WindowBounds.Size.y
-	 )
-	{
+	 ) {
 		d2d.Context->SetTarget(nullptr);
 		d2d.TargetBitmap											= {};
 		swapChain.PlatformDetail.RenderTargetView					= {};
 		swapChain.PlatformDetail.DepthStencilView					= {};
-		d3d.WindowSizeChangeInProgress								= true;
-		nwol_necall(::createWindowSizeDependentResources(instanceGraphics), "Unknown error.");
+		d3d.CreateWindowSizeDependentResources						= true;
 		d3d.WindowBounds.Size										= currentSize.Cast<float>();
 	}
 	return 0;
@@ -136,7 +134,7 @@ static ::nwol::error_t										d3dCreateDevice							(::nwol::SD3D11& d3dToInit
 		for(uint32_t iAttachedDisplay = 0; iAttachedDisplay < d3d.AttachedDisplays.size(); ++iAttachedDisplay)
 			d3d.AttachedDisplays[iAttachedDisplay]->PlatformDetail.SwapChain	= {};
 	}
-	nwol_necall(::nwol::dxInitializeDevices(instanceGraphics.PlatformDetail), "Failed to create DirectX device.");
+	nwol_necall(::nwol::dxCreateDevices(instanceGraphics.PlatformDetail), "Failed to create DirectX device.");
 	for(uint32_t iAttachedDisplay = 0; iAttachedDisplay < d3d.AttachedDisplays.size(); ++iAttachedDisplay)
 		::setDpi(instanceGraphics, *d3d.AttachedDisplays[iAttachedDisplay], {}, dpi);
 	return 0;
@@ -150,22 +148,22 @@ static ::nwol::error_t										d3dCreateDevice							(::nwol::SD3D11& d3dToInit
 		nwol_hrcall(hr);
 	}
 	else { // Otherwise, create a new one using the same adapter as the existing Direct3D device.
-	    ::DXGI_SWAP_CHAIN_DESC1											swapChainDesc							= {0};
-	    swapChainDesc.Width											= 0;								// Use automatic sizing.
-	    swapChainDesc.Height										= 0;
-	    swapChainDesc.Format										= ::DXGI_FORMAT_B8G8R8A8_UNORM;		// This is the most common swap chain format.
-	    swapChainDesc.Stereo										= false;
-	    swapChainDesc.SampleDesc.Count								= 1;								// Don't use multi-sampling.
-	    swapChainDesc.SampleDesc.Quality							= 0;
-	    swapChainDesc.BufferUsage									= DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	    swapChainDesc.BufferCount									= 2;								// Use double-buffering to minimize latency.
-	    swapChainDesc.Scaling										= ::DXGI_SCALING_NONE;
-	    swapChainDesc.SwapEffect									= ::DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;	// All Windows Store apps must use this SwapEffect.
-	    swapChainDesc.Flags											= 0;
+		::DXGI_SWAP_CHAIN_DESC1											swapChainDesc							= {0};
+		swapChainDesc.Width											= 0;								// Use automatic sizing.
+		swapChainDesc.Height										= 0;
+		swapChainDesc.Format										= ::DXGI_FORMAT_B8G8R8A8_UNORM;		// This is the most common swap chain format.
+		swapChainDesc.Stereo										= false;
+		swapChainDesc.SampleDesc.Count								= 1;								// Don't use multi-sampling.
+		swapChainDesc.SampleDesc.Quality							= 0;
+		swapChainDesc.BufferUsage									= DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		swapChainDesc.BufferCount									= 2;								// Use double-buffering to minimize latency.
+		swapChainDesc.Scaling										= ::DXGI_SCALING_NONE;
+		swapChainDesc.SwapEffect									= ::DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;	// All Windows Store apps must use this SwapEffect.
+		swapChainDesc.Flags											= 0;
 
-	    ::nwol::com_ptr<::IDXGIDevice1>									dxgiDevice;
-	    ::nwol::com_ptr<::IDXGIAdapter>									dxgiAdapter;
-	    ::nwol::com_ptr<::IDXGIFactory2>								dxgiFactory;
+		::nwol::com_ptr<::IDXGIDevice1>									dxgiDevice;
+		::nwol::com_ptr<::IDXGIAdapter>									dxgiAdapter;
+		::nwol::com_ptr<::IDXGIFactory2>								dxgiFactory;
 		nwol_necall(d3d.Device.as(&dxgiDevice), "Failed to acquire COM interface!");
 		nwol_hrcall(dxgiDevice->GetAdapter(&dxgiAdapter));
 		nwol_hrcall(dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory)));
@@ -185,7 +183,7 @@ static ::nwol::error_t										d3dCreateDevice							(::nwol::SD3D11& d3dToInit
 	// --- Cache the render target dimensions in our helper class for convenient use.
 	::D3D11_TEXTURE2D_DESC											backBufferDesc							= {0};
 	backBuffer->GetDesc(&backBufferDesc);
-	d3d.RenderTargetSize										= {backBufferDesc.Width, backBufferDesc.Height};
+	swapChain.RenderTargetSize									= {backBufferDesc.Width, backBufferDesc.Height};
 
 	// --- Create a depth stencil view for use with 3D rendering if needed.
 	::CD3D11_TEXTURE2D_DESC											depthStencilDesc						(::DXGI_FORMAT_D24_UNORM_S8_UINT, backBufferDesc.Width, backBufferDesc.Height, 1, 1, ::D3D11_BIND_DEPTH_STENCIL);

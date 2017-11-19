@@ -68,12 +68,12 @@ namespace nwol
 								::nwol::com_ptr<IDirectInput8		>		DirectInputContext						= {};	
 								::nwol::com_ptr<IDirectInputDevice8	>		DirectInputKeyboard						= {};	// For now we just support the basics and further we should move to xinput or similar.
 								::nwol::com_ptr<IDirectInputDevice8	>		DirectInputMouse						= {};	
-								::nwol::array_pod<::nwol::SDisplay>			WindowList								= {};
+								::nwol::array_pod<::nwol::SDisplay*>		AttachedDisplays						= {};
 	#else
 								void										(*handleAppInput)						()															= nullptr;
 	#endif
 
-																			~SDisplayInputDetail							()															{ 
+																			~SDisplayInputDetail					()															{ 
 	#if defined(__WINDOWS__)
 				::HRESULT															hr;
 				if(DirectInputMouse		&& gbit_true(DeviceFlagsMouse	, WINDOWS_INPUT_STATE_FLAG_Acquired)) info_if(FAILED(hr = DirectInputMouse		->Unacquire()), "Failed to unacquire device. This is normal when the device was lost before this. " "0x%X '%s'", hr, ::nwol::getWindowsErrorAsString(hr).c_str());

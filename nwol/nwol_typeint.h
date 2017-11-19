@@ -56,15 +56,13 @@ namespace nwol
 #elif defined (__WINDOWS__)
 #	if defined(_WIN64) || defined(WIN64)
 #		define REFCOUNT_T __int64
-	typedef volatile REFCOUNT_T			refcount_t;
 #	else
 #		define REFCOUNT_T long
-	typedef volatile long				refcount_t;
 #	endif
+	typedef volatile REFCOUNT_T			refcount_t;
 #else
-#	include <atomic>
-#	define REFCOUNT_T size_t
-	typedef std::atomic<size_t>			refcount_t;
+#	define REFCOUNT_T long
+	typedef REFCOUNT_T					refcount_t;
 #endif
 	typedef const char*					cue_t;	// Special thanks to Kragen Javier Sitaker for this cue_t idea.
 	typedef ::uint64_t					uid_t;

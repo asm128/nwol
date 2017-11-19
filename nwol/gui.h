@@ -11,19 +11,28 @@
 namespace nwol
 {
 #pragma pack (push, 1)
-	GDEFINE_ENUM_TYPE(CONTROL_FLAG, uint16_t);
-	GDEFINE_ENUM_VALUE(CONTROL_FLAG, NONE				, 0x000	);
-	GDEFINE_ENUM_VALUE(CONTROL_FLAG, WORD_WRAP			, 0x001	);
-	GDEFINE_ENUM_VALUE(CONTROL_FLAG, COLOR_INVERT		, 0x002	);
-	GDEFINE_ENUM_VALUE(CONTROL_FLAG, CLICKABLE			, 0x004	);
-	GDEFINE_ENUM_VALUE(CONTROL_FLAG, DISABLED			, 0x008	);
-	GDEFINE_ENUM_VALUE(CONTROL_FLAG, MOUSE_OVER			, 0x010	);
-	GDEFINE_ENUM_VALUE(CONTROL_FLAG, HIDDEN				, 0x020	);
-	GDEFINE_ENUM_VALUE(CONTROL_FLAG, ON_MOUSEOVER_INVERT, 0x040	);
-	GDEFINE_ENUM_VALUE(CONTROL_FLAG, OCCLUDED			, 0x080	);
-	GDEFINE_ENUM_VALUE(CONTROL_FLAG, EXECUTE			, 0x100	);
-	GDEFINE_ENUM_VALUE(CONTROL_FLAG, PRESSED			, 0x200	);
+	GDEFINE_ENUM_TYPE(TEXT_RENDER_MODE, uint8_t);
+	GDEFINE_ENUM_VALUE(TEXT_RENDER_MODE, NONE		, 0x000);
+	GDEFINE_ENUM_VALUE(TEXT_RENDER_MODE, WORD_WRAP	, 0x001);
+	GDEFINE_ENUM_VALUE(TEXT_RENDER_MODE, BOLD		, 0x002);
+	GDEFINE_ENUM_VALUE(TEXT_RENDER_MODE, ITALIC		, 0x004);
+	GDEFINE_ENUM_VALUE(TEXT_RENDER_MODE, UNDERLINE	, 0x008);
+	GDEFINE_ENUM_VALUE(TEXT_RENDER_MODE, STRIKE		, 0x010);
+	GDEFINE_ENUM_VALUE(TEXT_RENDER_MODE, ALIGN		, 0x020);
+	GDEFINE_ENUM_VALUE(TEXT_RENDER_MODE, DOCK		, 0x040);
 
+	GDEFINE_ENUM_TYPE(CONTROL_STATE, uint16_t);
+	GDEFINE_ENUM_VALUE(CONTROL_STATE, NONE					, 0x000	);
+	GDEFINE_ENUM_VALUE(CONTROL_STATE, DISABLED				, 0x001	);
+	GDEFINE_ENUM_VALUE(CONTROL_STATE, MOUSE_OVER			, 0x002	);
+	GDEFINE_ENUM_VALUE(CONTROL_STATE, HIDDEN				, 0x004	);
+	GDEFINE_ENUM_VALUE(CONTROL_STATE, OCCLUDED				, 0x008	);
+	GDEFINE_ENUM_VALUE(CONTROL_STATE, EXECUTE				, 0x010	);
+	GDEFINE_ENUM_VALUE(CONTROL_STATE, PRESSED				, 0x020	);
+
+	GDEFINE_ENUM_TYPE(CONTROL_MODE, uint8_t	);
+	GDEFINE_ENUM_VALUE(CONTROL_MODE, LABEL					, 0x000	);
+	GDEFINE_ENUM_VALUE(CONTROL_MODE, BUTTON					, 0x001	);
 	//--------------------------------------------------------- PODs
 	struct SControlTextColorASCII	{
 					::nwol::STextColorASCII										Color							;
@@ -37,33 +46,40 @@ namespace nwol
 					uint32_t													Background						;
 	};
 
-	//--------------------------------------------------------- Objects
-	struct SGUIControl				{				
+	struct SGUIControlText				{				
 					::nwol::glabel												Text							; //= {"GUI Control", 0xFF}											;
-					::nwol::SRectangle2D<int32_t>								AreaASCII						; //= {{1, 1}, {11, 1}}												;
-					::nwol::SRectangle2D<int32_t>								AreaBitmap						; //= {{1, 1}, {11, 1}}												;
+					::nwol::TEXT_RENDER_MODE									RenderModes						;
 					::nwol::STextColor32										TextColors32					; //= {0xFFFFFFFFL, 0xFF000000L}									;
 					::nwol::SControlTextColorASCII								TextColorsASCII					; //= {{COLOR_BLUE, COLOR_DARKGREY}, {COLOR_YELLOW, COLOR_BLUE}}	;
-					::nwol::ALIGN_SCREEN										AlignArea						; //= ::nwol::SCREEN_BOTTOM_RIGHT									;
 					::nwol::ALIGN_SCREEN										AlignText						; //= ::nwol::SCREEN_TOP_LEFT										;
-					::nwol::CONTROL_FLAG										ControlFlags					; //= ::nwol::CONTROL_FLAG_NONE										;
+	};
+	//--------------------------------------------------------- Objects
+	struct SGUIControl				{				
+					::nwol::SRectangle2D<int32_t>								AreaASCII						; //= {{1, 1}, {11, 1}}												;
+					::nwol::SRectangle2D<int32_t>								AreaBitmap						; //= {{1, 1}, {11, 1}}												;
+					::nwol::ALIGN_SCREEN										AlignArea						; //= ::nwol::SCREEN_BOTTOM_RIGHT									;
+					::nwol::glabel												Text							; //= {"GUI Control", 0xFF}											;
+					::nwol::STextColor32										TextColors32					; //= {0xFFFFFFFFL, 0xFF000000L}									;
+					::nwol::SControlTextColorASCII								TextColorsASCII					; //= {{COLOR_BLUE, COLOR_DARKGREY}, {COLOR_YELLOW, COLOR_BLUE}}	;
+					::nwol::ALIGN_SCREEN										AlignText						; //= ::nwol::SCREEN_TOP_LEFT										;
+					::nwol::CONTROL_STATE										ControlFlags					; //= ::nwol::CONTROL_STATE_NONE										;
 
 																				SGUIControl			
 		( const ::nwol::glabel					& text				= {"GUI Control", 0xFF}
 		, const ::nwol::SRectangle2D<int32_t>	& areaASCII			= {{1, 1}, {11, 1}}	
-		, const ::nwol::SRectangle2D<int32_t>	& areaBitmap		= {{1, 1}, {11, 1}}	
+		, const ::nwol::SRectangle2D<int32_t>	& areaBitmap		= {{1, 1}, {100, 50}}	
 		, const ::nwol::STextColor32			& textColors32		= {0xFFFFFFFFL, 0xFF000000L}
 		, const ::nwol::SControlTextColorASCII	& textColorsASCII	= {{COLOR_BLUE, COLOR_DARKGREY}, {COLOR_YELLOW, COLOR_BLUE}}	
 		, const ::nwol::ALIGN_SCREEN			& alignArea			= ::nwol::SCREEN_BOTTOM_RIGHT
 		, const ::nwol::ALIGN_SCREEN			& alignText			= ::nwol::SCREEN_TOP_LEFT	
-		, const ::nwol::CONTROL_FLAG			& controlFlags		= ::nwol::CONTROL_FLAG_NONE	
+		, const ::nwol::CONTROL_STATE			& controlFlags		= ::nwol::CONTROL_STATE_NONE	
 		) 
-			:	Text			(text				)
-			,	AreaASCII		(areaASCII			)
+			:	AreaASCII		(areaASCII			)
 			,	AreaBitmap		(areaBitmap			)
 			,	TextColors32	(textColors32		)
 			,	TextColorsASCII	(textColorsASCII	)	
 			,	AlignArea		(alignArea			)
+			,	Text			(text				)
 			,	AlignText		(alignText			)
 			,	ControlFlags	(controlFlags		)
 		{}
@@ -78,7 +94,7 @@ namespace nwol
 					::nwol::array_pod<::nwol::ALIGN_SCREEN				>		AlignText						= {};
 					::nwol::array_pod<::nwol::SControlTextColorASCII	>		TextColorsASCII					= {};
 					::nwol::array_pod<::nwol::STextColor32				>		TextColors32					= {};
-					::nwol::array_pod<::nwol::CONTROL_FLAG				>		ControlFlags					= {};
+					::nwol::array_pod<::nwol::CONTROL_STATE				>		ControlFlags					= {};
 					::nwol::array_obj<::nwol::glabel					>		Text							= {};
 					// -------------
 					void														Clear							()						{

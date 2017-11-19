@@ -19,25 +19,25 @@ namespace nwol
 		,	JSON_TYPE_INVALID		= -1
 		};
 
-	struct SJSONObject {
+	struct SJSONType {
 						int32_t												ParentIndex;
 						JSON_TYPE											Type;
 						::nwol::SSlice<uint32_t>							Span;
 	};
 
 	struct SJSONNode {
-						SJSONObject											* Object;
+						SJSONType											* Object;
 						SJSONNode											* Parent;
 						::nwol::array_obj<::nwol::ptr_obj<SJSONNode>>		Children;
 						int32_t												ObjectIndex;
 	};
 
 	struct SJSONDocument {
-						::nwol::array_obj<::nwol::SJSONObject>				Object;
+						::nwol::array_obj<::nwol::SJSONType>				Object;
 	};
 
 					::nwol::error_t										jsonParse							(::nwol::SJSONDocument& document, ::nwol::SJSONNode& jsonTree, const char* jsonAsString, uint32_t jsonLength);
-	static inline	::nwol::error_t										jsonParse							(::nwol::SJSONDocument& document, ::nwol::SJSONNode& jsonTree, const ::nwol::view_const_string& jsonAsString)			{ return ::nwol::jsonParse(document, jsonTree, jsonAsString.begin(), jsonAsString.size());			}
+	static inline	::nwol::error_t										jsonParse							(::nwol::SJSONDocument& document, ::nwol::SJSONNode& jsonTree, const ::nwol::view_const_string& jsonAsString)			{ return ::nwol::jsonParse(document, jsonTree, jsonAsString.begin(), jsonAsString.size());				}
 	static inline	::nwol::error_t										jsonParse							(::nwol::SJSONDocument& document, ::nwol::SJSONNode& jsonTree, const ::std::string& jsonAsString)						{ return ::nwol::jsonParse(document, jsonTree, jsonAsString.data (), (uint32_t)jsonAsString.size());	}
 #pragma pack(pop)
 }

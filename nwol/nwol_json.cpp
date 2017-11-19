@@ -22,7 +22,7 @@
 }
 
 						::nwol::error_t									nwol::jsonParse										(::nwol::SJSONDocument& document, ::nwol::SJSONNode& jsonTree, const char* jsonAsString, uint32_t jsonLength)	{
-	::nwol::SJSONObject															currentElement										= {};
+	::nwol::SJSONType															currentElement										= {};
 	currentElement.ParentIndex												= -1;
 	currentElement.Span														= {0, jsonLength};
 	currentElement.Type														= ::nwol::JSON_TYPE_UNKNOWN;
@@ -42,8 +42,7 @@
 		case '}'	: info_printf("closing level %u object"	, nestLevel); --nestLevel; document.Object[elementIndexCurrent].Span.End = iDocChar + 1; elementIndexCurrent = currentElement.ParentIndex; continue;	// Need to report that a block has been exited
 		case ']'	: info_printf("closing level %u array"	, nestLevel); --nestLevel; document.Object[elementIndexCurrent].Span.End = iDocChar + 1; elementIndexCurrent = currentElement.ParentIndex; continue;	// Need to report that a list has been exited
 		default		: 
-			// --- We may have a word... or a number.
-			switch(jsonAsString[iDocChar]) {
+			switch(jsonAsString[iDocChar]) {	// --- We may have a word... or a number.
 			case '0'	:
 			case '1'	:
 			case '2'	:
@@ -86,7 +85,6 @@
 					break;
 				}
 			}
-
 			continue;
 		}
 	}

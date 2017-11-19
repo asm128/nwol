@@ -185,7 +185,6 @@
     <ClInclude Include="nwol_ascii_display.h" />
     <ClInclude Include="nwol_ascii_target.h" />
     <ClInclude Include="nwol_display_graphics.h" />
-    <ClInclude Include="nwol_graphics_private.h" />
     <ClInclude Include="nwol_json.h" />
     <ClInclude Include="nwol_member_registry.h" />
     <ClInclude Include="nwol_bool.h" />

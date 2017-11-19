@@ -238,9 +238,9 @@ int32_t											updateSelectorApp								(::SApplication& instanceApp, bool ex
 	::nwol::SInput										& inputSystem									= instanceApp.Input	; nwol_necall(::nwol::pollInput(inputSystem)			, "%s", "Failed to update input states.");
 	::nwol::SGUI										& guiSystem										= instanceApp.GUI	; nwol_necall(::nwol::updateGUI(guiSystem, inputSystem)	, "%s", "Failed to update gui states.");
 
-	::nwol::array_pod<::nwol::CONTROL_FLAG>				& controlFlags									= guiSystem.Controls.ControlFlags;
+	::nwol::array_pod<::nwol::CONTROL_STATE>			& controlFlags									= guiSystem.Controls.ControlFlags;
 	for(uint32_t iControl = 0, controlCount = controlFlags.size(); iControl < controlCount; ++iControl)
-		if(::nwol::bit_true(controlFlags[iControl], ::nwol::CONTROL_FLAG_EXECUTE)) {
+		if(::nwol::bit_true(controlFlags[iControl], ::nwol::CONTROL_STATE_EXECUTE)) {
 			info_printf("Execute %u.", iControl);
 			uint32_t											selectedModuleIndex								= UINT_MAX;
 			switch(iControl) {

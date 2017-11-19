@@ -53,7 +53,7 @@ namespace nwol
 		inline				::nwol::error_t						get_value								(const ::std::string& name, _tValue& value)				const			{ return get_value(name.c_str(), value); }
 							::nwol::error_t						get_value								(const char_t* name, _tValue& value)					const			{
 			for(uint32_t i=0, count = Names.size(); i<count; ++i)
-				if(0 == strcmp(name, Names[i].c_str())) {
+				if(0 == ::strcmp(name, Names[i].c_str())) {
 					value													= Values[i];
 					return 0;
 				}
@@ -87,7 +87,7 @@ namespace nwol
 				value													= Names[index];
 				return 0;
 			}
-			value													= UNDEFINED_ENUM_VALUE_STR;
+			value													= ::nwol::UNDEFINED_ENUM_VALUE_STR;
 			error_printf("Enumeration index out of range! Index: 0x%u.", index);
 			return -1;
 		}
@@ -97,7 +97,7 @@ namespace nwol
 			}
 			else {
 				error_printf("Enumeration index out of range! Index: 0x%u.", index);
-				return UNDEFINED_ENUM_VALUE_STR;
+				return ::nwol::UNDEFINED_ENUM_VALUE_STR;
 			}
 		}
 							::nwol::error_t						get_value_index							(const ::nwol::gsyslabel& name, int32_t& index)			const			{
@@ -141,7 +141,7 @@ namespace nwol
 					return 0;
 				}
 			error_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
-			name													= UNRESOLVED_ENUM_LABEL_STR;		
+			name													= ::nwol::UNRESOLVED_ENUM_LABEL_STR;		
 			return -1;
 		}
 							::nwol::gsyslabel					get_value_label							(const _tValue& value)									const			{
@@ -150,7 +150,7 @@ namespace nwol
 					return Names[i];
 
 			error_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
-			return UNRESOLVED_ENUM_LABEL_STR;
+			return ::nwol::UNRESOLVED_ENUM_LABEL_STR;
 		}
 							::nwol::error_t						add_value								(const _tValue& value, const ::nwol::gsyslabel& name)					{
 			for(uint32_t i=0, count = Values.size(); i<count; ++i)
@@ -201,10 +201,10 @@ namespace nwol
 } // namespace
 
 // Defines the enumeration type, the invalid value (-1) and the flag operators 
-#define GDEFINE_ENUM_TYPE(EnumName, IntType)																																										\
-	enum EnumName : IntType {};																																														\
+#define GDEFINE_ENUM_TYPE(EnumName, IntType)																																											\
+	enum EnumName : IntType {};																																															\
 	static						const ::nwol::gsyslabel		EnumName##_STR							= #EnumName;																										\
-	static constexpr			const EnumName				EnumName##_INVALID						= ::nwol::genum_definition<EnumName>::INVALID_VALUE;																	\
+	static constexpr			const EnumName				EnumName##_INVALID						= ::nwol::genum_definition<EnumName>::INVALID_VALUE;																\
 	static						const EnumName				__sei_##EnumName##_INVALID				= (EnumName)::nwol::genum_definition<EnumName>::init(EnumName##_STR);												\
 	static inline constexpr		EnumName					operator &								(EnumName  a, EnumName b)					noexcept	{ return (EnumName)		(a & (IntType)b);				}	\
 	static inline constexpr		EnumName					operator ~								(EnumName  a)								noexcept	{ return (EnumName)		(~(IntType)a);					}	\
@@ -212,13 +212,13 @@ namespace nwol
 	static inline				EnumName&					operator |=								(EnumName &a, EnumName b)					noexcept	{ return (EnumName&)	( ((IntType&)a) |= (IntType)b); }	\
 	static inline				EnumName&					operator &=								(EnumName &a, EnumName b)					noexcept	{ return (EnumName&)	( ((IntType&)a) &= (IntType)b); }	\
 	static inline				EnumName&					operator ^=								(EnumName &a, EnumName b)					noexcept	{ return (EnumName&)	( ((IntType&)a) ^= (IntType)b); }	\
-	static inline constexpr		EnumName					operator |								(EnumName  a, EnumName b)					noexcept	{ return (EnumName)		(a | (IntType)b);					}
+	static inline constexpr		EnumName					operator |								(EnumName  a, EnumName b)					noexcept	{ return (EnumName)		(a | (IntType)b);				}
 
-#define GDEFINE_ENUM_VALUE(EnumName, ValueName, EnumValue)																														\
+#define GDEFINE_ENUM_VALUE(EnumName, ValueName, EnumValue)																															\
 	static constexpr			const EnumName				EnumName##_##ValueName					= (EnumName)(EnumValue);														\
 	static						const EnumName				__sei_##EnumName##_##ValueName			= (EnumName)::nwol::genum_value<EnumName>((EnumName)(EnumValue), #ValueName)
 
-#define GDEFINE_ENUM_VALUE_NOPREFIX(EnumName, ValueName, EnumValue)																												\
+#define GDEFINE_ENUM_VALUE_NOPREFIX(EnumName, ValueName, EnumValue)																													\
 	static constexpr			const EnumName				ValueName								= (EnumName)(EnumValue);														\
 	static						const EnumName				__sei_##EnumName##_##ValueName			= (EnumName)::nwol::genum_value<EnumName>((EnumName)(EnumValue), #ValueName)
 

@@ -3,9 +3,9 @@
 #include "nwol_array.h"
 #include "nwol_ptr.h"
 #include "nwol_enum.h"
-#if defined(__WINDOWS__)
-#	include <Windows.h>
-#endif
+//#if defined(__WINDOWS__)
+//#	include <Windows.h>
+//#endif
 
 #ifndef NWOL_WINDOW_H_9782365897236
 #define NWOL_WINDOW_H_9782365897236
@@ -43,6 +43,7 @@ namespace nwol
 		bool												Resized						: 1;	
 		bool												Resizing					: 1;	
 		bool												Closed						: 1;	// By closed we mean closed and not hidden or minimized.
+		bool												Repaint						: 1;
 	};
 
 	GDEFINE_ENUM_TYPE(DISPLAY_EVENT, uint8_t);
@@ -74,8 +75,8 @@ namespace nwol
 	struct SDisplay;
 	typedef	int											(*displayEventCallback)		(SDisplay& instanceDisplay, DISPLAY_EVENT eventToHandle);
 	struct SDisplay {
-		::nwol::array_obj<displayEventCallback>				CallbackList				= {};
-		::nwol::array_obj<SDisplayEvent>					EventList					= {};
+		::nwol::array_obj<::nwol::displayEventCallback>		CallbackList				= {};
+		::nwol::array_obj<::nwol::SDisplayEvent>			EventList					= {};
 		::nwol::SDisplayState								State						= {};
 		::nwol::SRectangle2D<int16_t>						Metrics						= {{10, 10}, {320, 240}};
 		::nwol::SDisplayDetail								PlatformDetail				= {};
