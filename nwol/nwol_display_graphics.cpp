@@ -174,6 +174,7 @@ static ::nwol::error_t										d3dCreateDevice							(::nwol::SD3D11& d3dToInit
 			, &swapchainDetail.SwapChain
 			));
 		nwol_hrcall(dxgiDevice->SetMaximumFrameLatency(1));	// Ensure that DXGI does not queue more than one frame at a time. This both reduces latency and ensures that the application will only render after each VSync, minimizing power consumption.
+		d3d.Factory													= dxgiFactory;
 	}
 	// --- Create a Direct3D render target view of the swap chain back buffer.
 	::nwol::com_ptr<::ID3D11Texture2D>								backBuffer;

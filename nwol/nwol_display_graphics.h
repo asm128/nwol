@@ -50,6 +50,7 @@ namespace nwol
 #if defined(__WINDOWS__)
 	struct SD3D11 {
 		// --- DirectX core objects. Required for 2D and 3D.
+							::nwol::com_ptr<::IDXGIFactory2>					Factory											= {};
 							::nwol::com_ptr<::ID3D11Device2>					Device											= {};
 							::nwol::com_ptr<::ID3D11DeviceContext2>				Context											= {};
 							::nwol::array_obj<::nwol::ptr_obj<SSwapChain>>		AttachedDisplays								= {};

@@ -96,9 +96,9 @@ namespace gdnet {
 	static constexpr					const uint16_t				MAX_COMMAND_PAYLOAD_SIZE						= 504;
 #pragma pack(push, 1)
 	struct SCommandPacket {
-										SHeaderUserData				PacketInfo										;
-										uint8_t						Padding											;
-										byte_t						Payload		[MAX_COMMAND_PAYLOAD_SIZE]			;
+											SHeaderUserData				PacketInfo										;
+											uint8_t						Padding											;
+											byte_t						Payload		[MAX_COMMAND_PAYLOAD_SIZE]			;
 	};
 	NWOL_POD(::gdnet, SCommandPacket, "Network command packet", "Stores a command and related data from a given packet."
 		, ::nwol::GDATA_TYPE_UINT8
