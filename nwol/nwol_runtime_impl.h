@@ -42,11 +42,10 @@
 	return 0;																																							\
 }
 
-#define DEFINE_RUNTIME_INTERFACE_SETUP(_yourCustomClass)	::nwol::error_t	NWOL_STDCALL	::nwol_moduleSetup		(void* instanceApp)		noexcept		{ ree_if(instanceApp == 0, "%s", "Invalid pointer!"); return setup		(*(_yourCustomClass*)instanceApp); }
-#define DEFINE_RUNTIME_INTERFACE_CLEANUP(_yourCustomClass)	::nwol::error_t	NWOL_STDCALL	::nwol_moduleCleanup	(void* instanceApp)		noexcept		{ ree_if(instanceApp == 0, "%s", "Invalid pointer!"); return cleanup	(*(_yourCustomClass*)instanceApp); }
-#define DEFINE_RUNTIME_INTERFACE_RENDER(_yourCustomClass)	::nwol::error_t	NWOL_STDCALL	::nwol_moduleRender		(void* instanceApp)		noexcept		{ ree_if(instanceApp == 0, "%s", "Invalid pointer!"); return render		(*(_yourCustomClass*)instanceApp); }
-#define DEFINE_RUNTIME_INTERFACE_UPDATE(_yourCustomClass)																												\
-::nwol::error_t	NWOL_STDCALL			::nwol_moduleUpdate				(void* instanceApp, bool requestedExit)								noexcept		{			\
+#define DEFINE_RUNTIME_INTERFACE_SETUP(_yourCustomClass)	::nwol::error_t	NWOL_STDCALL	::nwol_moduleSetup		(void* instanceApp)						noexcept		{ ree_if(instanceApp == 0, "%s", "Invalid pointer!"); return setup		(*(_yourCustomClass*)instanceApp); }
+#define DEFINE_RUNTIME_INTERFACE_CLEANUP(_yourCustomClass)	::nwol::error_t	NWOL_STDCALL	::nwol_moduleCleanup	(void* instanceApp)						noexcept		{ ree_if(instanceApp == 0, "%s", "Invalid pointer!"); return cleanup	(*(_yourCustomClass*)instanceApp); }
+#define DEFINE_RUNTIME_INTERFACE_RENDER(_yourCustomClass)	::nwol::error_t	NWOL_STDCALL	::nwol_moduleRender		(void* instanceApp)						noexcept		{ ree_if(instanceApp == 0, "%s", "Invalid pointer!"); return render		(*(_yourCustomClass*)instanceApp); }
+#define DEFINE_RUNTIME_INTERFACE_UPDATE(_yourCustomClass)	::nwol::error_t	NWOL_STDCALL	::nwol_moduleUpdate		(void* instanceApp, bool requestedExit)	noexcept		{			\
 	ree_if(instanceApp == 0, "%s", "Invalid pointer!");																													\
 	_yourCustomClass							& customApp						= *(_yourCustomClass*)instanceApp;														\
 	::nwol::APPLICATION_STATE					result							= (::nwol::APPLICATION_STATE)update(customApp, requestedExit);							\
@@ -76,7 +75,7 @@
 // 
 /// ---------- File: runtime_interface.cpp --------------------------
 // #include "YourCustomAppHeader.h"	// <--- Your stuff from here
-// #include "runtime_impl.h"		// <--- Runtime definition here
+// #include "nwol_runtime_impl.h"		// <--- Runtime definition here
 // 
 // DEFINE_RUNTIME_INTERFACE_FUNCTIONS(YourCustomClass);	// <----- 
 // 

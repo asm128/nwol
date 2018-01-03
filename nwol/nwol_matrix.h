@@ -66,7 +66,7 @@ namespace nwol
 				};
 		}
 		constexpr			TMat2				GetInverse					()																				const				{
-			return
+			return TMat2
 				{	 _22	, -_12
 				,	-_21	,  _11
 				} 
@@ -443,9 +443,9 @@ namespace nwol
 		//	return *this;
 		} // FoV
 							void				LookAt						(const _TCoord3& vPosition, const _TCoord3& vTarget, const _TCoord3& vUp)							{
-			::nwol::_TCoord3							F							= (vTarget - vPosition)	.Normalize();
-			::nwol::_TCoord3							R							= vUp	.Cross(F)		.Normalize();
-			::nwol::_TCoord3							U							= F		.Cross(R)		.Normalize();
+			_TCoord3									F							= _TCoord3{vTarget - vPosition}.Normalize();
+			_TCoord3									R							= vUp	.Cross(F)		.Normalize();
+			_TCoord3									U							= F		.Cross(R)		.Normalize();
 
 			_11 = R.x;	_12 = U.x;	_13 = F.x;	_14 = (_tBase)0;
 			_21 = R.y;	_22 = U.y;	_23 = F.y;	_24 = (_tBase)0;

@@ -10,6 +10,11 @@ namespace nwol
 	{
 	public:
 		using			gbuffer<_tBase, _F, ::nwol::GUSAGE_TEXT>::		m_ArrayBuffer;
+		using			gbuffer<_tBase, _F, ::nwol::GUSAGE_TEXT>::		Data;
+		using			gbuffer<_tBase, _F, ::nwol::GUSAGE_TEXT>::		Count;
+
+		using			gbuffer<_tBase, _F, ::nwol::GUSAGE_TEXT>::		size;
+		using			gbuffer<_tBase, _F, ::nwol::GUSAGE_TEXT>::		set;
 
 		inline															gestring			()									= default;
 		inline															gestring			(const gestring& other)				: gbuffer<_tBase, _F, ::nwol::GUSAGE_TEXT>(other)		{}

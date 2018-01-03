@@ -75,9 +75,7 @@ namespace nwol
 	template<typename _tNCO>
 	class ptr_nco {
 	protected:
-#if defined(__WINDOWS__)
 							::nwol::nwol_ref<_tNCO>			* Instance							= 0;
-#endif
 	public:
 		typedef				::nwol::ptr_nco<_tNCO>			TNCOPtr;
 		typedef				::nwol::nwol_ref<_tNCO>			TRef;
@@ -117,6 +115,7 @@ namespace nwol
 		typedef				::nwol::ptr_nco<_tOBJ>			TNCOPtr;
 		typedef				::nwol::ptr_obj<_tOBJ>			TOBJPtr;
 		typedef				::nwol::nwol_ref<_tOBJ>			TRef;
+		using				TNCOPtr							::Instance;
 
 		inline				const _tOBJ*					operator->							()											const	noexcept	{ return Instance;																}
 		inline				_tOBJ*							operator->							()													noexcept	{ return (0 == Instance) ? ::nwol::ref_create(&Instance) : Instance->Instance;	}
@@ -132,6 +131,7 @@ namespace nwol
 		typedef				::nwol::ptr_nco<_tPOD>			TNCOPtr;
 		typedef				::nwol::ptr_pod<_tPOD>			TPODPtr;
 		typedef				::nwol::nwol_ref<_tPOD>			TRef;
+		using				TNCOPtr							::Instance;
 
 		inline				const _tPOD*					operator->							()											const	noexcept	{ return Instance->Instance;																}
 		inline				_tPOD*							operator->							()													noexcept	{ return (0 == Instance) ? ::nwol::ref_allocate(&Instance) : Instance->Instance;	}

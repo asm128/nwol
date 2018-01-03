@@ -137,7 +137,7 @@ namespace nwol
 	};
 
 	struct SRuntimeValues {	
-				SRuntimeValuesDetail											PlatformDetail						= {};
+				::nwol::SRuntimeValuesDetail									PlatformDetail						= {};
 				::nwol::view_const_string										CommandLine							= {};
 				::nwol::array_obj<::nwol::view_const_string>					CommandLineArguments				= {};
 				::nwol::view_const_string										FileNameApplication					= {};
@@ -148,7 +148,7 @@ namespace nwol
 				// Returns -1 on error or the index of the loaded module.
 				::nwol::error_t													ModuleLoad							(const char_t* moduleName)	{
 			for(uint32_t i=0; i<Modules.size(); ++i) 
-				if(0 == strcmp(Modules[i]->FilenameOriginal.c_str(), moduleName)) 
+				if(0 == ::strcmp(Modules[i]->FilenameOriginal.c_str(), moduleName)) 
 					return i; 
 
 			::nwol::ptr_obj<::nwol::SApplicationModule>									moduleInstance; 

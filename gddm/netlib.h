@@ -2,7 +2,6 @@
 #include "gref.h"
 #include "gref_ptr.h"
 
-
 #ifndef NETLIB_H__934892734698236498236498716091782
 #define NETLIB_H__934892734698236498236498716091782
 

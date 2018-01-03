@@ -505,7 +505,7 @@ namespace nwol
 
 	// returns the index or -1 if not found.
 	template <typename _tValue>
-	inline				int32_t						find										(const array_pod<_tValue>& valueContainer, const _tValue& valueToLookFor)				{
+	inline				int32_t						find										(const ::nwol::array_pod<_tValue>& valueContainer, const _tValue& valueToLookFor)		{
 		const _tValue										* begin										= valueContainer.begin();
 		for(uint32_t i = 0, maxCount = valueContainer.size(); i < maxCount; ++i, ++begin)
 			if(valueToLookFor == *begin)

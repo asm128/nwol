@@ -9,22 +9,22 @@
 namespace gdnet {
 	
 #pragma pack( push, 1 )
-	GDEFINE_ENUM_TYPE (NWON_COMMAND, uint8_t);
-	GDEFINE_ENUM_VALUE(NWON_COMMAND, NOP				, 0x00);
-	GDEFINE_ENUM_VALUE(NWON_COMMAND, PING				, 0x01);
-	GDEFINE_ENUM_VALUE(NWON_COMMAND, ECHO				, 0x02);
-	GDEFINE_ENUM_VALUE(NWON_COMMAND, PORT_LOCAL			, 0x03);
-	GDEFINE_ENUM_VALUE(NWON_COMMAND, PORT_REMOTE		, 0x04);
-	GDEFINE_ENUM_VALUE(NWON_COMMAND, TIME_GET			, 0x05);
-	GDEFINE_ENUM_VALUE(NWON_COMMAND, CONNECT			, 0x06);
-	GDEFINE_ENUM_VALUE(NWON_COMMAND, DISCONNECT			, 0x07);
-	GDEFINE_ENUM_VALUE(NWON_COMMAND, USER_DATA			, 0x08);
+	GDEFINE_ENUM_TYPE	(NWON_COMMAND, uint8_t);
+	GDEFINE_ENUM_VALUE	(NWON_COMMAND, NOP				, 0x00);
+	GDEFINE_ENUM_VALUE	(NWON_COMMAND, PING				, 0x01);
+	GDEFINE_ENUM_VALUE	(NWON_COMMAND, ECHO				, 0x02);
+	GDEFINE_ENUM_VALUE	(NWON_COMMAND, PORT_LOCAL		, 0x03);
+	GDEFINE_ENUM_VALUE	(NWON_COMMAND, PORT_REMOTE		, 0x04);
+	GDEFINE_ENUM_VALUE	(NWON_COMMAND, TIME_GET			, 0x05);
+	GDEFINE_ENUM_VALUE	(NWON_COMMAND, CONNECT			, 0x06);
+	GDEFINE_ENUM_VALUE	(NWON_COMMAND, DISCONNECT		, 0x07);
+	GDEFINE_ENUM_VALUE	(NWON_COMMAND, USER_DATA		, 0x08);
 
-	GDEFINE_ENUM_TYPE(NWON_COMMAND_TYPE, uint8_t);
-	GDEFINE_ENUM_VALUE(NWON_COMMAND_TYPE, UNKNOWN		, 0);
-	GDEFINE_ENUM_VALUE(NWON_COMMAND_TYPE, REQUEST		, 1);
-	GDEFINE_ENUM_VALUE(NWON_COMMAND_TYPE, ACKNOWLEDGE	, 2);
-	GDEFINE_ENUM_VALUE(NWON_COMMAND_TYPE, RESPONSE		, 3);
+	GDEFINE_ENUM_TYPE	(NWON_COMMAND_TYPE, uint8_t);
+	GDEFINE_ENUM_VALUE	(NWON_COMMAND_TYPE, UNKNOWN		, 0);
+	GDEFINE_ENUM_VALUE	(NWON_COMMAND_TYPE, REQUEST		, 1);
+	GDEFINE_ENUM_VALUE	(NWON_COMMAND_TYPE, ACKNOWLEDGE	, 2);
+	GDEFINE_ENUM_VALUE	(NWON_COMMAND_TYPE, RESPONSE	, 3);
 
 	struct SCommand {
 											NWON_COMMAND				Command											: 4;
@@ -37,7 +37,6 @@ namespace gdnet {
 											SCommand					Command		;
 											uint16_t					PayloadSize	;
 	};
-
 
 	struct SResponseConnect {
 											SCommand					Command		;
@@ -58,7 +57,6 @@ namespace gdnet {
 	struct SResponse	{ SCommand Command; inline constexpr		SResponse										(::gdnet::NWON_COMMAND command) : Command{command, 0, ::gdnet::NWON_COMMAND_TYPE_RESPONSE		} {} inline constexpr operator const SCommand& () { return Command; } };
 	struct SAcknowledge	{ SCommand Command; inline constexpr		SAcknowledge									(::gdnet::NWON_COMMAND command) : Command{command, 0, ::gdnet::NWON_COMMAND_TYPE_ACKNOWLEDGE	} {} inline constexpr operator const SCommand& () { return Command; } };
 
-
 	struct				SConnectionEndpoints	{
 											GPNCO(::gdnet, IEndpoint)	Local	;
 											GPNCO(::gdnet, IEndpoint)	Remote	;
@@ -69,18 +67,15 @@ namespace gdnet {
 											::gdnet::SIPv4				Remote	;
 	};
 
-
 	static inline						::nwol::error_t				connectionSend									(::gdnet::SConnectionEndpoints& connection, const byte_t* buffer, uint32_t bytesToSend, int32_t* bytesSent)										{ return endpointSend(connection.Local.get_address(), buffer, bytesToSend, bytesSent, connection.Remote.get_address()); }
 	static inline						::nwol::error_t				connectionDisconnect							(::gdnet::SConnectionEndpoints& connection)																										{ connection = {}; return 0; }
-	static inline						::nwol::error_t				connectionAddress								(::gdnet::SConnectionEndpoints& connection, SConnectionAddress& address)																			{
-		return errored(::gdnet::endpointAddress(connection.Local	, address.Local)) 
+	static inline						::nwol::error_t				connectionAddress								(::gdnet::SConnectionEndpoints& connection, SConnectionAddress& address)																		{
+		return errored(::gdnet::endpointAddress(connection.Local	, address.Local )) 
 			|| errored(::gdnet::endpointAddress(connection.Remote	, address.Remote))
 			? -1 : 0;
 	}
 
 	//static inline						::nwol::error_t				endpointReceive									(::gdnet::SConnectionEndpoints& connection, byte_t* buffer, uint32_t bufLen, int32_t* bytesReceived, RECEIVE_FLAG receiveFlag);
-
-
 										int32_t						commandSend										(::gdnet::SConnectionEndpoints& connection, const	SCommand& commandToSend		);
 										int32_t						commandReceive									(::gdnet::SConnectionEndpoints& connection,			SCommand& commandReceived	);
 										int32_t						commandPeek										(::gdnet::SConnectionEndpoints& connection,			SCommand& commandReceived	);

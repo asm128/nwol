@@ -18,6 +18,7 @@ struct SWindowsConsoleInfo {
 						::CONSOLE_SCREEN_BUFFER_INFOEX		InfoScreenBufferOriginal						= {sizeof(::CONSOLE_SCREEN_BUFFER_INFOEX)};
 						::CONSOLE_SCREEN_BUFFER_INFOEX		InfoScreenBufferCurrent							= {sizeof(::CONSOLE_SCREEN_BUFFER_INFOEX)};
 						bool								Created											= false;
+						bool								SystemOwned										= false;
 };
 
 static				::nwol::array_pod<uint8_t >			g_bufferClearCharacter							= {};
@@ -169,22 +170,27 @@ static constexpr	const ::nwol::SColorRGBA			g_DefaultPalette	[]							=
 
 					::nwol::error_t						nwol::asciiDisplayCreate						(uint32_t frontBufferWidth, uint32_t frontBufferHeight)													{
 #if defined(__WINDOWS__)
-	::AllocConsole();
-	::AttachConsole(::GetCurrentProcessId());
+	bool														createdConsole									= (FALSE == ::AllocConsole()) ? false : true;
+	if(createdConsole)
+		::AttachConsole(::GetCurrentProcessId());
+
 	::EnableMenuItem
 		( ::GetSystemMenu(::GetConsoleWindow(), FALSE)
 	    , SC_CLOSE
 	    , MF_BYCOMMAND | MF_GRAYED 
 		);
-	const HANDLE												hConsoleIn										= ::GetStdHandle(STD_INPUT_HANDLE);
-    DWORD														mode											= 0;
-    ::GetConsoleMode(hConsoleIn, &mode);
-    mode													&= ~(DWORD)ENABLE_QUICK_EDIT_MODE;
-    ::SetConsoleMode(hConsoleIn, mode);
 
-	FILE*												
-	stream													= 0;	::freopen_s(&stream, "CONOUT$", "w+", stdout);
-	stream													= 0;	::freopen_s(&stream, "CONIN$", "r+", stdin);
+	if(createdConsole) {
+		const HANDLE												hConsoleIn										= ::GetStdHandle(STD_INPUT_HANDLE);
+		DWORD														mode											= 0;
+		::GetConsoleMode(hConsoleIn, &mode);
+		mode													&= ~(DWORD)ENABLE_QUICK_EDIT_MODE;
+		::SetConsoleMode(hConsoleIn, mode);
+
+		FILE*												
+		stream													= 0; ::freopen_s(&stream, "CONOUT$", "w+", stdout);
+		stream													= 0; ::freopen_s(&stream, "CONIN$", "r+", stdin);
+	}
 
 	SetConsoleTitle("No Workflow Overhead Console");
 	::SetConsoleCtrlHandler(::handlerConsoleRoutine, TRUE);
@@ -207,6 +213,7 @@ static constexpr	const ::nwol::SColorRGBA			g_DefaultPalette	[]							=
 	csbiInfo.srWindow.Bottom								= 600;
 	::initWindowsConsoleProperties(frontBufferWidth, frontBufferHeight, g_DefaultPalette);
 	g_ConsoleInfo.Created									= true;
+	g_ConsoleInfo.SystemOwned								= createdConsole ? false : true;
 #elif defined(__ANDROID__)
 #else
 #	error "Not implemented."

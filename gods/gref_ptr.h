@@ -219,7 +219,10 @@ namespace nwol
 			InstanceRef												= CoreInstance;
 		}
 	public:
+		using					gptr_pod<_tRef>::				compare_data																											;
+
 								gptr_pod<_tRef>					m_History																												= {};	// history doesn't call update handlers.
+
 								void							(*onCreate)				(_tBase* instance)																				= 0;
 								void							(*onUpdate)				(_tBase* instance)																				= 0;
 								void							(*onFree)				(_tBase* instance)																				= 0;
