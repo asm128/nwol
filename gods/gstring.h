@@ -65,9 +65,7 @@ namespace nwol
 				GPNCO(::nwol, SBuffer)												newListBuffer;
 				uint32_t															newSize				= _ASize+_BSize+1;
 				ree_if(0 > ::nwol::createBuffer(_F, ::nwol::GUSAGE_TEXT, newSize, &newListBuffer), "Failed to create buffer for array! Out of memory? Element count requested: %u", (uint32_t)newSize);
-	
 				_tBase																* newBaseArray		= ((_tBase*)newListBuffer->pByteArray);
-
 				uint32_t															totalChars			= 0;
 				for( uint32_t i=0, nCount=_ASize; i<nCount && 0 != _A[i]; i++)
 					newBaseArray[totalChars++]										= _A[i];

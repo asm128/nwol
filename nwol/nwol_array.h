@@ -350,6 +350,7 @@ namespace nwol
 			other.Size										= other.Count									= 0;
 			other.Data										= 0;
 		}	// move ctor
+
 														array_obj									(const array_obj<_tObj>& other)															{
 			if(other.Count) {
 				uint32_t											newSize										= other.Count;
@@ -372,6 +373,7 @@ namespace nwol
 				}
 			}
 		}
+
 		inline				array_obj<_tObj>&			operator =									(const array_obj<_tObj>& other)															{
 			throw_if(resize(other.Count) != (int32_t)other.Count, "", "Failed to resize array!")
 			else {
@@ -380,11 +382,13 @@ namespace nwol
 			}
 			return *this;
 		}
+
 		inline				int32_t						clear										()																						{ 
 			for(uint32_t i = 0; i < Count; ++i)
 				Data[i].~_tObj();
 			return Count									= 0; 
 		}
+
 		// Returns the new size of the array
 		inline				int32_t						pop_back									(_tObj* oldValue)																		{ 
 			ree_if(0 == Count, "%s", "Cannot pop elements from an empty array."); 
@@ -393,6 +397,7 @@ namespace nwol
 			Data[Count].~_tObj();
 			return Count; 
 		}
+
 		// Returns the index of the pushed value or -1 on failure
 		inline				int32_t						push_back									(const _tObj& newValue)																	{ 
 			int32_t												indexExpected								= Count;
@@ -400,6 +405,7 @@ namespace nwol
 			ree_if(indexNew != indexExpected, "Failed to push value! Array size: %i.", indexExpected);
 			return indexNew;
 		}
+
 		// returns the new size of the list or -1 on failure.
 							int32_t						insert										(uint32_t index, const _tObj& newValue)													{ 
 			ree_if(index >= Count, "Invalid index: %u.", index);
@@ -435,6 +441,7 @@ namespace nwol
 			}			
 			return ++Count;
 		}
+
 		// Returns the new size of the array or -1 if failed.
 		template <typename... _tArgs>
 							int32_t						resize										(uint32_t newSize, _tArgs&&... constructorArgs)											{
@@ -470,6 +477,7 @@ namespace nwol
 
 			return (int32_t)Count;
 		}	
+
 		// Returns the new size of the list or -1 if the array pointer is not initialized.
 							int32_t						remove_unordered							(uint32_t index)																		{ 
 			ree_if(0 == Data, "Uninitialized array pointer!");
@@ -481,10 +489,31 @@ namespace nwol
 				new (&Data[index]) _tObj(Data[--Count]);	// Placement new
 				Data[Count].~_tObj();						// Destroy reordered
 			}
-
 			return Count;
 		}
+
 		//// returns the index or -1 if not found.
+		template<typename _tObj>
+		inline				int32_t						erase										(const _tObj* address)																	{ 
+			ree_if(0 == Data, "Uninitialized array pointer!");
+			const uint32_t										index										= (uint32_t)(ptrdiff_t(address) - (ptrdiff_t)Data);
+			ree_if(index >= Count, "Invalid index: %u.", index);
+			return remove(index); 
+		}
+
+		inline				int32_t						erase										(uint32_t index)																		{ return remove(index); }
+							int32_t						remove										(uint32_t index)																		{ 
+			ree_if(0 == Data, "Uninitialized array pointer!");
+			ree_if(index >= Count, "Invalid index: %u.", index);
+			--Count;
+			while(index < Count) {
+				Data[index].~_tObj();							// Destroy old
+				new (&Data[index]) _tObj(Data[index + 1]);		// Placement new
+				++index;
+			}
+			Data[index].~_tObj();							// Destroy last
+			return Count;
+		}
 		//inline				int32_t						find										(const _tObj& valueToLookFor)										const				{
 		//	for(uint32_t i=0; i<Count; ++i)
 		//		if(Data[i] == valueToLookFor)
