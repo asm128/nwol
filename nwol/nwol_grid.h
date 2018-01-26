@@ -13,27 +13,30 @@ namespace nwol
 
 	template<typename _tCell, size_t _sizeWidth, size_t _sizeDepth>
 	struct SGrid : public grid_view<_tCell> {
-							typedef										_tCell									TCell;
+		typedef				_tCell										TCell;
+		typedef				grid_view<_tCell>							TGridView;
+
+		using				TGridView									::grid_view;
 
 		static constexpr	const uint32_t								Width									= (uint32_t)_sizeWidth;
 		static constexpr	const uint32_t								Depth									= (uint32_t)_sizeDepth;
 
 							TCell										Cells[_sizeDepth][_sizeWidth]			= {};
 
-		inline constexpr												SGrid									()																		: grid_view(&Cells[0][0], _sizeWidth, _sizeDepth)	{}
+		inline constexpr												SGrid									()																		: TGridView::grid_view{&Cells[0][0], _sizeWidth, _sizeDepth}	{}
 	};
 
 	template<typename _tCell, size_t _sizeWidth, size_t _sizeDepth>
 	struct grid_static : public grid_view<_tCell> {
-							typedef										_tCell									TCell;
-							typedef										grid_view<_tCell>						TGridView;
+		typedef				_tCell										TCell;
+		typedef				grid_view<_tCell>							TGridView;
 
 		static constexpr	const ::nwol::SCoord2<uint32_t>				Width									= (uint32_t)_sizeWidth;
 		static constexpr	const uint32_t								Depth									= (uint32_t)_sizeDepth;
 
 							TCell										Cells[_sizeDepth][_sizeWidth]			= {};
 
-		inline constexpr												grid_static								()																		: grid_view(&Cells[0][0], _sizeWidth, _sizeDepth)	{}
+		inline constexpr												grid_static								()																		: TGridView::grid_view{&Cells[0][0], _sizeWidth, _sizeDepth}	{}
 
 		inline				::nwol::error_t								read									(const byte_t* input, uint32_t* inout_bytesRead)						{
 			ree_if(0 == input, "Invalid input pointer!");
