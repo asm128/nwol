@@ -209,6 +209,7 @@
     <ClInclude Include="nwol_matrix.h" />
     <ClInclude Include="nwol_memory.h" />
     <ClInclude Include="nwol_misc.h" />
+    <ClInclude Include="nwol_random_generator.h" />
     <ClInclude Include="nwol_sync.h" />
     <ClInclude Include="nwol_module.h" />
     <ClInclude Include="nwol_noise.h" />
@@ -254,6 +255,7 @@
     <ClCompile Include="nwol_error.cpp" />
     <ClCompile Include="nwol_json.cpp" />
     <ClCompile Include="nwol_display.cpp" />
+    <ClCompile Include="nwol_noise.cpp" />
     <ClCompile Include="runtime_module.cpp" />
     <ClCompile Include="storage.cpp" />
     <ClCompile Include="text.cpp" />
