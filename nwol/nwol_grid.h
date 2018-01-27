@@ -67,7 +67,7 @@ namespace nwol
 	};
 
 	template<typename _tCell>
-	void																fillCellsFromNoise						(::nwol::grid_view<_tCell>& grid, const _tCell& value, int64_t seed, const _tCell& clearValue = ' ', int32_t diceFaces=10)														{
+	void																fillCellsFromNoise						(::nwol::grid_view<_tCell>& grid, const _tCell& value, int64_t seed, int32_t diceFaces=10)														{
 		_tCell																	* cells									= grid.begin();
 		for(uint32_t i = 0, count = grid.size();  i < count; ++i) {
 			double																	noise									= ::nwol::noiseNormal1D(i + 1, seed);

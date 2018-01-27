@@ -40,7 +40,8 @@ namespace nwol
 	template<typename... _Args>
 								int32_t	printfToRectColored		(char* display, uint32_t width, uint32_t height, uint16_t* textAttributes, uint16_t messageColor, int32_t offsetLine, int32_t offsetColumn, nwol::ALIGN_SCREEN align, const char* format, _Args&&... args) {
 		char									precookStr[1024]		= {};
-		int32_t									precookLen				= sprintf_s(precookStr, format, args...);
+		const int32_t							precookLen				= sprintf_s(precookStr, format, args...);
+		precookLen;
 		int32_t									actualX					= lineToRectColored(display, width, height, textAttributes, messageColor, offsetLine, offsetColumn, align, precookStr);
 		return actualX;
 	}

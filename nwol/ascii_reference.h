@@ -2,7 +2,7 @@
 #ifndef ASCII_REFERENCE_H_923640654654
 #define ASCII_REFERENCE_H_923640654654
 
-namespace klib
+namespace nwol
 {
 #pragma pack(push, 1)
 	static const unsigned char			ascii_wall_double				[] = 
@@ -95,62 +95,32 @@ namespace klib
 		};										
 
 	struct SASCIIWallConnection {
-		bool								Bottom				: 1;
-		bool								Top					: 1;
-		bool								Left				: 1;
-		bool								Right				: 1;
-		bool								ReinforcedBottom	: 1;
-		bool								ReinforcedTop		: 1;
-		bool								ReinforcedLeft		: 1;
-		bool								ReinforcedRight		: 1;
+						bool						Bottom				: 1;
+						bool						Top					: 1;
+						bool						Left				: 1;
+						bool						Right				: 1;
+						bool						ReinforcedBottom	: 1;
+						bool						ReinforcedTop		: 1;
+						bool						ReinforcedLeft		: 1;
+						bool						ReinforcedRight		: 1;
 	};
 
-	static char	resolveASCIIConnectionCross				( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CONNECTION_CROSS				] : ascii_wall_single[ASCII_WALL_CONNECTION_CROSS				]; }
-	static char	resolveASCIIConnectionHorizontalUp		( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CONNECTION_HORIZONTAL_UP		] : ascii_wall_single[ASCII_WALL_CONNECTION_HORIZONTAL_UP		]; }
-	static char	resolveASCIIConnectionHorizontalDown	( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CONNECTION_HORIZONTAL_DOWN	] : ascii_wall_single[ASCII_WALL_CONNECTION_HORIZONTAL_DOWN		]; }
-	static char	resolveASCIIConnectionVerticalRight		( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CONNECTION_VERTICAL_RIGHT		] : ascii_wall_single[ASCII_WALL_CONNECTION_VERTICAL_RIGHT		]; }
-	static char	resolveASCIIConnectionVerticalLeft		( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CONNECTION_VERTICAL_LEFT		] : ascii_wall_single[ASCII_WALL_CONNECTION_VERTICAL_LEFT		]; }
-	static char	resolveASCIICornerUpRight				( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CORNER_UP_RIGHT				] : ascii_wall_single[ASCII_WALL_CORNER_UP_RIGHT				]; }
-	static char	resolveASCIICornerUpLeft				( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CORNER_UP_LEFT				] : ascii_wall_single[ASCII_WALL_CORNER_UP_LEFT					]; }
-	static char	resolveASCIICornerDownRight				( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CORNER_DOWN_RIGHT				] : ascii_wall_single[ASCII_WALL_CORNER_DOWN_RIGHT				]; }
-	static char	resolveASCIICornerDownLeft				( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CORNER_DOWN_LEFT				] : ascii_wall_single[ASCII_WALL_CORNER_DOWN_LEFT				]; }
-	static char	resolveASCIIVertical					( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_VERTICAL						] : ascii_wall_single[ASCII_WALL_VERTICAL						]; }
-	static char	resolveASCIIHorizontal					( bool bIsReinforced, const SASCIIWallConnection& connection) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_HORIZONTAL					] : ascii_wall_single[ASCII_WALL_HORIZONTAL						]; }
+	static inline	char						resolveASCIIConnectionCross				( bool bIsReinforced, const SASCIIWallConnection& /*connection*/) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CONNECTION_CROSS				] : ascii_wall_single[ASCII_WALL_CONNECTION_CROSS				]; }
+	static inline	char						resolveASCIIConnectionHorizontalUp		( bool bIsReinforced, const SASCIIWallConnection& /*connection*/) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CONNECTION_HORIZONTAL_UP		] : ascii_wall_single[ASCII_WALL_CONNECTION_HORIZONTAL_UP		]; }
+	static inline	char						resolveASCIIConnectionHorizontalDown	( bool bIsReinforced, const SASCIIWallConnection& /*connection*/) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CONNECTION_HORIZONTAL_DOWN	] : ascii_wall_single[ASCII_WALL_CONNECTION_HORIZONTAL_DOWN		]; }
+	static inline	char						resolveASCIIConnectionVerticalRight		( bool bIsReinforced, const SASCIIWallConnection& /*connection*/) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CONNECTION_VERTICAL_RIGHT		] : ascii_wall_single[ASCII_WALL_CONNECTION_VERTICAL_RIGHT		]; }
+	static inline	char						resolveASCIIConnectionVerticalLeft		( bool bIsReinforced, const SASCIIWallConnection& /*connection*/) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CONNECTION_VERTICAL_LEFT		] : ascii_wall_single[ASCII_WALL_CONNECTION_VERTICAL_LEFT		]; }
+	static inline	char						resolveASCIICornerUpRight				( bool bIsReinforced, const SASCIIWallConnection& /*connection*/) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CORNER_UP_RIGHT				] : ascii_wall_single[ASCII_WALL_CORNER_UP_RIGHT				]; }
+	static inline	char						resolveASCIICornerUpLeft				( bool bIsReinforced, const SASCIIWallConnection& /*connection*/) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CORNER_UP_LEFT				] : ascii_wall_single[ASCII_WALL_CORNER_UP_LEFT					]; }
+	static inline	char						resolveASCIICornerDownRight				( bool bIsReinforced, const SASCIIWallConnection& /*connection*/) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CORNER_DOWN_RIGHT				] : ascii_wall_single[ASCII_WALL_CORNER_DOWN_RIGHT				]; }
+	static inline	char						resolveASCIICornerDownLeft				( bool bIsReinforced, const SASCIIWallConnection& /*connection*/) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_CORNER_DOWN_LEFT				] : ascii_wall_single[ASCII_WALL_CORNER_DOWN_LEFT				]; }
+	static inline	char						resolveASCIIVertical					( bool bIsReinforced, const SASCIIWallConnection& /*connection*/) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_VERTICAL						] : ascii_wall_single[ASCII_WALL_VERTICAL						]; }
+	static inline	char						resolveASCIIHorizontal					( bool bIsReinforced, const SASCIIWallConnection& /*connection*/) { return (bIsReinforced) ? ascii_wall_double[ASCII_WALL_HORIZONTAL					] : ascii_wall_single[ASCII_WALL_HORIZONTAL						]; }
 														 
-	static char							getASCIIWall			(const ::nwol::grid_view<STileProp>& propGrid, int32_t x, int32_t z){
-		SASCIIWallConnection					connection				= {false};
-
-		char									result					= '-';
-		static const ::nwol::glabel				labelWall				= "Wall";
-
-		bool									bIsReinforced			= propGrid[z][x].Modifier > 0;
-
-		if(x - 1 >= 0							&& propGrid[z    ][x - 1].Definition != -1 && definitionsStageProp[propGrid[z    ][x - 1].Definition].Name == labelWall) { connection.Left		= true;	if(propGrid[z    ][x - 1].Modifier > 0) connection.ReinforcedLeft	= true; }
-		if(x + 1 < (int32_t)propGrid.width()	&& propGrid[z    ][x + 1].Definition != -1 && definitionsStageProp[propGrid[z    ][x + 1].Definition].Name == labelWall) { connection.Right		= true;	if(propGrid[z    ][x + 1].Modifier > 0) connection.ReinforcedRight	= true; }
-		if(z - 1 >= 0							&& propGrid[z - 1][x    ].Definition != -1 && definitionsStageProp[propGrid[z - 1][x    ].Definition].Name == labelWall) { connection.Top		= true;	if(propGrid[z - 1][x    ].Modifier > 0) connection.ReinforcedTop	= true; }
-		if(z + 1 < (int32_t)propGrid.height()	&& propGrid[z + 1][x    ].Definition != -1 && definitionsStageProp[propGrid[z + 1][x    ].Definition].Name == labelWall) { connection.Bottom	= true;	if(propGrid[z + 1][x    ].Modifier > 0) connection.ReinforcedBottom	= true; }
-		
-			 if(connection.Bottom	&& connection.Top		&& connection.Left && connection.Right	) { result = resolveASCIIConnectionCross			(bIsReinforced, connection); }
-		else if(connection.Left		&& connection.Right		&& connection.Top						) { result = resolveASCIIConnectionHorizontalUp		(bIsReinforced, connection); }
-		else if(connection.Left		&& connection.Right		&& connection.Bottom					) { result = resolveASCIIConnectionHorizontalDown	(bIsReinforced, connection); }
-		else if(connection.Top		&& connection.Bottom	&& connection.Right						) { result = resolveASCIIConnectionVerticalRight	(bIsReinforced, connection); }
-		else if(connection.Top		&& connection.Bottom	&& connection.Left						) { result = resolveASCIIConnectionVerticalLeft		(bIsReinforced, connection); }
-		else if(connection.Top		&& connection.Right												) { result = resolveASCIICornerUpRight				(bIsReinforced, connection); }
-		else if(connection.Top		&& connection.Left												) { result = resolveASCIICornerUpLeft				(bIsReinforced, connection); }
-		else if(connection.Bottom	&& connection.Right												) { result = resolveASCIICornerDownRight			(bIsReinforced, connection); }
-		else if(connection.Bottom	&& connection.Left												) { result = resolveASCIICornerDownLeft				(bIsReinforced, connection); }
-		//else iconnection.(bTop	&& connection.Bottom											) { result = resolveASCIIVertical					(bIsReinforced, connection); }
-		//else iconnection.(bLeft	&& connection.Right												) { result = resolveASCIIHorizontal					(bIsReinforced, connection); }
-		else if(connection.Top		|| connection.Bottom											) { result = resolveASCIIVertical					(bIsReinforced, connection); }
-		else if(connection.Left		|| connection.Right												) { result = resolveASCIIHorizontal					(bIsReinforced, connection); }
-
-		return result;
-	}
-
-	static const char					ascii_fraction	[]		= {' ',	char(0xFF & 0xAC), char(0xFF & 0xAB) };	//'¼', '½'};
-	static const char					ascii_water		[]		= {' ', (char)0xF7, '~' };						//'≈', '~'};
-	static const char					ascii_tones		[]		= {' ', (char)0xB0, (char)0xB1, (char)0xB2};	//" ░▒▓";
-	static const char					ascii_arrow		[]		= {0, 0x11, 0x1F, 0x10, 0x1E};					//" ◄▲►▼";
+	static			const unsigned char			ascii_fraction	[]						= {' ',	0xFF & 0xAC, 0xFF & 0xAB };	//'¼', '½'};
+	static			const unsigned char			ascii_water		[]						= {' ', 0xF7, '~' };						//'≈', '~'};
+	static			const unsigned char			ascii_tones		[]						= {' ', 0xB0, 0xB1, 0xB2};	//" ░▒▓";
+	static			const unsigned char			ascii_arrow		[]						= {0, 0x11, 0x1F, 0x10, 0x1E};					//" ◄▲►▼";
 	//static const char ascii_arrw2[] = " ←↑→↓↕↔↨";
 
 	#define ARROW_LEFT		1
@@ -160,28 +130,28 @@ namespace klib
 	#define ARROW_UPDOWN	5
 	#define ARROW_LEFTRIGHT	6
 
-	static const char					ascii_gender	[]		= {' ', 0x0C, 0x0B, (char)232};				// " ♀♂Φ";
+	static const unsigned char					ascii_gender	[]						= {' ', 0x0C, 0x0B, 232};				// " ♀♂Φ";
 	#define FEMALE			1
 	#define MALE			2
 	#define HERMAPHRODITE	3
 
 	//static const char ascii_sound[] = "♫";
 
-	static const char					ascii_cards		[]		= {' ', 0x03, 0x04, 0x05, 0x06};				// " ♥♦♣♠";
+	static const char							ascii_cards		[]						= {' ', 0x03, 0x04, 0x05, 0x06};				// " ♥♦♣♠";
 	#define DECK_HEARTS		1
 	#define DECK_DIAMONDS	2
 	#define DECK_CLUBS		3
 	#define DECK_SPADES		4
 
-	static const char					ascii_face		[]		= {' ', 0x01, 0x02};								//" ☺☻";
+	static const char							ascii_face		[]						= {' ', 0x01, 0x02};								//" ☺☻";
 	#define FACE_BLACK	1
 	#define FACE_WHITE	2
 
-	static const char					ascii_button	[]		= {' ', 0x09, 0x0A};							//" ○◙";
+	static const char							ascii_button	[]						= {' ', 0x09, 0x0A};							//" ○◙";
 	#define BUTTON_OFF	1
 	#define BUTTON_ON	2
 
-	static const char					ascii_buttn2	[]		= {' ', 0x07, 0x08};							//" •◘";
+	static const char							ascii_buttn2	[]						= {' ', 0x07, 0x08};							//" •◘";
 	#define BUTTON_OFF	1
 	#define BUTTON_ON	2
 
