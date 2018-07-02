@@ -85,8 +85,8 @@ namespace gdnet {
 
 										int32_t						dataSend										(::gdnet::SConnectionEndpoints& connection, const NWON_COMMAND_TYPE	requestOrResponse	, const byte_t	* sourceBuffer, uint32_t bufferSize);
 										int32_t						dataReceive										(::gdnet::SConnectionEndpoints& connection, NWON_COMMAND_TYPE		& requestOrResponse	, byte_t		* targetBuffer, uint32_t bufferSize);
-	template<typename _tPOD>	inline	int32_t						dataSend										(::gdnet::SConnectionEndpoints& connection, const NWON_COMMAND_TYPE	requestOrResponse	, const _tPOD	& podSourceInstance)					{ return dataSend		(connection.Local, connection.Target, requestOrResponse, &podSourceInstance, sizeof(_tPOD)); }
-	template<typename _tPOD>	inline	int32_t						dataReceive										(::gdnet::SConnectionEndpoints& connection, NWON_COMMAND_TYPE		& requestOrResponse	, _tPOD			& podTargetInstance)					{ return dataReceive	(connection.Local, connection.Target, requestOrResponse, &podTargetInstance, sizeof(_tPOD)); }
+	template<typename _tPOD>	inline	int32_t						dataSend										(::gdnet::SConnectionEndpoints& connection, const NWON_COMMAND_TYPE	requestOrResponse	, const _tPOD	& podSourceInstance)					{ return dataSend		(connection.Local, connection.Remote, requestOrResponse, &podSourceInstance, sizeof(_tPOD)); }
+	template<typename _tPOD>	inline	int32_t						dataReceive										(::gdnet::SConnectionEndpoints& connection, NWON_COMMAND_TYPE		& requestOrResponse	, _tPOD			& podTargetInstance)					{ return dataReceive	(connection.Local, connection.Remote, requestOrResponse, &podTargetInstance, sizeof(_tPOD)); }
 
 	static constexpr					const uint16_t				MAX_COMMAND_PAYLOAD_SIZE						= 504;
 #pragma pack(push, 1)

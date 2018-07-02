@@ -1,6 +1,7 @@
 /// Copyright 2009-2017 - asm128
 #include "nwol_bit.h"
 #include "nwol_math.h"
+#include "nwol_log.h"
 
 #ifndef NWOL_COORD_H_283409263409234698374
 #define NWOL_COORD_H_283409263409234698374
