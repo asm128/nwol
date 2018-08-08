@@ -26,7 +26,7 @@ namespace gdnet
 		typedef				::nwol::error_t								(*FCommandProcedure)								(const SNetworkNode& instanceNode);
 
 							::gdnet::SConnectionEndpoints				Endpoints											= {};
-							::gdnet::SConnectionAddress					Address												= {{}, {{192, 168, 1, 27}, 45678}};
+							::gdnet::SConnectionAddress					Address												= {{}, {{192, 168, 1, 79}, 45678}};
 							uint64_t									Id													= ~0ULL;
 							::gdnet::SNetworkNodeTimes					Timestamps											= {};
 
