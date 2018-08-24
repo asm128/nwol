@@ -103,11 +103,11 @@ int32_t											listDLLFiles									(const char* modulesPath, ::nwol::array_o
 	::nwol::array_obj<::nwol::glabel>					fileNames;
 	nwol_necall(::nwol::listFiles(modulesPath, fileNames), "Failed to list module files from path: '%s'.", modulesPath);
 	for(uint32_t iFile=0, fileCount = fileNames.size(); iFile < fileCount; ++iFile) {
-		const ::nwol::glabel								& moduleName							= fileNames[iFile];
+		const ::nwol::glabel								& moduleName									= fileNames[iFile];
 		info_printf("File found: %s.", moduleName.begin());
 		if(moduleName.size() > 4) {
-			const char											* nameText								= &moduleName[moduleName.size()-4];
-			char												fileExtension	[5]						= {};
+			const char											* nameText										= &moduleName[moduleName.size()-4];
+			char												fileExtension	[5]								= {};
 			for(uint32_t iChar = 0, charCount = ::nwol::size(fileExtension)-1; iChar<charCount; ++iChar)
 				fileExtension[iChar]							= (char)::tolower(nameText[iChar]);
 

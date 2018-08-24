@@ -14,8 +14,8 @@ namespace nwol
 		typedef			SCoord2<_tBase>		TCoord2;
 							_tBase			x, y;
 		//
-		inline				const _tBase&	operator[]				(uint32_t index)											const				{ throw_if(index > 1, "Invalid vector element being accessed: %u", index); return *((&_11)[index]); }
-		inline				_tBase&			operator[]				(uint32_t index)																{ throw_if(index > 1, "Invalid vector element being accessed: %u", index); return *((&_11)[index]); }
+		inline				const _tBase&	operator[]				(uint32_t index)											const				{ throw_if(index > 1, "Invalid vector element being accessed: %u", index); return *((&x)[index]); }
+		inline				_tBase&			operator[]				(uint32_t index)																{ throw_if(index > 1, "Invalid vector element being accessed: %u", index); return *((&x)[index]); }
 		//
 		inline constexpr	TCoord2			operator+				(const TCoord2& other)										const	noexcept	{ return {x + other.x, y + other.y};																							}
 		inline constexpr	TCoord2			operator-				(const TCoord2& other)										const	noexcept	{ return {x - other.x, y - other.y};																							}
@@ -66,8 +66,8 @@ namespace nwol
 		typedef			SCoord3<_tBase>		TCoord3;
 							_tBase			x, y, z;
 		//
-		inline				const _tBase&	operator[]				(uint32_t index)											const				{ throw_if(index > 2, "Invalid vector element being accessed: %u", index); return *((&_11)[index]); }
-		inline				_tBase&			operator[]				(uint32_t index)																{ throw_if(index > 2, "Invalid vector element being accessed: %u", index); return *((&_11)[index]); }
+		inline				const _tBase&	operator[]				(uint32_t index)											const				{ throw_if(index > 2, "Invalid vector element being accessed: %u", index); return *((&x)[index]); }
+		inline				_tBase&			operator[]				(uint32_t index)																{ throw_if(index > 2, "Invalid vector element being accessed: %u", index); return *((&x)[index]); }
 		//
 		constexpr			TCoord3			operator+				(const TCoord3& other)										const	noexcept	{ return {x + other.x, y + other.y, z + other.z};												}
 		constexpr			TCoord3			operator-				(const TCoord3& other)										const	noexcept	{ return {x - other.x, y - other.y, z - other.z};												}
@@ -145,8 +145,8 @@ namespace nwol
 		typedef			SCoord4<_tBase>		TCoord4;
 							_tBase			x, y, z, w;
 		//
-		inline				const _tBase&	operator[]				(uint32_t index)											const				{ throw_if(index > 3, "Invalid vector element being accessed: %u", index); return *((&_11)[index]); }
-		inline				_tBase&			operator[]				(uint32_t index)																{ throw_if(index > 3, "Invalid vector element being accessed: %u", index); return *((&_11)[index]); }
+		inline				const _tBase&	operator[]				(uint32_t index)											const				{ throw_if(index > 3, "Invalid vector element being accessed: %u", index); return *((&x)[index]); }
+		inline				_tBase&			operator[]				(uint32_t index)																{ throw_if(index > 3, "Invalid vector element being accessed: %u", index); return *((&x)[index]); }
 		//										 
 		constexpr			bool			operator ==				(const TCoord4& other)										const	noexcept	{ return x == other.x && y == other.y && z == other.z && w == other.w;								}
 		inline constexpr 	bool			operator !=				(const TCoord4& other)										const	noexcept	{ return !operator==(other);																		}
@@ -193,8 +193,8 @@ namespace nwol
 		typedef			SCoord3<_tBase>		TCoord3;
 							_tBase			x, y, z, w;
 		//
-		inline				const _tBase&	operator[]				(uint32_t index)											const				{ throw_if(index > 3, "Invalid quaternion element being accessed: %u", index); return *((&_11)[index]); }
-		inline				_tBase&			operator[]				(uint32_t index)																{ throw_if(index > 3, "Invalid quaternion element being accessed: %u", index); return *((&_11)[index]); }
+		inline				const _tBase&	operator[]				(uint32_t index)											const				{ throw_if(index > 3, "Invalid quaternion element being accessed: %u", index); return *((&x)[index]); }
+		inline				_tBase&			operator[]				(uint32_t index)																{ throw_if(index > 3, "Invalid quaternion element being accessed: %u", index); return *((&x)[index]); }
 		// 
 		constexpr			bool			operator ==				(const TQuat& other)										const	noexcept	{ return x == other.x && y == other.y && z == other.z && w == other.w; }
 		constexpr inline	bool			operator !=				(const TQuat& other)										const	noexcept	{ return !operator==(other); }
@@ -324,7 +324,7 @@ namespace nwol
 
 	// Geometric figures and other coord-related POD structs.
 	template<typename _tCoord> struct	SRange			{ _tCoord Offset, Count;							/**/ inline constexpr bool operator !=(const	SRange			<_tCoord>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SRange			<_tCoord>	& other) const noexcept { return Offset		== other.Offset		&& Count		== other.Count;							} };
-	template<typename _tCoord> struct	SSlice			{ _tCoord Begin, End;								/**/ inline constexpr bool operator !=(const	SRange			<_tCoord>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SRange			<_tCoord>	& other) const noexcept { return Offset		== other.Offset		&& Count		== other.Count;							} };
+	template<typename _tCoord> struct	SSlice			{ _tCoord Begin, End;								/**/ inline constexpr bool operator !=(const	SSlice			<_tCoord>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SSlice			<_tCoord>	& other) const noexcept { return Begin		== other.Begin		&& End			== other.End;							} };
 	template<typename _tCoord> struct	SLine2D			{ SCoord2<_tCoord> A, B;							/**/ inline constexpr bool operator !=(const	SLine2D			<_tCoord>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SLine2D			<_tCoord>	& other) const noexcept { return A			== other.A			&& B			== other.B;								} };
 	template<typename _tCoord> struct	SLine3D			{ SCoord3<_tCoord> A, B;							/**/ inline constexpr bool operator !=(const	SLine3D			<_tCoord>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	SLine3D			<_tCoord>	& other) const noexcept { return A			== other.A			&& B			== other.B;								} };
 	template<typename _tCoord> struct	STriangle2D		{ SCoord2<_tCoord> A, B, C;							/**/ inline constexpr bool operator !=(const	STriangle2D		<_tCoord>& other ) const noexcept { return !operator==(other); } /**/ inline constexpr bool operator==(const	STriangle2D		<_tCoord>	& other) const noexcept { return A			== other.A			&& B			== other.B			&& C == other.C;	} };

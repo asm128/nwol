@@ -116,10 +116,12 @@ namespace nwol
 		typedef ::nwol::SDataBlock<_tBase, _BlockInstanceCount>				TBlock;			// Better to alias this because we're gonna need to reference it later
 		typedef ::nwol::array_pod<TBlock*>									TBlockArray;	// Better to alias this because we're gonna need to reference it later
 
+
 	public:
 														unordered_pod_set			()																																	{ (void)INIT_CRITICAL_SECTION(Lock); }
 
 		using	container_base::						BlockArray					;
+		using	container_base::						Lock						;
 		using	container_base::						getDataCoordsFromDataIndex	;
 		// Returns an array view of a given item.
 		const _tBase*									get							(const int32_t itemIndex)																							const			{
