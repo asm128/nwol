@@ -7,6 +7,7 @@
 #endif
 
 #include <malloc.h>
+#include <windows.h>
 
 #ifndef LOG_H_9284087409823740923864192736
 #define LOG_H_9284087409823740923864192736

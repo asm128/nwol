@@ -40,7 +40,7 @@ namespace nwol
 		_aligned_free(_pepe);
 	}
 
-	struct auto_nwol_free : public ::nwol::platform_handle_wrapper<void*, 0>					{ using TWrapper::platform_handle_wrapper; inline ~auto_nwol_free() { close(); } inline void close() { safe_nwol_free(Handle); } };
+	struct auto_nwol_free : public ::nwol::platform_handle_wrapper<void*, nullptr>					{ using TWrapper::platform_handle_wrapper; inline ~auto_nwol_free() { close(); } inline void close() { safe_nwol_free(Handle); } };
 
 #define GREF_PAGE_SIZE_MAX (4096)
 	template<typename _tBase>	static inline constexpr		uint32_t							get_page_size				()													noexcept	{ return (uint32_t)(sizeof(_tBase) <= GREF_PAGE_SIZE_MAX) ? GREF_PAGE_SIZE_MAX/sizeof(_tBase) : 1; };

@@ -117,7 +117,7 @@ namespace nwol
 							array_pod<_tPOD>&			operator =									(const array_pod<_tPOD>& other)															{
 			throw_if(resize(other.Count) != (int32_t)other.Count, "", "Failed to assign array.");
 			for(uint32_t iElement = 0; iElement < other.Count; ++iElement)
-				operator[](iElement)							= other[iElement];
+				this->operator[](iElement)						= other[iElement];
 			return *this;
 		}
 		// This method doesn't call destructors of the contained PODs.
@@ -179,7 +179,7 @@ namespace nwol
 				_TArrayView											safe_data									= {newData, reserveSize};
 				if(oldData) {
 					for(uint32_t i = 0, count = ::nwol::min(newSize, oldCount); i<count; ++i)
-						safe_data[i]									= operator[](i);
+						safe_data[i]									= this->operator[](i);
 				}
 				Size											= (uint32_t)reserveSize;
 				Count											= newSize;
@@ -378,7 +378,7 @@ namespace nwol
 			throw_if(resize(other.Count) != (int32_t)other.Count, "", "Failed to resize array!")
 			else {
 				for(uint32_t iElement = 0; iElement < other.Count; ++iElement)
-					operator[](iElement)							= other[iElement];
+					this->operator[](iElement)							= other[iElement];
 			}
 			return *this;
 		}
