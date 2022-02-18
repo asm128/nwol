@@ -1,7 +1,6 @@
 #include "nwor.h"
 
 #include "nwol_sync.h"
-#include "nwol_enum.h"
 #include "nwol_sleep.h"
 
 #if defined(__ANDROID__)

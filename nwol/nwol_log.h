@@ -49,7 +49,7 @@ namespace nwol
 	static	void									__nwol_printf					(const char* severity, const char (&prefix)[_sizePrefix], const char* format, const TArgs... args)			{
 		_nwol_internal_info_printf(prefix, _sizePrefix-1);
 		char											customDynamicString	[4096]			= {0};
-		const size_t									stringLength						= sprintf_s(customDynamicString, format, args...);
+		const size_t									stringLength						= sprintf_s(customDynamicString, format, args...); (void)stringLength;
 		_nwol_internal_info_printf(customDynamicString, (int)stringLength);
 		_nwol_internal_info_printf("\n", 1);
 		if('2' < severity[0])
@@ -73,10 +73,12 @@ namespace nwol
 
 #define nwol_wprintf nwol_printf
 
-#if defined( __ANDROID__ )
-#	define always_printf( ... )										__android_log_print( ANDROID_LOG_DEBUG, __FILE__ ":", __VA_ARGS__ )
-#else
-#	define always_printf( format, ... )								nwol_printf(NWOL_ERROR_SEVERITY_DEBUG, "info", format, __VA_ARGS__)
+#ifndef always_printf
+#	if defined( __ANDROID__ )
+#		define always_printf( ... )										__android_log_print( ANDROID_LOG_DEBUG, __FILE__ ":", __VA_ARGS__ )
+#	else
+#		define always_printf( format, ... )								nwol_printf(NWOL_ERROR_SEVERITY_DEBUG, "info", format, __VA_ARGS__)
+#	endif
 #endif
 
 #if defined(USE_DEBUG_BREAK_ON_ERROR_LOG)

@@ -100,7 +100,7 @@ namespace nwol {
 #endif
 	
 #define NWOL_DECLARE_MODULE_FUNCTION(functionName, ...) 																	\
-	extern "C"	::nwol::error_t		 NWOL_STDCALL		functionName									(__VA_ARGS__);		\
+	extern "C"	::nwol::error_t		 NWOL_STDCALL		functionName									(__VA_ARGS__) noexcept;		\
 	typedef		::nwol::error_t		(NWOL_STDCALL		* NWOL_MODULE_FUNCTION_NAME(functionName))		(__VA_ARGS__);		\
 
 #define NWOM_PFUNC(structNameSpace, structName, functionName)	NWOM(structNameSpace, structName, , NWOL_MODULE_FUNCTION_NAME(functionName), functionName, ::nwol::GDATA_TYPE_FUN, #functionName, "Function")	= nullptr

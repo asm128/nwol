@@ -156,7 +156,7 @@ int32_t								nwol::renderGUIASCII		(char* bbText, uint16_t* bbColor	, const ::
 	for(uint32_t iRect=0; iRect < controls.Text.size(); ++iRect) {
 		const ::nwol::glabel					& label						= controls.Text					[iRect];
 		const ::nwol::SRectangle2D<int32_t>		& rectangle					= controls.AreasRealignedASCII	[iRect];
-		const ::nwol::ALIGN_SCREEN				alignControl				= controls.AlignArea			[iRect];
+		//const ::nwol::ALIGN_SCREEN				alignControl				= controls.AlignArea			[iRect];
 		const ::nwol::ALIGN_SCREEN				alignText					= controls.AlignText			[iRect];
 		::drawText(bbText, maxSize.x, maxSize.y, label.c_str(), label.size(), rectangle, alignText, false);
 	}

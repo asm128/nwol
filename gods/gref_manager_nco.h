@@ -125,9 +125,9 @@ namespace nwol
 			else if( !(Globals.DataAlign % sizeof(void*)) ) { info_printf("Detected align to native size: %llu."	, (uint64_t)sizeof(void*));		}	
 			else { info_printf("Type is not of an aligned size. %llu padding bytes will be added.", (uint64_t)ActualSizePadded-ActualEntrySize);	}
 #else
-			UNUSED const uint32_t										ActualEntrySize							= sizeof(SInstanceEntry);
-			UNUSED const uint32_t										ActualSizePadded						= Globals.DataSizePadded;
-			UNUSED const uint32_t										ActualAlign								= Globals.DataAlign;
+			UNUSED const uint32_t										ActualEntrySize							= sizeof(SInstanceEntry);		(void)ActualEntrySize;
+			UNUSED const uint32_t										ActualSizePadded						= Globals.DataSizePadded;		(void)ActualSizePadded;
+			UNUSED const uint32_t										ActualAlign								= Globals.DataAlign;			(void)ActualAlign;
 #endif
 			info_printf("Size of base type: %u. Entry size: %u. Size of entry padded to %u bytes: %u", (uint32_t)sizeof(_tBase), (uint32_t)ActualEntrySize, (uint32_t)BASETYPE_ALIGN, (uint32_t)ActualSizePadded);
 			lstUnusedInstances										= (_tRef**)&PageBytes[0];

@@ -82,7 +82,7 @@ namespace nwol
 	}
 	template <typename _tCell, typename _tCoord>	
 	static inline								void				fillRectangle			(_tCell* target, int32_t targetWidth, int32_t targetHeight, int32_t targetPitch, _tCell color, const ::nwol::SRectangle2D<_tCoord>& rect, ::nwol::ALIGN_SCREEN align)	{
-		if(align == (::nwol::SCREEN_tValueOP_LEFT))
+		if(align == (::nwol::SCREEN_TOP_LEFT))
 			::nwol::fillRectangle(target, targetWidth, targetHeight, targetPitch, color, rect);
 		else {
 			::nwol::SRectangle2D<int32_t>										rectAligned				= rect;

@@ -1,8 +1,8 @@
 // These sources are best viewed in Visual Studio 2017 with a screen of at least 1920x1080 screen and the zoom set to 81 %.
 // Pablo Ariel Zorrilla Cepeda (asm128) Copyright (c) 2010-2017 - Distributed under the MIT License.
+#include "nwol_platform_globals.h"
 #include "nwol_display.h"
 #include "nwol_module.h"
-#include "nwol_enum.h"
 #include "nwol_ptr.h"
 
 #if defined(__WINDOWS__)
